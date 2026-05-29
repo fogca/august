@@ -1,0 +1,630 @@
+@charset "UTF-8";
+
+/* ============================================================
+   TAKUMIISOBE.COM — base.css
+   Mobile-first global styles, design tokens, reset
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Naming convention (TAKUMIISOBE.COM "Stratum Naming")
+
+   - Page / Block        : PascalCase  (main.Office, section.Ethos)
+   - Wrapper structure   : lowercase   (.wrapper, .container, .box)
+   - Style descendants by parent:
+       .Ethos .wrapper .container h1 { ... }
+   - State               : .is-active, .has-image
+   - Simple role         : .bold, .white, .mute, .center, .sp, .pc
+   - Layout              : .l-stack, .l-grid, .flex, .w100
+   - Spacing             : .mt-10, .mb-20, .mx-30 ... (px direct)
+   - JS hook (no styles) : .js-*
+
+   - Language detection  : <html lang="en"> + :lang(ja) auto
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+   1. Font faces
+   ------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'Apercu';
+  src: url('/fonts/Apc.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Apercu';
+  src: url('/fonts/ApercuMedium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------
+   2. Modern reset
+   ------------------------------------------------------------ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+ul,
+ol,
+ul li,
+ol li {
+  list-style: none;
+  text-decoration: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+}
+
+::selection {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+/* ------------------------------------------------------------
+   3. Design tokens (mobile baseline)
+   ------------------------------------------------------------ */
+
+:root {
+  /* --- Colors --- */
+  --color-bg:        #ffffff;
+  --color-text:      #000000;
+  --color-text-mute: rgba(0, 0, 0, 0.3);
+  --color-bg-dark:   #121212;
+  --color-bg-gray:   #f1f1f1;
+  --color-accent:    #b33030;
+  --color-line:      rgba(0, 0, 0, 0.15);
+
+  /* --- Color aliases (general-purpose) --- */
+  --background: var(--color-bg);
+  --white:      #ffffff;
+  --black:      var(--color-text);
+  --key:        var(--color-text);
+
+  /* --- Typography stacks --- */
+  --font-en:     'Apercu', 'Helvetica Neue', Arial, sans-serif;
+  --font-ja:     'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+                 'Yu Gothic', 'Meiryo', sans-serif;
+  --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                 Roboto, sans-serif;
+
+  /* heading-font / text-font are switched by :lang() blocks */
+  --heading-font: var(--font-en);
+  --text-font:    var(--font-en);
+
+  /* --- Type scale (mobile) --- */
+  --fs-h0:   24px;   /* Display larger than h1 if needed */
+  --fs-h1:   24px;   /* Archive title */
+  --fs-h2:   20px;   /* Major section (interpolated) */
+  --fs-h3:   16px;   /* PC section title ("Office", "Ethos:") */
+  --fs-h4:   14px;   /* "Colophon" heading */
+  --fs-h5:   12px;   /* Numbering "01", labels, nav PC */
+  --fs-h6:   10px;   /* small meta / captions / labels — fixed 10px */
+  --fs-body: 12px;
+  --fs-p:    12px;   /* paragraphs — fixed 12px */
+
+  /* --- Line heights --- */
+  --lh-h1:   1.2;
+  --lh-h2:   1.2;
+  --lh-h3:   1.33;
+  --lh-h4:   1.4;
+  --lh-h5:   1.4;
+  --lh-h6:   1.5;
+  --lh-body: 1.5;
+  --lh-ja:   1.8;
+  --lh-row:  2;
+
+  /* --- Spacing scale (component padding/gap, 4px base) --- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  30px;
+  --space-8:  40px;
+  --space-9:  60px;
+  --space-10: 80px;
+  --space-11: 120px;
+
+  /* --- Layout (vw-based padding for sections) --- */
+  --padding:    5vw;     /* Mobile section padding */
+  --pcPadding:  5vw;     /* Used in PC override below */
+  --gutter:     20px;    /* Fixed-px alt for image-bleed pages */
+  --gutter-alt: 25px;    /* Fixed-px alt for nav/Office (Mobile) */
+  --header-offset: 30px;
+  --max-width:  1480px;  /* PC Figma viewport */
+
+  /* --- Motion --- */
+  --duration-fast:    200ms;
+  --duration-default: 400ms;
+  --duration-slow:    800ms;
+  --ease-default:     cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:         cubic-bezier(0, 0, 0.2, 1);
+  --ease-in:          cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out:      cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Z-index --- */
+  --z-base:    0;
+  --z-content: 1;
+  --z-header:  10;
+  --z-overlay: 100;
+  --z-modal:   1000;
+
+  /* --- Misc reusable height for animation slots --- */
+  --shuffle-height: 15vh;
+}
+
+/* ------------------------------------------------------------
+   4. Breakpoint scale-ups (768 / 1024 / 1440)
+   ------------------------------------------------------------ */
+
+@media (min-width: 768px) {
+  :root {
+    --fs-h1: 28px;
+    --fs-h2: 24px;
+    --padding:       7.5vw;
+    --gutter:        32px;
+    --gutter-alt:    40px;
+    --header-offset: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --fs-h1: 40px;
+    --fs-h2: 28px;
+    --padding:       5vw;
+    --gutter:        40px;
+    --gutter-alt:    40px;
+    --header-offset: 28px;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --fs-h1: 48px;
+    --fs-h2: 32px;
+    --padding:    5vw;
+    --gutter:     48px;
+    --gutter-alt: 48px;
+  }
+}
+
+/* ------------------------------------------------------------
+   5. Lang-based font switch
+   ------------------------------------------------------------ */
+
+:lang(en) {
+  --heading-font: var(--font-en);
+  --text-font:    var(--font-en);
+}
+
+:lang(ja) {
+  --heading-font: var(--font-ja);
+  --text-font:    var(--font-ja);
+}
+
+/* ------------------------------------------------------------
+   6. Document base
+   ------------------------------------------------------------ */
+
+html {
+  font-size: 62.5%;                    /* 1rem = 10px */
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body {
+  width: 100vw;
+  background-color: var(--background);
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+body {
+  font-family: var(--text-font);
+  font-weight: 400;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-text);
+}
+
+/* JP-specific line-height (font-family is already switched by :lang) */
+:lang(ja) {
+  line-height: var(--lh-ja);
+}
+
+/* ------------------------------------------------------------
+   7. Universal text element styling
+   ------------------------------------------------------------ */
+
+div, h1, h2, h3, h4, h5, h6,
+a, span, input, button, tspan,
+tr, td, th, p, li {
+  font-family: var(--heading-font);
+  color: var(--color-text);
+  font-display: swap;
+  font-feature-settings: "palt";
+}
+
+/* ------------------------------------------------------------
+   8. Headings & body (tags + .h0/.h1〜.h6 utility)
+   ------------------------------------------------------------ */
+
+.h0 {
+  font-size: var(--fs-h0);
+  line-height: var(--lh-h1);
+  font-weight: 400;
+}
+
+h1, .h1 {
+  font-family:  var(--heading-font);
+  font-size:    var(--fs-h1);
+  line-height:  var(--lh-h1);
+  font-weight:  400;
+}
+
+h2, .h2 {
+  font-family:  var(--heading-font);
+  font-size:    var(--fs-h2);
+  line-height:  var(--lh-h2);
+  font-weight:  400;
+}
+
+h3, .h3 {
+  font-family:  var(--heading-font);
+  font-size:    var(--fs-h3);
+  line-height:  var(--lh-h3);
+  font-weight:  500;
+}
+
+h4, .h4 {
+  font-family:  var(--heading-font);
+  font-size:    var(--fs-h4);
+  line-height:  var(--lh-h4);
+  font-weight:  500;
+}
+
+h5, .h5 {
+  font-family:  var(--heading-font);
+  font-size:    var(--fs-h5);
+  line-height:  var(--lh-h5);
+  font-weight:  500;
+}
+
+h6, .h6 {
+  font-family:  var(--heading-font);
+  font-size:    var(--fs-h6);
+  line-height:  var(--lh-h6);
+  font-weight:  400;
+}
+
+p, .p {
+  font-family:  var(--text-font);
+  font-size:    var(--fs-p);
+  line-height:  var(--lh-body);
+}
+
+p:lang(ja), .p:lang(ja) {
+  line-height: var(--lh-ja);
+}
+
+/* ------------------------------------------------------------
+   9. Body element defaults
+   ------------------------------------------------------------ */
+
+section {
+  padding-left:  var(--padding);
+  padding-right: var(--padding);
+}
+
+img {
+  width: 100%;
+  object-fit: cover;
+  object-position: 50%;
+}
+
+input::placeholder {
+  color: var(--color-text);
+  opacity: 0.25;
+}
+
+/* ------------------------------------------------------------
+   10. Role utilities
+   ------------------------------------------------------------ */
+
+/* Weight */
+.regular { font-weight: 400; }
+.medium  { font-weight: 500; }
+.bold    { font-weight: 700; }
+
+/* Color */
+/* Text colour: black by default; add `.white` to any element and it (and every
+   descendant) is forced white — overrides the per-element colours set in §7
+   and inline styles, so you can whiten a whole block from the parent alone. */
+.white,
+.white * { color: var(--white) !important; }
+.black   { color: var(--black); }
+.mute    { color: var(--color-text-mute); }
+.accent  { color: var(--color-accent); }
+
+/* Background */
+.bg-white { background: var(--white); }
+.bg-dark  { background: var(--color-bg-dark); }
+.bg-gray  { background: var(--color-bg-gray); }
+
+/* Alignment */
+.left    { text-align: left; }
+.center  { text-align: center; }
+.right   { text-align: right; }
+
+/* Transform */
+.upper   { text-transform: uppercase; }
+.lower   { text-transform: lowercase; }
+.italic  { font-style: italic; }
+.nowrap  { white-space: nowrap; }
+
+/* Display */
+.block         { display: block; }
+.inline-block  { display: inline-block; }
+.hidden        { display: none; }
+
+/* Mobile-first responsive switches */
+.sp { display: block; }
+.pc { display: none; }
+
+@media (min-width: 768px) {
+  .sp { display: none; }
+  .pc { display: block; }
+}
+
+/* Full-bleed (cancel section padding) */
+.w100 {
+  width: 100vw;
+  margin-left: calc(-1 * var(--padding));
+}
+
+/* ------------------------------------------------------------
+   11. State utilities (.is-*, .has-*)
+   ------------------------------------------------------------ */
+
+.is-active   { color: var(--color-text); }
+.is-inactive,
+.is-mute     { color: var(--color-text-mute); }
+.is-hidden   { display: none; }
+.is-paused   { animation-play-state: paused; }
+.is-open     { /* hook for components */ }
+.is-closed   { /* hook for components */ }
+
+.has-image   { /* hook */ }
+.has-video   { /* hook */ }
+
+/* ------------------------------------------------------------
+   12. Layout utilities (.l-*, .flex)
+   ------------------------------------------------------------ */
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.l-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.l-container-alt {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter-alt);
+}
+
+.l-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.l-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.l-grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.l-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------
+   13. Spacing utilities (margin, px direct)
+   Values: 1, 3, 5, 8, 10, 15, 20, 30, 40, 60, 80, 100, 120
+   (mt/mb extend to 160, 200)
+   ------------------------------------------------------------ */
+
+/* mx (left + right) */
+.mx-1   { margin-left: 1px;   margin-right: 1px; }
+.mx-3   { margin-left: 3px;   margin-right: 3px; }
+.mx-5   { margin-left: 5px;   margin-right: 5px; }
+.mx-8   { margin-left: 8px;   margin-right: 8px; }
+.mx-10  { margin-left: 10px;  margin-right: 10px; }
+.mx-15  { margin-left: 15px;  margin-right: 15px; }
+.mx-20  { margin-left: 20px;  margin-right: 20px; }
+.mx-30  { margin-left: 30px;  margin-right: 30px; }
+.mx-40  { margin-left: 40px;  margin-right: 40px; }
+.mx-60  { margin-left: 60px;  margin-right: 60px; }
+.mx-80  { margin-left: 80px;  margin-right: 80px; }
+.mx-100 { margin-left: 100px; margin-right: 100px; }
+.mx-120 { margin-left: 120px; margin-right: 120px; }
+
+/* my (top + bottom) */
+.my-1   { margin-top: 1px;   margin-bottom: 1px; }
+.my-3   { margin-top: 3px;   margin-bottom: 3px; }
+.my-5   { margin-top: 5px;   margin-bottom: 5px; }
+.my-8   { margin-top: 8px;   margin-bottom: 8px; }
+.my-10  { margin-top: 10px;  margin-bottom: 10px; }
+.my-15  { margin-top: 15px;  margin-bottom: 15px; }
+.my-20  { margin-top: 20px;  margin-bottom: 20px; }
+.my-30  { margin-top: 30px;  margin-bottom: 30px; }
+.my-40  { margin-top: 40px;  margin-bottom: 40px; }
+.my-60  { margin-top: 60px;  margin-bottom: 60px; }
+.my-80  { margin-top: 80px;  margin-bottom: 80px; }
+.my-100 { margin-top: 100px; margin-bottom: 100px; }
+.my-120 { margin-top: 120px; margin-bottom: 120px; }
+
+/* mt (top only) */
+.mt-1   { margin-top: 1px; }
+.mt-3   { margin-top: 3px; }
+.mt-5   { margin-top: 5px; }
+.mt-8   { margin-top: 8px; }
+.mt-10  { margin-top: 10px; }
+.mt-15  { margin-top: 15px; }
+.mt-20  { margin-top: 20px; }
+.mt-30  { margin-top: 30px; }
+.mt-40  { margin-top: 40px; }
+.mt-60  { margin-top: 60px; }
+.mt-80  { margin-top: 80px; }
+.mt-100 { margin-top: 100px; }
+.mt-120 { margin-top: 120px; }
+.mt-160 { margin-top: 160px; }
+.mt-200 { margin-top: 200px; }
+
+/* mb (bottom only) */
+.mb-1   { margin-bottom: 1px; }
+.mb-3   { margin-bottom: 3px; }
+.mb-5   { margin-bottom: 5px; }
+.mb-8   { margin-bottom: 8px; }
+.mb-10  { margin-bottom: 10px; }
+.mb-15  { margin-bottom: 15px; }
+.mb-20  { margin-bottom: 20px; }
+.mb-30  { margin-bottom: 30px; }
+.mb-40  { margin-bottom: 40px; }
+.mb-60  { margin-bottom: 60px; }
+.mb-80  { margin-bottom: 80px; }
+.mb-100 { margin-bottom: 100px; }
+.mb-120 { margin-bottom: 120px; }
+.mb-160 { margin-bottom: 160px; }
+.mb-200 { margin-bottom: 200px; }
+
+/* ml (left only) */
+.ml-1   { margin-left: 1px; }
+.ml-3   { margin-left: 3px; }
+.ml-5   { margin-left: 5px; }
+.ml-8   { margin-left: 8px; }
+.ml-10  { margin-left: 10px; }
+.ml-15  { margin-left: 15px; }
+.ml-20  { margin-left: 20px; }
+.ml-30  { margin-left: 30px; }
+.ml-40  { margin-left: 40px; }
+.ml-60  { margin-left: 60px; }
+.ml-80  { margin-left: 80px; }
+.ml-100 { margin-left: 100px; }
+.ml-120 { margin-left: 120px; }
+
+/* mr (right only) */
+.mr-1   { margin-right: 1px; }
+.mr-3   { margin-right: 3px; }
+.mr-5   { margin-right: 5px; }
+.mr-8   { margin-right: 8px; }
+.mr-10  { margin-right: 10px; }
+.mr-15  { margin-right: 15px; }
+.mr-20  { margin-right: 20px; }
+.mr-30  { margin-right: 30px; }
+.mr-40  { margin-right: 40px; }
+.mr-60  { margin-right: 60px; }
+.mr-80  { margin-right: 80px; }
+.mr-100 { margin-right: 100px; }
+.mr-120 { margin-right: 120px; }
+
+/* ------------------------------------------------------------
+   14. Reduced motion
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------
+   15. Focus outlines (accessibility)
+   ------------------------------------------------------------ */
+
+:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   16. Accessibility helper
+   ------------------------------------------------------------ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="August Type Foundry — Steiner Variable Font" />
+		<!-- Global design tokens and reset -->
+		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css" />
+		<!-- Steiner Book (static; will swap with Variable when Ultra master is fully compatible) -->
+		<style>
+			@font-face {
+				font-family: 'Steiner';
+				src: url('%sveltekit.assets%/fonts/Steiner-Book.woff2?v=05') format('woff2');
+				font-weight: 400;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			/* Mokuseki Sans (latest v05) — used by the gQ typeface */
+			@font-face {
+				font-family: 'Mokuseki Sans';
+				src: url('%sveltekit.assets%/fonts/MokusekiSans05-Regular.woff2?v=05') format('woff2');
+				font-weight: 400;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			/* Site-wide font: Steiner for all elements (chairman directive) */
+			:root {
+				--font-en: 'Steiner', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Steiner', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+			}
+
+			html,
+			body {
+				font-family: 'Steiner', 'Helvetica Neue', Arial, sans-serif;
+			}
+		</style>
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
