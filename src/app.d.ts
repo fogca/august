@@ -2,13 +2,9 @@
 // for information about these interfaces
 declare global {
 	namespace App {
-		interface Platform {
-			env: Env;
-			ctx: ExecutionContext;
-			caches: CacheStorage;
-			cf?: IncomingRequestCfProperties;
-		}
-
+		// No Cloudflare bindings (KV/D1/R2) are used, so Platform is left empty.
+		// If bindings are added later, declare them under Platform['env'].
+		// interface Platform {}
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
