@@ -62,8 +62,10 @@ export const maskReveal: Action<HTMLElement, MaskRevealOptions | undefined> = (
 
 		// Switch from flow fallback to overlapped layers. The wrapper holds one
 		// screen; each layer is full-bleed; first listed paints on top.
+		// Use dvh so the wrapper respects the mobile address bar — otherwise
+		// content pushed to the bottom (e.g. margin-top: auto) gets clipped behind it.
 		const wrapperHeight = node.style.height;
-		node.style.height = '100vh';
+		node.style.height = CSS.supports('height', '100dvh') ? '100dvh' : '100vh';
 		const layerStyles = layers.map((el) => ({
 			position: el.style.position,
 			inset: el.style.inset,
