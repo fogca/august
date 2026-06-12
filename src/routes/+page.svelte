@@ -6,20 +6,19 @@
 
 	// Transition scheme:
 	//   Top → font01 (steiner) : v2 reveal (maskReveal)
-	//   font01 → 02 → 03        : normal scroll
-	//   font03 (atom) → About   : normal scroll
+	//   font01 → font02 (gQ)   : normal scroll
+	//   font02 → About         : normal scroll
 	//   About → Custom          : v1 cover (coverReveal on Custom)
 	//   Custom → Design office  : v1 cover (coverReveal on Office)
 	const steiner = getTypeface('steiner')!;
 	const gq = getTypeface('gq')!;
-	const atom = getTypeface('atom')!;
 </script>
 
 <svelte:head>
-	<title>August Type Foundry — Steiner, gQ, Atom</title>
+	<title>August Type Foundry — Steiner, gQ</title>
 	<meta
 		name="description"
-		content="August Type Foundry — an independent type foundry from Tokyo. Steiner, gQ, and Atom."
+		content="August Type Foundry — an independent type foundry from Tokyo. Steiner and gQ."
 	/>
 </svelte:head>
 
@@ -46,15 +45,12 @@
 			</div>
 		</div>
 		<div class="Reveal__layer" data-layer>
-			<TypefaceHero typeface={steiner} total={3} />
+			<TypefaceHero typeface={steiner} total={2} />
 		</div>
 	</section>
 
-	<!-- font 02 (gQ) — normal scroll -->
-	<TypefaceHero typeface={gq} total={3} />
-
-	<!-- font 03 (atom) — normal scroll; atom → About is a normal scroll -->
-	<TypefaceHero typeface={atom} total={3} />
+	<!-- font 02 (gQ) — normal scroll; gQ → About is a normal scroll -->
+	<TypefaceHero typeface={gq} total={2} />
 
 	<!-- About (white) — normal scroll -->
 	<section class="Home__about">
@@ -133,7 +129,6 @@
 	.Home__kv-mark {
 		font-family: 'Mokuseki Sans', 'Steiner', sans-serif;
 		font-size: clamp(140px, 50vw, 300px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1;
 		letter-spacing: 0;
 		white-space: nowrap;
@@ -148,7 +143,6 @@
 	.Home__kv-name {
 		font-family: 'Mokuseki Sans', 'Steiner', sans-serif;
 		font-size: clamp(20px, 6vw, 28px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1.2;
 		letter-spacing: 0;
 		margin: 0 0 10px;
@@ -220,7 +214,6 @@
 
 	.About__statement em {
 		font-style: italic;
-		font-variation-settings: 'wght' 400;
 	}
 
 	@media (min-width: 768px) {
@@ -252,7 +245,7 @@
 	.Custom__eyebrow {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		opacity: 0.6;
@@ -262,7 +255,6 @@
 	.Custom__heading {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(28px, 5vw, 44px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1.15;
 		letter-spacing: 0;
 		margin: 0 0 28px;
@@ -288,7 +280,7 @@
 		display: inline-block;
 		font-family: 'Steiner', sans-serif;
 		font-size: 16px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		text-decoration: none;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.4);
@@ -321,7 +313,7 @@
 	.Office__label {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		opacity: 0.5;
@@ -340,7 +332,7 @@
 	.Office__link {
 		font-family: 'Steiner', sans-serif;
 		font-size: 13px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		text-decoration: none;
 		opacity: 0.7;

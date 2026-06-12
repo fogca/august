@@ -17,41 +17,17 @@
 		features?: Feature[];
 	}
 
-	// Steiner's actual feature roster: Tier 1 ships [ss03]; Tier 2 in progress
-	// covers smcp / c2sc / onum / tnum / frac / zero / liga / case; Signature
-	// alternates cv01–cv05 (agGRQ) are Steiner's identity; ss09 is the
-	// historical ampersand. Keep order: classic → figures → caps → signature → ss.
+	// Steiner — shipping roster (Steiner 07).
+	// Live OFF → ON demos render against the actual webfont, so what's here
+	// reflects what's actually compiled into the OTF/woff2 right now.
+	// Coming next: onum / tnum / frac / sups / subs / numr / dnom / case,
+	// plus ss01 (a), ss02 (g), ss09 (&) once those alternates are drawn.
 	const STEINER_FEATURES: Feature[] = [
 		{
 			tag: 'liga',
 			name: 'Standard Ligatures',
 			description: 'fi, fl, ff, ffi and ffl join into single connected glyphs for cleaner rhythm.',
 			sample: 'office final fluffy'
-		},
-		{
-			tag: 'onum',
-			name: 'Oldstyle Figures',
-			description:
-				'Numerals with ascenders and descenders, set at lowercase height — at home in running text.',
-			sample: 'Established 2026'
-		},
-		{
-			tag: 'tnum',
-			name: 'Tabular Figures',
-			description: 'Equal-width numerals for columns, prices and tables.',
-			sample: '10,938 24,517'
-		},
-		{
-			tag: 'frac',
-			name: 'Fractions',
-			description: 'Diagonal fractions composed automatically: 1/2 → ½.',
-			sample: '1/2 3/4 7/8'
-		},
-		{
-			tag: 'zero',
-			name: 'Slashed Zero',
-			description: 'A slashed zero to disambiguate from capital O in technical contexts.',
-			sample: '0 1024 305'
 		},
 		{
 			tag: 'smcp',
@@ -67,52 +43,34 @@
 			sample: 'TYPE FOUNDRY'
 		},
 		{
-			tag: 'case',
-			name: 'Case-Sensitive Forms',
-			description: 'Lifts punctuation and brackets to align with capitals when set in all-caps.',
-			sample: '(STEINER) [2026]'
+			tag: 'ordn',
+			name: 'Ordinals',
+			description: 'Raised ordinal markers — ª º — for ordered numbering and abbreviations.',
+			sample: 'No 1a 2o'
 		},
 		{
-			tag: 'cv01',
-			name: 'Alternate a',
-			description: 'Switch between Steiner’s default a and single-story variants.',
-			sample: 'agency'
-		},
-		{
-			tag: 'cv02',
-			name: 'Alternate g',
-			description: 'Open and closed g loops — Steiner’s strongest stylistic switch.',
-			sample: 'language'
-		},
-		{
-			tag: 'cv03',
-			name: 'Alternate R',
-			description: 'Alternate leg shapes for capital R.',
-			sample: 'Romance'
-		},
-		{
-			tag: 'cv04',
-			name: 'Alternate G',
-			description: 'Capital G with or without the lower spur.',
-			sample: 'Glyph'
-		},
-		{
-			tag: 'cv05',
-			name: 'Alternate Q',
-			description: 'Alternate tail constructions for Q.',
-			sample: 'Quiet'
+			tag: 'zero',
+			name: 'Slashed Zero',
+			description: 'A slashed zero to disambiguate from capital O in technical contexts.',
+			sample: '0 1024 305'
 		},
 		{
 			tag: 'ss03',
-			name: 'Stylistic Set 03 — b d p q',
-			description: 'Alternate construction for b, d, p and q. Shipped in v1.',
+			name: 'Stylistic Set 03 — Alternate b d p q',
+			description: 'Alternate construction for b, d, p and q.',
 			sample: 'absurd proposal'
 		},
 		{
-			tag: 'ss09',
-			name: 'Stylistic Set 09 — Historical Ampersand',
-			description: 'An italic, historical form of the ampersand.',
-			sample: 'Black & White'
+			tag: 'ss07',
+			name: 'Stylistic Set 07 — Alternate R',
+			description: 'Alternate leg shape for capital R.',
+			sample: 'Romance'
+		},
+		{
+			tag: 'ss08',
+			name: 'Stylistic Set 08 — Alternate Q',
+			description: 'Alternate tail construction for Q.',
+			sample: 'Quiet'
 		}
 	];
 
@@ -138,13 +96,16 @@
 					<p class="OpenType__description">{f.description}</p>
 				</div>
 				<div class="OpenType__samples" style="font-family: '{fontFamily}', sans-serif;">
-					<span class="OpenType__sample" style="font-feature-settings: '{f.tag}' 0;">
+					<!-- Preserve site-wide `palt` while toggling the demo feature; the
+					     parent base.css applies `font-feature-settings: "palt"` globally,
+					     and the CSS rule REPLACES (not merges), so we explicitly combine. -->
+					<span class="OpenType__sample" style="font-feature-settings: 'palt', '{f.tag}' 0;">
 						{f.sample}
 					</span>
 					<span class="OpenType__arrow" aria-hidden="true">→</span>
 					<span
 						class="OpenType__sample OpenType__sample--on"
-						style="font-feature-settings: '{f.tag}' 1;"
+						style="font-feature-settings: 'palt', '{f.tag}' 1;"
 					>
 						{f.sample}
 					</span>
@@ -211,7 +172,7 @@
 	.OpenType__name {
 		font-family: 'Steiner', sans-serif;
 		font-size: 12px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		color: #fff;
 	}
@@ -243,13 +204,11 @@
 	}
 
 	.OpenType__sample {
-		font-variation-settings: 'wght' 400;
 		color: rgba(255, 255, 255, 0.4);
 	}
 
 	.OpenType__sample--on {
 		/* keep weight in sync; feature applied via inline font-feature-settings */
-		font-variation-settings: 'wght' 400;
 		color: #fff;
 	}
 

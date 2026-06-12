@@ -36,7 +36,7 @@
 		padding: 7px 14px;
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		background: var(--color-bg-gray);
 		border: 0;

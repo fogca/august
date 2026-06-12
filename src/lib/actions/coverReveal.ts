@@ -1,4 +1,5 @@
 import type { Action } from 'svelte/action';
+import { getScrollTrigger } from '$lib/scroll';
 
 // Coalesce refreshes: each `use:coverReveal` instance asks for a refresh, but
 // we only want one after they have all created their triggers (avoids triggers
@@ -53,12 +54,10 @@ export const coverReveal: Action<HTMLElement, CoverRevealOptions | undefined> = 
 		const prev = node.previousElementSibling as HTMLElement | null;
 		if (!prev) return;
 
-		const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-			import('gsap'),
-			import('gsap/ScrollTrigger')
-		]);
+		// Shared gsap instance, registered and wired to Lenis before any trigger
+		// is created (see $lib/scroll.ts).
+		const { ScrollTrigger } = await getScrollTrigger();
 		if (disposed) return;
-		gsap.registerPlugin(ScrollTrigger);
 
 		// Lift the incoming section above the pinned (position:fixed) predecessor.
 		const prevPosition = node.style.position;

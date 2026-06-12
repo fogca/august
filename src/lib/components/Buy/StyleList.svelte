@@ -196,7 +196,6 @@
 		margin-left: auto;
 		font-family: 'Steiner', sans-serif;
 		font-size: 10px;
-		font-variation-settings: 'wght' 300;
 		color: inherit;
 		opacity: 0.45;
 		font-variant-numeric: tabular-nums;

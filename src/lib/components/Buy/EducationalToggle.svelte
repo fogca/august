@@ -94,13 +94,12 @@
 	.EducationalToggle__title {
 		font-family: 'Steiner', sans-serif;
 		font-size: 13px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 	}
 
 	.EducationalToggle__desc {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 300;
 		color: var(--color-text-mute);
 		line-height: 1.55;
 	}
@@ -112,7 +111,7 @@
 		color: #2e7d32;
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 	}
 </style>

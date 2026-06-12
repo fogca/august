@@ -1,19 +1,13 @@
 <script lang="ts">
 	// Scroll-driven, viewport-pinned video.
 	//
-	// Implementation: transform-based pseudo-pin (no GSAP pin, no CSS sticky).
-	//   - Outer reserves total scroll height (100vh + scrollDistance).
-	//   - Inner stage is `position: absolute; top: 0; height: 100vh`.
-	//   - On every scroll frame we compute how many px the section top has
-	//     scrolled past viewport top (= "offset"), then translateY the stage
-	//     by that offset. The stage therefore sticks at viewport top while
-	//     the section scrolls past, then releases naturally at the bottom.
-	//   - This avoids `position: fixed` (which breaks under transformed
-	//     ancestors like Stock's PageTransition wrapper) and CSS sticky
-	//     (which breaks under Lenis hijacked scroll).
-	//   - video.currentTime is mapped from scroll progress 0→1 across
-	//     the pin range; scrolling up rewinds, scrolling speed = play speed.
+	// The outer wrapper reserves the scroll runway (100vh + scrollDistance);
+	// the stage is `position: sticky` so it holds at the viewport top while the
+	// wrapper scrolls past, then releases naturally. Scroll progress 0→1 across
+	// that runway is mapped to video.currentTime — scrolling up rewinds, scroll
+	// speed = play speed.
 	import { onMount } from 'svelte';
+	import { onScroll } from '$lib/scroll';
 
 	interface Props {
 		src: string;
@@ -22,7 +16,6 @@
 		label?: string;
 		fit?: 'cover' | 'contain';
 		background?: string;
-		debug?: boolean;
 	}
 
 	let {
@@ -31,69 +24,30 @@
 		poster,
 		label = 'Steiner scroll specimen',
 		fit = 'cover',
-		background = '#000',
-		debug = false
+		background = '#000'
 	}: Props = $props();
 
 	let outer: HTMLDivElement;
-	let stage: HTMLDivElement;
 	let video: HTMLVideoElement;
-	let vh = $state(0);
 
 	onMount(() => {
-		let killed = false;
-		let rafId = 0;
-		let onMetadata: (() => void) | null = null;
-		let onResize: (() => void) | null = null;
-		let scrollHandler: (() => void) | null = null;
-		type LenisLike = {
-			on: (event: string, fn: () => void) => void;
-			off?: (event: string, fn: () => void) => void;
-		};
-		let lenisRef: LenisLike | null = null;
-
-		const prefersReduced =
-			typeof window !== 'undefined' &&
-			window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		const measure = () => {
-			vh = window.innerHeight;
-		};
-		measure();
-		onResize = measure;
-		window.addEventListener('resize', onResize);
-
-		// If user prefers reduced motion, skip the scrub and just play once
-		if (prefersReduced) {
-			(async () => {
-				try {
-					await video?.play();
-				} catch {
-					/* autoplay blocked */
-				}
-			})();
-			return () => {
-				if (onResize) window.removeEventListener('resize', onResize);
-			};
+		// Reduced motion: skip the scrub, just play the video once.
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			video?.play().catch(() => {
+				/* autoplay blocked — poster remains */
+			});
+			return;
 		}
 
+		let rafId = 0;
+
 		const update = () => {
-			if (!outer || !video || !stage || !video.duration) return;
-			const rect = outer.getBoundingClientRect();
-			const total = outer.offsetHeight - vh; // total px the section can be scrolled past pin
-			const offset = Math.max(0, Math.min(total, -rect.top));
-			const progress = total > 0 ? offset / total : 0;
-
-			stage.style.transform = `translate3d(0, ${offset}px, 0)`;
-
+			if (!outer || !video || !video.duration) return;
+			const range = outer.offsetHeight - window.innerHeight;
+			if (range <= 0) return;
+			const progress = Math.min(1, Math.max(0, -outer.getBoundingClientRect().top / range));
 			const t = video.duration * progress;
-			if (Math.abs(video.currentTime - t) > 0.01) {
-				video.currentTime = t;
-			}
-
-			if (debug && progress > 0 && progress < 1 && Math.random() < 0.02) {
-				console.log('[ScrollVideo] progress', progress.toFixed(3), 'offset', offset);
-			}
+			if (Math.abs(video.currentTime - t) > 0.01) video.currentTime = t;
 		};
 
 		const requestUpdate = () => {
@@ -101,54 +55,22 @@
 			rafId = requestAnimationFrame(update);
 		};
 
-		const setup = () => {
-			if (killed) return;
-			if (debug) {
-				console.log('[ScrollVideo] setup', {
-					duration: video.duration,
-					scrollDistance,
-					outerHeight: outer.offsetHeight,
-					vh
-				});
-			}
-			update();
-		};
-
-		// Wait for video metadata
+		const onMetadata = () => update();
 		if (video.readyState >= 1 && isFinite(video.duration) && video.duration > 0) {
-			setup();
+			update();
 		} else {
-			onMetadata = () => setup();
 			video.addEventListener('loadedmetadata', onMetadata, { once: true });
 		}
 
-		// Hook into Lenis scroll if available, otherwise native scroll
-		const lenisInstance = (window as Window & { __lenisInstance?: LenisLike })
-			.__lenisInstance;
-		if (lenisInstance) {
-			lenisRef = lenisInstance;
-			scrollHandler = () => requestUpdate();
-			lenisRef.on('scroll', scrollHandler);
-		} else {
-			scrollHandler = () => requestUpdate();
-			window.addEventListener('scroll', scrollHandler, { passive: true });
-		}
-
-		// Kick once
+		const offScroll = onScroll(requestUpdate);
+		window.addEventListener('resize', requestUpdate);
 		requestUpdate();
 
 		return () => {
-			killed = true;
 			cancelAnimationFrame(rafId);
-			if (onMetadata) video?.removeEventListener('loadedmetadata', onMetadata);
-			if (onResize) window.removeEventListener('resize', onResize);
-			if (scrollHandler) {
-				if (lenisRef && typeof lenisRef.off === 'function') {
-					lenisRef.off('scroll', scrollHandler);
-				} else {
-					window.removeEventListener('scroll', scrollHandler);
-				}
-			}
+			offScroll();
+			window.removeEventListener('resize', requestUpdate);
+			video?.removeEventListener('loadedmetadata', onMetadata);
 		};
 	});
 </script>
@@ -159,7 +81,7 @@
 	bind:this={outer}
 	style="height: calc(100vh + {scrollDistance}px); --scroll-video-bg: {background};"
 >
-	<div class="ScrollVideo__stage" bind:this={stage}>
+	<div class="ScrollVideo__stage">
 		<video
 			bind:this={video}
 			{src}
@@ -174,22 +96,20 @@
 </div>
 
 <style>
+	/* No `overflow: hidden` here — it would make this element the sticky
+	   containment box and unpin the stage. */
 	.ScrollVideo {
 		position: relative;
 		width: 100%;
 		background: var(--scroll-video-bg, #000);
-		overflow: hidden;
 	}
 
 	.ScrollVideo__stage {
-		position: absolute;
+		position: sticky;
 		top: 0;
-		left: 0;
 		width: 100%;
 		height: 100vh;
 		height: 100dvh;
-		will-change: transform;
-		transform: translate3d(0, 0, 0);
 	}
 
 	.ScrollVideo__stage video {

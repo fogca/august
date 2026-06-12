@@ -2,7 +2,7 @@
 	import { TYPEFACES } from '$lib/data/typefaces.js';
 
 	// Sort by order (ascending) to guarantee display sequence
-	const typefaces = [...TYPEFACES].sort((a, b) => a.order - b.order);
+	const typefaces = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
 </script>
 
 <svelte:head>
@@ -77,7 +77,6 @@
 	.Fonts__heading {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(36px, 6vw, 64px);
-		font-variation-settings: 'wght' 400;
 		letter-spacing: 0;
 		line-height: 1.05;
 		margin: 0 0 12px;
@@ -136,7 +135,6 @@
 	/* Large specimen text */
 	.FontCard__specimen {
 		font-size: clamp(48px, 10vw, 120px);
-		font-variation-settings: 'wght' 400;
 		line-height: 0.95;
 		letter-spacing: 0;
 		grid-column: 1;
@@ -161,7 +159,7 @@
 	.FontCard__badge {
 		font-family: 'Steiner', sans-serif;
 		font-size: 10px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		color: var(--color-text-mute);
 		border: 1px solid var(--color-line);
@@ -185,7 +183,7 @@
 	.FontCard__buy {
 		font-family: 'Steiner', sans-serif;
 		font-size: 14px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		white-space: nowrap;
 	}

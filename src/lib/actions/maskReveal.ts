@@ -1,4 +1,5 @@
 import type { Action } from 'svelte/action';
+import { getScrollTrigger } from '$lib/scroll';
 
 export interface MaskRevealOptions {
 	/** When false the action is inert. */
@@ -48,12 +49,10 @@ export const maskReveal: Action<HTMLElement, MaskRevealOptions | undefined> = (
 		const layers = Array.from(node.querySelectorAll<HTMLElement>('[data-layer]'));
 		if (layers.length < 2) return;
 
-		const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-			import('gsap'),
-			import('gsap/ScrollTrigger')
-		]);
+		// Shared gsap instance, registered and wired to Lenis before any trigger
+		// is created (see $lib/scroll.ts).
+		const { gsap } = await getScrollTrigger();
 		if (disposed) return;
-		gsap.registerPlugin(ScrollTrigger);
 
 		const n = layers.length;
 		const segments = n - 1;

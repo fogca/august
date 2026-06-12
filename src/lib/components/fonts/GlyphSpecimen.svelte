@@ -1,65 +1,103 @@
 <script lang="ts">
-	// Large 3-row character specimen: A–Z, a–z, and ~30 standard symbols, each on
-	// its own row at the same size. Image-driven: if a row image is supplied it is
-	// shown; otherwise the row falls back to live text rendered in the webfont
-	// (so the layout is visible before glyph images are exported).
+	// Pinned 100vh character specimen: A–Z, a–z, figures and currency.
+	// The section pins (position: sticky) while the wrapper scrolls; scroll
+	// progress drives the variable wght axis from 1 (Hair) to 950 (Ultra).
+	import { onMount } from 'svelte';
+	import { onScroll } from '$lib/scroll';
+
 	interface Props {
 		fontFamily: string;
-		images?: { uppercase?: string; lowercase?: string; symbols?: string };
 	}
 
-	let { fontFamily, images }: Props = $props();
+	let { fontFamily }: Props = $props();
 
-	const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	const LOWER = 'abcdefghijklmnopqrstuvwxyz';
-	const SYMBOLS = '& ! ? @ # % * + = / ( ) [ ] { } < > . , : ; " ’ - – — … • $ € ¥';
+	const WGHT_MIN = 1;
+	const WGHT_MAX = 950;
 
-	const rows = $derived([
-		{ key: 'uppercase', text: UPPER, img: images?.uppercase },
-		{ key: 'lowercase', text: LOWER, img: images?.lowercase },
-		{ key: 'symbols', text: SYMBOLS, img: images?.symbols }
-	]);
+	// Centered specimen lines — letters, then figures + currency/essential marks
+	const LINES = [
+		'ABCDEFGHIJKLM',
+		'NOPQRSTUVWXYZ',
+		'abcdefghijklm',
+		'nopqrstuvwxyz',
+		'0123456789',
+		'$ € ¥ £ % & @ § №'
+	];
+
+	let wrapEl = $state<HTMLElement>();
+	let wght = $state(WGHT_MIN);
+
+	onMount(() => {
+		const update = () => {
+			if (!wrapEl) return;
+			const rect = wrapEl.getBoundingClientRect();
+			const range = rect.height - window.innerHeight;
+			if (range <= 0) return;
+			const progress = Math.min(1, Math.max(0, -rect.top / range));
+			wght = Math.round(WGHT_MIN + progress * (WGHT_MAX - WGHT_MIN));
+		};
+		update();
+		return onScroll(update);
+	});
 </script>
 
-<section class="GlyphSpecimen" aria-label="Character specimen">
-	{#each rows as row (row.key)}
-		<div class="GlyphSpecimen__row">
-			{#if row.img}
-				<img class="GlyphSpecimen__img" src={row.img} alt="" />
-			{:else}
-				<p class="GlyphSpecimen__text" style="font-family: '{fontFamily}', sans-serif;">
-					{row.text}
-				</p>
-			{/if}
-		</div>
-	{/each}
+<section class="GlyphSpecimen" aria-label="Character specimen" bind:this={wrapEl}>
+	<div class="GlyphSpecimen__pin">
+		<p class="GlyphSpecimen__wght" aria-hidden="true">wght {wght}</p>
+		<p
+			class="GlyphSpecimen__text"
+			style="font-family: '{fontFamily}', sans-serif; font-variation-settings: 'wght' {wght};"
+		>
+			{#each LINES as line}
+				<span class="GlyphSpecimen__line">{line}</span>
+			{/each}
+		</p>
+	</div>
 </section>
 
 <style>
+	/* Tall wrapper provides the scroll distance for the wght animation */
 	.GlyphSpecimen {
-		padding: 80px var(--padding);
-		display: flex;
-		flex-direction: column;
-		gap: 24px;
+		height: 300vh;
 		border-top: 1px solid var(--color-line);
 	}
 
-	.GlyphSpecimen__row {
-		display: block;
+	.GlyphSpecimen__pin {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 0 var(--padding);
+		overflow: hidden;
 	}
 
-	.GlyphSpecimen__img {
-		width: 100%;
-		height: auto;
-		display: block;
+	.GlyphSpecimen__wght {
+		position: absolute;
+		top: 70px;
+		left: var(--padding);
+		font-family: var(--font-en), sans-serif;
+		font-size: 10px;
+		color: var(--color-text-mute);
+		letter-spacing: 0;
+		margin: 0;
+		opacity: 0.7;
+		font-variation-settings: normal;
 	}
 
 	.GlyphSpecimen__text {
-		font-size: clamp(34px, 8.5vw, 104px);
-		font-variation-settings: 'wght' 400;
-		line-height: 1.1;
+		font-size: clamp(28px, 6.5vw, 88px);
+		line-height: 1.25;
 		letter-spacing: 0.01em;
 		margin: 0;
-		word-break: break-word;
+		text-align: center;
+		width: 100%;
+	}
+
+	.GlyphSpecimen__line {
+		display: block;
 	}
 </style>

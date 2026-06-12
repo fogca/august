@@ -14,6 +14,8 @@ export interface Typeface {
 	/** Display order (ascending): 1 = Scheteiner, 2 = MK Sans, 3 = Atom */
 	order: number;
 	status: TypefaceStatus;
+	/** Temporarily hide from all listings (top page, /fonts, header menu) */
+	hidden?: boolean;
 	/** CSS font-family value to use in the Type Tester */
 	fontFamily: string;
 	tagline: string;
@@ -21,7 +23,8 @@ export interface Typeface {
 	/** e.g. 'Humanist Sans · 12 weights' */
 	classification: string;
 	weights: WeightDef[];
-	defaultText: string;
+	/** Per-weight default words for the Type Tester — row i uses defaultTexts[i % length] */
+	defaultTexts: string[];
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
 	thumbnail?: string;
@@ -61,9 +64,31 @@ export const TYPEFACES: Typeface[] = [
 			"Where Apercu draws on Franklin Gothic, Steiner draws on Rotis — seventy years of humanist tradition folded into a single voice.",
 		classification: 'Humanist Sans · 12 weights',
 		weights: WEIGHTS,
-		defaultText: 'The aether carries Rudolf Steiner anthroposophy.',
-		// Existing Scheteiner motion specimen doubles as the hero slide background
-		heroVideo: '/images/August_Scheteiner_01.mp4',
+		// One long German word per weight row (20) — anthroposophy / Steiner vocabulary
+		defaultTexts: [
+			'Anthroposophie',
+			'Eurythmie',
+			'Metamorphose',
+			'Imagination',
+			'Inspiration',
+			'Intuition',
+			'Lebenskraft',
+			'Geisteswissenschaft',
+			'Weltanschauung',
+			'Dreigliederung',
+			'Sinneslehre',
+			'Bewusstseinsseele',
+			'Verwandlung',
+			'Goetheanum',
+			'Seelenkalender',
+			'Menschenkunde',
+			'Formkräfte',
+			'Lichtgestalt',
+			'Urpflanze',
+			'Äthermedium'
+		],
+		// Hero background — aether/cloud still (Figma 280:104)
+		thumbnail: '/images/fonts/steiner.jpg',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		hero: {
 			label: 'Neo Humanist Sans',
@@ -77,7 +102,7 @@ export const TYPEFACES: Typeface[] = [
 		name: 'gQ',
 		order: 2,
 		status: 'in-development',
-		// Latest Mokuseki Sans (v05) webfont
+		// Latest Mokuseki Sans (v08) webfont
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
 		description:
@@ -87,15 +112,40 @@ export const TYPEFACES: Typeface[] = [
 		classification: 'Neo Humanist Sans · 12 weights',
 		// Provisional weights — same 12-stop axis as Scheteiner until spec is finalised
 		weights: WEIGHTS,
-		defaultText: 'gQ — the latest Mokuseki Sans.',
+		// One long German word per weight row (20) — aesthetic / philosophical vocabulary
+		defaultTexts: [
+			'Gesamtkunstwerk',
+			'Zeitgeist',
+			'Sprachgefühl',
+			'Augenblick',
+			'Fernweh',
+			'Weltschmerz',
+			'Stimmung',
+			'Sehnsucht',
+			'Einfühlung',
+			'Erscheinung',
+			'Verfremdung',
+			'Lichtung',
+			'Dasein',
+			'Zwischenraum',
+			'Formwille',
+			'Kunstwollen',
+			'Querschnitt',
+			'Wanderlust',
+			'Bildung',
+			'Gestalt'
+		],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
 		hero: {
 			label: 'Neo Humanist Sans',
 			vol: 'vol.02',
 			subtitle: '(Mokuseki Sans)',
-			debut: '26.06.06 Debut',
-			large: true
+			debut: 'Coming soon',
+			large: true,
+			comingSoon: true,
+			intro: 'The next cut from our foundry.',
+			statement: 'Mokuseki Sans, maturing.'
 		}
 	},
 	{
@@ -103,6 +153,7 @@ export const TYPEFACES: Typeface[] = [
 		name: 'Atom',
 		order: 3,
 		status: 'in-development',
+		hidden: true,
 		// No font files yet — render as Scheteiner for preview purposes
 		fontFamily: 'Steiner',
 		tagline: 'A display typeface in development.',
@@ -113,7 +164,29 @@ export const TYPEFACES: Typeface[] = [
 		classification: 'Neo Grotesque · in development',
 		// Provisional weights — same 12-stop axis as Scheteiner until spec is finalised
 		weights: WEIGHTS,
-		defaultText: 'Atom — coming 2026.',
+		// One long German word per weight row (20) — physics / natural-philosophy vocabulary
+		defaultTexts: [
+			'Weltanschauung',
+			'Quintessenz',
+			'Elementarteilchen',
+			'Wirklichkeit',
+			'Naturphilosophie',
+			'Kontinuum',
+			'Raumzeit',
+			'Unendlichkeit',
+			'Materie',
+			'Antimaterie',
+			'Quantensprung',
+			'Gleichgewicht',
+			'Schwerkraft',
+			'Lichtgeschwindigkeit',
+			'Urknall',
+			'Kristallgitter',
+			'Wellenfunktion',
+			'Singularität',
+			'Übergang',
+			'Urstoff'
+		],
 		thumbnail: '/images/fonts/atom.png',
 		theme: { bg: '#15181C', fg: '#ffffff' },
 		hero: {

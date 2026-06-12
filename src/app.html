@@ -6,20 +6,20 @@
 		<meta name="description" content="August Type Foundry — Steiner Variable Font" />
 		<!-- Global design tokens and reset -->
 		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css" />
-		<!-- Steiner Book (static; will swap with Variable when Ultra master is fully compatible) -->
+		<!-- Steiner VF 13 — variable font wght 1–950, duplexed 1–400 (Hair / Book / Ultra) -->
 		<style>
 			@font-face {
 				font-family: 'Steiner';
-				src: url('%sveltekit.assets%/fonts/Steiner-Book.woff2?v=07') format('woff2');
-				font-weight: 400;
+				src: url('%sveltekit.assets%/fonts/Steiner-VF13.woff2?v=20260612c') format('woff2-variations');
+				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
-			/* Mokuseki Sans (latest v05) — used by the gQ typeface */
+			/* Mokuseki Sans (latest v08) — used by the gQ typeface */
 			@font-face {
 				font-family: 'Mokuseki Sans';
-				src: url('%sveltekit.assets%/fonts/MokusekiSans05-Regular.woff2?v=05') format('woff2');
+				src: url('%sveltekit.assets%/fonts/MokusekiSans08-Regular.woff2?v=08') format('woff2');
 				font-weight: 400;
 				font-style: normal;
 				font-display: swap;

@@ -47,7 +47,7 @@
 	}
 
 	.DiscountList__amount {
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		color: var(--color-text);
 	}
 </style>

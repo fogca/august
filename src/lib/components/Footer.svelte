@@ -23,7 +23,8 @@
 	const LEGAL: LinkItem[] = [
 		{ label: 'EULA', href: '/legal/eula' },
 		{ label: 'Privacy', href: '/legal/privacy' },
-		{ label: 'Imprint', href: '/legal/imprint' }
+		{ label: 'Imprint', href: '/legal/imprint' },
+		{ label: 'Company', href: '/legal/company' }
 	];
 
 	const YEAR = new Date().getFullYear();
@@ -116,7 +117,7 @@
 <style>
 	.Footer {
 		font-family: 'Steiner', sans-serif;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		background: #000;
 		color: #fff;
 		padding: 64px 0 24px;
@@ -175,7 +176,7 @@
 
 	.Footer__logo {
 		font-size: 32px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		text-decoration: none;
 		color: inherit;
@@ -191,7 +192,7 @@
 
 	.Footer__heading {
 		font-size: 12px;
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 		letter-spacing: 0;
 		opacity: 0.6;
 		margin: 0;
@@ -266,7 +267,7 @@
 		color: inherit;
 		font: inherit;
 		font-size: 14px;
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 		cursor: pointer;
 		padding: 8px 0;
 		text-align: left;

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { onScroll, scrollToEl } from '$lib/scroll';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSpecimen from '$lib/components/fonts/GlyphSpecimen.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
@@ -25,11 +26,7 @@
 			buybarVisible = scrolled && !atFooter;
 		};
 		update();
-		window.addEventListener('scroll', update, { passive: true });
-		const lenis = (window as Window & { __lenisInstance?: { on: (e: string, fn: () => void) => void } })
-			.__lenisInstance;
-		lenis?.on('scroll', update);
-		return () => window.removeEventListener('scroll', update);
+		return onScroll(update);
 	});
 
 	// Placeholder gallery items until real exports are dropped in (image-driven:
@@ -37,14 +34,9 @@
 	const inUseItems: GalleryItem[] = [{}, {}, {}, {}];
 	const otherItems: GalleryItem[] = [{}, {}, {}];
 
-	// Smooth-scroll the fixed CTA to the on-page buy block (prefer Lenis).
+	// Smooth-scroll the fixed CTA to the on-page buy block.
 	function scrollToBuy() {
-		const el = document.getElementById('buy');
-		if (!el) return;
-		const lenis = (window as Window & { __lenisInstance?: { scrollTo: (t: HTMLElement) => void } })
-			.__lenisInstance;
-		if (lenis?.scrollTo) lenis.scrollTo(el);
-		else el.scrollIntoView({ behavior: 'smooth' });
+		scrollToEl('#buy');
 	}
 </script>
 
@@ -114,6 +106,13 @@
 		<p class="FontDetail__description">{tf.description}</p>
 	</div>
 
+	<TypeTester
+		weights={tf.weights}
+		fontFamily={tf.fontFamily}
+		defaultTexts={tf.defaultTexts}
+		available={isAvailable}
+	/>
+
 	<!-- A–Z / a–z / symbols — three large specimen rows -->
 	<GlyphSpecimen fontFamily={tf.fontFamily} />
 
@@ -128,13 +127,6 @@
 
 	<!-- Other images -->
 	<ImageGallery title="Other" items={otherItems} columns={3} ratio="4 / 5" />
-
-	<TypeTester
-		weights={tf.weights}
-		fontFamily={tf.fontFamily}
-		defaultText={tf.defaultText}
-		available={isAvailable}
-	/>
 
 	<!-- On-page buy block (the fixed CTA scrolls here) -->
 	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">
@@ -244,7 +236,6 @@
 	.FontDetail__hero-name {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(40px, 9vw, 120px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1.2;
 		letter-spacing: 0;
 		color: currentColor;
@@ -325,7 +316,6 @@
 	.FontDetail__name {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(36px, 7vw, 72px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1.05;
 		letter-spacing: 0;
 		margin: 0 0 16px;
@@ -364,7 +354,7 @@
 	.FontBuy__eyebrow {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--color-text-mute);
@@ -374,7 +364,6 @@
 	.FontBuy__heading {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(32px, 6vw, 56px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1.05;
 		letter-spacing: 0;
 		margin: 0 0 12px;
@@ -410,7 +399,7 @@
 		display: inline-block;
 		font-family: 'Steiner', sans-serif;
 		font-size: 16px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		text-decoration: none;
 		color: var(--color-bg);
@@ -470,7 +459,7 @@
 	.FontDetail__buybar-cta {
 		font-family: 'Steiner', sans-serif;
 		font-size: 14px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		color: var(--color-bg);
 		background: transparent;

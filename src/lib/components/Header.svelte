@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import Logo from './Logo.svelte';
+	import { onScroll } from '$lib/scroll';
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
@@ -24,11 +25,7 @@
 			scrolled = window.scrollY > 8;
 		};
 		update();
-		window.addEventListener('scroll', update, { passive: true });
-		const lenis = (window as Window & { __lenisInstance?: { on: (e: string, fn: () => void) => void } })
-			.__lenisInstance;
-		lenis?.on('scroll', update);
-		return () => window.removeEventListener('scroll', update);
+		return onScroll(update);
 	});
 
 	type NavItem = { label: string; href: string };
@@ -41,7 +38,7 @@
 	];
 
 	// Mobile panel: typeface shortcuts + page links
-	const fonts = [...TYPEFACES].sort((a, b) => a.order - b.order);
+	const fonts = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
 	const PAGES: NavItem[] = [
 		{ label: 'Buy', href: '/buy' },
 		{ label: 'About', href: '/about' },
@@ -156,13 +153,14 @@
 		color: #000;
 	}
 
+
 	.Header__toggle {
 		background: transparent;
 		border: 0;
 		cursor: pointer;
 		font: inherit;
 		font-size: 14px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		color: inherit;
 		letter-spacing: 0;
 		padding: 4px 8px;
@@ -177,7 +175,7 @@
 
 	.Header__nav-link {
 		font-size: 16px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		color: inherit;
 		text-decoration: none;
 		letter-spacing: 0;
@@ -186,7 +184,7 @@
 
 	.Header__logo {
 		font-size: 20px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		text-decoration: none;
 		color: inherit;
 		letter-spacing: 0;
@@ -251,7 +249,6 @@
 	.MenuPanel__label {
 		display: block;
 		font-size: 11px;
-		font-variation-settings: 'wght' 400;
 		line-height: 1.5;
 		letter-spacing: 0;
 		color: #000;
@@ -271,7 +268,6 @@
 	.MenuPanel__list a,
 	.MenuPanel__pages a {
 		font-size: 11px;
-		font-variation-settings: 'wght' 400;
 		line-height: 1.5;
 		letter-spacing: 0;
 		color: #000;

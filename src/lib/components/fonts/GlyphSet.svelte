@@ -96,7 +96,6 @@
 		justify-content: center;
 		height: 30px;
 		font-size: clamp(14px, 1.9vw, 18px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1;
 		color: var(--color-text);
 	}

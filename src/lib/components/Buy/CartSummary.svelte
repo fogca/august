@@ -23,6 +23,8 @@
 		onremovepackage: (packageId: string) => void;
 		/** Render as an always-open in-flow block (no collapsing sticky bar). */
 		inline?: boolean;
+		/** Educational discount active — forwarded to checkout. */
+		isStudent?: boolean;
 	}
 
 	let {
@@ -37,7 +39,8 @@
 		onremove,
 		onTierChange,
 		onremovepackage,
-		inline = false
+		inline = false,
+		isStudent = false
 	}: Props = $props();
 
 	const hasItems = $derived(items.length > 0);
@@ -209,7 +212,7 @@
 			<!-- Checkout -->
 			<form method="POST" action="?/checkout" class="CartSummary__form">
 				<input type="hidden" name="currency" value={currency} />
-				<input type="hidden" name="total" value={total} />
+				<input type="hidden" name="educational" value={isStudent ? '1' : '0'} />
 				{#each packageDefs as pkg}
 					<input type="hidden" name="package_id" value={pkg.id} />
 				{/each}
@@ -280,7 +283,7 @@
 
 	.CartSummary__mobile-total {
 		font-size: 14px;
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 	}
 
 	.CartSummary__mobile-chevron {
@@ -324,7 +327,7 @@
 
 	.CartSummary__heading {
 		font-size: 11px;
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 		letter-spacing: 0;
 		color: var(--color-text-mute);
 		margin: 0 0 10px;
@@ -332,7 +335,6 @@
 
 	.CartSummary__empty {
 		font-size: 13px;
-		font-variation-settings: 'wght' 300;
 		color: var(--color-text-mute);
 		line-height: 1.5;
 	}
@@ -350,7 +352,6 @@
 	.CartSummary__licence {
 		background: var(--color-bg);
 		font-size: 13px;
-		font-variation-settings: 'wght' 400;
 	}
 
 	.CartSummary__licence-main {
@@ -361,7 +362,7 @@
 	}
 
 	.CartSummary__licence-type {
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		flex-shrink: 0;
 	}
 
@@ -378,7 +379,6 @@
 		cursor: pointer;
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 400;
 		color: var(--color-text);
 		letter-spacing: 0;
 		-webkit-appearance: none;
@@ -434,11 +434,10 @@
 	}
 
 	.CartSummary__package-name {
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 	}
 
 	.CartSummary__package-detail {
-		font-variation-settings: 'wght' 300;
 		color: var(--color-text-mute);
 		font-size: 12px;
 	}
@@ -459,17 +458,15 @@
 		gap: 12px;
 		align-items: baseline;
 		font-size: 13px;
-		font-variation-settings: 'wght' 400;
 	}
 
 	.CartSummary__row-currency {
 		font-size: 11px;
 		opacity: 0.55;
-		font-variation-settings: 'wght' 400;
 	}
 
 	.CartSummary__row-amount {
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 		min-width: 80px;
 		text-align: right;
 	}
@@ -482,12 +479,12 @@
 		padding-top: 10px;
 		border-top: 1px solid rgba(0, 0, 0, 0.08);
 		font-size: 16px;
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 	}
 
 	.CartSummary__row--total .CartSummary__row-amount {
 		font-size: 16px;
-		font-variation-settings: 'wght' 550;
+		font-weight: 550;
 	}
 
 	/* ── Checkout ── */
@@ -499,7 +496,7 @@
 		color: var(--color-bg);
 		font-family: 'Steiner', sans-serif;
 		font-size: 14px;
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 		letter-spacing: 0;
 		border: 0;
 		cursor: pointer;

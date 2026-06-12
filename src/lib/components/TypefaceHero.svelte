@@ -134,7 +134,6 @@
 	.TypefaceHero__name {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(40px, 9vw, 120px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1.2;
 		letter-spacing: 0;
 		color: currentColor;
@@ -168,7 +167,6 @@
 	.TypefaceHero__soon-name {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(22px, 6vw, 36px);
-		font-variation-settings: 'wght' 400;
 		line-height: 1.2;
 		letter-spacing: 0;
 	}
@@ -210,7 +208,7 @@
 		color: #fff;
 		font-family: 'Steiner', sans-serif;
 		font-size: 16px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		line-height: 1;
 		letter-spacing: 0;
 	}

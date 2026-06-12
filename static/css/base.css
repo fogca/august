@@ -125,6 +125,13 @@ a {
   --heading-font: var(--font-en);
   --text-font:    var(--font-en);
 
+  /* --- Font weight tokens (Steiner VF, wght 1–950) ---
+     Change --fw-base to reweight the entire site. Components must NOT
+     hardcode weights; use these tokens (or inherit). */
+  --fw-base:   300;  /* default text weight (body inherits everywhere) */
+  --fw-ui:     450;  /* UI accents: nav, buttons, labels */
+  --fw-strong: 500;  /* emphasis / sub-headings */
+
   /* --- Type scale (mobile) --- */
   --fs-h0:   24px;   /* Display larger than h1 if needed */
   --fs-h1:   24px;   /* Archive title */
@@ -252,17 +259,44 @@ html {
 
 html,
 body {
-  width: 100vw;
   background-color: var(--background);
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: auto !important;
-  min-height: 100% !important;
+  min-height: 100%;
+  /* Guard against accidental horizontal overflow WITHOUT creating a scroll
+     container: `clip` (unlike `hidden`) keeps `position: sticky` working.
+     Never put `overflow-x: hidden` back here — it silently turns <body> into
+     a non-scrolling scroll container and kills every sticky/pinned element
+     on the site. Same reason `width: 100vw` (scrollbar overflow) is gone. */
+  overflow-x: clip;
+}
+
+/* ------------------------------------------------------------
+   Lenis smooth scroll (see src/lib/scroll.ts)
+   ------------------------------------------------------------ */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 body {
   font-family: var(--text-font);
-  font-weight: 400;
+  font-weight: var(--fw-base);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   color: var(--color-text);
@@ -293,49 +327,49 @@ tr, td, th, p, li {
 .h0 {
   font-size: var(--fs-h0);
   line-height: var(--lh-h1);
-  font-weight: 400;
+  font-weight: var(--fw-base);
 }
 
 h1, .h1 {
   font-family:  var(--heading-font);
   font-size:    var(--fs-h1);
   line-height:  var(--lh-h1);
-  font-weight:  400;
+  font-weight: var(--fw-base);
 }
 
 h2, .h2 {
   font-family:  var(--heading-font);
   font-size:    var(--fs-h2);
   line-height:  var(--lh-h2);
-  font-weight:  400;
+  font-weight: var(--fw-base);
 }
 
 h3, .h3 {
   font-family:  var(--heading-font);
   font-size:    var(--fs-h3);
   line-height:  var(--lh-h3);
-  font-weight:  500;
+  font-weight: var(--fw-strong);
 }
 
 h4, .h4 {
   font-family:  var(--heading-font);
   font-size:    var(--fs-h4);
   line-height:  var(--lh-h4);
-  font-weight:  500;
+  font-weight: var(--fw-strong);
 }
 
 h5, .h5 {
   font-family:  var(--heading-font);
   font-size:    var(--fs-h5);
   line-height:  var(--lh-h5);
-  font-weight:  500;
+  font-weight: var(--fw-strong);
 }
 
 h6, .h6 {
   font-family:  var(--heading-font);
   font-size:    var(--fs-h6);
   line-height:  var(--lh-h6);
-  font-weight:  400;
+  font-weight: var(--fw-base);
 }
 
 p, .p {
@@ -373,8 +407,8 @@ input::placeholder {
    ------------------------------------------------------------ */
 
 /* Weight */
-.regular { font-weight: 400; }
-.medium  { font-weight: 500; }
+.regular { font-weight: var(--fw-base); }
+.medium  { font-weight: var(--fw-strong); }
 .bold    { font-weight: 700; }
 
 /* Color */

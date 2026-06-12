@@ -36,7 +36,6 @@
 	.Contact__heading {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(28px, 5vw, 48px);
-		font-variation-settings: 'wght' 400;
 		letter-spacing: 0;
 		line-height: 1.1;
 		margin-bottom: 8px;
@@ -45,7 +44,6 @@
 	.Contact__sub {
 		font-family: 'Steiner', sans-serif;
 		font-size: 12px;
-		font-variation-settings: 'wght' 300;
 		color: var(--color-text-mute);
 		margin-bottom: 24px;
 	}
@@ -61,7 +59,7 @@
 	.Contact__link {
 		font-family: 'Steiner', sans-serif;
 		font-size: 16px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		text-decoration: underline;
 		text-underline-offset: 3px;
 	}

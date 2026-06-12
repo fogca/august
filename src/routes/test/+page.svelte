@@ -4,6 +4,7 @@
 	// cover-reveal scroll logic can be isolated and tuned. GSAP markers are on,
 	// and a fixed HUD reports scroll position + measured block heights.
 	import { onMount } from 'svelte';
+	import { onScroll } from '$lib/scroll';
 	import { coverReveal } from '$lib/actions/coverReveal';
 	import { maskReveal } from '$lib/actions/maskReveal';
 
@@ -33,14 +34,10 @@
 			vh = window.innerHeight;
 		};
 		update();
-		window.addEventListener('scroll', update, { passive: true });
+		const offScroll = onScroll(update);
 		window.addEventListener('resize', update);
-		// Lenis drives scroll separately — listen to it too if present.
-		const lenis = (window as Window & { __lenisInstance?: { on: (e: string, fn: () => void) => void } })
-			.__lenisInstance;
-		lenis?.on('scroll', update);
 		return () => {
-			window.removeEventListener('scroll', update);
+			offScroll();
 			window.removeEventListener('resize', update);
 		};
 	});

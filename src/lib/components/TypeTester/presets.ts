@@ -1,25 +1,15 @@
-// Scheteiner weight axis definitions (Variable Font wght axis values)
-// Note: spec v1 §2.1 uses "axis value" distinct from OS/2 wght value
+// Steiner weight axis definitions (Variable Font wght axis values)
+// Numeric naming scheme (2026-06-11): name = wght / 10, except "1" = wght 1.
+// 20 weights: 1, 5, 10, ... 95 (40 = Book, 95 = Ultra).
 export interface WeightDef {
 	id: number;
 	name: string;
 	axisValue: number;
 }
 
-export const WEIGHTS: WeightDef[] = [
-	{ id: 10, name: 'Air', axisValue: 50 },
-	{ id: 20, name: 'Line', axisValue: 150 },
-	{ id: 30, name: 'Thin', axisValue: 250 },
-	{ id: 40, name: 'Light', axisValue: 350 },
-	{ id: 50, name: 'Book', axisValue: 400 },
-	{ id: 55, name: 'Regular', axisValue: 450 },
-	{ id: 60, name: 'Regular2', axisValue: 500 },
-	{ id: 70, name: 'Medium', axisValue: 550 },
-	{ id: 80, name: 'Bold', axisValue: 650 },
-	{ id: 90, name: 'Black', axisValue: 750 },
-	{ id: 100, name: 'Super', axisValue: 850 },
-	{ id: 110, name: 'Ultra', axisValue: 950 }
-];
+export const WEIGHTS: WeightDef[] = [1, ...Array.from({ length: 19 }, (_, i) => (i + 1) * 5)].map(
+	(n) => ({ id: n, name: String(n), axisValue: n === 1 ? 1 : n * 10 })
+);
 
 // Default tester text — bridges Scheteiner (medium) and Steiner's anthroposophy
 export const DEFAULT_TEXT = 'The aether carries Rudolf Steiner anthroposophy.';
@@ -36,6 +26,10 @@ export const FONT_SIZE_DEFAULT_MOBILE = 20;
 export const FONT_SIZE_DEFAULT = FONT_SIZE_DEFAULT_DESKTOP;
 // Breakpoint at which mobile default applies
 export const MOBILE_BREAKPOINT_PX = 768;
+
+// Per-weight-row default sizes (independent tester rows)
+export const WEIGHT_ROW_SIZE_DEFAULT_DESKTOP = 64;
+export const WEIGHT_ROW_SIZE_DEFAULT_MOBILE = 36;
 
 export const LETTER_SPACING_MIN = -0.05;
 export const LETTER_SPACING_MAX = 0.2;

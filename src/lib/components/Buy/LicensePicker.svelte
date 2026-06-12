@@ -179,7 +179,7 @@
 	.LicensePicker__title {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 500;
+		font-weight: var(--fw-strong);
 		letter-spacing: 0;
 		color: var(--color-text-mute);
 		margin-bottom: 8px;
@@ -272,14 +272,13 @@
 	.LicensePicker__name {
 		font-family: 'Steiner', sans-serif;
 		font-size: 18px;
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 	}
 
 	.LicensePicker__blurb {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		font-variation-settings: 'wght' 300;
 		line-height: 1.5;
 		color: var(--color-text-mute);
 	}
@@ -301,7 +300,6 @@
 		cursor: pointer;
 		font-family: 'Steiner', sans-serif;
 		font-size: 12px;
-		font-variation-settings: 'wght' 400;
 		color: var(--color-text);
 		letter-spacing: 0;
 		-webkit-appearance: none;
@@ -318,7 +316,7 @@
 	}
 
 	.LicensePicker__card.is-active .LicensePicker__select {
-		font-variation-settings: 'wght' 450;
+		font-weight: var(--fw-ui);
 		background-color: transparent;
 		color: var(--color-bg);
 		border-color: rgba(255, 255, 255, 0.4);

@@ -207,11 +207,13 @@
 		min-height: 100vh;
 	}
 
+	/* No `will-change` here: it would make this wrapper the containing block
+	   for `position: fixed` descendants and break GSAP ScrollTrigger pins.
+	   GSAP promotes layers itself while the transition is animating. */
 	.page-wrapper {
 		background: var(--color-bg, white);
 		min-height: 100vh;
 		position: relative;
-		will-change: transform, opacity;
 	}
 
 	.darken-overlay {

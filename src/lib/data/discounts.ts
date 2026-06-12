@@ -1,14 +1,15 @@
 // Discount rules for August Type Foundry
 //
 // Discount stacking rules:
-//   - Educational ON  → only Educational applies (−30%); all others suppressed
-//   - Educational OFF → Package discount (anchored in CartSummary) + Early Bird stack
+//   - Package discount (built into base price, displayed as anchoring vs gross)
+//   - Educational −30% applies on top of the post-package subtotal
+//   - Early Bird stacks on the post-package subtotal when active
 //
 // | Discount        | Rate | Stacks with         |
 // |-----------------|------|---------------------|
 // | Package         | varies (built into base) | displayed as anchoring |
 // | Early Bird      | −30% | Package (on top)    |
-// | Educational     | −30% | none (exclusive)    |
+// | Educational     | −30% | Package (on top)    |
 
 import type { Currency } from './pricing';
 import type { PackageDef, LicenseDef } from './pricing';
@@ -16,7 +17,7 @@ import type { PackageDef, LicenseDef } from './pricing';
 export type DiscountId = 'early-bird' | 'educational';
 
 // Toggle Early Bird globally — set to false after launch period
-export const EARLY_BIRD_ACTIVE = true;
+export const EARLY_BIRD_ACTIVE = false;
 
 export const EARLY_BIRD_RATE = 0.3;
 export const EDUCATIONAL_RATE = 0.3;
@@ -61,8 +62,8 @@ function baseSubtotal(items: CartItem[]): number {
  *
  * Subtotal shown = gross (pre-package) so package discount lines are visible.
  * Stacking:
- *   - Educational ON  → only Educational applies (on gross subtotal)
- *   - Educational OFF → Per-package discount lines + Early Bird (on post-package subtotal)
+ *   - Per-package discount lines, then Educational / Early Bird on the
+ *     post-package subtotal
  *
  * When packageDefs is provided, each package shows its own discount line.
  * Falls back to legacy single packageDef behaviour for backwards compatibility.
@@ -78,18 +79,6 @@ export function computeTotal(cart: CartState): {
 	const gross = grossSubtotal(items);
 	const base = baseSubtotal(items);
 	const discounts: AppliedDiscount[] = [];
-
-	// Educational: exclusive — applies to gross subtotal, suppresses all others
-	if (isStudent) {
-		const amount = Math.round(gross * EDUCATIONAL_RATE);
-		discounts.push({
-			id: 'educational',
-			label: 'Educational (−30%)',
-			rate: EDUCATIONAL_RATE,
-			amount
-		});
-		return { subtotal: gross, discounts, total: Math.max(0, gross - amount) };
-	}
 
 	// Package discount(s): one row per package that has a discount
 	const pkgList = packageDefs && packageDefs.length > 0 ? packageDefs : packageDef ? [packageDef] : [];
@@ -109,6 +98,17 @@ export function computeTotal(cart: CartState): {
 				amount: pkgAmount
 			});
 		}
+	}
+
+	// Educational: −30% on post-package subtotal
+	if (isStudent) {
+		const amount = Math.round(base * EDUCATIONAL_RATE);
+		discounts.push({
+			id: 'educational',
+			label: 'Educational (−30%)',
+			rate: EDUCATIONAL_RATE,
+			amount
+		});
 	}
 
 	// Early Bird: −30% on post-package subtotal

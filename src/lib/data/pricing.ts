@@ -108,63 +108,30 @@ export interface TypefacePricing {
 	packages: PackageDef[];
 }
 
+// Steiner ships 20 numeric weights (name × 10 = wght; 40 = Book, 95 = Ultra),
+// each with a matching Italic — 40 styles total. Sold as one complete family.
+export const STEINER_WEIGHTS: string[] = [
+	'1', '5', '10', '15', '20', '25', '30', '35', '40', '45',
+	'50', '55', '60', '65', '70', '75', '80', '85', '90', '95'
+];
+
 export const TYPEFACE_PRICING: TypefacePricing[] = [
 	{
 		slug: 'steiner',
 		packages: [
 			{
-				id: 'steiner-full',
-				label: 'Steiner Family',
-				detail: '24 Styles',
-				styles: [
-					'Air', 'Line', 'Thin', 'Light', 'Book', 'Regular',
-					'Regular2', 'Medium', 'Bold', 'Black', 'Super', 'Ultra'
-				],
+				id: 'steiner-complete',
+				label: 'Steiner Complete',
+				detail: '40 Styles — 20 weights, Roman & Italic',
+				styles: STEINER_WEIGHTS,
 				italic: true,
-				baseEur: 480,
-				grossEur: 960,
+				baseEur: 560,
+				grossEur: 1120,
 				discountRate: 0.5
-			},
-			{
-				id: 'steiner-basic',
-				label: 'Steiner Family Basic',
-				detail: '12 Styles',
-				styles: ['Thin', 'Light', 'Regular', 'Medium', 'Bold', 'Black'],
-				italic: true,
-				baseEur: 300,
-				grossEur: 480,
-				discountRate: 0.375
-			},
-			{
-				id: 'steiner-mini',
-				label: 'Steiner Family Mini',
-				detail: '6 Styles',
-				styles: ['Thin', 'Regular', 'Bold'],
-				italic: true,
-				baseEur: 180,
-				grossEur: 240,
-				discountRate: 0.25
-			}
-		]
-	},
-	{
-		slug: 'gq',
-		packages: [
-			{
-				id: 'gq-family',
-				label: 'gQ Sans',
-				detail: 'Choose weights',
-				styles: ['Air', 'Line', 'Thin', 'Light', 'Book', 'Regular', 'Medium', 'Bold', 'Black', 'Ultra'],
-				italic: false,
-				selectable: true,
-				perStyleEur: 60,
-				baseEur: 60,
-				grossEur: 60,
-				discountRate: 0
 			}
 		]
 	}
-	// atom: in-development, no packages
+	// gq, atom: in development — not for sale yet
 ];
 
 export function getTypefacePricing(slug: TypefaceSlug): TypefacePricing | undefined {
@@ -232,22 +199,6 @@ export function computeGrossEur(pkg: PackageDef, license: LicenseDef, tierIndex:
 	const tier = TIER_DEFS.find((t) => t.index === tierIndex);
 	if (!tier || tier.multiplier === null) return null;
 	return Math.round(pkg.grossEur * license.baseMultiplier * tier.multiplier);
-}
-
-// ── gQ — per-style selection with quantity discount ───────────────────────────
-// €60 per weight; the more weights selected, the larger the discount.
-//   1–4 → 0%, 5–9 → 20%, 10 → 40% (matches the old Single/Basic/Family anchors).
-export const GQ_PER_STYLE_EUR = 60;
-
-export function gqDiscountRate(count: number): number {
-	if (count >= 10) return 0.4;
-	if (count >= 5) return 0.2;
-	return 0;
-}
-
-export function gqBaseEur(count: number): number {
-	if (count <= 0) return 0;
-	return Math.round(count * GQ_PER_STYLE_EUR * (1 - gqDiscountRate(count)));
 }
 
 // Convert a base-EUR price to the requested currency
