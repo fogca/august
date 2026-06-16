@@ -79,11 +79,19 @@
 </main>
 
 <style>
-	/* Text appearance comes from base.css (h2 / p). Only layout spacing here. */
+	/* Dark theme — scoped to About only. base.css applies color directly to
+	   div / p / span / a / h1-h6, so the parent color loses the cascade;
+	   override every descendant with :global(*). Uses base.css dark tokens. */
 	.About {
 		min-height: 100vh;
 		padding-block: 96px;
 		padding-inline: 0;
+		background: var(--color-bg-dark);
+		color: var(--white);
+	}
+
+	.About :global(*) {
+		color: var(--white);
 	}
 
 	@media (min-width: 768px) {

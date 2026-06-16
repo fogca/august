@@ -30,6 +30,8 @@ export interface Typeface {
 	thumbnail?: string;
 	/** Optional hero video (used in preference to thumbnail when present). */
 	heroVideo?: string;
+	/** Optional credit line for the hero image (photographer / source / licence). */
+	imageCredit?: string;
 	/** Hero slide colour theme — gives each typeface a distinct light/dark tone. */
 	theme: { bg: string; fg: string };
 	/** Hero metadata (per Figma SP design 280:104 / 274:18) */
@@ -56,45 +58,48 @@ export const TYPEFACES: Typeface[] = [
 		order: 1,
 		status: 'available',
 		fontFamily: 'Steiner',
-		tagline: 'The medium meaning passes through.',
+		tagline: 'The formative forces of the word, made visible.',
 		description:
-			"Steiner is a 12-weight humanist sans-serif variable font, drawn in Tokyo. " +
-			"The name is rooted in the classical Greek word for the upper air — the medium through which light and form once travelled. " +
-			"In lineage it stands as a sibling to Apercu, but reaches deeper: through Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, and Otl Aicher's Rotis (1988). " +
-			"Where Apercu draws on Franklin Gothic, Steiner draws on Rotis — seventy years of humanist tradition folded into a single voice.",
-		classification: 'Humanist Sans · 12 weights',
+			"Steiner is a 20-weight neo-humanist sans-serif variable font. " +
+			"It takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature, where form is never fixed but always in metamorphosis, and an anthroposophy that holds the human being as the measure of things. " +
+			"The letters are made to feel grown rather than constructed — organic in their curves, human in their proportion. " +
+			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
+		classification: 'Neo Humanist Sans · 20 weights',
 		weights: WEIGHTS,
-		// One long German word per weight row (20) — anthroposophy / Steiner vocabulary
+		// One German word per weight row (20), in alphabetical order A→T —
+		// Steiner / anthroposophy & nature vocabulary
 		defaultTexts: [
 			'Anthroposophie',
-			'Eurythmie',
-			'Metamorphose',
-			'Imagination',
-			'Inspiration',
-			'Intuition',
-			'Lebenskraft',
-			'Geisteswissenschaft',
-			'Weltanschauung',
+			'Bildekräfte',
+			'Christusimpuls',
 			'Dreigliederung',
-			'Sinneslehre',
-			'Bewusstseinsseele',
-			'Verwandlung',
+			'Eurythmie',
+			'Freiheit',
 			'Goetheanum',
+			'Herzdenken',
+			'Imagination',
+			'Jahreslauf',
+			'Keimkraft',
+			'Lebenskraft',
+			'Metamorphose',
+			'Naturreich',
+			'Organismus',
+			'Pflanzenwelt',
+			'Quelle',
+			'Rhythmus',
 			'Seelenkalender',
-			'Menschenkunde',
-			'Formkräfte',
-			'Lichtgestalt',
-			'Urpflanze',
-			'Äthermedium'
+			'Tierwelt'
 		],
-		// Hero background — aether/cloud still (Figma 280:104)
-		thumbnail: '/images/fonts/steiner.jpg',
+		// Hero background — Rudolf Steiner portrait (1905, Otto Rietmann; public domain)
+		thumbnail: '/images/Steiner/06_R.-Steiner-1905-Foto-Rietmann.jpg',
+		imageCredit:
+			'Rudolf Steiner — photograph by Otto Rietmann, 1905. Public domain, courtesy of the Rudolf Steiner Archive, Dornach.',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		hero: {
 			label: 'Neo Humanist Sans',
 			vol: 'vol.01',
-			subtitle: '(Geometry breathing)',
-			debut: '26.06.06 Debut'
+			subtitle: '(Formative forces)',
+			debut: '26.07.01 Debut'
 		}
 	},
 	{

@@ -66,7 +66,7 @@
 					disablepictureinpicture
 				></video>
 			{:else if tf.thumbnail}
-				<img class="FontDetail__hero-media" src={tf.thumbnail} alt="" />
+				<img class="FontDetail__hero-media" src={tf.thumbnail} alt={tf.imageCredit ?? ''} />
 			{:else}
 				<div class="FontDetail__hero-placeholder" aria-hidden="true">
 					<span class="FontDetail__hero-placeholder-name">{tf.name}</span>
@@ -74,9 +74,10 @@
 			{/if}
 		</div>
 
-		<nav class="FontDetail__nav" aria-label="Breadcrumb">
-			<a href="/fonts" class="FontDetail__back">← Fonts</a>
-		</nav>
+		{#if tf.imageCredit}
+			<!-- Photo credit / colophon — museum-label style, top-right -->
+			<p class="FontDetail__hero-credit">{tf.imageCredit}</p>
+		{/if}
 
 		<div class="FontDetail__hero-center">
 			<span class="FontDetail__hero-name">{tf.name}</span>
@@ -133,7 +134,7 @@
 		{#if isAvailable}
 			<p class="FontBuy__eyebrow">License</p>
 			<h2 class="FontBuy__heading">{tf.name}</h2>
-			<p class="FontBuy__price">From €360 · perpetual license, pay once</p>
+			<p class="FontBuy__price">From €560 · perpetual license, pay once</p>
 			<ul class="FontBuy__licenses">
 				<li>Desktop</li>
 				<li>Web</li>
@@ -142,7 +143,7 @@
 			</ul>
 			<a class="FontBuy__cta" href="/buy?font={tf.slug}">Configure licenses &amp; buy →</a>
 			<p class="FontBuy__note">
-				12-weight variable family. Bundle multiple license types and save 17%.
+				40 styles — 20 weights with matching italics. Educational licences −30%.
 			</p>
 		{:else}
 			<p class="FontBuy__eyebrow">In development</p>
@@ -157,7 +158,7 @@
 <div class="FontDetail__buybar white" class:is-visible={buybarVisible}>
 	<span class="FontDetail__buybar-label">{tf.name} · {tf.classification}</span>
 	<button type="button" class="FontDetail__buybar-cta" onclick={scrollToBuy}>
-		{isAvailable ? 'Buy — from €360' : 'Coming…'}
+		{isAvailable ? 'Buy — from €560' : 'Coming…'}
 	</button>
 </div>
 
@@ -206,21 +207,33 @@
 		user-select: none;
 	}
 
-	.FontDetail__nav {
+	/* Photo credit — small, muted, top-right (museum-label style).
+	   Compact on mobile, roomier on desktop. */
+	.FontDetail__hero-credit {
 		position: absolute;
 		top: 0;
-		left: 0;
-		padding: 64px var(--gutter) 0;
+		right: 0;
+		padding: 56px var(--gutter) 0;
+		max-width: 168px;
+		text-align: right;
+		font-family: 'Steiner', sans-serif;
+		font-size: 9px;
+		line-height: 1.45;
+		letter-spacing: 0;
+		color: currentColor;
+		opacity: 0.55;
+		margin: 0;
 		z-index: 2;
 	}
 
-	.FontDetail__back {
-		font-family: 'Steiner', sans-serif;
-		font-size: 13px;
-		color: currentColor;
-		text-decoration: none;
-		letter-spacing: 0;
-		opacity: 0.85;
+	@media (min-width: 768px) {
+		.FontDetail__hero-credit {
+			padding-top: 64px;
+			max-width: 280px;
+			font-size: 10px;
+			line-height: 1.5;
+			opacity: 0.6;
+		}
 	}
 
 	.FontDetail__hero-center {
@@ -315,7 +328,8 @@
 
 	.FontDetail__name {
 		font-family: 'Steiner', sans-serif;
-		font-size: clamp(36px, 7vw, 72px);
+		font-size: 48px;
+		font-weight: var(--fw-base);
 		line-height: 1.05;
 		letter-spacing: 0;
 		margin: 0 0 16px;

@@ -128,7 +128,7 @@ a {
   /* --- Font weight tokens (Steiner VF, wght 1–950) ---
      Change --fw-base to reweight the entire site. Components must NOT
      hardcode weights; use these tokens (or inherit). */
-  --fw-base:   300;  /* default text weight (body inherits everywhere) */
+  --fw-base:   320;  /* default text weight (body inherits everywhere) */
   --fw-ui:     450;  /* UI accents: nav, buttons, labels */
   --fw-strong: 500;  /* emphasis / sub-headings */
 
