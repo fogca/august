@@ -5,7 +5,8 @@
 	import {
 		MOBILE_BREAKPOINT_PX,
 		WEIGHT_ROW_SIZE_DEFAULT_DESKTOP,
-		WEIGHT_ROW_SIZE_DEFAULT_MOBILE
+		WEIGHT_ROW_SIZE_DEFAULT_MOBILE,
+		TESTER_PARAGRAPH_DE
 	} from './presets.js';
 
 	interface Props {
@@ -41,7 +42,7 @@
 		{#each weights as weight, i (weight.id)}
 			<WeightRow
 				{weight}
-				defaultText={defaultTexts[i % defaultTexts.length]}
+				defaultText={`${defaultTexts[i % defaultTexts.length]}\n${TESTER_PARAGRAPH_DE}`}
 				{fontFamily}
 				{initialSize}
 			/>

@@ -77,7 +77,7 @@
 					</li>
 				{/each}
 				<li>
-					<a href="mailto:hello@august.tf">hello@august.tf</a>
+					<a href="mailto:hi@august.tf">hi@august.tf</a>
 				</li>
 			</ul>
 		</section>

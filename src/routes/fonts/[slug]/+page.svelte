@@ -99,12 +99,15 @@
 		<div class="FontDetail__info">
 			<p class="FontDetail__classification">{tf.classification}</p>
 			{#if !isAvailable}
-				<span class="FontDetail__badge">In development</span>
+				<span class="FontDetail__badge">Coming Soon</span>
 			{/if}
 		</div>
 		<h1 class="FontDetail__name">{tf.name}</h1>
 		<p class="FontDetail__tagline">{tf.tagline}</p>
 		<p class="FontDetail__description">{tf.description}</p>
+		{#if tf.descriptionJa}
+			<p class="FontDetail__description-ja" lang="ja">{tf.descriptionJa}</p>
+		{/if}
 	</div>
 
 	<TypeTester
@@ -123,11 +126,20 @@
 	<!-- OpenType features (live OFF → ON demos) -->
 	<OpenTypeFeatures fontFamily={tf.fontFamily} />
 
-	<!-- In use -->
-	<ImageGallery title="In Use" items={inUseItems} columns={2} ratio="16 / 10" />
-
-	<!-- Other images -->
-	<ImageGallery title="Other" items={otherItems} columns={3} ratio="4 / 5" />
+	<!-- Specimens — per-typeface galleries when present, else placeholders -->
+	{#if tf.specimens && tf.specimens.length}
+		{#each tf.specimens as gallery (gallery.title)}
+			<ImageGallery
+				title={gallery.title}
+				items={gallery.items}
+				columns={gallery.columns ?? 2}
+				ratio={gallery.ratio ?? '16 / 10'}
+			/>
+		{/each}
+	{:else}
+		<ImageGallery title="In Use" items={inUseItems} columns={2} ratio="16 / 10" />
+		<ImageGallery title="Other" items={otherItems} columns={3} ratio="4 / 5" />
+	{/if}
 
 	<!-- On-page buy block (the fixed CTA scrolls here) -->
 	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">
@@ -146,9 +158,9 @@
 				40 styles — 20 weights with matching italics. Educational licences −30%.
 			</p>
 		{:else}
-			<p class="FontBuy__eyebrow">In development</p>
+			<p class="FontBuy__eyebrow">Coming Soon</p>
 			<h2 class="FontBuy__heading">{tf.name}</h2>
-			<p class="FontBuy__price">Coming {tf.hero.debut}</p>
+			<p class="FontBuy__price">In development — released in due course.</p>
 			<a class="FontBuy__cta" href="/contact">Get notified →</a>
 		{/if}
 	</section>
@@ -158,7 +170,7 @@
 <div class="FontDetail__buybar white" class:is-visible={buybarVisible}>
 	<span class="FontDetail__buybar-label">{tf.name} · {tf.classification}</span>
 	<button type="button" class="FontDetail__buybar-cta" onclick={scrollToBuy}>
-		{isAvailable ? 'Buy — from €560' : 'Coming…'}
+		{isAvailable ? 'Buy — from €560' : 'Coming Soon'}
 	</button>
 </div>
 
@@ -353,9 +365,25 @@
 	.FontDetail__description {
 		/* size/line-height from base p (12px) */
 		letter-spacing: 0;
-		color: var(--color-text-mute);
+		color: var(--color-text);
 		max-width: 64ch;
 		margin: 0;
+	}
+
+	/* Japanese running translation — Tazugane Light, ~1.75px smaller than the
+	   Latin. Latin runs inside JA use the page typeface (var(--type-font)).
+	   font-family needs !important to beat the page-wide :global(*) font rule. */
+	.FontDetail .FontDetail__description-ja {
+		font-family: var(--type-font, 'Steiner'), 'TazuganeGothicStdN-Light',
+			'Tazugane Gothic StdN', 'Tazugane Gothic', 'Hiragino Sans W3', 'Hiragino Sans',
+			'Yu Gothic', sans-serif !important;
+		font-weight: 300;
+		font-size: calc(var(--fs-p) - 1.75px);
+		line-height: 1.85;
+		letter-spacing: 0;
+		color: var(--color-text);
+		max-width: 64ch;
+		margin: 12px 0 0;
 	}
 
 	/* ── On-page buy block ── */

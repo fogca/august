@@ -44,6 +44,9 @@ export function initScroll(): Promise<void> {
 		]);
 
 		gsap.registerPlugin(ScrollTrigger);
+		// Ignore the resize the mobile URL bar fires on show/hide — otherwise
+		// pinned reveals jump mid-scroll as the viewport (dvh) changes.
+		ScrollTrigger.config({ ignoreMobileResize: true });
 		gsapRef = gsap;
 		scrollTriggerRef = ScrollTrigger;
 

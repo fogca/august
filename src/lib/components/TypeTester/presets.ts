@@ -14,6 +14,14 @@ export const WEIGHTS: WeightDef[] = [1, ...Array.from({ length: 19 }, (_, i) => 
 // Default tester text — bridges Scheteiner (medium) and Steiner's anthroposophy
 export const DEFAULT_TEXT = 'The aether carries Rudolf Steiner anthroposophy.';
 
+// Running text appended under each weight's word in the Type Tester.
+// German (anthroposophy register) is shown now.
+export const TESTER_PARAGRAPH_DE =
+	'Das Denken ist eine stille Tätigkeit des Willens. Zwischen Wachen und Träumen bewegt sich die Seele durch Welten, die wir selten beim Namen nennen.';
+// English alternative — kept for later use, NOT currently displayed.
+export const TESTER_PARAGRAPH_EN =
+	'The human being, Steiner held, is woven of four bodies — the physical, the etheric, the astral, and the I — each unfolding in its own seven-year season.';
+
 // Maximum characters allowed in the textarea
 export const MAX_CHARS = 500;
 
@@ -29,7 +37,7 @@ export const MOBILE_BREAKPOINT_PX = 768;
 
 // Per-weight-row default sizes (independent tester rows)
 export const WEIGHT_ROW_SIZE_DEFAULT_DESKTOP = 64;
-export const WEIGHT_ROW_SIZE_DEFAULT_MOBILE = 36;
+export const WEIGHT_ROW_SIZE_DEFAULT_MOBILE = 28;
 
 export const LETTER_SPACING_MIN = -0.05;
 export const LETTER_SPACING_MAX = 0.2;

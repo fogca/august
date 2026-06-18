@@ -163,7 +163,10 @@
 		if (activeSkipFadeIn) {
 			// Hand off to a custom intro/loader on the new page.
 			gsap.set('.page-wrapper', { clearProps: 'all' });
-			gsap.set('.transition-panel', { y: '100%', clearProps: 'backgroundColor' });
+			// Hand the hidden state back to CSS (translateY(100%)) instead of baking
+			// a px transform — otherwise the fixed white panel leaves a strip pinned
+			// at the bottom on mobile when the URL bar retracts and the viewport grows.
+			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
 			gsap.set('.darken-overlay', { opacity: 0 });
 			activeSkipFadeIn = false;
 			onComplete?.();
@@ -180,7 +183,10 @@
 			},
 			onComplete: () => {
 				gsap.set('.page-wrapper', { clearProps: 'all' });
-				gsap.set('.transition-panel', { y: '100%', clearProps: 'backgroundColor' });
+				// Hand the hidden state back to CSS (translateY(100%)) instead of baking
+			// a px transform — otherwise the fixed white panel leaves a strip pinned
+			// at the bottom on mobile when the URL bar retracts and the viewport grows.
+			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
 				gsap.set('.darken-overlay', { opacity: 0 });
 				onComplete?.();
 			}
@@ -226,9 +232,17 @@
 		will-change: opacity;
 	}
 
+	/* Hidden via translateY(100%). Use the LARGE viewport height (100lvh) so the
+	   panel always clears the collapsed mobile toolbar height — otherwise a white
+	   band pins to the bottom when the URL bar retracts. The transition also
+	   clearProps:'transform' on reset so no stale px translate is left behind. */
 	.transition-panel {
 		position: fixed;
-		inset: 0;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 100vh;
+		height: 100lvh;
 		background: white;
 		transform: translateY(100%);
 		z-index: 1000;

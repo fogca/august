@@ -9,6 +9,7 @@
 import { redirect, fail } from '@sveltejs/kit';
 import Stripe from 'stripe';
 import { env } from '$env/dynamic/private';
+import { dev } from '$app/environment';
 import type { Actions } from './$types';
 import {
 	LICENSES,
@@ -87,8 +88,14 @@ export const actions: Actions = {
 		// ── Stripe Checkout Session ────────────────────────────
 		const secretKey = env.STRIPE_SECRET_KEY;
 		if (!secretKey) {
-			// Local dev fallback — no key configured yet
-			console.warn('STRIPE_SECRET_KEY not set — skipping Stripe, redirecting to success (stub).');
+			// In production a missing key must NEVER fall through to a free
+			// "success" — that would mark orders paid without charging. Only the
+			// local dev stub is allowed to skip Stripe.
+			if (!dev) {
+				console.error('STRIPE_SECRET_KEY missing in production — refusing checkout.');
+				return fail(503, { message: 'Checkout is temporarily unavailable. Please try again later.' });
+			}
+			console.warn('STRIPE_SECRET_KEY not set — dev stub, redirecting to success.');
 			throw redirect(303, '/buy/success');
 		}
 

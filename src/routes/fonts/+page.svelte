@@ -33,8 +33,8 @@
 							<span class="FontCard__classification">{tf.classification}</span>
 
 							{#if tf.status === 'in-development'}
-								<span class="FontCard__badge" aria-label="Status: in development">
-									In development
+								<span class="FontCard__badge" aria-label="Status: coming soon">
+									Coming Soon
 								</span>
 							{/if}
 						</div>

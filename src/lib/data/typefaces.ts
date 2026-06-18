@@ -20,6 +20,8 @@ export interface Typeface {
 	fontFamily: string;
 	tagline: string;
 	description: string;
+	/** Japanese running translation of the description (shown under the English). */
+	descriptionJa?: string;
 	/** e.g. 'Humanist Sans · 12 weights' */
 	classification: string;
 	weights: WeightDef[];
@@ -32,6 +34,13 @@ export interface Typeface {
 	heroVideo?: string;
 	/** Optional credit line for the hero image (photographer / source / licence). */
 	imageCredit?: string;
+	/** Specimen galleries for the typeface page (each renders an ImageGallery). */
+	specimens?: {
+		title: string;
+		columns?: number;
+		ratio?: string;
+		items: { src?: string; caption?: string; alt?: string }[];
+	}[];
 	/** Hero slide colour theme — gives each typeface a distinct light/dark tone. */
 	theme: { bg: string; fg: string };
 	/** Hero metadata (per Figma SP design 280:104 / 274:18) */
@@ -64,6 +73,8 @@ export const TYPEFACES: Typeface[] = [
 			"It takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature, where form is never fixed but always in metamorphosis, and an anthroposophy that holds the human being as the measure of things. " +
 			"The letters are made to feel grown rather than constructed — organic in their curves, human in their proportion. " +
 			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
+		descriptionJa:
+			'Steiner は、20ウェイトのネオ・ヒューマニスト・サンセリフ（可変フォント）です。その名と気質はルドルフ・シュタイナーに由来します——形を固定されたものでなく絶えざる変容として見るゲーテ的な自然観と、人間を万物の尺度とする人智学。文字は「構築された」のではなく「育った」ように、曲線は有機的に、プロポーションは人間的に。ヒューマニストの系譜は表層ではなく土壌として静かに息づいています——ジョンストンの1916年ロンドン地下鉄書体、Gill Sans、Neuzeit、オトル・アイヒャーの Rotis。',
 		classification: 'Neo Humanist Sans · 20 weights',
 		weights: WEIGHTS,
 		// One German word per weight row (20), in alphabetical order A→T —
@@ -94,6 +105,24 @@ export const TYPEFACES: Typeface[] = [
 		thumbnail: '/images/Steiner/06_R.-Steiner-1905-Foto-Rietmann.jpg',
 		imageCredit:
 			'Rudolf Steiner — photograph by Otto Rietmann, 1905. Public domain, courtesy of the Rudolf Steiner Archive, Dornach.',
+		// Page specimens (DrawBot / drawbot-skia — see Steiner/00_master/Visuals/page_specimens.py)
+		specimens: [
+			{
+				title: 'Specimens',
+				columns: 2,
+				ratio: '16 / 10',
+				items: [
+					{ src: '/images/specimens/steiner/currency_f6.png', caption: 'Currency — Book' },
+					{ src: '/images/specimens/steiner/ligatures_f6.png', caption: 'Ligatures — fi fl ff ffi ffl' }
+				]
+			},
+			{
+				title: 'Weight',
+				columns: 2,
+				ratio: '4 / 5',
+				items: [{ src: '/images/specimens/steiner/ag_anim_f6.gif', caption: 'ag — wght 1 → 950' }]
+			}
+		],
 		theme: { bg: '#000000', fg: '#ffffff' },
 		hero: {
 			label: 'Neo Humanist Sans',
@@ -114,6 +143,8 @@ export const TYPEFACES: Typeface[] = [
 			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at August Type Foundry. ' +
 			'Details on weights and axis range will be published as the design reaches maturity. ' +
 			'Debuting 2026.',
+		descriptionJa:
+			'gQ は Mokuseki Sans の最新進化形——August Type Foundry が描くネオ・ヒューマニスト・サンセリフです。ウェイトや軸の範囲などの詳細は、デザインの成熟に合わせて公開していきます。2026年デビュー予定。',
 		classification: 'Neo Humanist Sans · 12 weights',
 		// Provisional weights — same 12-stop axis as Scheteiner until spec is finalised
 		weights: WEIGHTS,
@@ -166,6 +197,8 @@ export const TYPEFACES: Typeface[] = [
 			'Atom is a display typeface currently in development at August Type Foundry. ' +
 			'Further details on its design direction and release schedule will follow. ' +
 			'Coming 2026.',
+		descriptionJa:
+			'Atom は August Type Foundry で現在開発中のディスプレイ書体です。デザインの方向性やリリース時期の詳細は、追ってお知らせします。2026年公開予定。',
 		classification: 'Neo Grotesque · in development',
 		// Provisional weights — same 12-stop axis as Scheteiner until spec is finalised
 		weights: WEIGHTS,

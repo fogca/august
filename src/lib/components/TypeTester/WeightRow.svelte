@@ -250,6 +250,8 @@
 	.WeightRow__text {
 		display: block;
 		width: 100%;
+		/* pre-wrap so the seeded "word\nparagraph" keeps its line break */
+		white-space: pre-wrap;
 		word-break: break-word;
 		min-height: 1em;
 		cursor: text;
