@@ -53,6 +53,9 @@ export function initScroll(): Promise<void> {
 		// `anchors: true` makes Lenis handle same-page #hash links natively.
 		lenis = new LenisCtor({ anchors: true });
 		lenis.on('scroll', ScrollTrigger.update);
+		// Filming hook: expose the live instance so capture tooling can drive
+		// deterministic scroll positions (reverted after capture).
+		(window as unknown as { __lenis?: Lenis }).__lenis = lenis;
 
 		// Drive Lenis from GSAP's ticker so the scroller and triggers share a clock.
 		tickerFn = (time: number) => lenis?.raf(time * 1000);
