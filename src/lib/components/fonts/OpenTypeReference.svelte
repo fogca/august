@@ -1,33 +1,41 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	// OpenType feature reference — a working cheat-sheet of the features a
-	// professional Latin font is expected to ship, split into "essential" and
-	// "recommended". Each row is a LIVE off → on demo via font-feature-settings
-	// (or `lang` for locl). Steiner does not yet ship every feature, so demos
-	// render in fonts that verifiably do — Inter (sans) and EB Garamond (serif).
-	// Every sample / off-on pair was confirmed against each font's actual GSUB
-	// table and rendered output, so the toggle is always visible — no empty demos.
-	// NOTE: font-family is set INLINE on each sample span on purpose. base.css has
-	// `…, span, … { font-family: var(--heading-font) }`, a direct rule that would
-	// otherwise force Steiner onto these spans (inheritance loses to a direct rule).
+	// professional Latin font is expected to ship. Each row is a LIVE off → on
+	// demo. Steiner does not yet ship every feature, so demos render in fonts that
+	// verifiably do — Inter (sans) and EB Garamond (serif).
+	//
+	// CROSS-BROWSER: every toggle is applied through ALL the mechanisms that exist
+	// for it at once, set to the same state, because engines disagree on which one
+	// they honour (e.g. Chromium ignores `font-feature-settings: 'smcp'` but obeys
+	// font-variant-caps; other engines do the opposite for oldstyle-nums / hist):
+	//   1. high-level `font-variant-*` / `font-kerning` (best support),
+	//   2. `font-variant-alternates` via @font-feature-values (ss## / cv## / hist),
+	//   3. `font-feature-settings` (+ -webkit- prefix) as a last-resort fallback.
+	// Whichever the browser supports wins; the others are harmless no-ops.
+	//
+	// NOTE: font-family is set INLINE on each sample span — base.css has a direct
+	// `…, span, … { font-family: var(--heading-font) }` rule that otherwise forces
+	// Steiner onto these spans (inheritance loses to a direct rule).
 	type Need = 'must' | 'nice';
-	type Demo = 'feature' | 'lang' | 'static';
 	type FontKey = 'inter' | 'garamond';
 
 	interface Feature {
 		tag: string;
-		name: string; // English feature name
-		ja: string; // one-line Japanese gloss
+		name: string;
+		ja: string;
 		need: Need;
 		font: FontKey;
 		sample: string;
-		demo?: Demo; // default 'feature'
-		lang?: string; // BCP-47 tag for demo === 'lang'
-		// Full CSS declaration overrides for the OFF / ON sample. Default is
-		// `font-feature-settings: '<tag>' 0|1`. Caps / numeric features need their
-		// high-level font-variant-* property — font-feature-settings is ignored for
-		// those in Chromium, so they carry explicit overrides below.
-		off?: string;
-		on?: string;
+		lang?: string; // locl: drives the change via the `lang` attribute
+		varProp?: string; // high-level property name (font-variant-*, font-kerning)
+		varOff?: string;
+		varOn?: string;
+		altOn?: string; // font-variant-alternates ON value (ss/cv/hist)
+		altOff?: string; // default 'normal'
+		ffsOff?: string; // font-feature-settings OFF value, default "'tag' 0"
+		ffsOn?: string; // font-feature-settings ON value, default "'tag' 1"
+		ghost?: boolean; // overlay the OFF state faintly behind ON (for subtle vertical shifts like `case`)
 	}
 
 	interface Group {
@@ -36,14 +44,40 @@
 		items: Feature[];
 	}
 
-	const FONT_LABEL: Record<FontKey, string> = {
-		inter: 'Inter',
-		garamond: 'EB Garamond'
-	};
+	const FONT_LABEL: Record<FontKey, string> = { inter: 'Inter', garamond: 'EB Garamond' };
+	// Self-hosted, uniquely-named families. Self-hosting matters: Google Fonts
+	// (fonts.gstatic.com) is routinely blocked by privacy extensions / networks,
+	// and when the demo fonts fail to load every demo silently falls back and the
+	// feature appears "not working". Unique names avoid any clash with a cached
+	// or system Inter / EB Garamond.
 	const FONT_STACK: Record<FontKey, string> = {
-		inter: "'Inter', system-ui, sans-serif",
-		garamond: "'EB Garamond', Georgia, serif"
+		inter: "'OTRef Inter', system-ui, sans-serif",
+		garamond: "'OTRef Garamond', Georgia, serif"
 	};
+
+	// Raw <head> CSS: local @font-face for the demo fonts + named feature values so
+	// ss##/cv## can also be driven by font-variant-alternates. Injected via {@html}
+	// so Svelte leaves the @font-face / @font-feature-values at-rules untouched.
+	const HEAD_CSS = `<style>
+		@font-face {
+			font-family: 'OTRef Inter';
+			src: url('/fonts/otref-inter.woff2') format('woff2');
+			font-weight: 100 900;
+			font-style: normal;
+			font-display: swap;
+		}
+		@font-face {
+			font-family: 'OTRef Garamond';
+			src: url('/fonts/otref-garamond.woff2') format('woff2');
+			font-weight: 400 800;
+			font-style: normal;
+			font-display: swap;
+		}
+		@font-feature-values 'OTRef Inter' {
+			@styleset { ot-ss01: 1; ot-ss02: 2; }
+			@character-variant { ot-cv11: 11; }
+		}
+	</style>`;
 
 	const GROUPS: Group[] = [
 		{
@@ -53,10 +87,13 @@
 				{
 					tag: 'kern',
 					name: 'Kerning',
-					ja: '文字ペアの間隔調整。オフにすると AV・To が間延びする。',
+					ja: '文字ペアの間隔調整。オフだと AV・To が間延びする。',
 					need: 'must',
 					font: 'inter',
-					sample: 'AVATAR To Wo Ya. Tr'
+					sample: 'AV To Wa Ya',
+					varProp: 'font-kerning',
+					varOff: 'none',
+					varOn: 'normal'
 				},
 				{
 					tag: 'liga',
@@ -64,7 +101,10 @@
 					ja: 'fi・fl・ff・ffi の衝突を1グリフに統合。',
 					need: 'must',
 					font: 'garamond',
-					sample: 'office final flower stiff'
+					sample: 'fi fl ffi ffl',
+					varProp: 'font-variant-ligatures',
+					varOff: 'no-common-ligatures',
+					varOn: 'common-ligatures'
 				},
 				{
 					tag: 'calt',
@@ -72,34 +112,28 @@
 					ja: '前後関係を見て自動で字形を差し替える（ここでは矢印化）。',
 					need: 'must',
 					font: 'inter',
-					sample: 'step --> next --> done'
-				},
-				{
-					tag: 'ccmp',
-					name: 'Mark Composition & Positioning',
-					ja: 'アクセントの合成・配置（mark / mkmk）。常時オン＝正しく載るか壊れるかの二択。',
-					need: 'must',
-					font: 'inter',
-					sample: 'Ǻ Ņ ờ ẫ ǚ Ḝ',
-					demo: 'static'
+					sample: 'a --> b',
+					varProp: 'font-variant-ligatures',
+					varOff: 'no-contextual',
+					varOn: 'contextual'
 				},
 				{
 					tag: 'locl',
 					name: 'Localized Forms',
-					ja: '言語に応じて字形を切替（ルーマニア語＝セディーユをコンマ下に）。',
+					ja: '言語で字形を切替（ルーマニア語＝セディーユ ş をコンマ下 ș に）。',
 					need: 'must',
 					font: 'inter',
-					sample: 'şcoală ţară',
-					demo: 'lang',
+					sample: 'şcoală',
 					lang: 'ro'
 				},
 				{
 					tag: 'case',
 					name: 'Case-Sensitive Forms',
-					ja: 'オールキャップス時に記号類を大文字の高さへ。',
+					ja: 'オールキャップス時、括弧・中黒・ダッシュが小文字基準の低い位置から大文字の中心へ上がる。薄い赤＝OFF（元）の位置。',
 					need: 'must',
 					font: 'inter',
-					sample: '(A–Z) ¡HOLA! @5·9'
+					sample: '(A·B–C)',
+					ghost: true
 				}
 			]
 		},
@@ -110,13 +144,16 @@
 				{
 					tag: 'onum',
 					name: 'Oldstyle Figures',
-					ja: '等高のライニング（左）→ 本文になじむ上下動のあるオールドスタイル。',
+					ja: '等高のライニング → 本文になじむ上下動のあるオールドスタイル。',
 					need: 'must',
 					font: 'garamond',
-					sample: 'in 1842 — 67,309',
-					// EB Garamond defaults to oldstyle, so force lining on the OFF side.
-					off: "font-feature-settings: 'lnum' 1",
-					on: "font-feature-settings: 'onum' 1"
+					sample: '0123456789',
+					varProp: 'font-variant-numeric',
+					varOff: 'lining-nums',
+					varOn: 'oldstyle-nums',
+					// EB Garamond defaults to oldstyle, so the OFF side forces lining.
+					ffsOff: "'lnum' 1",
+					ffsOn: "'onum' 1"
 				},
 				{
 					tag: 'tnum',
@@ -124,7 +161,10 @@
 					ja: '全数字を等幅に。表・金額で桁が縦に揃う。',
 					need: 'must',
 					font: 'inter',
-					sample: '1,481  2,070'
+					sample: '1,481 · 2,070',
+					varProp: 'font-variant-numeric',
+					varOff: 'proportional-nums',
+					varOn: 'tabular-nums'
 				},
 				{
 					tag: 'frac',
@@ -132,7 +172,10 @@
 					ja: 'スラッシュ分数を正式な分数字形へ。',
 					need: 'must',
 					font: 'inter',
-					sample: '1/2 3/4 5/8'
+					sample: '1/2 3/4',
+					varProp: 'font-variant-numeric',
+					varOff: 'normal',
+					varOn: 'diagonal-fractions'
 				},
 				{
 					tag: 'zero',
@@ -140,7 +183,10 @@
 					ja: '0 と O を区別するスラッシュ付きゼロ。',
 					need: 'nice',
 					font: 'inter',
-					sample: '0 vs O · 10,204'
+					sample: '0 O 1080',
+					varProp: 'font-variant-numeric',
+					varOff: 'normal',
+					varOn: 'slashed-zero'
 				}
 			]
 		},
@@ -154,10 +200,10 @@
 					ja: '小文字を小型大文字へ。本文中の略語に最適。',
 					need: 'nice',
 					font: 'garamond',
-					sample: 'small caps refinement',
-					// Caps features ignore font-feature-settings in Chromium — use font-variant-caps.
-					off: 'font-variant-caps: normal',
-					on: 'font-variant-caps: small-caps'
+					sample: 'small caps',
+					varProp: 'font-variant-caps',
+					varOff: 'normal',
+					varOn: 'small-caps'
 				},
 				{
 					tag: 'c2sc',
@@ -165,9 +211,10 @@
 					ja: '大文字を小型大文字へ。オールキャップスを穏やかに。',
 					need: 'nice',
 					font: 'garamond',
-					sample: 'UNESCO · PDF',
-					off: 'font-variant-caps: normal',
-					on: 'font-variant-caps: all-small-caps'
+					sample: 'UNESCO',
+					varProp: 'font-variant-caps',
+					varOff: 'normal',
+					varOn: 'all-small-caps'
 				},
 				{
 					tag: 'cv11',
@@ -175,7 +222,8 @@
 					ja: '個別の字形バリエーション（ここでは1階建ての a）。',
 					need: 'nice',
 					font: 'inter',
-					sample: 'a magnolia area'
+					sample: 'a banana',
+					altOn: 'character-variant(ot-cv11)'
 				},
 				{
 					tag: 'ss02',
@@ -183,53 +231,70 @@
 					ja: 'まとまった字形セット（識別性を上げた I）。',
 					need: 'nice',
 					font: 'inter',
-					sample: 'Illinois · Il1'
+					sample: 'Illinois Il1',
+					altOn: 'styleset(ot-ss02)'
 				},
 				{
 					tag: 'ss01',
 					name: 'Stylistic Set — alternate digits',
-					ja: '別デザインの数字（3 4 6 9）。',
+					ja: '別デザインの数字（3 4 6 9 が変わる）。',
 					need: 'nice',
 					font: 'inter',
-					sample: '3 4 6 9 · 2026'
+					sample: '3 4 6 9',
+					altOn: 'styleset(ot-ss01)'
 				},
 				{
 					tag: 'hist',
 					name: 'Historical Forms',
-					ja: '古字形（long s など）。',
+					ja: '古字形（s が long s ſ に）。',
 					need: 'nice',
 					font: 'garamond',
-					sample: 'passing roses'
+					sample: 'passing',
+					altOn: 'historical-forms'
 				}
 			]
 		}
 	];
 
-	// Build the inline style for a sample span: demo font first (must beat the
-	// base.css `span` rule), then the feature toggle as a full CSS declaration.
+	// Compose every applicable toggle mechanism, all set to the same state, so the
+	// demo fires regardless of which one the browser honours.
 	function sampleStyle(f: Feature, state: 'off' | 'on'): string {
-		const family = `font-family: ${FONT_STACK[f.font]};`;
-		if (f.demo === 'lang' || f.demo === 'static') return family;
-		const decl =
-			state === 'off'
-				? (f.off ?? `font-feature-settings: '${f.tag}' 0`)
-				: (f.on ?? `font-feature-settings: '${f.tag}' 1`);
-		return `${family} ${decl};`;
+		const parts = [`font-family: ${FONT_STACK[f.font]}`];
+		if (f.lang) return parts.join('; ') + ';'; // locl is driven by the lang attribute
+		if (f.varProp) parts.push(`${f.varProp}: ${state === 'off' ? f.varOff : f.varOn}`);
+		if (f.altOn) parts.push(`font-variant-alternates: ${state === 'off' ? (f.altOff ?? 'normal') : f.altOn}`);
+		const ffs = state === 'off' ? (f.ffsOff ?? `'${f.tag}' 0`) : (f.ffsOn ?? `'${f.tag}' 1`);
+		parts.push(`font-feature-settings: ${ffs}`);
+		parts.push(`-webkit-font-feature-settings: ${ffs}`);
+		return parts.join('; ') + ';';
 	}
+
+	// Confirm the demo fonts actually loaded — if they don't, every demo falls back
+	// and nothing toggles, so surface it plainly instead of failing silently.
+	let fontsOk = $state<boolean | null>(null);
+	onMount(async () => {
+		try {
+			await document.fonts.ready;
+		} catch {
+			/* ignore */
+		}
+		const inter = document.fonts.check("24px 'OTRef Inter'");
+		const garamond = document.fonts.check("24px 'OTRef Garamond'");
+		fontsOk = inter && garamond;
+	});
 </script>
 
 <svelte:head>
-	<!-- Demo fonts that verifiably ship the features below. Variable woff2 from
-	     Google Fonts keeps the GSUB/GPOS table used here. -->
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..600;1,400&family=Inter:opsz,wght@14..32,400..600&display=swap"
-		rel="stylesheet"
-	/>
+	<!-- Self-hosted demo fonts (no external request to block) + named feature values. -->
+	{@html HEAD_CSS}
 </svelte:head>
 
 <section class="OTRef" aria-label="OpenType feature reference">
+	{#if fontsOk === false}
+		<p class="OTRef__fontwarn" role="status">
+			⚠ デモ用フォント（Inter / EB Garamond）が読み込めていません。各機能の変化が表示されない可能性があります。
+		</p>
+	{/if}
 	{#each GROUPS as group (group.title)}
 		<div class="OTRef__group">
 			<div class="OTRef__grouphead">
@@ -253,26 +318,30 @@
 						</div>
 
 						<div class="OTRef__samples">
-							{#if f.demo === 'static'}
-								<!-- Structural feature: no on/off — show one correct specimen. -->
-								<span class="OTRef__sample OTRef__sample--on" style={sampleStyle(f, 'on')}>
-									{f.sample}
-								</span>
-								<span class="OTRef__always">always on</span>
-							{:else if f.demo === 'lang'}
-								<!-- locl fires by language, not font-feature-settings. -->
+							<span class="OTRef__cell">
 								<span class="OTRef__sample" style={sampleStyle(f, 'off')}>{f.sample}</span>
-								<span class="OTRef__arrow" aria-hidden="true">→</span>
-								<span class="OTRef__sample OTRef__sample--on" style={sampleStyle(f, 'on')} lang={f.lang}>
-									{f.sample}
-								</span>
-							{:else}
-								<span class="OTRef__sample" style={sampleStyle(f, 'off')}>{f.sample}</span>
-								<span class="OTRef__arrow" aria-hidden="true">→</span>
-								<span class="OTRef__sample OTRef__sample--on" style={sampleStyle(f, 'on')}>
-									{f.sample}
-								</span>
-							{/if}
+								<span class="OTRef__state">off</span>
+							</span>
+							<span class="OTRef__arrow" aria-hidden="true">→</span>
+							<span class="OTRef__cell">
+								{#if f.ghost}
+									<!-- Overlay the OFF state faintly behind ON so a subtle vertical
+									     shift (case) reads as a clear double image. -->
+									<span class="OTRef__ghostwrap">
+										<span class="OTRef__sample OTRef__ghost" style={sampleStyle(f, 'off')} aria-hidden="true">
+											{f.sample}
+										</span>
+										<span class="OTRef__sample OTRef__sample--on" style={sampleStyle(f, 'on')}>
+											{f.sample}
+										</span>
+									</span>
+								{:else}
+									<span class="OTRef__sample OTRef__sample--on" style={sampleStyle(f, 'on')} lang={f.lang}>
+										{f.sample}
+									</span>
+								{/if}
+								<span class="OTRef__state OTRef__state--on">on · {f.tag}</span>
+							</span>
 						</div>
 					</li>
 				{/each}
@@ -284,6 +353,18 @@
 <style>
 	.OTRef {
 		padding: 0 var(--padding);
+	}
+
+	.OTRef__fontwarn {
+		font-family: 'Steiner', sans-serif;
+		font-size: var(--fs-h6);
+		line-height: 1.5;
+		color: var(--color-accent, #b33030);
+		border: 1px solid var(--color-accent, #b33030);
+		border-radius: 3px;
+		padding: 10px 14px;
+		margin: 0 0 32px;
+		letter-spacing: 0;
 	}
 
 	.OTRef__group {
@@ -323,8 +404,8 @@
 	.OTRef__row {
 		display: grid;
 		grid-template-columns: 1fr;
-		gap: 14px;
-		padding: 22px 0;
+		gap: 18px;
+		padding: 28px 0;
 		border-bottom: 1px solid var(--color-line);
 	}
 
@@ -392,45 +473,80 @@
 		margin: 0;
 	}
 
+	/* Big, glyph-focused specimens. Each cell stacks the sample over a tiny
+	   off/on caption so the toggle state is unambiguous. */
 	.OTRef__samples {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		flex-wrap: wrap;
-		gap: 16px;
-		font-size: clamp(26px, 4.5vw, 40px);
-		line-height: 1.25;
+		gap: 12px 22px;
+	}
+
+	.OTRef__cell {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 	}
 
 	.OTRef__sample {
-		color: rgba(0, 0, 0, 0.34);
+		font-size: clamp(34px, 6.5vw, 54px);
+		font-weight: 450;
+		line-height: 1.1;
+		color: rgba(0, 0, 0, 0.4);
 	}
 
 	.OTRef__sample--on {
 		color: var(--color-text);
 	}
 
-	.OTRef__arrow {
-		font-family: 'Steiner', sans-serif;
-		font-size: 14px;
-		color: rgba(0, 0, 0, 0.3);
-		align-self: center;
+	/* Ghost overlay: faint OFF state pinned behind the ON sample. The caps line up
+	   exactly, so only the case-shifted marks read as a double image. */
+	.OTRef__ghostwrap {
+		position: relative;
+		display: inline-block;
 	}
 
-	.OTRef__always {
-		font-family: ui-monospace, monospace;
+	.OTRef__ghost {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		color: rgba(179, 48, 48, 0.55);
+		pointer-events: none;
+	}
+
+	/* Keep the black ON sample above the red ghost, so only the shifted marks
+	   show red underneath. */
+	.OTRef__ghostwrap .OTRef__sample--on {
+		position: relative;
+		z-index: 1;
+	}
+
+	.OTRef__state {
+		font-family: ui-monospace, 'SF Mono', monospace;
 		font-size: 9px;
-		letter-spacing: 0.04em;
+		letter-spacing: 0.06em;
 		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.32);
+	}
+
+	.OTRef__state--on {
+		color: rgba(0, 0, 0, 0.55);
+	}
+
+	.OTRef__arrow {
+		font-family: 'Steiner', sans-serif;
+		font-size: 16px;
 		color: rgba(0, 0, 0, 0.3);
 		align-self: center;
+		margin-bottom: 17px; /* nudge onto the glyph baseline, above the caption */
 	}
 
 	@media (min-width: 768px) {
 		.OTRef__row {
-			grid-template-columns: 300px 1fr;
+			grid-template-columns: 280px 1fr;
 			gap: 40px;
 			align-items: center;
-			padding: 26px 0;
+			padding: 30px 0;
 		}
 	}
 </style>
