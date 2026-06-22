@@ -6,11 +6,11 @@
 		<meta name="description" content="August Type Foundry — Steiner Variable Font" />
 		<!-- Global design tokens and reset -->
 		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css" />
-		<!-- Steiner VF 40 — latest export -->
+		<!-- Steiner VF 50 — caps spacing: E/G/S/V/K normalized (V symmetric, all masters) -->
 		<style>
 			@font-face {
 				font-family: 'Steiner';
-				src: url('%sveltekit.assets%/fonts/Steiner-VF40.woff2?v=20260620') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Steiner-VF50.woff2?v=20260622c') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -36,6 +36,30 @@
 				font-family: 'Steiner', 'Helvetica Neue', Arial, sans-serif;
 			}
 		</style>
+
+		<!-- Icons -->
+		<link rel="icon" type="image/png" href="%sveltekit.assets%/favicon.png" />
+		<link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
+		<meta name="theme-color" content="#ffffff" />
+
+		<!-- Open Graph / Twitter (site-wide defaults; pages set their own <title>) -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="August Type Foundry" />
+		<meta property="og:title" content="August Type Foundry — Steiner" />
+		<meta
+			property="og:description"
+			content="An independent type foundry from Tokyo. Steiner — a 20-weight neo-humanist variable typeface."
+		/>
+		<meta property="og:url" content="https://august.tf/" />
+		<meta property="og:image" content="https://august.tf/og.png" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="August Type Foundry — Steiner" />
+		<meta
+			name="twitter:description"
+			content="An independent type foundry from Tokyo. Steiner — a 20-weight neo-humanist variable typeface."
+		/>
+		<meta name="twitter:image" content="https://august.tf/og.png" />
+
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

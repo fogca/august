@@ -109,7 +109,8 @@ export interface TypefacePricing {
 }
 
 // Steiner ships 20 numeric weights (name × 10 = wght; 40 = Book, 95 = Ultra),
-// each with a matching Italic — 40 styles total. Sold as one complete family.
+// upright only — a single weight axis from Hairline to Ultra. Sold as one family.
+// (No italic masters yet; do not advertise italics until they actually ship.)
 export const STEINER_WEIGHTS: string[] = [
 	'1', '5', '10', '15', '20', '25', '30', '35', '40', '45',
 	'50', '55', '60', '65', '70', '75', '80', '85', '90', '95'
@@ -122,9 +123,9 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 			{
 				id: 'steiner-complete',
 				label: 'Steiner Complete',
-				detail: '40 Styles — 20 weights, Roman & Italic',
+				detail: '20 weights — Hairline to Ultra',
 				styles: STEINER_WEIGHTS,
-				italic: true,
+				italic: false,
 				baseEur: 560,
 				grossEur: 1120,
 				discountRate: 0.5

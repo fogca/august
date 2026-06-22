@@ -83,6 +83,7 @@
 		<p class="OpenType__hint">
 			Toggle previews — each row shows the feature off, then on. Live in the webfont.
 		</p>
+		<a class="OpenType__ref" href="/opentype">OpenType — full feature reference →</a>
 	</div>
 
 	<ul class="OpenType__list">
@@ -141,6 +142,23 @@
 		color: rgba(255, 255, 255, 0.5);
 		margin: 6px 0 0;
 		letter-spacing: 0;
+	}
+
+	.OpenType__ref {
+		display: inline-block;
+		font-family: 'Steiner', sans-serif;
+		font-size: var(--fs-h6);
+		color: rgba(255, 255, 255, 0.7);
+		letter-spacing: 0;
+		text-decoration: none;
+		margin-top: 12px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+		padding-bottom: 2px;
+		transition: color 0.15s ease;
+	}
+
+	.OpenType__ref:hover {
+		color: #fff;
 	}
 
 	.OpenType__list {

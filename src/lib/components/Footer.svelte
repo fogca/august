@@ -23,7 +23,7 @@
 	const LEGAL: LinkItem[] = [
 		{ label: 'EULA', href: '/legal/eula' },
 		{ label: 'Privacy', href: '/legal/privacy' },
-		{ label: 'Imprint', href: '/legal/imprint' },
+		{ label: '特定商取引法', href: '/legal/tokusho' },
 		{ label: 'Company', href: '/legal/company' }
 	];
 

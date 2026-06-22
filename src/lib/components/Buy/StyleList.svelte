@@ -1,9 +1,10 @@
 <script lang="ts">
 	// StyleList — the styles bundled in a package, as a simple 2-column grid.
-	//  - italic packages: same weight's upright (left) + italic (right).
-	//  - non-italic packages: weight list split in half (e.g. 8 → 4×2).
+	//  - non-italic packages (current): weight list split in half (e.g. 20 → 10×2).
+	//  - italic packages: same weight's upright (left) + italic (right) — unused
+	//    until Steiner ships real italic masters.
 	// Lives inside the package card; colours inherit so it adapts to the
-	// card's selected (inverted) state. Faux italic until italic masters ship.
+	// card's selected (inverted) state.
 	import type { PackageDef } from '$lib/data/pricing';
 	import { WEIGHTS } from '$lib/components/TypeTester/presets';
 

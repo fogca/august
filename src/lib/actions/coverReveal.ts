@@ -50,6 +50,10 @@ export const coverReveal: Action<HTMLElement, CoverRevealOptions | undefined> = 
 
 		// Respect reduced-motion: skip the pin entirely, sections just stack.
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		// Phones: skip the pin. Pinning + the mobile URL bar (dvh) desyncs the
+		// pinned predecessor and leaves scroll/white-band artefacts; plain stacked
+		// scrolling is robust on mobile. Desktop/tablet keep the cover reveal.
+		if (window.matchMedia('(max-width: 767.98px)').matches) return;
 
 		const prev = node.previousElementSibling as HTMLElement | null;
 		if (!prev) return;

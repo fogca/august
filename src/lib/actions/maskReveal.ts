@@ -45,6 +45,12 @@ export const maskReveal: Action<HTMLElement, MaskRevealOptions | undefined> = (
 	async function build(opts: MaskRevealOptions | undefined) {
 		if ((opts?.enabled ?? true) === false) return;
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		// Phones: skip the pinned clip-path reveal entirely. The pin spacer is a
+		// fixed pixel height while the layers are sized in dvh, so the mobile URL
+		// bar showing/hiding desyncs them and leaves a white band below the
+		// section. The CSS fallback (layers stacked in normal flow) scrolls
+		// cleanly on mobile — dvh works fine when nothing is pinned.
+		if (window.matchMedia('(max-width: 767.98px)').matches) return;
 
 		const layers = Array.from(node.querySelectorAll<HTMLElement>('[data-layer]'));
 		if (layers.length < 2) return;
