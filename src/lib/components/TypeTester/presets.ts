@@ -11,7 +11,7 @@ export const WEIGHTS: WeightDef[] = [1, ...Array.from({ length: 19 }, (_, i) => 
 	(n) => ({ id: n, name: String(n), axisValue: n === 1 ? 1 : n * 10 })
 );
 
-// Default tester text — bridges Scheteiner (medium) and Steiner's anthroposophy
+// Default tester text — bridges Steiner (medium) and Steiner's anthroposophy
 export const DEFAULT_TEXT = 'The aether carries Rudolf Steiner anthroposophy.';
 
 // Running text appended under each weight's word in the Type Tester.

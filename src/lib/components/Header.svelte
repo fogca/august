@@ -126,13 +126,16 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		/* Chairman directive 2026-05-16: top 15px, sides 10px, bottom 10px */
-		padding: 15px 10px 10px;
+		/* Solid white header bar with a hairline rule (replaces the blend-mode overlay). */
+		padding: 20px var(--padding) 15px;
+		/* Kept high (not 1) so the fixed bar stays above z-indexed content sections. */
 		z-index: 100;
 		font-family: 'Steiner', sans-serif;
-		mix-blend-mode: difference;
-		color: #fff;
-		pointer-events: none;
+		background-color: #fff;
+		mix-blend-mode: normal;
+		color: #000;
+		border-bottom: 0.5px solid rgba(0, 0, 0, 0.25);
+		pointer-events: auto;
 		transform: translateY(0);
 		transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 	}
@@ -235,8 +238,8 @@
 		background: #ffffff;
 		color: #000;
 		font-family: 'Steiner', sans-serif;
-		/* top padding clears the header row so the nav sits below the logo */
-		padding: 55px var(--gutter, 20px) 16px;
+		/* top padding clears the (now solid, taller) header row so the nav sits below it */
+		padding: 74px var(--gutter, 20px) 16px;
 	}
 
 	.MenuPanel__nav {

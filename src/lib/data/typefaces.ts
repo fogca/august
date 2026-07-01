@@ -11,7 +11,7 @@ export type TypefaceStatus = 'available' | 'in-development';
 export interface Typeface {
 	slug: string;
 	name: string;
-	/** Display order (ascending): 1 = Scheteiner, 2 = MK Sans, 3 = Atom */
+	/** Display order (ascending): 1 = Steiner, 2 = MK Sans, 3 = Atom */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
@@ -146,7 +146,7 @@ export const TYPEFACES: Typeface[] = [
 		descriptionJa:
 			'gQ は Mokuseki Sans の最新進化形——August Type Foundry が描くネオ・ヒューマニスト・サンセリフです。ウェイトや軸の範囲などの詳細は、デザインの成熟に合わせて公開していきます。2026年デビュー予定。',
 		classification: 'Neo Humanist Sans · 12 weights',
-		// Provisional weights — same 12-stop axis as Scheteiner until spec is finalised
+		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
 		weights: WEIGHTS,
 		// One long German word per weight row (20) — aesthetic / philosophical vocabulary
 		defaultTexts: [
@@ -190,7 +190,7 @@ export const TYPEFACES: Typeface[] = [
 		order: 3,
 		status: 'in-development',
 		hidden: true,
-		// No font files yet — render as Scheteiner for preview purposes
+		// No font files yet — render as Steiner for preview purposes
 		fontFamily: 'Steiner',
 		tagline: 'A display typeface in development.',
 		description:
@@ -200,7 +200,7 @@ export const TYPEFACES: Typeface[] = [
 		descriptionJa:
 			'Atom は August Type Foundry で現在開発中のディスプレイ書体です。デザインの方向性やリリース時期の詳細は、追ってお知らせします。2026年公開予定。',
 		classification: 'Neo Grotesque · in development',
-		// Provisional weights — same 12-stop axis as Scheteiner until spec is finalised
+		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
 		weights: WEIGHTS,
 		// One long German word per weight row (20) — physics / natural-philosophy vocabulary
 		defaultTexts: [
