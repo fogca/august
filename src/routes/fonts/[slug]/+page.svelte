@@ -22,7 +22,8 @@
 	onMount(() => {
 		const update = () => {
 			const scrolled = window.scrollY > 8;
-			const atFooter = mainEl ? mainEl.getBoundingClientRect().bottom <= window.innerHeight : false;
+			const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+			const atFooter = mainEl ? mainEl.getBoundingClientRect().bottom <= viewportHeight : false;
 			buybarVisible = scrolled && !atFooter;
 		};
 		update();
@@ -471,12 +472,15 @@
 		right: 0;
 		bottom: 0;
 		z-index: 60;
-		height: 56px;
+		/* Extra bottom padding for the home-indicator safe area (viewport-fit=cover
+		   lets this bar reach the true screen edge on notched iPhones); the 56px
+		   content row stays vertically centered above it. */
+		height: calc(56px + env(safe-area-inset-bottom, 0px));
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 16px;
-		padding: 0 var(--gutter);
+		padding: 0 var(--gutter) env(safe-area-inset-bottom, 0px);
 		background: var(--color-text);
 		color: var(--color-bg);
 		/* hidden below the fold until scrolling starts */

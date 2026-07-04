@@ -54,6 +54,7 @@
 <style>
 	.Fonts {
 		min-height: 100vh;
+		min-height: 100dvh;
 		padding-top: 96px;
 		padding-bottom: 96px;
 		padding-inline: var(--padding);

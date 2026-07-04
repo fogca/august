@@ -17,6 +17,7 @@
 <style>
 	.Contact {
 		min-height: 100vh;
+		min-height: 100dvh;
 		display: flex;
 		align-items: center;
 		padding-top: 80px;

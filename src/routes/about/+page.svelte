@@ -95,6 +95,7 @@
 	   override every descendant with :global(*). Uses base.css dark tokens. */
 	.About {
 		min-height: 100vh;
+		min-height: 100dvh;
 		padding-block: 96px;
 		padding-inline: 0;
 		background: var(--color-bg-dark);

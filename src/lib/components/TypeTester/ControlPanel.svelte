@@ -176,7 +176,9 @@
 		z-index: var(--z-header);
 		background: var(--color-bg);
 		border-top: 1px solid var(--color-line);
-		padding: 12px var(--padding) 16px;
+		/* sticks to the true screen bottom — keep the tappable controls clear of
+		   the home-indicator safe area */
+		padding: 12px var(--padding) calc(16px + env(safe-area-inset-bottom, 0px));
 		display: flex;
 		flex-direction: column;
 		gap: 10px;

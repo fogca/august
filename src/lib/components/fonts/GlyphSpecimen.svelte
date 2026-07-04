@@ -31,7 +31,7 @@
 		const update = () => {
 			if (!wrapEl) return;
 			const rect = wrapEl.getBoundingClientRect();
-			const range = rect.height - window.innerHeight;
+			const range = rect.height - (window.visualViewport?.height ?? window.innerHeight);
 			if (range <= 0) return;
 			const progress = Math.min(1, Math.max(0, -rect.top / range));
 			wght = Math.round(WGHT_MIN + progress * (WGHT_MAX - WGHT_MIN));
@@ -59,6 +59,7 @@
 	/* Tall wrapper provides the scroll distance for the wght animation */
 	.GlyphSpecimen {
 		height: 300vh;
+		height: 300dvh;
 		border-top: 1px solid var(--color-line);
 	}
 

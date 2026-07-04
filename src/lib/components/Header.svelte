@@ -126,8 +126,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		/* Solid white header bar with a hairline rule (replaces the blend-mode overlay). */
-		padding: 20px var(--padding) 15px;
+		/* Solid white header bar with a hairline rule (replaces the blend-mode overlay).
+		   viewport-fit=cover lets this bar reach the true screen edge, so add the
+		   notch/Dynamic Island safe area on top of the existing 20px. */
+		padding: calc(20px + env(safe-area-inset-top, 0px)) var(--padding) 15px;
 		/* Kept high (not 1) so the fixed bar stays above z-indexed content sections. */
 		z-index: 100;
 		font-family: 'Steiner', sans-serif;
@@ -238,8 +240,9 @@
 		background: #ffffff;
 		color: #000;
 		font-family: 'Steiner', sans-serif;
-		/* top padding clears the (now solid, taller) header row so the nav sits below it */
-		padding: 74px var(--gutter, 20px) 16px;
+		/* top padding clears the (now solid, taller) header row so the nav sits below it;
+		   add the same safe-area-inset-top the header itself carries */
+		padding: calc(74px + env(safe-area-inset-top, 0px)) var(--gutter, 20px) 16px;
 	}
 
 	.MenuPanel__nav {

@@ -103,9 +103,13 @@
 		activeSkipFadeIn = skipFadeIn;
 		onPanelUp?.();
 
-		// Anchor scale origin to the visible viewport center
+		// Anchor scale origin to the visible viewport center. Use visualViewport
+		// (the currently-visible height) rather than innerHeight (which iOS Safari
+		// keeps pinned to the toolbar-collapsed max) so the origin matches what's
+		// actually on screen when the toolbar is showing.
 		const scrollY = window.scrollY;
-		const vhCenter = scrollY + window.innerHeight / 2;
+		const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+		const vhCenter = scrollY + viewportHeight / 2;
 		gsap.set('.page-wrapper', {
 			transformOrigin: `50% ${vhCenter}px`
 		});
@@ -211,6 +215,7 @@
 	.transition-bg {
 		background: black;
 		min-height: 100vh;
+		min-height: 100dvh;
 	}
 
 	/* No `will-change` here: it would make this wrapper the containing block
@@ -219,6 +224,7 @@
 	.page-wrapper {
 		background: var(--color-bg, white);
 		min-height: 100vh;
+		min-height: 100dvh;
 		position: relative;
 	}
 

@@ -81,7 +81,7 @@ export const coverReveal: Action<HTMLElement, CoverRevealOptions | undefined> = 
 			// for one viewport of scroll while this section slides up to cover it.
 			// (Covered sections are sized ~100vh so a single screen fully covers.)
 			start: 'top top',
-			end: () => '+=' + window.innerHeight * distance,
+			end: () => '+=' + (window.visualViewport?.height ?? window.innerHeight) * distance,
 			pin: true,
 			pinSpacing: false,
 			invalidateOnRefresh: true,

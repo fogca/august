@@ -43,7 +43,7 @@
 
 		const update = () => {
 			if (!outer || !video || !video.duration) return;
-			const range = outer.offsetHeight - window.innerHeight;
+			const range = outer.offsetHeight - (window.visualViewport?.height ?? window.innerHeight);
 			if (range <= 0) return;
 			const progress = Math.min(1, Math.max(0, -outer.getBoundingClientRect().top / range));
 			const t = video.duration * progress;
@@ -79,7 +79,7 @@
 	class="ScrollVideo"
 	class:is-contain={fit === 'contain'}
 	bind:this={outer}
-	style="height: calc(100vh + {scrollDistance}px); --scroll-video-bg: {background};"
+	style="height: calc(100vh + {scrollDistance}px); height: calc(100dvh + {scrollDistance}px); --scroll-video-bg: {background};"
 >
 	<div class="ScrollVideo__stage">
 		<video

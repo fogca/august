@@ -173,6 +173,7 @@
 	/* ── Page shell ── */
 	.BuyPage {
 		min-height: 100vh;
+		min-height: 100dvh;
 		padding-top: 20vh;
 		padding-bottom: 120px;
 		padding-inline: 20px;

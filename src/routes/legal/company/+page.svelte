@@ -41,6 +41,7 @@
 	/* Text appearance comes from base.css; only layout spacing here. */
 	.Company {
 		min-height: 100vh;
+		min-height: 100dvh;
 		padding-block: 96px;
 	}
 

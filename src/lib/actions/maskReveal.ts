@@ -94,7 +94,8 @@ export const maskReveal: Action<HTMLElement, MaskRevealOptions | undefined> = (
 			scrollTrigger: {
 				trigger: node,
 				start: 'top top',
-				end: () => '+=' + window.innerHeight * distance * segments,
+				end: () =>
+					'+=' + (window.visualViewport?.height ?? window.innerHeight) * distance * segments,
 				scrub: true,
 				pin: true,
 				pinSpacing: true,

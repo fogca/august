@@ -302,6 +302,7 @@
 	.CartSummary.is-expanded .CartSummary__details {
 		display: block;
 		max-height: calc(100vh - 120px);
+		max-height: calc(100dvh - 120px);
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
 		overscroll-behavior: contain;
