@@ -1,10 +1,7 @@
 <script lang="ts">
 	// August site footer.
-	// Holds newsletter signup, contact info, site nav and legal links.
+	// Holds contact info, site nav and legal links.
 	import Logo from './Logo.svelte';
-
-	let email = $state('');
-	let submitted = $state(false);
 
 	type LinkItem = { label: string; href: string };
 
@@ -28,17 +25,6 @@
 	];
 
 	const YEAR = new Date().getFullYear();
-
-	function handleSubscribe(e: SubmitEvent) {
-		e.preventDefault();
-		// Newsletter signup is a placeholder — wire up to ESP (Resend / Mailchimp) in Phase 4
-		if (!email.trim()) return;
-		submitted = true;
-		setTimeout(() => {
-			submitted = false;
-			email = '';
-		}, 2400);
-	}
 </script>
 
 <footer class="Footer" aria-labelledby="footer-heading">
@@ -82,25 +68,13 @@
 			</ul>
 		</section>
 
-		<!-- Column 4: newsletter -->
-		<section class="Footer__col Footer__col--newsletter">
-			<h3 class="Footer__heading">Newsletter</h3>
-			<p class="Footer__note">New releases, in-progress weights, foundry updates.</p>
-			<form class="Footer__form" onsubmit={handleSubscribe}>
-				<label class="Footer__sr" for="footer-email">Email address</label>
-				<input
-					id="footer-email"
-					type="email"
-					required
-					placeholder="you@example.com"
-					autocomplete="email"
-					bind:value={email}
-					class="Footer__input"
-				/>
-				<button type="submit" class="Footer__submit">
-					{submitted ? 'Thank you' : 'Subscribe →'}
-				</button>
-			</form>
+		<!-- Column 4: contact -->
+		<section class="Footer__col">
+			<h3 class="Footer__heading">Contact</h3>
+			<p class="Footer__note">Licensing, custom type, and general enquiries.</p>
+			<ul class="Footer__list">
+				<li><a href="/contact">Contact us →</a></li>
+			</ul>
 		</section>
 	</div>
 
@@ -135,10 +109,6 @@
 
 	.Footer :global(a) {
 		color: #fff;
-	}
-
-	.Footer :global(input::placeholder) {
-		color: rgba(255, 255, 255, 0.4);
 	}
 
 	.Footer__sr {
@@ -226,64 +196,6 @@
 		line-height: 1.5;
 		opacity: 0.7;
 		margin: 0;
-	}
-
-	.Footer__form {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	@media (min-width: 480px) {
-		.Footer__form {
-			flex-direction: row;
-		}
-	}
-
-	.Footer__input {
-		flex: 1;
-		background: transparent;
-		border: 0;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-		color: inherit;
-		font: inherit;
-		font-size: 14px;
-		padding: 8px 0;
-		outline: none;
-		transition: border-color 0.2s ease;
-	}
-
-	.Footer__input::placeholder {
-		color: rgba(255, 255, 255, 0.4);
-	}
-
-	.Footer__input:focus {
-		border-bottom-color: #fff;
-	}
-
-	.Footer__submit {
-		background: transparent;
-		border: 0;
-		color: inherit;
-		font: inherit;
-		font-size: 14px;
-		font-weight: var(--fw-strong);
-		cursor: pointer;
-		padding: 8px 0;
-		text-align: left;
-		transition: opacity 0.15s ease;
-	}
-
-	@media (min-width: 480px) {
-		.Footer__submit {
-			padding: 8px 16px;
-			text-align: center;
-			border-bottom: 1px solid transparent;
-		}
-	}
-
-	.Footer__submit:hover {
-		opacity: 0.7;
 	}
 
 	.Footer__bottom {

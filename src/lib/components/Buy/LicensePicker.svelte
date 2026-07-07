@@ -2,7 +2,7 @@
 	// License picker — toggle select + stepper for tier; no dropdown.
 	// Card click = toggle license on/off.
 	// Arrow buttons (‹ ›) = change tier independently without affecting selection state.
-	import { LICENSES, TIER_DEFS, getPrice, getGrossPrice, getTierLabel } from '$lib/data/pricing';
+	import { LICENSES, TIER_DEFS, getPrice, getGrossPrice, getTierLabel, formatPrice } from '$lib/data/pricing';
 	import type { LicenseType, Currency, PackageDef } from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
 
@@ -27,9 +27,22 @@
 
 	const isActive = (lt: LicenseType): boolean => cartItems.some((i) => i.licenseType === lt);
 
+	// License type whose enterprise tier was requested — shows the inline quote notice
+	let enterpriseNotice = $state<LicenseType | null>(null);
+
 	/** Current tier index for a license (default 1). */
 	function currentTierIndex(lt: LicenseType): number {
 		return tierSelections.get(lt) ?? 1;
+	}
+
+	/**
+	 * Price preview for a license card at its currently previewed tier.
+	 * Returns null for the enterprise tier (custom quote).
+	 */
+	function cardPrice(lt: LicenseType): number | null {
+		if (packages.length === 0) return null;
+		const license = LICENSES.find((l) => l.id === lt)!;
+		return getPrice(packages[0], license, currentTierIndex(lt), currency);
 	}
 
 	/** Human-readable tier label for a given license + tier index. */
@@ -45,6 +58,8 @@
 	 */
 	function toggleCard(lt: LicenseType) {
 		if (isActive(lt)) {
+			// Deselecting also retires any enterprise-quote notice for this license
+			if (enterpriseNotice === lt) enterpriseNotice = null;
 			onremove(lt);
 			return;
 		}
@@ -53,10 +68,12 @@
 		const tier = TIER_DEFS.find((t) => t.index === tierIndex);
 
 		if (tier?.multiplier === null) {
-			// Enterprise tier — redirect to contact
-			window.location.href = '/contact';
+			// Enterprise tier has no self-serve price — show the inline quote notice
+			// instead of navigating away (which would silently discard the cart).
+			enterpriseNotice = lt;
 			return;
 		}
+		if (enterpriseNotice === lt) enterpriseNotice = null;
 
 		if (packages.length > 0) {
 			// Resolve price against first selected package;
@@ -89,16 +106,27 @@
 	 * Set the tier for a license from the dropdown.
 	 * Inactive card → just preview the tier (no cart change).
 	 * Active card → update tier across all selected packages.
-	 * Tier 12 (enterprise) is kept selectable; price resolves to "Contact".
+	 * Tier 12 (enterprise) on an ACTIVE card is unpriceable: keep the cart at the
+	 * current tier, revert the select, and show the inline quote notice (matching
+	 * toggleCard / CartSummary) instead of desyncing tierSelections from the cart.
 	 */
-	function setTier(lt: LicenseType, next: number) {
+	function setTier(lt: LicenseType, next: number, el?: HTMLSelectElement) {
 		if (next === currentTierIndex(lt)) return;
 		const license = LICENSES.find((l) => l.id === lt)!;
+		const tier = TIER_DEFS.find((t) => t.index === next);
 
 		if (!isActive(lt)) {
 			ontierstep(lt, next);
+			enterpriseNotice = tier?.multiplier === null ? lt : enterpriseNotice === lt ? null : enterpriseNotice;
 			return;
 		}
+
+		if (tier?.multiplier === null) {
+			if (el) el.value = String(currentTierIndex(lt));
+			enterpriseNotice = lt;
+			return;
+		}
+		if (enterpriseNotice === lt) enterpriseNotice = null;
 
 		if (packages.length > 0) {
 			for (const pkg of packages) {
@@ -159,14 +187,25 @@
 						class="LicensePicker__select"
 						aria-label={`${license.label} license scale`}
 						value={tierIndex}
-						onchange={(e) => setTier(license.id, Number(e.currentTarget.value))}
+						onchange={(e) => setTier(license.id, Number(e.currentTarget.value), e.currentTarget)}
 					>
 						{#each TIER_DEFS as t (t.index)}
 							<option value={t.index}>{tierLabelFor(license.id, t.index)}</option>
 						{/each}
 					</select>
+					{#if packages.length > 0}
+						{@const price = cardPrice(license.id)}
+						<span class="LicensePicker__price">
+							{price === null ? 'Custom quote' : formatPrice(price, currency)}
+						</span>
+					{/if}
 				</div>
 			</div>
+			{#if enterpriseNotice === license.id}
+				<p class="LicensePicker__enterprise" role="status">
+					This scale requires a custom quote — <a href="/contact">contact us</a>.
+				</p>
+			{/if}
 		{/each}
 	</div>
 </div>
@@ -286,7 +325,38 @@
 	/* ── Tier dropdown — top-right, beside the licence name ── */
 	.LicensePicker__tier {
 		flex-shrink: 0;
-		padding: 18px 18px 0 0;
+		padding: 18px 18px 16px 0;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 6px;
+	}
+
+	/* Live price preview for the selected tier (updates with tier + currency) */
+	.LicensePicker__price {
+		font-family: 'Steiner', sans-serif;
+		font-size: 12px;
+		font-variation-settings: 'wght' 450;
+		letter-spacing: 0;
+		white-space: nowrap;
+	}
+
+	.LicensePicker__card.is-active .LicensePicker__price {
+		color: var(--color-bg);
+	}
+
+	/* Inline enterprise-quote notice (replaces the old hard redirect to /contact) */
+	.LicensePicker__enterprise {
+		font-family: 'Steiner', sans-serif;
+		font-size: 11px;
+		line-height: 1.5;
+		margin: 0;
+		padding: 8px 18px 0;
+	}
+
+	.LicensePicker__enterprise a {
+		text-decoration: underline;
+		text-underline-offset: 2px;
 	}
 
 	.LicensePicker__select {

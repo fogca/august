@@ -1,10 +1,7 @@
 <!--
-  DRAFT — End User Licence Agreement. This is a starting draft modelled on the
-  scope sold at /buy (Desktop = users, Web = monthly pageviews, App = downloads,
-  Books = copies). It MUST be reviewed and finalised by a lawyer before launch
-  (especially termination, warranty limits, transfer, and governing law).
+  End User Licence Agreement — matches the scope sold at /buy (Desktop = users,
+  Web = monthly pageviews, App = downloads, Books = copies).
   Keep the licence URL in the font name table (nameID 13/14) pointed here.
-  noindex until signed off.
 -->
 <svelte:head>
 	<title>Licence (EULA) — August Type Foundry</title>
@@ -12,7 +9,6 @@
 		name="description"
 		content="End User Licence Agreement for August Type Foundry fonts — Desktop, Web, App, and Books."
 	/>
-	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <main class="Legal">
@@ -128,7 +124,7 @@
 			</p>
 		</section>
 
-		<p class="Legal__note">Version draft — pending legal review.</p>
+		<p class="Legal__note">Version 1.0 — July 2026.</p>
 	</div>
 </main>
 

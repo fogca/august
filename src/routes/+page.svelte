@@ -6,19 +6,17 @@
 
 	// Transition scheme:
 	//   Top → font01 (steiner) : v2 reveal (maskReveal)
-	//   font01 → font02 (gQ)   : normal scroll
-	//   font02 → About         : normal scroll
+	//   font01 → About         : normal scroll
 	//   About → Custom          : v1 cover (coverReveal on Custom)
 	//   Custom → Design office  : v1 cover (coverReveal on Office)
 	const steiner = getTypeface('steiner')!;
-	const gq = getTypeface('gq')!;
 </script>
 
 <svelte:head>
-	<title>August Type Foundry — Steiner, gQ</title>
+	<title>August Type Foundry — Steiner</title>
 	<meta
 		name="description"
-		content="August Type Foundry — an independent type foundry from Tokyo. Steiner and gQ."
+		content="August Type Foundry — an independent type foundry from Tokyo. Steiner, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
@@ -45,12 +43,9 @@
 			</div>
 		</div>
 		<div class="Reveal__layer" data-layer>
-			<TypefaceHero typeface={steiner} total={2} />
+			<TypefaceHero typeface={steiner} total={1} />
 		</div>
 	</section>
-
-	<!-- font 02 (gQ) — normal scroll; gQ → About is a normal scroll -->
-	<TypefaceHero typeface={gq} total={2} />
 
 	<!-- About (white) — normal scroll -->
 	<section class="Home__about">

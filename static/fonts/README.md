@@ -1,28 +1,15 @@
-# Aether Web Fonts
+# august.tf Web Fonts
 
-## Current
+Only fonts actually referenced by the site live here. Old builds are archived
+outside the repo (Projects/brands/August/Steiner/00_master/Export/).
 
-`Aether-Book.woff2` — Aether Book (static, weight 400)
-- Latest export: 2026-05-07
-- Includes T right-side tightening (RSB 55 → 35)
-- 56 glyphs (uppercase, lowercase, space, period, comma, hyphen)
+| File | Used by | Loaded from |
+|------|---------|-------------|
+| `Steiner-VF57.woff2` | Site-wide primary typeface (variable, wght 1–950) | `src/app.html` @font-face |
+| `MokusekiSans08-Regular.woff2` | Home-page wordmark (A.tf) | `src/app.html` @font-face |
+| `otref-inter.woff2` | /opentype feature-reference demos | `OpenTypeReference.svelte` |
+| `otref-garamond.woff2` | /opentype feature-reference demos | `OpenTypeReference.svelte` |
 
-`Aether-Variable.woff2` — Identical to Book (backward-compat alias)
-
-## CSS
-
-```css
-@font-face {
-  font-family: 'Aether';
-  src: url('/fonts/Aether-Book.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-```
-
-## Roadmap
-
-- Phase 1 (now): Book static (current)
-- Phase 1.5: Light/Regular/Medium/Bold/Black static instances
-- Phase 2: Variable Font (wght 50-950) — pending Ultra master compatibility
+When shipping a new Steiner build: add the new `Steiner-VF##.woff2`, update the
+`@font-face` src (and `?v=` cache-buster) in `src/app.html`, and DELETE the old
+file — superseded builds must not remain publicly downloadable.

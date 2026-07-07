@@ -23,23 +23,9 @@
 
 /* ------------------------------------------------------------
    1. Font faces
-   ------------------------------------------------------------ */
-
-@font-face {
-  font-family: 'Apercu';
-  src: url('/fonts/Apc.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Apercu';
-  src: url('/fonts/ApercuMedium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
+   ------------------------------------------------------------
+   Steiner / Mokuseki Sans @font-face live in app.html (versioned
+   filenames). No other webfonts ship. */
 
 /* ------------------------------------------------------------
    2. Modern reset
@@ -102,7 +88,9 @@ a {
   /* --- Colors --- */
   --color-bg:        #ffffff;
   --color-text:      #000000;
-  --color-text-mute: rgba(0, 0, 0, 0.3);
+  /* 0.55 ≈ 4.6:1 on white — WCAG AA for the small functional copy this styles
+     (license blurbs, cart hints, buy notes). Was 0.3 (~2.1:1, unreadable). */
+  --color-text-mute: rgba(0, 0, 0, 0.55);
   --color-bg-dark:   #121212;
   --color-bg-gray:   #f1f1f1;
   --color-accent:    #b33030;
@@ -114,8 +102,10 @@ a {
   --black:      var(--color-text);
   --key:        var(--color-text);
 
-  /* --- Typography stacks --- */
-  --font-en:     'Apercu', 'Helvetica Neue', Arial, sans-serif;
+  /* --- Typography stacks ---
+     app.html re-declares --font-en/--font-ja as Steiner (site-wide directive);
+     this is the no-JS/base fallback. */
+  --font-en:     'Steiner', 'Helvetica Neue', Arial, sans-serif;
   --font-ja:     'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
                  'Yu Gothic', 'Meiryo', sans-serif;
   --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI',

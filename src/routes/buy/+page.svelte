@@ -1,6 +1,6 @@
 <script lang="ts">
 	// /buy — August Type Foundry license purchase page (minimal, single product)
-	// One product: Steiner Complete — 40 styles (20 weights × Roman & Italic).
+	// One product: Steiner Complete — 20 weights, upright only (Hairline to Ultra).
 	// Flow: Currency → License (type + tier) → Checkout (Stripe).
 
 	import { LICENSES, TYPEFACE_PRICING, getPrice, getGrossPrice } from '$lib/data/pricing';
@@ -13,6 +13,10 @@
 	import CartSummary from '$lib/components/Buy/CartSummary.svelte';
 	import CurrencyToggle from '$lib/components/Buy/CurrencyToggle.svelte';
 	import StyleList from '$lib/components/Buy/StyleList.svelte';
+	import type { ActionData } from './$types';
+
+	// Checkout action result — carries the error message when the action fails.
+	let { form }: { form: ActionData } = $props();
 
 	// ── The single product ──────────────────────────────────
 
@@ -162,6 +166,7 @@
 			{discounts}
 			{total}
 			packageDefs={hasLicense ? [STEINER] : []}
+			errorMessage={form?.message ?? null}
 			onremove={removeLicense}
 			onremovepackage={() => (cartItems = [])}
 			onTierChange={handleTierChange}

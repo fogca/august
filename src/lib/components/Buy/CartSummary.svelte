@@ -2,6 +2,7 @@
 	// Cart summary — License > Fonts hierarchy.
 	// Supports multiple selected packages.
 	// Tier changes use arrow stepper instead of dropdown.
+	import { enhance } from '$app/forms';
 	import { formatPrice, getLicense, getTierLabel, TIER_DEFS, getPrice, getGrossPrice } from '$lib/data/pricing';
 	import type { Currency, LicenseType, PackageDef } from '$lib/data/pricing';
 	import type { CartItem, AppliedDiscount } from '$lib/data/discounts';
@@ -25,6 +26,8 @@
 		inline?: boolean;
 		/** Educational discount active — forwarded to checkout. */
 		isStudent?: boolean;
+		/** Checkout action failure message (from the page's `form` prop). */
+		errorMessage?: string | null;
 	}
 
 	let {
@@ -40,15 +43,27 @@
 		onTierChange,
 		onremovepackage,
 		inline = false,
-		isStudent = false
+		isStudent = false,
+		errorMessage = null
 	}: Props = $props();
 
 	const hasItems = $derived(items.length > 0);
+
+	// True while the checkout POST is in flight (until Stripe redirect unloads the page)
+	let submitting = $state(false);
+
+	// License type whose enterprise tier was requested — shows the inline quote notice
+	let enterpriseNotice = $state<LicenseType | null>(null);
 
 	// Deduplicated list of active license types (in cart)
 	const activeLicenses = $derived<LicenseType[]>(
 		[...new Set(items.map((i) => i.licenseType))]
 	);
+
+	/** Sum of charged (post-package) prices for a license across selected packages. */
+	function licensePrice(lt: LicenseType): number {
+		return items.filter((i) => i.licenseType === lt).reduce((s, i) => s + i.basePrice, 0);
+	}
 
 	/**
 	 * Get current tier index for a given license+package combo.
@@ -64,16 +79,21 @@
 
 	/**
 	 * Set the tier for a license across all packages (from the cart dropdown).
+	 * The enterprise tier (multiplier null) has no self-serve price: keep the cart
+	 * untouched, revert the select, and show an inline custom-quote notice instead
+	 * of hard-navigating away (which used to silently destroy the cart).
 	 */
-	function setTier(lt: LicenseType, next: number) {
+	function setTier(lt: LicenseType, next: number, el?: HTMLSelectElement) {
 		const current = currentTierIndex(lt);
 		if (next === current) return;
 
 		const tier = TIER_DEFS.find((t) => t.index === next);
 		if (tier?.multiplier === null) {
-			window.location.href = '/contact';
+			if (el) el.value = String(current);
+			enterpriseNotice = lt;
 			return;
 		}
+		if (enterpriseNotice === lt) enterpriseNotice = null;
 
 		const license = getLicense(lt);
 		for (const pkg of packageDefs) {
@@ -96,6 +116,10 @@
 		return getLicense(lt).label;
 	}
 </script>
+
+<!-- bfcache: coming Back from Stripe restores the page with submitting=true —
+     reset it so the Checkout button is usable again -->
+<svelte:window onpageshow={(e) => { if (e.persisted) submitting = false; }} />
 
 <aside
 	class="CartSummary"
@@ -147,19 +171,28 @@
 									class="CartSummary__select"
 									aria-label={`${licenseLabel(lt)} scale`}
 									value={tierIndex}
-									onchange={(e) => setTier(lt, Number(e.currentTarget.value))}
+									onchange={(e) => setTier(lt, Number(e.currentTarget.value), e.currentTarget)}
 								>
 									{#each TIER_DEFS as t (t.index)}
 										<option value={t.index}>{tierOptionLabel(lt, t.index)}</option>
 									{/each}
 								</select>
+								<span class="CartSummary__licence-price">{formatPrice(licensePrice(lt), currency)}</span>
 								<button
 									type="button"
 									class="CartSummary__remove"
-									onclick={() => onremove(lt)}
+									onclick={() => {
+										if (enterpriseNotice === lt) enterpriseNotice = null;
+										onremove(lt);
+									}}
 									aria-label={`Remove ${licenseLabel(lt)} license`}
 								>×</button>
 							</div>
+							{#if enterpriseNotice === lt && activeLicenses.includes(lt)}
+								<p class="CartSummary__enterprise" role="status">
+									This scale requires a custom quote — <a href="/contact">contact us</a>.
+								</p>
+							{/if}
 						</li>
 					{/each}
 				</ul>
@@ -186,10 +219,11 @@
 				</section>
 			{/if}
 
-			<!-- Totals -->
+			<!-- Totals — "Full price" is the gross (pre-discount) anchor; the per-line
+			     license prices above are launch (post-package) prices -->
 			<section class="CartSummary__totals">
 				<div class="CartSummary__row">
-					<span>Subtotal</span>
+					<span>Full price</span>
 					<span class="CartSummary__row-currency">{currency}</span>
 					<span class="CartSummary__row-amount">{formatPrice(subtotal, currency)}</span>
 				</div>
@@ -210,7 +244,23 @@
 			</section>
 
 			<!-- Checkout -->
-			<form method="POST" action="?/checkout" class="CartSummary__form">
+			{#if errorMessage}
+				<p class="CartSummary__error" role="alert">{errorMessage}</p>
+			{/if}
+			<form
+				method="POST"
+				action="?/checkout"
+				class="CartSummary__form"
+				use:enhance={() => {
+					submitting = true;
+					return async ({ update }) => {
+						// On failure the `form` prop updates in place — cart state survives.
+						// On success SvelteKit follows the external redirect to Stripe.
+						await update({ reset: false });
+						submitting = false;
+					};
+				}}
+			>
 				<input type="hidden" name="currency" value={currency} />
 				<input type="hidden" name="educational" value={isStudent ? '1' : '0'} />
 				{#each packageDefs as pkg}
@@ -222,7 +272,9 @@
 					<input type="hidden" name="item_price" value={item.basePrice} />
 					<input type="hidden" name="item_package" value={item.packageId} />
 				{/each}
-				<button type="submit" class="CartSummary__checkout-btn">Checkout</button>
+				<button type="submit" class="CartSummary__checkout-btn" disabled={submitting}>
+					{submitting ? 'Redirecting…' : 'Checkout'}
+				</button>
 			</form>
 		{/if}
 	</div>
@@ -394,6 +446,27 @@
 		border-color: var(--color-text);
 	}
 
+	.CartSummary__licence-price {
+		flex-shrink: 0;
+		font-size: 12px;
+		font-variation-settings: 'wght' 450;
+		white-space: nowrap;
+	}
+
+	/* Inline enterprise-quote notice (replaces the old hard redirect to /contact) */
+	.CartSummary__enterprise {
+		margin: 0;
+		padding: 0 14px 10px;
+		font-size: 11px;
+		line-height: 1.5;
+		color: var(--color-text);
+	}
+
+	.CartSummary__enterprise a {
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
 	.CartSummary__remove {
 		background: transparent;
 		border: 0;
@@ -509,7 +582,22 @@
 		opacity: 0.86;
 	}
 
+	.CartSummary__checkout-btn:disabled {
+		opacity: 0.55;
+		cursor: default;
+	}
+
 	.CartSummary__form {
 		margin: 0;
+	}
+
+	/* Checkout failure message — announced (role=alert) above the button */
+	.CartSummary__error {
+		margin: 0 0 10px;
+		padding: 10px 12px;
+		border: 1px solid var(--color-accent, #b33030);
+		color: var(--color-accent, #b33030);
+		font-size: 12px;
+		line-height: 1.5;
 	}
 </style>

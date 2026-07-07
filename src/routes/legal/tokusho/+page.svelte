@@ -1,12 +1,7 @@
-<!--
-  DRAFT — 特定商取引法に基づく表記.
-  Requires founder input ([運営責任者名], phone-disclosure choice) and a final
-  check (advisor + the tax-inclusive JPY price display). noindex until signed off.
--->
+<!-- 特定商取引法に基づく表記（2026-07 確定） -->
 <svelte:head>
 	<title>特定商取引法に基づく表記 — August Type Foundry</title>
 	<meta name="description" content="Specified Commercial Transactions Act disclosure for August Type Foundry." />
-	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <main class="Legal">
@@ -58,7 +53,7 @@
 			</div>
 			<div class="Legal__fact">
 				<dt>商品の引渡し時期</dt>
-				<dd>決済完了後、ダウンロードリンクを記載したメールにて速やかに提供いたします。</dd>
+				<dd>決済完了後、24時間以内にダウンロードリンクを記載したメールにてお届けいたします。</dd>
 			</div>
 			<div class="Legal__fact">
 				<dt>返品・キャンセルについて</dt>
@@ -73,7 +68,7 @@
 			</div>
 		</dl>
 
-		<p class="Legal__note" lang="ja">最終更新：2026年——／本表記は確定前のドラフトです。</p>
+		<p class="Legal__note" lang="ja">最終更新：2026年7月</p>
 	</div>
 </main>
 

@@ -1,7 +1,6 @@
 <svelte:head>
 	<title>Company — August Type Foundry</title>
 	<meta name="description" content="August Type Foundry — company information." />
-	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <main class="Company">

@@ -3,20 +3,20 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-		<meta name="description" content="August Type Foundry — Steiner Variable Font" />
+		<!-- Per-page <meta name="description"> comes from each route's svelte:head -->
 		<!-- Global design tokens and reset -->
 		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css" />
-		<!-- Steiner VF 56 — latest export -->
+		<!-- Steiner VF — latest export (version in the filename) -->
 		<style>
 			@font-face {
 				font-family: 'Steiner';
-				src: url('%sveltekit.assets%/fonts/Steiner-VF56.woff2?v=20260622h') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Steiner-VF57.woff2?v=20260703') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
-			/* Mokuseki Sans (latest v08) — used by the gQ typeface */
+			/* Mokuseki Sans (latest v08) — used by the home-page wordmark */
 			@font-face {
 				font-family: 'Mokuseki Sans';
 				src: url('%sveltekit.assets%/fonts/MokusekiSans08-Regular.woff2?v=08') format('woff2');
@@ -42,7 +42,8 @@
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
 		<meta name="theme-color" content="#ffffff" />
 
-		<!-- Open Graph / Twitter (site-wide defaults; pages set their own <title>) -->
+		<!-- Open Graph / Twitter (site-wide defaults; pages set their own <title>).
+		     No og:url here — crawlers fall back to each page's own URL. -->
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="August Type Foundry" />
 		<meta property="og:title" content="August Type Foundry — Steiner" />
@@ -50,7 +51,6 @@
 			property="og:description"
 			content="An independent type foundry from Tokyo. Steiner — a 20-weight neo-humanist variable typeface."
 		/>
-		<meta property="og:url" content="https://august.tf/" />
 		<meta property="og:image" content="https://august.tf/og.png" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="August Type Foundry — Steiner" />

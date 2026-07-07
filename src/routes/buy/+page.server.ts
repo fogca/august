@@ -104,29 +104,43 @@ export const actions: Actions = {
 			httpClient: Stripe.createFetchHttpClient()
 		});
 
-		const session = await stripe.checkout.sessions.create({
-			mode: 'payment',
-			line_items: [
-				{
-					quantity: 1,
-					price_data: {
-						currency: currency.toLowerCase(),
-						unit_amount: toStripeAmount(total, currency),
-						product_data: {
-							name: `${STEINER.label} — ${STEINER.detail}`,
-							description: `Licenses: ${lineDescriptions.join(' / ')}${isStudent ? ' · Educational' : ''}`
+		// Stripe caps metadata values at 500 chars — truncate defensively.
+		const licensesSummary = lineDescriptions.join(' / ').slice(0, 490);
+
+		let session: Stripe.Checkout.Session;
+		try {
+			session = await stripe.checkout.sessions.create({
+				mode: 'payment',
+				line_items: [
+					{
+						quantity: 1,
+						price_data: {
+							currency: currency.toLowerCase(),
+							unit_amount: toStripeAmount(total, currency),
+							product_data: {
+								name: `${STEINER.label} — ${STEINER.detail}`,
+								description:
+									`Licenses: ${licensesSummary}${isStudent ? ' · Educational' : ''}`.slice(0, 900)
+							}
 						}
 					}
-				}
-			],
-			metadata: {
-				package: STEINER.id,
-				licenses: lineDescriptions.join(' / '),
-				educational: isStudent ? 'yes' : 'no'
-			},
-			success_url: `${url.origin}/buy/success?session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${url.origin}/buy`
-		});
+				],
+				metadata: {
+					package: STEINER.id,
+					licenses: licensesSummary,
+					educational: isStudent ? 'yes' : 'no'
+				},
+				success_url: `${url.origin}/buy/success?session_id={CHECKOUT_SESSION_ID}`,
+				cancel_url: `${url.origin}/buy`
+			});
+		} catch (err) {
+			// Fails safe: no session, no charge. Keep the buyer on /buy with a message
+			// instead of an unhandled 500.
+			console.error('Stripe checkout session creation failed:', err);
+			return fail(502, {
+				message: 'Could not start checkout. Please try again in a moment — your selection is kept.'
+			});
+		}
 
 		if (!session.url) {
 			return fail(500, { message: 'Could not start checkout. Please try again.' });

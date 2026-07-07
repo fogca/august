@@ -5,7 +5,8 @@ import type { PageLoad } from './$types.js';
 export const load: PageLoad = ({ params }) => {
 	const typeface = getTypeface(params.slug);
 
-	if (!typeface) {
+	// Hidden typefaces are unannounced — keep them out of direct URL reach too.
+	if (!typeface || typeface.hidden) {
 		error(404, `Typeface "${params.slug}" not found`);
 	}
 

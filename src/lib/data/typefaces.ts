@@ -136,6 +136,9 @@ export const TYPEFACES: Typeface[] = [
 		name: 'gQ',
 		order: 2,
 		status: 'in-development',
+		// Withdrawn from the public site for the Steiner-only launch (2026-07).
+		// Weight count / spec are not final — do not re-list until they are.
+		hidden: true,
 		// Latest Mokuseki Sans (v08) webfont
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
@@ -177,7 +180,7 @@ export const TYPEFACES: Typeface[] = [
 			label: 'Neo Humanist Sans',
 			vol: 'vol.02',
 			subtitle: '(Mokuseki Sans)',
-			debut: 'Coming soon',
+			debut: 'Coming Soon',
 			large: true,
 			comingSoon: true,
 			intro: 'The next cut from our foundry.',
@@ -230,8 +233,8 @@ export const TYPEFACES: Typeface[] = [
 		hero: {
 			label: 'Neo Grotesque',
 			vol: 'vol.03',
-			subtitle: '(Coming soon)',
-			debut: 'Coming soon',
+			subtitle: '(Coming Soon)',
+			debut: 'Coming Soon',
 			comingSoon: true,
 			intro: 'The very first Neo Grotesque from our foundry.',
 			statement: 'Geometry, breathing.'

@@ -1,12 +1,7 @@
-<!--
-  DRAFT — Privacy Policy. Needs a final legal/advisor review and confirmation of
-  every processor actually used at launch (Stripe + email + Cloudflare).
-  noindex until signed off.
--->
+<!-- Privacy Policy — processors in use: Stripe (payments), email, Cloudflare (hosting). -->
 <svelte:head>
 	<title>Privacy Policy — August Type Foundry</title>
 	<meta name="description" content="How August Type Foundry collects and uses personal data." />
-	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <main class="Legal">
@@ -23,17 +18,16 @@
 			<p>
 				When you purchase a licence we collect your name, email address, and billing details, and a
 				record of what you licensed. Card details are entered directly with our payment processor
-				and are never stored on our servers. If you sign up to our newsletter we collect your email
-				address. If you email us we keep that correspondence.
+				and are never stored on our servers. If you email us we keep that correspondence.
 			</p>
 		</section>
 
 		<section class="Legal__block">
 			<h2>How we use it</h2>
 			<p>
-				To process your order, deliver your fonts and licence documents, provide support, keep
-				records required by law (tax, accounting), and — only if you opt in — send foundry updates.
-				We do not sell your data, and we do not track the users of websites that license our fonts.
+				To process your order, deliver your fonts and licence documents, provide support, and keep
+				records required by law (tax, accounting). We do not sell your data, and we do not track
+				the users of websites that license our fonts.
 			</p>
 		</section>
 
@@ -49,9 +43,8 @@
 		<section class="Legal__block">
 			<h2>Legal basis &amp; retention</h2>
 			<p>
-				We process order data to perform our contract with you and to meet legal obligations, and
-				newsletter data on the basis of your consent. We keep order and tax records for the period
-				required by law, and you can unsubscribe from the newsletter at any time.
+				We process order data to perform our contract with you and to meet legal obligations. We
+				keep order and tax records for the period required by law.
 			</p>
 		</section>
 
@@ -64,7 +57,7 @@
 			</p>
 		</section>
 
-		<p class="Legal__note">Last updated: 2026 — — · Draft pending review.</p>
+		<p class="Legal__note">Last updated: July 2026.</p>
 	</div>
 </main>
 

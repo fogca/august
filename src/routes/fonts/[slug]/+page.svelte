@@ -156,7 +156,7 @@
 			</ul>
 			<a class="FontBuy__cta" href="/buy?font={tf.slug}">Configure licenses &amp; buy →</a>
 			<p class="FontBuy__note">
-				40 styles — 20 weights with matching italics. Educational licences −30%.
+				20 weights — Hairline to Ultra. Educational licences −30%.
 			</p>
 		{:else}
 			<p class="FontBuy__eyebrow">Coming Soon</p>

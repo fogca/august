@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Educational discount toggle.
-	// When enabled, all other discounts are suppressed (§11.4-D).
+	// −30% applied on top of the post-package subtotal (see $lib/data/discounts).
 	interface Props {
 		checked: boolean;
 		onchange: (v: boolean) => void;
@@ -31,14 +31,14 @@
 			<span class="EducationalToggle__title">Educational discount (−30%)</span>
 			<span class="EducationalToggle__desc" id="edu-description">
 				For students and educational institutions. Requires .edu / .ac.jp email or student ID.
-				Cannot be combined with other discounts.
+				Applies on top of the launch price.
 			</span>
 		</span>
 	</label>
 
 	{#if checked}
 		<div class="EducationalToggle__badge" role="status" aria-live="polite">
-			Educational discount applied — other discounts suppressed
+			Educational discount applied (−30%)
 		</div>
 	{/if}
 </div>
