@@ -2,7 +2,7 @@
 
 ## Scope
 EC ではなく決済機能のみ。カート永続化・アカウント・在庫は持たない。
-1 商品（Steiner Complete — 40 Styles）× ライセンス構成を 1 回の Checkout Session で決済する。
+1 商品（Steiner Complete — 20 weights）× ライセンス構成を 1 回の Checkout Session で決済する。
 
 ## Flow
 1. `/buy` でライセンス（type + tier）・通貨・Educational を選択

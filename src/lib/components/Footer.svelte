@@ -12,10 +12,9 @@
 		{ label: 'Contact', href: '/contact' }
 	];
 
-	const SOCIAL: LinkItem[] = [
-		{ label: 'Instagram', href: 'https://instagram.com/' },
-		{ label: 'Twitter', href: 'https://twitter.com/' }
-	];
+	// Social accounts are not live yet — placeholder links must not ship.
+	// Re-add entries here once the foundry accounts exist.
+	const SOCIAL: LinkItem[] = [];
 
 	const LEGAL: LinkItem[] = [
 		{ label: 'EULA', href: '/legal/eula' },
@@ -53,7 +52,7 @@
 
 		<!-- Column 3: social / contact -->
 		<section class="Footer__col">
-			<h3 class="Footer__heading">Find us</h3>
+			<h3 class="Footer__heading">Email</h3>
 			<ul class="Footer__list">
 				{#each SOCIAL as item (item.href)}
 					<li>
