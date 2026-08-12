@@ -95,6 +95,9 @@ a {
   --color-bg-gray:   #f1f1f1;
   --color-accent:    #b33030;
   --color-line:      rgba(0, 0, 0, 0.15);
+  /* Sharper signal red — top-page redesign (2026-08) + Header logo. Distinct
+     from the older, muted --color-accent above; do not merge the two. */
+  --color-signal:    #e0231c;
 
   /* --- Color aliases (general-purpose) --- */
   --background: var(--color-bg);

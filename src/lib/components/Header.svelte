@@ -191,13 +191,18 @@
 		font-size: 20px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
-		color: inherit;
+		/* Signal red, not the header's black/inverted text — wins over .is-open too. */
+		color: var(--color-signal, #e0231c);
 		letter-spacing: 0;
 		padding: 4px 8px;
 	}
 
-	/* SP: logo 25px (overrides the SVG's inline height) */
+	/* SP: logo 25px (overrides the SVG's inline height); tighter header padding */
 	@media (max-width: 767px) {
+		.Header {
+			padding: calc(12px + env(safe-area-inset-top, 0px)) 10px 8px;
+		}
+
 		.Header__logo :global(.Logo) {
 			height: 25px !important;
 		}
