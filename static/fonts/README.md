@@ -5,11 +5,13 @@ outside the repo (Projects/brands/August/Steiner/00_master/Export/).
 
 | File | Used by | Loaded from |
 |------|---------|-------------|
-| `Steiner-VF57.woff2` | Site-wide primary typeface (variable, wght 1–950) | `src/app.html` @font-face |
-| `MokusekiSans08-Regular.woff2` | Home-page wordmark (A.tf) | `src/app.html` @font-face |
+| `Steiner-VF69.woff2` | Site-wide primary typeface (variable, wght 1–950) | `src/app.html` @font-face |
+| `MokusekiSans08-Regular.woff2` | Home-page wordmark, general use (v08) | `src/app.html` @font-face |
+| `MokusekiSans01-Regular.woff2` | AUGUST logotype on the top-page KV (v01, first cut) | `src/app.html` @font-face |
 | `otref-inter.woff2` | /opentype feature-reference demos | `OpenTypeReference.svelte` |
 | `otref-garamond.woff2` | /opentype feature-reference demos | `OpenTypeReference.svelte` |
 
-When shipping a new Steiner build: add the new `Steiner-VF##.woff2`, update the
+When shipping a new Steiner build: add the new `Steiner-VF##.woff2` (woff2
+only — never ship the .ttf, it's a full desktop-installable font), update the
 `@font-face` src (and `?v=` cache-buster) in `src/app.html`, and DELETE the old
 file — superseded builds must not remain publicly downloadable.
