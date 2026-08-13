@@ -34,6 +34,9 @@ export interface Typeface {
 	heroVideo?: string;
 	/** Optional credit line for the hero image (photographer / source / licence). */
 	imageCredit?: string;
+	/** When true the typeface page hero flips through the alphabet (white on
+	 *  black) instead of showing heroVideo/thumbnail. */
+	heroGlyphCycle?: boolean;
 	/** Specimen galleries for the typeface page (each renders an ImageGallery). */
 	specimens?: {
 		title: string;
@@ -101,6 +104,9 @@ export const TYPEFACES: Typeface[] = [
 			'Seelenkalender',
 			'Tierwelt'
 		],
+		// Typeface-page hero: alphabet cycling white-on-black (the portrait below
+		// still serves the /fonts index slide).
+		heroGlyphCycle: true,
 		// Hero background — Rudolf Steiner portrait (1905, Otto Rietmann; public domain)
 		thumbnail: '/images/Steiner/06_R.-Steiner-1905-Foto-Rietmann.jpg',
 		imageCredit:

@@ -6,6 +6,7 @@
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
 	import ImageGallery from '$lib/components/fonts/ImageGallery.svelte';
+	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
 	import type { GalleryItem } from '$lib/components/fonts/ImageGallery.svelte';
 	import type { PageData } from './$types.js';
 
@@ -50,12 +51,14 @@
 	<!-- 100vh top-view hero: full-screen media + centered wordmark + meta -->
 	<section
 		class="FontDetail__hero"
-		class:has-media={!!(tf.heroVideo || tf.thumbnail)}
-		class:white={!!(tf.heroVideo || tf.thumbnail)}
+		class:has-media={!!(tf.heroGlyphCycle || tf.heroVideo || tf.thumbnail)}
+		class:white={!!(tf.heroGlyphCycle || tf.heroVideo || tf.thumbnail)}
 		style="background: {tf.theme.bg}; color: {tf.theme.fg};"
 	>
 		<div class="FontDetail__hero-bg">
-			{#if tf.heroVideo}
+			{#if tf.heroGlyphCycle}
+				<GlyphCycle />
+			{:else if tf.heroVideo}
 				<video
 					class="FontDetail__hero-media"
 					src={tf.heroVideo}
@@ -75,14 +78,18 @@
 			{/if}
 		</div>
 
-		{#if tf.imageCredit}
+		{#if tf.imageCredit && !tf.heroGlyphCycle}
 			<!-- Photo credit / colophon — museum-label style, top-right -->
 			<p class="FontDetail__hero-credit">{tf.imageCredit}</p>
 		{/if}
 
-		<div class="FontDetail__hero-center">
-			<span class="FontDetail__hero-name">{tf.name}</span>
-		</div>
+		{#if !tf.heroGlyphCycle}
+			<!-- The cycling alphabet is the centrepiece on its own; a wordmark on
+			     top of it would just collide. -->
+			<div class="FontDetail__hero-center">
+				<span class="FontDetail__hero-name">{tf.name}</span>
+			</div>
+		{/if}
 
 		<div class="FontDetail__hero-foot">
 			<p class="FontDetail__hero-label">{tf.hero.label}</p>
