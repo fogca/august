@@ -141,6 +141,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
+		/* Three of the four columns are <section>s, and base.css still carries a
+		   bare `section { padding-inline: var(--padding) }`. Left alone it inset
+		   those columns ~19px while the <nav> column stayed flush, so Fonts /
+		   About / Buy sat out of line with the logo and Email/Contact. */
+		padding-inline: 0;
 	}
 
 	.Footer__logo {

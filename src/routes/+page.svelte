@@ -2,12 +2,13 @@
 	import { coverReveal } from '$lib/actions/coverReveal';
 	import Arrow from '$lib/components/Arrow.svelte';
 
-	// Hero specimen wave. A leads; "a" trails it by ~0.8s of the 9s cycle, so the
-	// weight travels across the pair as a chase (per STN-M09_aaaa-wave). The delay
-	// is negative so the loop is already in phase at first paint.
+	// Hero specimen wave. A leads; "a" trails it by 0.3s of the 9s cycle, so the
+	// weight travels across the pair as a tight chase (per STN-M09_aaaa-wave).
+	// The delay is negative — lag 0.3s == 8.7s ahead — so the loop is already in
+	// phase at first paint instead of sitting still for a beat.
 	const AA: { glyph: string; delay: string }[] = [
 		{ glyph: 'A', delay: '0s' },
-		{ glyph: 'a', delay: '-8.2s' }
+		{ glyph: 'a', delay: '-8.7s' }
 	];
 
 	// Top page v2 — red / black / white, type-first.
@@ -71,7 +72,11 @@
 	<section class="Home__custom" use:coverReveal>
 		<div class="Custom__inner">
 			<p class="Custom__eyebrow">Bespoke</p>
-			<h2 class="Custom__heading">Custom type for corporate identity</h2>
+			<!-- Spans, not <br>: they stay inline on desktop and become the three
+			     designed lines on phones. -->
+			<h2 class="Custom__heading">
+				<span>Custom type</span> <span>for corporate</span> <span>identity</span>
+			</h2>
 			<p class="Custom__body">
 				Beyond our retail library, August designs bespoke typefaces for brands and
 				institutions — a proprietary voice, drawn from the first sketch to a fully realised
@@ -89,10 +94,18 @@
 		<div class="Office__inner">
 			<p class="Office__label">Design Office</p>
 			<p class="Office__text">
-				August Type Foundry is the type design practice of an independent design office in
-				Tokyo.
+				August Type Foundry is the pragmatic type design practice of an independent design
+				office in Tokyo.
 			</p>
-			<a class="Office__link" href="/about">About the foundry <Arrow size={9} /></a>
+			<div class="Office__links">
+				<a class="Office__link" href="/about">About type foundry <Arrow size={9} /></a>
+				<a
+					class="Office__link"
+					href="https://takumiisobe.com"
+					target="_blank"
+					rel="noopener noreferrer">About design office <Arrow size={9} /></a
+				>
+			</div>
 		</div>
 	</section>
 </main>
@@ -165,6 +178,12 @@
 	.Hero__cell {
 		position: relative;
 		display: inline-block;
+	}
+
+	/* The Ultra-weight ghost reserves the widest box, which leaves the pair a
+	   touch loose at lighter weights — pull the second glyph back in. */
+	.Hero__cell + .Hero__cell {
+		margin-left: -3px;
 	}
 
 	/* Reserves the box at the heaviest weight — never painted, never announced. */
@@ -390,6 +409,13 @@
 		margin: 0 0 28px;
 	}
 
+	/* Phones: break to the designed three lines instead of wrapping freely. */
+	@media (max-width: 767.98px) {
+		.Custom__heading span {
+			display: block;
+		}
+	}
+
 	.Custom__body {
 		font-family: 'Steiner', sans-serif;
 		font-size: 14px;
@@ -471,7 +497,8 @@
 		margin: 0;
 	}
 
-	/* Matches .Buy__heading — this statement is the section's title. */
+	/* Matches .Buy__heading — this statement is the section's title, so it gets
+	   the full column (the 80% cap is for body copy) and wraps in fewer lines. */
 	.Office__text {
 		font-family: 'Steiner', sans-serif;
 		font-size: var(--display-fs);
@@ -479,8 +506,14 @@
 		line-height: 1.02;
 		text-transform: uppercase;
 		letter-spacing: 0.025em;
-		max-width: 80%;
-		margin: 0 auto;
+		margin: 0;
+	}
+
+	.Office__links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px 28px;
 	}
 
 	.Office__link {
