@@ -28,7 +28,8 @@
 <main class="Home">
 	<!-- Hero (white) — the Steiner "Aa" specimen, per Figma 313:176 -->
 	<section class="Hero">
-		<p class="Hero__headline">Our very first typeface: Steiner Sans</p>
+		<p class="Hero__name">Steiner Sans</p>
+		<p class="Hero__headline">Our very first typeface</p>
 		<div class="Hero__specimen">
 			<!-- Each glyph sits in a fixed-width cell: an invisible Ultra-weight
 			     ghost reserves the widest box, and the animated glyph is centred
@@ -135,10 +136,21 @@
 		padding-inline: var(--gutter);
 	}
 
+	/* Typeface name leads, set at h2 scale in sentence case. */
+	.Hero__name {
+		font-family: 'Steiner', sans-serif;
+		font-size: var(--fs-h2);
+		line-height: var(--lh-h2);
+		font-weight: 400;
+		text-align: center;
+		margin: 0;
+	}
+
 	.Hero__headline {
 		font-family: 'Steiner', sans-serif;
 		font-size: clamp(15px, 1.6vw, 21px);
 		line-height: 1.4;
+		font-weight: 400;
 		text-align: center;
 		text-transform: uppercase;
 		letter-spacing: 0.025em;
@@ -183,7 +195,7 @@
 	/* The Ultra-weight ghost reserves the widest box, which leaves the pair a
 	   touch loose at lighter weights — pull the second glyph back in. */
 	.Hero__cell + .Hero__cell {
-		margin-left: -3px;
+		margin-left: -8px;
 	}
 
 	/* Reserves the box at the heaviest weight — never painted, never announced. */
