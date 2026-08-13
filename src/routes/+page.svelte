@@ -21,7 +21,9 @@
 	<section class="Hero">
 		<p class="Hero__headline">Our very first typeface: Steiner Sans</p>
 		<div class="Hero__specimen">
-			<p class="Hero__aa">Aa</p>
+			<!-- Each glyph animates the wght axis on its own phase, so the pair
+			     breathes as a continuous wave rather than pulsing in unison. -->
+			<p class="Hero__aa"><span>A</span><span>a</span></p>
 		</div>
 		<div class="Hero__bottom">
 			<div class="Hero__meta">
@@ -121,6 +123,39 @@
 		font-size: clamp(160px, 32vw, 420px);
 		line-height: 1;
 		margin: 0;
+		display: flex;
+		align-items: baseline;
+		justify-content: center;
+	}
+
+	/* Seamless wght loop: 1 (Hair) → 950 (Ultra) → 1. The two glyphs share one
+	   keyframe and are offset by a negative delay, so "a" trails "A" by a
+	   quarter cycle — the family's continuous-wave motion, not a pulse. */
+	@keyframes steinerBreath {
+		0%,
+		100% {
+			font-variation-settings: 'wght' 1;
+		}
+		50% {
+			font-variation-settings: 'wght' 950;
+		}
+	}
+
+	.Hero__aa span {
+		display: inline-block;
+		font-variation-settings: 'wght' 1;
+		animation: steinerBreath 9s ease-in-out infinite;
+	}
+
+	.Hero__aa span:last-child {
+		animation-delay: -2.25s;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.Hero__aa span {
+			animation: none;
+			font-variation-settings: 'wght' 400;
+		}
 	}
 
 	.Hero__bottom {
@@ -197,9 +232,11 @@
 	.Buy {
 		background: var(--red);
 		color: #ffffff;
-		min-height: 70vh;
+		min-height: 100vh;
+		min-height: 100dvh;
 		display: flex;
 		align-items: center;
+		padding-inline: var(--padding);
 		padding-top: clamp(70px, 10vh, 130px);
 		padding-bottom: clamp(70px, 10vh, 130px);
 	}
@@ -359,22 +396,27 @@
 		}
 	}
 
-	/* --- Design office band — unchanged from v1 --- */
+	/* --- Design office (white) — full screen, centered, uppercase --- */
 	.Office {
-		min-height: 300px;
+		min-height: 100vh;
+		min-height: 100dvh;
 		background: #ffffff;
 		color: #000000;
 		display: flex;
 		align-items: center;
-		padding-top: 48px;
-		padding-bottom: 48px;
+		justify-content: center;
+		padding-inline: var(--padding);
+		padding-top: clamp(70px, 10vh, 130px);
+		padding-bottom: clamp(70px, 10vh, 130px);
 	}
 
 	.Office__inner {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
-		max-width: 540px;
+		align-items: center;
+		gap: 24px;
+		max-width: 800px;
+		text-align: center;
 	}
 
 	.Office__label {
@@ -389,9 +431,11 @@
 
 	.Office__text {
 		font-family: 'Steiner', sans-serif;
-		font-size: 16px;
+		font-size: clamp(24px, 4vw, 40px);
 		font-variation-settings: 'wght' 360;
-		line-height: 1.5;
+		line-height: 1.35;
+		text-transform: uppercase;
+		letter-spacing: 0.025em;
 		margin: 0;
 	}
 

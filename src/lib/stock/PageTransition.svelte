@@ -114,6 +114,8 @@
 			transformOrigin: `50% ${vhCenter}px`
 		});
 		gsap.set('.transition-panel', { backgroundColor: panelColor });
+		// Arm the darken layer (kept transparent while idle — see the CSS note)
+		gsap.set('.darken-overlay', { backgroundColor: 'black' });
 
 		return new Promise<void>((resolve) => {
 			const tl = gsap.timeline({
@@ -171,7 +173,7 @@
 			// a px transform — otherwise the fixed white panel leaves a strip pinned
 			// at the bottom on mobile when the URL bar retracts and the viewport grows.
 			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
-			gsap.set('.darken-overlay', { opacity: 0 });
+			gsap.set('.darken-overlay', { opacity: 0, backgroundColor: 'transparent' });
 			activeSkipFadeIn = false;
 			onComplete?.();
 			return;
@@ -191,7 +193,7 @@
 			// a px transform — otherwise the fixed white panel leaves a strip pinned
 			// at the bottom on mobile when the URL bar retracts and the viewport grows.
 			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
-				gsap.set('.darken-overlay', { opacity: 0 });
+				gsap.set('.darken-overlay', { opacity: 0, backgroundColor: 'transparent' });
 				onComplete?.();
 			}
 		});
@@ -208,8 +210,13 @@
 <div class="transition-panel" aria-hidden="true"></div>
 
 <style>
+	/* iOS Safari tints its floating toolbar (and the safe areas behind it) with
+	   the BODY's background-color. A black body therefore paints a black band
+	   under a white page — the bug this used to cause. The transition's black
+	   backdrop lives on .transition-bg (a real element, never sampled by
+	   Safari), so body must stay the page colour. Do not set body black again. */
 	:global(body) {
-		background: black;
+		background: var(--color-bg, #ffffff);
 	}
 
 	.transition-bg {
@@ -228,10 +235,14 @@
 		position: relative;
 	}
 
+	/* Transparent while idle on purpose: iOS Safari samples the background-color
+	   of viewport-edge `position: fixed` elements to tint its toolbar, and it
+	   does so even when the element is fully transparent via opacity. The black
+	   is switched on by the timeline (gsap.set below) and cleared on reset. */
 	.darken-overlay {
 		position: fixed;
 		inset: 0;
-		background: black;
+		background: transparent;
 		opacity: 0;
 		z-index: 998;
 		pointer-events: none;
