@@ -62,10 +62,12 @@
 			<p class="Buy__eyebrow">License</p>
 			<h2 class="Buy__heading">Make it yours.</h2>
 			<p class="Buy__body">
-				Steiner Complete — 20 weights, desktop and web. From €560, perpetual license. Pay
-				once, use forever.
+				Steiner Complete gathers the whole family — 20 weights from Hair to Ultra, drawn as
+				a single variable font and delivered with statics, for desktop and web alike. One
+				perpetual license from €560: no seat renewals, no page-view tiers, no expiry. Buy it
+				once and it stays yours, across every project you take on.
 			</p>
-			<a class="Buy__cta" href="/buy">Buy Steiner</a>
+			<a class="Buy__cta" href="/buy">Buy Steiner <Arrow size={10} /></a>
 		</div>
 	</section>
 
@@ -346,19 +348,22 @@
 		margin: 0 auto 36px;
 	}
 
+	/* Same text-plus-arrow treatment as the Bespoke / Design Office links,
+	   in white against the red band. */
 	.Buy__cta {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
 		font-family: 'Steiner', sans-serif;
-		font-size: 15px;
+		font-size: 16px;
 		font-weight: var(--fw-ui);
-		background: #000000;
-		padding: 16px 34px;
 		text-decoration: none;
-		transition: background 0.2s ease;
+		color: #ffffff;
+		transition: opacity 0.2s ease;
 	}
 
 	.Buy__cta:hover {
-		background: #1c1c1c;
+		opacity: 0.7;
 	}
 
 	@media (min-width: 768px) {
