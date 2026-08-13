@@ -139,9 +139,9 @@
 	/* Typeface name leads, set at h2 scale in sentence case. */
 	.Hero__name {
 		font-family: 'Steiner', sans-serif;
-		font-size: var(--fs-h2);
+		font-size: var(--display-fs);
 		line-height: var(--lh-h2);
-		font-weight: 400;
+		font-weight: var(--fw-base);
 		text-align: center;
 		margin: 0;
 	}
