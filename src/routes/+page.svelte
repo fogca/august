@@ -95,8 +95,8 @@
 		<div class="Office__inner">
 			<p class="Office__label">Design Office</p>
 			<p class="Office__text">
-				August Type Foundry is the pragmatic type design practice of an independent design
-				office in Tokyo.
+				August Type Foundry is the pragmatic type design practice led by a creative office
+				in Tokyo.
 			</p>
 			<div class="Office__links">
 				<a class="Office__link" href="/about">About type foundry <Arrow size={9} /></a>
@@ -442,13 +442,18 @@
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-		padding-bottom: 4px;
-		transition: border-color 0.2s ease;
+		color: var(--red);
+		transition: opacity 0.2s ease;
+	}
+
+	/* The section paints every descendant white via `.Home__custom :global(*)`,
+	   which also catches the arrow SVG. Re-assert red inside the CTA. */
+	.Custom__cta :global(*) {
+		color: var(--red);
 	}
 
 	.Custom__cta:hover {
-		border-bottom-color: #ffffff;
+		opacity: 0.7;
 	}
 
 	@media (min-width: 768px) {
@@ -526,11 +531,11 @@
 		font-size: 13px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
-		opacity: 0.7;
+		color: var(--red);
 		transition: opacity 0.2s ease;
 	}
 
 	.Office__link:hover {
-		opacity: 1;
+		opacity: 0.7;
 	}
 </style>
