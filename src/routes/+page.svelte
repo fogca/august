@@ -2,6 +2,14 @@
 	import { coverReveal } from '$lib/actions/coverReveal';
 	import Arrow from '$lib/components/Arrow.svelte';
 
+	// Hero specimen wave. A leads; "a" trails it by ~0.8s of the 9s cycle, so the
+	// weight travels across the pair as a chase (per STN-M09_aaaa-wave). The delay
+	// is negative so the loop is already in phase at first paint.
+	const AA: { glyph: string; delay: string }[] = [
+		{ glyph: 'A', delay: '0s' },
+		{ glyph: 'a', delay: '-8.2s' }
+	];
+
 	// Top page v2 — red / black / white, type-first.
 	// Scheme:
 	//   Hero (white, Figma 313:176) — Steiner "Aa" specimen + Discover — normal scroll
@@ -21,9 +29,18 @@
 	<section class="Hero">
 		<p class="Hero__headline">Our very first typeface: Steiner Sans</p>
 		<div class="Hero__specimen">
-			<!-- Each glyph animates the wght axis on its own phase, so the pair
-			     breathes as a continuous wave rather than pulsing in unison. -->
-			<p class="Hero__aa"><span>A</span><span>a</span></p>
+			<!-- Each glyph sits in a fixed-width cell: an invisible Ultra-weight
+			     ghost reserves the widest box, and the animated glyph is centred
+			     on top of it. Without this the advance width grows with the
+			     weight and the pair visibly drifts apart mid-animation. -->
+			<p class="Hero__aa">
+				{#each AA as { glyph, delay } (glyph)}
+					<span class="Hero__cell">
+						<span class="Hero__ghost" aria-hidden="true">{glyph}</span>
+						<span class="Hero__live" style="animation-delay: {delay};">{glyph}</span>
+					</span>
+				{/each}
+			</p>
 		</div>
 		<div class="Hero__bottom">
 			<div class="Hero__meta">
@@ -85,6 +102,11 @@
 	   (a sibling, not a descendant, of .Home) can use the same red for the logo. */
 	.Home {
 		--red: var(--color-signal);
+		/* One display size shared by every section title (Make it yours / Custom
+		   type… / August Type Foundry is…). Bounded by viewport HEIGHT as well as
+		   width, so a long statement still wraps inside its 100dvh section on a
+		   short laptop instead of pushing the section taller. */
+		--display-fs: clamp(40px, min(7vw, 9.5vh), 88px);
 	}
 
 	/* --- Hero (white) — Steiner "Aa" specimen --- */
@@ -128,9 +150,8 @@
 		justify-content: center;
 	}
 
-	/* Seamless wght loop: 1 (Hair) → 950 (Ultra) → 1. The two glyphs share one
-	   keyframe and are offset by a negative delay, so "a" trails "A" by a
-	   quarter cycle — the family's continuous-wave motion, not a pulse. */
+	/* Seamless wght loop: 1 (Hair) → 950 (Ultra) → 1. Both glyphs share this one
+	   keyframe; only their animation-delay differs (set inline, see AA above). */
 	@keyframes steinerBreath {
 		0%,
 		100% {
@@ -141,18 +162,30 @@
 		}
 	}
 
-	.Hero__aa span {
+	.Hero__cell {
+		position: relative;
 		display: inline-block;
+	}
+
+	/* Reserves the box at the heaviest weight — never painted, never announced. */
+	.Hero__ghost {
+		visibility: hidden;
+		font-variation-settings: 'wght' 950;
+	}
+
+	/* Centred on the fixed cell, so the glyph thickens in place instead of
+	   pushing its neighbour along. */
+	.Hero__live {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
 		font-variation-settings: 'wght' 1;
 		animation: steinerBreath 9s ease-in-out infinite;
 	}
 
-	.Hero__aa span:last-child {
-		animation-delay: -2.25s;
-	}
-
 	@media (prefers-reduced-motion: reduce) {
-		.Hero__aa span {
+		.Hero__live {
 			animation: none;
 			font-variation-settings: 'wght' 400;
 		}
@@ -264,7 +297,7 @@
 
 	.Buy__heading {
 		font-family: 'Steiner', sans-serif;
-		font-size: clamp(40px, 7vw, 88px);
+		font-size: var(--display-fs);
 		line-height: 1.02;
 		text-transform: uppercase;
 		letter-spacing: 0.025em;
@@ -277,7 +310,9 @@
 		font-variation-settings: 'wght' 360;
 		line-height: 1.7;
 		letter-spacing: 0.02em;
-		margin: 0 0 36px;
+		/* Narrow column — wraps sooner, so the copy block reads tall, not wide. */
+		max-width: 80%;
+		margin: 0 auto 36px;
 	}
 
 	.Buy__cta {
@@ -308,6 +343,7 @@
 
 		.Buy__body {
 			font-size: 16px;
+			margin-inline: 0;
 		}
 	}
 
@@ -344,10 +380,11 @@
 		margin: 0 0 20px;
 	}
 
+	/* Matches .Buy__heading — the section titles share one display size. */
 	.Custom__heading {
 		font-family: 'Steiner', sans-serif;
-		font-size: clamp(28px, 5vw, 44px);
-		line-height: 1.15;
+		font-size: var(--display-fs);
+		line-height: 1.02;
 		text-transform: uppercase;
 		letter-spacing: 0.025em;
 		margin: 0 0 28px;
@@ -360,7 +397,8 @@
 		line-height: 1.7;
 		letter-spacing: 0.02em;
 		opacity: 0.85;
-		margin: 0 0 32px;
+		max-width: 80%;
+		margin: 0 auto 32px;
 	}
 
 	.Custom__cta {
@@ -393,6 +431,7 @@
 
 		.Custom__body {
 			font-size: 16px;
+			margin-inline: 0;
 		}
 	}
 
@@ -415,7 +454,10 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 24px;
-		max-width: 800px;
+		/* Wide enough that the statement, set at the display size, still wraps
+		   inside one screen — at 800px it ran to 9 lines and pushed the section
+		   past 100dvh on a laptop. */
+		max-width: 1060px;
 		text-align: center;
 	}
 
@@ -429,14 +471,16 @@
 		margin: 0;
 	}
 
+	/* Matches .Buy__heading — this statement is the section's title. */
 	.Office__text {
 		font-family: 'Steiner', sans-serif;
-		font-size: clamp(24px, 4vw, 40px);
+		font-size: var(--display-fs);
 		font-variation-settings: 'wght' 360;
-		line-height: 1.35;
+		line-height: 1.02;
 		text-transform: uppercase;
 		letter-spacing: 0.025em;
-		margin: 0;
+		max-width: 80%;
+		margin: 0 auto;
 	}
 
 	.Office__link {
