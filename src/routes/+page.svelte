@@ -355,11 +355,6 @@
 			margin-inline: 0;
 		}
 
-		.Buy__heading {
-			text-transform: none;
-			letter-spacing: 0;
-		}
-
 		.Buy__body {
 			font-size: 16px;
 			margin-inline: 0;
@@ -448,11 +443,6 @@
 		.Custom__inner {
 			text-align: left;
 			margin-inline: 0;
-		}
-
-		.Custom__heading {
-			text-transform: none;
-			letter-spacing: 0;
 		}
 
 		.Custom__body {
