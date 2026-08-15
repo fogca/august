@@ -74,10 +74,10 @@ export const TYPEFACES: Typeface[] = [
 		description:
 			"Steiner is a 20-weight neo-humanist sans-serif variable font. " +
 			"It takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature, where form is never fixed but always in metamorphosis, and an anthroposophy that holds the human being as the measure of things. " +
-			"The letters are made to feel grown rather than constructed — organic in their curves, human in their proportion. " +
+			"Humanist-geometric — the mechanical and the organic coexist in every glyph, held together by formative force. " +
 			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
 		descriptionJa:
-			'Steiner は、20ウェイトのネオ・ヒューマニスト・サンセリフ（可変フォント）です。その名と気質はルドルフ・シュタイナーに由来します——形を固定されたものでなく絶えざる変容として見るゲーテ的な自然観と、人間を万物の尺度とする人智学。文字は「構築された」のではなく「育った」ように、曲線は有機的に、プロポーションは人間的に。ヒューマニストの系譜は表層ではなく土壌として静かに息づいています——ジョンストンの1916年ロンドン地下鉄書体、Gill Sans、Neuzeit、オトル・アイヒャーの Rotis。',
+			'Steiner は、20ウェイトのネオ・ヒューマニスト・サンセリフ（可変フォント）です。その名と気質はルドルフ・シュタイナーに由来します——形を固定されたものでなく絶えざる変容として見るゲーテ的な自然観と、人間を万物の尺度とする人智学。ヒューマニスト・ジオメトリック——無機質なものと有機質なものが、ひとつひとつの字形のなかに共存し、形成力によって結びついています。ヒューマニストの系譜は表層ではなく土壌として静かに息づいています——ジョンストンの1916年ロンドン地下鉄書体、Gill Sans、Neuzeit、オトル・アイヒャーの Rotis。',
 		classification: 'Neo Humanist Sans · 20 weights',
 		weights: WEIGHTS,
 		// One German word per weight row (20), in alphabetical order A→T —

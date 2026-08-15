@@ -15,7 +15,7 @@
 	const WGHT_MAX = 950;
 
 	// Centered specimen lines — letters, then figures + currency/essential marks
-	const LINES = [
+	const LINES_LG = [
 		'ABCDEFGHIJKLM',
 		'NOPQRSTUVWXYZ',
 		'abcdefghijklm',
@@ -24,10 +24,33 @@
 		'$ € ¥ £ % & @ § №'
 	];
 
+	// Phones get shorter lines. The wght axis runs to Ultra, where every glyph
+	// is far wider than at Hair, so the break has to clear the *heaviest*
+	// state: at 48px the longest line below measures 298px against 338px of
+	// available width on a 375pt screen.
+	const LINES_SM = [
+		'ABCDEFGHI',
+		'JKLMNOPQR',
+		'STUVWXYZ',
+		'abcdefghi',
+		'jklmnopqr',
+		'stuvwxyz',
+		'0123456789',
+		'$ € ¥ £ %',
+		'& @ § №'
+	];
+
 	let wrapEl = $state<HTMLElement>();
 	let wght = $state(WGHT_MIN);
+	let isSmall = $state(false);
+	const LINES = $derived(isSmall ? LINES_SM : LINES_LG);
 
 	onMount(() => {
+		const mq = window.matchMedia('(max-width: 767px)');
+		isSmall = mq.matches;
+		const onChange = () => (isSmall = mq.matches);
+		mq.addEventListener('change', onChange);
+
 		const update = () => {
 			if (!wrapEl) return;
 			const rect = wrapEl.getBoundingClientRect();
@@ -37,7 +60,11 @@
 			wght = Math.round(WGHT_MIN + progress * (WGHT_MAX - WGHT_MIN));
 		};
 		update();
-		return onScroll(update);
+		const stopScroll = onScroll(update);
+		return () => {
+			mq.removeEventListener('change', onChange);
+			stopScroll();
+		};
 	});
 </script>
 
@@ -96,6 +123,28 @@
 		margin: 0;
 		text-align: center;
 		width: 100%;
+	}
+
+	/* Phones: 48px flat. min() only bites below ~356pt, where 48px would no
+	   longer clear the frame at Ultra. */
+	@media (max-width: 767px) {
+		.GlyphSpecimen__text {
+			font-size: min(48px, 13.5vw);
+		}
+
+		/* The page gutter (5vw) leaves only 300px of measure on a 375pt phone,
+		   which the heaviest line clears by 2px. This is a display specimen,
+		   not body copy — give it a flat 10px so the lines breathe. */
+		.GlyphSpecimen__pin {
+			padding-inline: 10px;
+		}
+
+		/* base.css still carries a bare `section { padding-inline: var(--padding) }`,
+		   which insets this whole block by another 5vw a side. Drop it here so the
+		   10px above is the only gutter the specimen pays for. */
+		.GlyphSpecimen {
+			padding-inline: 0;
+		}
 	}
 
 	.GlyphSpecimen__line {
