@@ -50,6 +50,9 @@
 		isSmall = mq.matches;
 		const onChange = () => (isSmall = mq.matches);
 		mq.addEventListener('change', onChange);
+		// Belt and braces: some embedded/emulated viewports resize without
+		// firing the media-query change event.
+		window.addEventListener('resize', onChange);
 
 		const update = () => {
 			if (!wrapEl) return;
@@ -63,6 +66,7 @@
 		const stopScroll = onScroll(update);
 		return () => {
 			mq.removeEventListener('change', onChange);
+			window.removeEventListener('resize', onChange);
 			stopScroll();
 		};
 	});
@@ -125,25 +129,28 @@
 		width: 100%;
 	}
 
-	/* Phones: 48px flat. min() only bites below ~356pt, where 48px would no
-	   longer clear the frame at Ultra. */
+	/* Phones: 58px flat, set solid. A-Z in three lines is already the tightest
+	   split there is (9/9/8 — searched every contiguous break), and at Ultra the
+	   widest line measures 360px, so a 375pt screen has to give up its gutters
+	   entirely for the type to run at this size. */
 	@media (max-width: 767px) {
 		.GlyphSpecimen__text {
-			font-size: min(48px, 13.5vw);
+			font-size: 58px;
+			line-height: 1;
 		}
 
-		/* The page gutter (5vw) leaves only 300px of measure on a 375pt phone,
-		   which the heaviest line clears by 2px. This is a display specimen,
-		   not body copy — give it a flat 10px so the lines breathe. */
+		/* base.css carries a bare `section { padding-inline: var(--padding) }`;
+		   both that and the pin's own gutter come off here. */
+		.GlyphSpecimen,
 		.GlyphSpecimen__pin {
-			padding-inline: 10px;
-		}
-
-		/* base.css still carries a bare `section { padding-inline: var(--padding) }`,
-		   which insets this whole block by another 5vw a side. Drop it here so the
-		   10px above is the only gutter the specimen pays for. */
-		.GlyphSpecimen {
 			padding-inline: 0;
+		}
+	}
+
+	/* Below 375pt there is no width left to give, so the type scales instead. */
+	@media (max-width: 374px) {
+		.GlyphSpecimen__text {
+			font-size: 15.4vw;
 		}
 	}
 
