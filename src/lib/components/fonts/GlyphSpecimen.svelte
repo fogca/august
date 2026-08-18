@@ -21,7 +21,9 @@
 		'abcdefghijklm',
 		'nopqrstuvwxyz',
 		'0123456789',
-		'$ € ¥ £ % & @ § №'
+		'$ € ¥ £ % & @ § №',
+		'.,:;!?()[]{}—–…""\'\'',
+		'#*+−×÷=±©®™¶•'
 	];
 
 	// Phones get shorter lines. The wght axis runs to Ultra, where every glyph
@@ -37,7 +39,11 @@
 		'stuvwxyz',
 		'0123456789',
 		'$ € ¥ £ %',
-		'& @ § №'
+		'& @ § №',
+		'.,:;!?()[]',
+		'{}—–…""\'\'',
+		'#*+−×÷=±',
+		'©®™¶•'
 	];
 
 	let wrapEl = $state<HTMLElement>();
