@@ -130,15 +130,14 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 				detail: '20 weights — Hairline to Ultra',
 				styles: STEINER_WEIGHTS,
 				italic: false,
-				// Tier-1 (1-2 users) price. Set against the market: on Future Fonts
-				// the median finished family is ~$200 and only 1.6% of listings
-				// clear $600 — all of them with italics. Steiner is upright-only
-				// for now, so it sits at the p75 of finished families, and moves
-				// up when the italic ships.
-				baseEur: 280,
+				// Tier-1 (1-2 users) price: EUR21 per weight across the 20.
+				// Deliberately above the Future Fonts band — that platform is the
+				// work-in-progress channel and prices below the finished release
+				// by design. Moves up when the italic ships.
+				baseEur: 420,
 				// No standing discount: an anchor that never expires reads as a
 				// fake list price.
-				grossEur: 280,
+				grossEur: 420,
 				discountRate: 0
 			}
 		]
