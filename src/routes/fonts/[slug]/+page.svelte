@@ -154,7 +154,7 @@
 		{#if isAvailable}
 			<p class="FontBuy__eyebrow">License</p>
 			<h2 class="FontBuy__heading">{tf.name}</h2>
-			<p class="FontBuy__price">From €560 · perpetual license, pay once</p>
+			<p class="FontBuy__price">From €280 · perpetual license, pay once</p>
 			<ul class="FontBuy__licenses">
 				<li>Desktop</li>
 				<li>Web</li>
@@ -178,7 +178,7 @@
 <div class="FontDetail__buybar white" class:is-visible={buybarVisible}>
 	<span class="FontDetail__buybar-label">{tf.name} · {tf.classification}</span>
 	<button type="button" class="FontDetail__buybar-cta" onclick={scrollToBuy}>
-		{isAvailable ? 'Buy — from €560' : 'Coming Soon'}
+		{isAvailable ? 'Buy — from €280' : 'Coming Soon'}
 	</button>
 </div>
 

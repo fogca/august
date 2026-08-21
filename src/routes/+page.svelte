@@ -64,7 +64,7 @@
 			<p class="Buy__body">
 				Steiner Complete gathers the whole family — 20 weights from Hair to Ultra, drawn as
 				a single variable font and delivered with statics, for desktop and web alike. One
-				perpetual license from €560: no seat renewals, no page-view tiers, no expiry. Buy it
+				perpetual license from €280: no seat renewals, no page-view tiers, no expiry. Buy it
 				once and it stays yours, across every project you take on.
 			</p>
 			<a class="Buy__cta" href="/buy">Buy Steiner <Arrow size={10} /></a>

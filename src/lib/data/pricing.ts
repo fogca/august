@@ -58,19 +58,23 @@ export interface TierDef {
 	multiplier: number | null; // null = Contact
 }
 
-// 12-step multiplier curve (Tier 1 = ×1.0 base)
+// 12-step multiplier curve (Tier 1 = ×1.0 base).
+// Convex on purpose: individuals and small studios stay close to base, while
+// large organisations carry the revenue. The old ×1.0-8.0 curve charged a
+// 1,000-seat company only 4.6x, roughly a fifth of the industry norm, which
+// forced the entry price to carry everything.
 export const TIER_DEFS: TierDef[] = [
 	{ index: 1,  desktopLabel: '1–2 users',         webLabel: 'up to 10,000 PV / mo',  appLabel: 'up to 10,000 downloads',   booksLabel: 'up to 5,000 copies',    multiplier: 1.0  },
-	{ index: 2,  desktopLabel: 'up to 10 users',    webLabel: 'up to 25,000 PV / mo',  appLabel: 'up to 50,000 downloads',   booksLabel: 'up to 50,000 copies',   multiplier: 1.4  },
-	{ index: 3,  desktopLabel: 'up to 25 users',    webLabel: 'up to 50,000 PV / mo',  appLabel: 'up to 100,000 downloads',  booksLabel: 'up to 100,000 copies',  multiplier: 1.8  },
-	{ index: 4,  desktopLabel: 'up to 50 users',    webLabel: 'up to 100,000 PV / mo',    appLabel: 'up to 500,000 downloads',  booksLabel: 'up to 500,000 copies',  multiplier: 2.2  },
-	{ index: 5,  desktopLabel: 'up to 100 users',   webLabel: 'up to 250,000 PV / mo',  appLabel: 'up to 1,000,000 downloads',    booksLabel: 'up to 1,000,000 copies',    multiplier: 2.6  },
-	{ index: 6,  desktopLabel: 'up to 250 users',   webLabel: 'up to 500,000 PV / mo',    appLabel: 'up to 5,000,000 downloads',    booksLabel: 'up to 5,000,000 copies',    multiplier: 3.2  },
-	{ index: 7,  desktopLabel: 'up to 500 users',   webLabel: 'up to 1,000,000 PV / mo',   appLabel: 'up to 10,000,000 downloads',   booksLabel: 'up to 10,000,000 copies',   multiplier: 3.8  },
-	{ index: 8,  desktopLabel: 'up to 1,000 users', webLabel: 'up to 2,500,000 PV / mo',   appLabel: 'up to 25,000,000 downloads',   booksLabel: 'up to 25,000,000 copies',   multiplier: 4.6  },
-	{ index: 9,  desktopLabel: 'up to 2,500 users', webLabel: 'up to 5,000,000 PV / mo',   appLabel: 'up to 50,000,000 downloads',   booksLabel: 'up to 50,000,000 copies',   multiplier: 5.6  },
-	{ index: 10, desktopLabel: 'up to 5,000 users', webLabel: 'up to 10,000,000 PV / mo',  appLabel: 'up to 100,000,000 downloads',  booksLabel: 'up to 100,000,000 copies',  multiplier: 6.8  },
-	{ index: 11, desktopLabel: 'up to 10,000 users',webLabel: 'up to 25,000,000 PV / mo',  appLabel: 'up to 250,000,000 downloads',  booksLabel: 'up to 250,000,000 copies',  multiplier: 8.0  },
+	{ index: 2,  desktopLabel: 'up to 10 users',    webLabel: 'up to 25,000 PV / mo',  appLabel: 'up to 50,000 downloads',   booksLabel: 'up to 50,000 copies',   multiplier: 1.8  },
+	{ index: 3,  desktopLabel: 'up to 25 users',    webLabel: 'up to 50,000 PV / mo',  appLabel: 'up to 100,000 downloads',  booksLabel: 'up to 100,000 copies',  multiplier: 2.8  },
+	{ index: 4,  desktopLabel: 'up to 50 users',    webLabel: 'up to 100,000 PV / mo',    appLabel: 'up to 500,000 downloads',  booksLabel: 'up to 500,000 copies',  multiplier: 4.2  },
+	{ index: 5,  desktopLabel: 'up to 100 users',   webLabel: 'up to 250,000 PV / mo',  appLabel: 'up to 1,000,000 downloads',    booksLabel: 'up to 1,000,000 copies',    multiplier: 6.0  },
+	{ index: 6,  desktopLabel: 'up to 250 users',   webLabel: 'up to 500,000 PV / mo',    appLabel: 'up to 5,000,000 downloads',    booksLabel: 'up to 5,000,000 copies',    multiplier: 9.0  },
+	{ index: 7,  desktopLabel: 'up to 500 users',   webLabel: 'up to 1,000,000 PV / mo',   appLabel: 'up to 10,000,000 downloads',   booksLabel: 'up to 10,000,000 copies',   multiplier: 13.0  },
+	{ index: 8,  desktopLabel: 'up to 1,000 users', webLabel: 'up to 2,500,000 PV / mo',   appLabel: 'up to 25,000,000 downloads',   booksLabel: 'up to 25,000,000 copies',   multiplier: 20.0  },
+	{ index: 9,  desktopLabel: 'up to 2,500 users', webLabel: 'up to 5,000,000 PV / mo',   appLabel: 'up to 50,000,000 downloads',   booksLabel: 'up to 50,000,000 copies',   multiplier: 30.0  },
+	{ index: 10, desktopLabel: 'up to 5,000 users', webLabel: 'up to 10,000,000 PV / mo',  appLabel: 'up to 100,000,000 downloads',  booksLabel: 'up to 100,000,000 copies',  multiplier: 45.0  },
+	{ index: 11, desktopLabel: 'up to 10,000 users',webLabel: 'up to 25,000,000 PV / mo',  appLabel: 'up to 250,000,000 downloads',  booksLabel: 'up to 250,000,000 copies',  multiplier: 65.0  },
 	{ index: 12, desktopLabel: '10,000+ users',     webLabel: '25,000,000+ PV / mo',       appLabel: '250,000,000+ downloads',       booksLabel: '250,000,000+ copies',       multiplier: null }
 ];
 
@@ -126,9 +130,16 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 				detail: '20 weights — Hairline to Ultra',
 				styles: STEINER_WEIGHTS,
 				italic: false,
-				baseEur: 560,
-				grossEur: 1120,
-				discountRate: 0.5
+				// Tier-1 (1-2 users) price. Set against the market: on Future Fonts
+				// the median finished family is ~$200 and only 1.6% of listings
+				// clear $600 — all of them with italics. Steiner is upright-only
+				// for now, so it sits at the p75 of finished families, and moves
+				// up when the italic ships.
+				baseEur: 280,
+				// No standing discount: an anchor that never expires reads as a
+				// fake list price.
+				grossEur: 280,
+				discountRate: 0
 			}
 		]
 	}
