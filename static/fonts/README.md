@@ -1,7 +1,7 @@
 # august.tf Web Fonts
 
 Only fonts actually referenced by the site live here. Old builds are archived
-outside the repo (Projects/brands/August/Steiner/00_master/Export/).
+outside the repo (Projects/brands/Andersen/Steiner/00_master/Export/).
 
 | File | Used by | Loaded from |
 |------|---------|-------------|

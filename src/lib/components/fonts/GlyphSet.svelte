@@ -10,7 +10,7 @@
 
 	let { fontFamily, image, title = 'Character set' }: Props = $props();
 
-	// Per the Glyph Roster in Projects/brands/August/md/specification.md.
+	// Per the Glyph Roster in Projects/brands/Andersen/md/specification.md.
 	// Displayable characters of Tier 1 (basic Latin), Tier 2 standalone Unicode
 	// (fractions, ordinals), Tier 3 (Western-European diacritics) and the common
 	// Tier 4 Central-European diacritics — ~280 glyphs. OpenType-feature glyphs
