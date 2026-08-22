@@ -13,8 +13,8 @@
 </script>
 
 <svelte:head>
-	<title>Order Received — August Type Foundry</title>
-	<meta name="description" content="Order confirmation — August Type Foundry." />
+	<title>Order Received — Andersen</title>
+	<meta name="description" content="Order confirmation — Andersen." />
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -57,7 +57,7 @@
 			<a href="mailto:hi@august.tf">hi@august.tf</a>{#if order}&nbsp;quoting your order reference{/if}.
 		</p>
 
-		<a href="/" class="Success__home">← Back to August Type Foundry</a>
+		<a href="/" class="Success__home">← Back to Andersen</a>
 	</div>
 </main>
 

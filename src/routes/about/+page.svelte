@@ -1,8 +1,8 @@
 <svelte:head>
-	<title>About — August Type Foundry</title>
+	<title>About — Andersen</title>
 	<meta
 		name="description"
-		content="August Type Foundry — an independent type foundry from Tokyo. Studio statement and philosophy."
+		content="Andersen — an independent type foundry from Tokyo. Studio statement and philosophy."
 	/>
 </svelte:head>
 
@@ -10,15 +10,15 @@
 	<div class="About__inner">
 		<!-- 1 — Foundry -->
 		<section class="block">
-			<h2 class="gq">August Type Foundry</h2>
+			<h2 class="gq">Andersen</h2>
 			<p class="en" lang="en">
-				August Type Foundry is an independent type foundry, founded in Tokyo in 2026. We cross
+				Andersen is an independent type foundry, founded in Tokyo in 2026. We cross
 				histories, cultures, and eras, reinterpret their context, and draw type through a
 				contemporary eye. Anchored in retail families and bespoke commissions, we keep searching for
 				forms not yet seen.
 			</p>
 			<p class="ja" lang="ja">
-				オーガストタイプは、東京を拠点に2026年に設立した独立系のタイプファウンドリーです。歴史・文化・時代を交差させ、その文脈を読み替えながら、現代の視点で書体を描きます。リテール書体とビスポーク書体を軸に、まだ見ぬ形を探求し続けます。
+				アンデルセンは、東京を拠点に2026年に設立した独立系のタイプファウンドリーです。歴史・文化・時代を交差させ、その文脈を読み替えながら、現代の視点で書体を描きます。リテール書体とビスポーク書体を軸に、まだ見ぬ形を探求し続けます。
 			</p>
 		</section>
 

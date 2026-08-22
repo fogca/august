@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>{page.status} — August Type Foundry</title>
+	<title>{page.status} — Andersen</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -26,7 +26,7 @@
 			{/if}
 		</p>
 		<div class="ErrorPage__links">
-			<a href="/">← August Type Foundry</a>
+			<a href="/">← Andersen</a>
 			<a href="mailto:hi@august.tf">hi@august.tf</a>
 		</div>
 	</div>

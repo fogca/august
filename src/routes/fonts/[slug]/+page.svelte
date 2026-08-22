@@ -43,7 +43,7 @@
 </script>
 
 <svelte:head>
-	<title>{tf.name} — August Type Foundry</title>
+	<title>{tf.name} — Andersen</title>
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 

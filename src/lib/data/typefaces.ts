@@ -1,4 +1,4 @@
-// Typeface data definitions for August Type Foundry
+// Typeface data definitions for Andersen
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
@@ -149,11 +149,11 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
 		description:
-			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at August Type Foundry. ' +
+			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Andersen. ' +
 			'Details on weights and axis range will be published as the design reaches maturity. ' +
 			'Debuting 2026.',
 		descriptionJa:
-			'gQ は Mokuseki Sans の最新進化形——August Type Foundry が描くネオ・ヒューマニスト・サンセリフです。ウェイトや軸の範囲などの詳細は、デザインの成熟に合わせて公開していきます。2026年デビュー予定。',
+			'gQ は Mokuseki Sans の最新進化形——Andersen が描くネオ・ヒューマニスト・サンセリフです。ウェイトや軸の範囲などの詳細は、デザインの成熟に合わせて公開していきます。2026年デビュー予定。',
 		classification: 'Neo Humanist Sans · 12 weights',
 		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
 		weights: WEIGHTS,
@@ -203,11 +203,11 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Steiner',
 		tagline: 'A display typeface in development.',
 		description:
-			'Atom is a display typeface currently in development at August Type Foundry. ' +
+			'Atom is a display typeface currently in development at Andersen. ' +
 			'Further details on its design direction and release schedule will follow. ' +
 			'Coming 2026.',
 		descriptionJa:
-			'Atom は August Type Foundry で現在開発中のディスプレイ書体です。デザインの方向性やリリース時期の詳細は、追ってお知らせします。2026年公開予定。',
+			'Atom は Andersen で現在開発中のディスプレイ書体です。デザインの方向性やリリース時期の詳細は、追ってお知らせします。2026年公開予定。',
 		classification: 'Neo Grotesque · in development',
 		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
 		weights: WEIGHTS,
