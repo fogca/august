@@ -33,7 +33,7 @@
 		<!-- Column 1: brand + ethos -->
 		<section class="Footer__col Footer__col--brand">
 			<a href="/" class="Footer__logo" aria-label="Andersen — home">
-				<Logo height={20} />
+				<Logo height={21} />
 			</a>
 			<p class="Footer__tagline">
 				A type foundry from Tokyo.<br />

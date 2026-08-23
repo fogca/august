@@ -81,7 +81,7 @@
 	</nav>
 
 	<a class="Header__logo" href="/" onclick={close} aria-label="Andersen — home">
-		<Logo height={23} />
+		<Logo height={25} />
 	</a>
 </header>
 
@@ -204,7 +204,7 @@
 		}
 
 		.Header__logo :global(.Logo) {
-			height: 19px !important;
+			height: 20px !important;
 		}
 	}
 
