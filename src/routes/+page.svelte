@@ -1,20 +1,23 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { coverReveal } from '$lib/actions/coverReveal';
 	import Arrow from '$lib/components/Arrow.svelte';
 
-	// Hero specimen wave. A leads; "a" trails it by 0.3s of the 9s cycle, so the
-	// weight travels across the pair as a tight chase (per STN-M09_aaaa-wave).
-	// The delay is negative — lag 0.3s == 8.7s ahead — so the loop is already in
-	// phase at first paint instead of sitting still for a beat.
-	const AA: { glyph: string; delay: string }[] = [
-		{ glyph: 'A', delay: '0s' },
-		{ glyph: 'a', delay: '-8.7s' }
-	];
-
 	// Top page v2 — red / black / white, type-first.
 	// Scheme:
-	//   Hero (white, Figma 313:176) — Steiner "Aa" specimen + Discover — normal scroll
+	//   Hero (black, video specimen) — Asger wght-axis sweep + Discover — normal scroll
+	//   Alfred (ochre) / Asta (blue) — announced, unreleased siblings
 	//   Buy (red) / Custom (black) / Office (white) : v1 cover reveals (unchanged)
+
+	// CSS animation-play-state has no effect on native <video> — pause it by
+	// hand for users who asked the OS for less motion. SSR still renders
+	// `autoplay`; this stops it on the client before the user notices.
+	let heroVideo: HTMLVideoElement | undefined = $state();
+	onMount(() => {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			heroVideo?.pause();
+		}
+	});
 </script>
 
 <svelte:head>
@@ -26,25 +29,30 @@
 </svelte:head>
 
 <main class="Home">
-	<!-- Hero (white) — the Steiner "Aa" specimen, per Figma 313:176 -->
+	<!-- Hero (black) — Asger variable-weight video specimen -->
 	<section class="Hero">
 		<p class="Hero__headline">Debut typeface</p>
 		<p class="Hero__name">
 			<span class="Title__face">Asger</span> <span class="Title__foundry">August</span>
 		</p>
 		<div class="Hero__specimen">
-			<!-- Each glyph sits in a fixed-width cell: an invisible Ultra-weight
-			     ghost reserves the widest box, and the animated glyph is centred
-			     on top of it. Without this the advance width grows with the
-			     weight and the pair visibly drifts apart mid-animation. -->
-			<p class="Hero__aa">
-				{#each AA as { glyph, delay } (glyph)}
-					<span class="Hero__cell">
-						<span class="Hero__ghost" aria-hidden="true">{glyph}</span>
-						<span class="Hero__live" style="animation-delay: {delay};">{glyph}</span>
-					</span>
-				{/each}
-			</p>
+			<!-- Steiner's wght axis, 1 (Hair) -> 950 (Ultra), swept across a row of
+			     "a"s (STN services_type_VF_animation source, re-encoded with its
+			     90deg display-matrix rotation baked into the pixels — browsers are
+			     inconsistent about honouring rotation side-data on <video>). Same
+			     landscape file on both breakpoints; only .Hero__video's CSS differs
+			     — PC shows it as encoded, SP rotates it 90deg to fill the taller,
+			     narrower frame. -->
+			<video
+				bind:this={heroVideo}
+				class="Hero__video"
+				src="/videos/asger_vf_aa.mp4"
+				autoplay
+				loop
+				muted
+				playsinline
+				aria-label="Asger variable weight axis, sweeping from Hair to Ultra"
+			></video>
 		</div>
 		<div class="Hero__bottom">
 			<div class="Hero__meta">
@@ -109,6 +117,51 @@
 			<!-- Deliberately a span, not an <a>: there is no Alfred page yet, so the
 			     control must not be clickable, focusable, or announced as a link. -->
 			<span class="Alfred__cta" aria-disabled="true">Coming Soon</span>
+		</div>
+	</section>
+
+	<!-- Asta (white) — same composition as Alfred, one section down. -->
+	<section class="Asta">
+		<p class="Asta__name">
+			<span class="Title__face">Asta</span> <span class="Title__foundry">August</span>
+		</p>
+		<div class="Asta__specimen">
+			<svg
+				class="Asta__mark"
+				viewBox="0 0 266.08 113.28"
+				role="img"
+				aria-label="Asta"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					fill="currentColor"
+					d="M0,112L44.48,0h6.24l44.48,112h-7.36l-17.12-43.36H24.32L7.36,112H0ZM26.88,62.24h41.44L47.52,9.44l-20.64,52.8Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M163.88,36.32l-7.52-4.67v-1.41h41.4v1.51l-1.32,4.57h-32.55ZM198.4,111.04c-3.2.96-6.4,1.38-9.6,1.28-3.2-.11-6.05-.93-8.56-2.48-2.51-1.54-4.51-3.89-6-7.04-1.49-3.14-2.24-7.17-2.24-12.08V13.8l5.89-5.64h.74v80.32c0,5.65,1.47,9.81,3.29,12.48,1.81,2.67,4.18,4.24,7.12,4.72,2.93.48,6.05.35,9.36-.4v5.76Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M147.76,79.6c-1.97-2.96-4.77-5.26-8.05-7.23s-6.57-3.78-9.86-5.09c-3.61-1.48-6.9-3.12-10.02-4.6-2.96-1.64-5.59-3.61-7.56-5.92-1.81-2.14-2.79-4.93-2.79-8.38,0-5.75,4.6-13.64,18.07-13.64,10.02,0,14.95,4.44,18.07,7.89v-7.72c-4.11-3.45-9.2-6.41-18.24-6.41-15.61,0-25.3,10.02-25.3,20.54,0,4.11,1.15,7.56,3.29,10.35s4.77,5.26,8.22,7.07c3.29,1.81,6.57,3.61,10.19,5.26,3.29,1.31,6.57,2.79,9.69,4.44,2.96,1.48,5.59,3.45,7.56,5.75s2.79,5.42,2.79,9.69c0,10.68-9.69,15.12-20.54,15.12-8.54,0-16.6-4.93-21.52-9.53v9.69c4.77,2.79,13.47,6.41,21.52,6.41,16.43,0,27.6-8.05,27.6-22.18,0-4.6-.99-8.38-3.12-11.5Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M266.08,58.42c0-16.77-9.77-28.49-27.84-28.49-13.68,0-19.38,4.4-22.8,7v8.47c4.07-4.56,10.58-9.61,22.8-9.61,13.51,0,20.52,9.28,20.84,22.8v7.49c-1.79.16-4.07.33-6.84.65-2.93.16-7.16.81-12.86,1.63-10.1,1.3-17.91,4.23-22.96,8.79-5.05,4.23-7.49,9.61-7.49,15.63,0,3.91.81,7.33,2.44,9.77,1.63,2.77,3.58,4.72,5.86,6.19,2.44,1.63,4.72,2.61,7.33,3.26,2.28.49,4.4.81,6.02.81,4.88,0,8.79-.65,12.37-2.12,3.58-1.63,6.51-3.58,9.28-6.19,2.61-2.61,4.72-5.37,6.84-8.63l.98,16.12h6.02v-53.57ZM259.07,72.26v7.82c0,3.58-.65,6.68-2.28,9.93-1.3,3.26-3.09,6.02-5.54,8.47-2.28,2.61-4.88,4.4-7.98,6.02-2.93,1.47-6.02,2.12-9.28,2.12-1.47,0-3.09-.16-5.21-.65-1.95-.33-3.75-.98-5.86-1.95-1.79-.98-3.42-2.44-4.56-4.23-1.47-1.95-2.12-4.23-2.12-7.16,0-3.09.98-5.86,2.93-8.47,1.95-2.44,4.72-4.72,8.3-6.35,3.75-1.79,7.98-3.09,12.7-3.75,3.26-.33,6.35-.65,8.96-.98s5.05-.49,6.68-.65,2.77-.16,3.26-.16Z"
+				/>
+			</svg>
+		</div>
+		<div class="Asta__bottom">
+			<div class="Asta__meta">
+				<div class="Asta__meta-left">
+					<p class="Asta__meta-name">Asta August</p>
+					<p class="Asta__meta-class">Sibling to Asger</p>
+				</div>
+				<span class="Asta__meta-version">In development</span>
+			</div>
+			<!-- Deliberately a span, not an <a>: there is no Asta page yet, so the
+			     control must not be clickable, focusable, or announced as a link. -->
+			<span class="Asta__cta" aria-disabled="true">Coming Soon</span>
 		</div>
 	</section>
 
@@ -192,17 +245,26 @@
 		--title-fs: clamp(36px, min(7vw, 9.5vh), 88px);
 	}
 
-	/* --- Hero (white) — Steiner "Aa" specimen --- */
+	/* --- Hero (black) — Asger variable-weight video specimen --- */
 	.Hero {
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
 		min-height: 100dvh;
-		background: #ffffff;
-		color: #000000;
+		/* Pure black, matching the video's own ground exactly — the frame edge
+		   should disappear, not read as a lighter rectangle on black. */
+		background: #000000;
+		color: #ffffff;
 		padding-top: clamp(48px, 8vh, 72px);
 		padding-bottom: var(--gutter);
 		padding-inline: var(--gutter);
+	}
+
+	/* base.css sets color directly on div/p/span/etc, which breaks inheritance
+	   from .Hero's own `color` — force every descendant white, same pattern as
+	   .Buy/.Home__custom below. .Hero__cta re-asserts black afterwards. */
+	.Hero :global(*) {
+		color: #ffffff;
 	}
 
 	/* Typeface name leads, set at h2 scale in sentence case. */
@@ -242,60 +304,32 @@
 		min-height: 0;
 	}
 
-	.Hero__aa {
-		font-family: 'Steiner', sans-serif;
-		font-size: clamp(160px, 32vw, 420px);
-		line-height: 1;
-		margin: 0;
-		display: flex;
-		align-items: baseline;
-		justify-content: center;
+	/* PC: shown as encoded (landscape, 1350:1080) — scaled to fit the flex:1
+	   specimen area without overflowing it, same pattern as .Alfred__mark. */
+	.Hero__video {
+		display: block;
+		width: min(900px, 78vw);
+		height: auto;
+		max-height: 100%;
 	}
 
-	/* Seamless wght loop: 1 (Hair) → 950 (Ultra) → 1. Both glyphs share this one
-	   keyframe; only their animation-delay differs (set inline, see AA above). */
-	@keyframes steinerBreath {
-		0%,
-		100% {
-			font-variation-settings: 'wght' 1;
+	@media (max-width: 767.98px) {
+		/* Clip whatever the rotation pushes outside the frame. */
+		.Hero__specimen {
+			overflow: hidden;
 		}
-		50% {
-			font-variation-settings: 'wght' 950;
-		}
-	}
 
-	.Hero__cell {
-		position: relative;
-		display: inline-block;
-	}
-
-	/* The Ultra-weight ghost reserves the widest box, which leaves the pair a
-	   touch loose at lighter weights — pull the second glyph back in. */
-	.Hero__cell + .Hero__cell {
-		margin-left: -8px;
-	}
-
-	/* Reserves the box at the heaviest weight — never painted, never announced. */
-	.Hero__ghost {
-		visibility: hidden;
-		font-variation-settings: 'wght' 950;
-	}
-
-	/* Centred on the fixed cell, so the glyph thickens in place instead of
-	   pushing its neighbour along. */
-	.Hero__live {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		font-variation-settings: 'wght' 1;
-		animation: steinerBreath 9s ease-in-out infinite;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.Hero__live {
-			animation: none;
-			font-variation-settings: 'wght' 400;
+		/* Rotate 90deg for the taller, narrower phone frame. Pre-rotation
+		   height is set to the viewport width (100vw), so post-rotation the
+		   video's effective WIDTH exactly fills the screen — its now-taller
+		   effective height (AR 1350:1080 -> 125vw) overflows top/bottom and
+		   is cropped by .Hero__specimen's overflow:hidden above, centred. */
+		.Hero__video {
+			width: auto;
+			max-width: none;
+			height: 100vw;
+			max-height: none;
+			transform: rotate(90deg);
 		}
 	}
 
@@ -342,19 +376,25 @@
 		align-items: center;
 		justify-content: center;
 		height: 50px;
-		background: #000000;
-		color: #ffffff;
+		background: #ffffff;
+		color: #000000;
 		font-family: 'Steiner', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-transform: uppercase;
 		letter-spacing: 0.025em;
 		text-decoration: none;
-		transition: background 0.2s ease;
+		transition: opacity 0.2s ease;
+	}
+
+	/* .Hero :global(*) painted every descendant white; re-assert black text on
+	   the button's own white ground. */
+	.Hero__cta :global(*) {
+		color: #000000;
 	}
 
 	.Hero__cta:hover {
-		background: #1c1c1c;
+		opacity: 0.8;
 	}
 
 	@media (min-width: 768px) {
@@ -455,6 +495,110 @@
 		height: 50px;
 		background: #000000;
 		color: #ffffff;
+		font-family: 'Steiner', sans-serif;
+		font-size: 16px;
+		font-weight: var(--fw-ui);
+		text-transform: uppercase;
+		letter-spacing: 0.025em;
+		text-decoration: none;
+		cursor: default;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	/* --- Asta (white) — mirrors .Alfred exactly, one section down --- */
+	.Asta {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		min-height: 100dvh;
+		background: #cdd6e6;
+		color: #ffffff;
+		padding-top: clamp(48px, 8vh, 72px);
+		padding-bottom: var(--gutter);
+		padding-inline: var(--gutter);
+	}
+
+	/* base.css sets color directly on div/p/span/etc, which breaks inheritance
+	   from .Asta's own `color` — force every descendant white, same pattern as
+	   .Hero above. .Asta__cta is already white-on-black and unaffected. */
+	.Asta :global(*) {
+		color: #ffffff;
+	}
+
+	/* Same slot and scale as .Hero__name / .Alfred__name, set in Asger. */
+	.Asta__name {
+		font-family: 'Steiner', sans-serif;
+		font-size: var(--title-fs);
+		line-height: var(--lh-h2);
+		font-weight: var(--display-fw);
+		text-align: center;
+		margin: 0;
+	}
+
+	.Asta__specimen {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 0;
+	}
+
+	/* The logotype is the specimen — sized off the viewport like .Alfred__mark. */
+	.Asta__mark {
+		display: block;
+		width: min(600px, 82vw);
+		height: auto;
+		max-height: 100%;
+	}
+
+	.Asta__bottom {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.Asta__meta {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 20px;
+		font-family: 'Steiner', sans-serif;
+	}
+
+	.Asta__meta-left {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.Asta__meta-name {
+		font-size: 11px;
+		font-weight: var(--fw-ui);
+		margin: 0;
+	}
+
+	.Asta__meta-class {
+		font-size: 11px;
+		opacity: 0.55;
+		margin: 0;
+	}
+
+	.Asta__meta-version {
+		font-size: 11px;
+		opacity: 0.55;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Same box as .Alfred__cta, held in a disabled state — no hover, no pointer,
+	   no focus, and it never receives events. */
+	.Asta__cta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 50px;
+		background: #ffffff;
+		color: #cdd6e6;
 		font-family: 'Steiner', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
