@@ -1,4 +1,4 @@
-// Pricing data for Andersen
+// Pricing data for August Type Foundry
 // Architecture: typeface → package → license type → tier
 // Prices are computed from EUR base prices via conversion functions.
 // All EUR base prices are the minimum-tier (tier 1) values.

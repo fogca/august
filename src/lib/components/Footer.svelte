@@ -1,5 +1,5 @@
 <script lang="ts">
-	// Andersen site footer.
+	// August Type Foundry site footer.
 	// Holds contact info, site nav and legal links.
 	import Logo from './Logo.svelte';
 
@@ -27,13 +27,13 @@
 </script>
 
 <footer class="Footer" aria-labelledby="footer-heading">
-	<h2 id="footer-heading" class="Footer__sr">Andersen</h2>
+	<h2 id="footer-heading" class="Footer__sr">August Type Foundry</h2>
 
 	<div class="Footer__grid">
 		<!-- Column 1: brand + ethos -->
 		<section class="Footer__col Footer__col--brand">
-			<a href="/" class="Footer__logo" aria-label="Andersen — home">
-				<Logo height={21} />
+			<a href="/" class="Footer__logo" aria-label="August Type Foundry — home">
+				<Logo height={25} />
 			</a>
 			<p class="Footer__tagline">
 				A type foundry from Tokyo.<br />
@@ -83,7 +83,7 @@
 				<li><a href={item.href}>{item.label}</a></li>
 			{/each}
 		</ul>
-		<p class="Footer__copy">© {YEAR} Andersen · Tokyo, Japan</p>
+		<p class="Footer__copy">© {YEAR} August Type Foundry · Tokyo, Japan</p>
 	</div>
 </footer>
 

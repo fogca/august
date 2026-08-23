@@ -1,8 +1,8 @@
 <svelte:head>
-	<title>Contact — Andersen</title>
+	<title>Contact — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Contact Andersen — licensing questions, enterprise scale, custom typefaces, and general enquiries."
+		content="Contact August Type Foundry — licensing questions, enterprise scale, custom typefaces, and general enquiries."
 	/>
 </svelte:head>
 

@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>OpenType — Reference — Andersen</title>
+	<title>OpenType — Reference — August Type Foundry</title>
 	<meta name="description" content="A working reference of essential and recommended OpenType features." />
 	<meta name="robots" content="noindex" />
 </svelte:head>
@@ -20,11 +20,8 @@
 			essentials every font should carry and the extras that add range. Each row toggles live, off →
 			on.
 		</p>
-		<p class="OTPage__lead-ja" lang="ja">
-			必須と推奨を一覧化したリファレンス。デモは実際にその機能を持つ Inter（サンセリフ）/ EB
-			Garamond（セリフ）でレンダリングしています — Steiner は自前のサブセットを搭載しているため。原則は「数を増やすことではなく、空っぽの機能をゼロにすること」。なお
-			mark / mkmk / ccmp（アクセントの合成・配置）は CSS でオン・オフできない常時オンの構造系のため、トグル一覧からは外しています（正しく載るか壊れるかの二択）。
-		</p>
+		<!-- Japanese lead hidden: the second language is moving to Danish.
+		     Kept in git history, not rendered. -->
 	</header>
 
 	<OpenTypeReference />
@@ -80,15 +77,17 @@
 		max-width: 60ch;
 	}
 
+	/* Hidden with its markup — restore when the Danish text lands.
 	.OTPage__lead-ja {
-		font-family: 'Steiner', sans-serif;
-		font-size: var(--fs-p);
-		line-height: 1.75;
-		letter-spacing: 0;
-		color: rgba(0, 0, 0, 0.55);
-		margin: 14px 0 0;
-		max-width: 60ch;
-	}
+			font-family: 'Steiner', sans-serif;
+			font-size: var(--fs-p);
+			line-height: 1.75;
+			letter-spacing: 0;
+			color: rgba(0, 0, 0, 0.55);
+			margin: 14px 0 0;
+			max-width: 60ch;
+		}
+	*/
 
 	.OTPage__foot {
 		padding: 48px var(--padding) 0;

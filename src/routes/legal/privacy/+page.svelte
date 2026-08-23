@@ -1,14 +1,14 @@
 <!-- Privacy Policy — processors in use: Stripe (payments), email, Cloudflare (hosting). -->
 <svelte:head>
-	<title>Privacy Policy — Andersen</title>
-	<meta name="description" content="How Andersen collects and uses personal data." />
+	<title>Privacy Policy — August Type Foundry</title>
+	<meta name="description" content="How August Type Foundry collects and uses personal data." />
 </svelte:head>
 
 <main class="Legal">
 	<div class="Legal__inner">
 		<h1>Privacy Policy</h1>
 		<p class="Legal__lead">
-			Andersen is a brand operated by Mirai Service Co., Ltd. (株式会社みらいサービス).
+			August Type Foundry is a brand operated by Mirai Service Co., Ltd. (株式会社みらいサービス).
 			This policy explains what personal data we collect when you buy a licence or contact us, and how
 			we use it.
 		</p>

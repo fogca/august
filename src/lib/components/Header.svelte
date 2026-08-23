@@ -1,7 +1,7 @@
 <script lang="ts">
-	// Andersen site header.
+	// August Type Foundry site header.
 	// Mobile (<768px): "Menu" toggle. Open state is a light top panel (Figma
-	//   188:10): Close + Andersen wordmark, a "Fonts" group of typeface links,
+	//   188:10): Close + August Type Foundry wordmark, a "Fonts" group of typeface links,
 	//   and Buy / About / Contact.
 	// Desktop (≥768px): inline nav links on the left, no toggle.
 	import { onMount } from 'svelte';
@@ -80,8 +80,8 @@
 		{/each}
 	</nav>
 
-	<a class="Header__logo" href="/" onclick={close} aria-label="Andersen — home">
-		<Logo height={25} />
+	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Foundry — home">
+		<Logo height={29} />
 	</a>
 </header>
 

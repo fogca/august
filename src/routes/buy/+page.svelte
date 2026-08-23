@@ -1,5 +1,5 @@
 <script lang="ts">
-	// /buy — Andersen license purchase page (minimal, single product)
+	// /buy — August Type Foundry license purchase page (minimal, single product)
 	// One product: Steiner Complete — 20 weights, upright only (Hairline to Ultra).
 	// Flow: Currency → License (type + tier) → Checkout (Stripe).
 
@@ -103,7 +103,7 @@
 </script>
 
 <svelte:head>
-	<title>Buy — Andersen</title>
+	<title>Buy — August Type Foundry</title>
 	<meta
 		name="description"
 		content="Purchase Steiner Complete — a 20-weight variable family. Desktop, Web, App, and Books licenses available."

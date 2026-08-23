@@ -299,7 +299,7 @@
 		<div class="OTRef__group">
 			<div class="OTRef__grouphead">
 				<h2 class="OTRef__grouptitle">{group.title}</h2>
-				<p class="OTRef__groupnote" lang="ja">{group.note}</p>
+				<!-- Japanese group note hidden pending the Danish translation -->
 			</div>
 
 			<ul class="OTRef__list">
@@ -313,7 +313,7 @@
 									{f.need === 'must' ? '必須' : '推奨'}
 								</span>
 							</div>
-							<p class="OTRef__ja" lang="ja">{f.ja}</p>
+							<!-- Japanese feature note hidden pending the Danish translation -->
 							<p class="OTRef__font">Demo · {FONT_LABEL[f.font]}</p>
 						</div>
 
@@ -386,14 +386,16 @@
 		color: var(--color-text);
 	}
 
+	/* Hidden with its markup — restore when the Danish text lands.
 	.OTRef__groupnote {
-		font-family: 'Steiner', sans-serif;
-		font-size: var(--fs-h6);
-		line-height: 1.5;
-		color: rgba(0, 0, 0, 0.45);
-		margin: 4px 0 0;
-		letter-spacing: 0;
-	}
+			font-family: 'Steiner', sans-serif;
+			font-size: var(--fs-h6);
+			line-height: 1.5;
+			color: rgba(0, 0, 0, 0.45);
+			margin: 4px 0 0;
+			letter-spacing: 0;
+		}
+	*/
 
 	.OTRef__list {
 		list-style: none;
@@ -455,15 +457,17 @@
 		color: var(--color-bg);
 	}
 
+	/* Hidden with its markup — restore when the Danish text lands.
 	.OTRef__ja {
-		font-family: 'Steiner', sans-serif;
-		font-size: var(--fs-p);
-		line-height: 1.55;
-		color: rgba(0, 0, 0, 0.6);
-		letter-spacing: 0;
-		margin: 0;
-		max-width: 44ch;
-	}
+			font-family: 'Steiner', sans-serif;
+			font-size: var(--fs-p);
+			line-height: 1.55;
+			color: rgba(0, 0, 0, 0.6);
+			letter-spacing: 0;
+			margin: 0;
+			max-width: 44ch;
+		}
+	*/
 
 	.OTRef__font {
 		font-family: ui-monospace, 'SF Mono', monospace;

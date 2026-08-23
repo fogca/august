@@ -1,20 +1,20 @@
 <!-- 特定商取引法に基づく表記（2026-07 確定） -->
 <svelte:head>
-	<title>特定商取引法に基づく表記 — Andersen</title>
-	<meta name="description" content="Specified Commercial Transactions Act disclosure for Andersen." />
+	<title>特定商取引法に基づく表記 — August Type Foundry</title>
+	<meta name="description" content="Specified Commercial Transactions Act disclosure for August Type Foundry." />
 </svelte:head>
 
 <main class="Legal">
 	<div class="Legal__inner">
 		<h1>特定商取引法に基づく表記</h1>
 		<p class="Legal__lead">
-			本表記は、特定商取引法（通信販売）に基づき、Andersen のフォント販売について開示するものです。
+			本表記は、特定商取引法（通信販売）に基づき、August Type Foundry のフォント販売について開示するものです。
 		</p>
 
 		<dl class="Legal__facts">
 			<div class="Legal__fact">
 				<dt>販売事業者</dt>
-				<dd>株式会社みらいサービス（屋号：Andersen）</dd>
+				<dd>株式会社みらいサービス（屋号：August Type Foundry）</dd>
 			</div>
 			<div class="Legal__fact">
 				<dt>運営統括責任者</dt>

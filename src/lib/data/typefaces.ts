@@ -1,4 +1,4 @@
-// Typeface data definitions for Andersen
+// Typeface data definitions for August Type Foundry
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
@@ -21,7 +21,7 @@ export interface Typeface {
 	tagline: string;
 	description: string;
 	/** Japanese running translation of the description (shown under the English). */
-	descriptionJa?: string;
+	descriptionDa?: string;
 	/** e.g. 'Humanist Sans · 12 weights' */
 	classification: string;
 	weights: WeightDef[];
@@ -76,8 +76,11 @@ export const TYPEFACES: Typeface[] = [
 			"It takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature, where form is never fixed but always in metamorphosis, and an anthroposophy that holds the human being as the measure of things. " +
 			"Humanist-geometric — the mechanical and the organic coexist in every glyph, held together by formative force. " +
 			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
-		descriptionJa:
-			'Steiner は、20ウェイトのネオ・ヒューマニスト・サンセリフ（可変フォント）です。その名と気質はルドルフ・シュタイナーに由来します——形を固定されたものでなく絶えざる変容として見るゲーテ的な自然観と、人間を万物の尺度とする人智学。ヒューマニスト・ジオメトリック——無機質なものと有機質なものが、ひとつひとつの字形のなかに共存し、形成力によって結びついています。ヒューマニストの系譜は表層ではなく土壌として静かに息づいています——ジョンストンの1916年ロンドン地下鉄書体、Gill Sans、Neuzeit、オトル・アイヒャーの Rotis。',
+		descriptionDa:
+			'Steiner er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
+			+ 'Den har sit navn — og sit temperament — fra Rudolf Steiner: en goethesk læsning af naturen, hvor formen aldrig ligger fast, men altid er under forvandling, og en antroposofi, der holder mennesket som målestok. '
+			+ 'Humanistisk-geometrisk — det mekaniske og det organiske findes side om side i hvert tegn, holdt sammen af formende kraft. '
+			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		weights: WEIGHTS,
 		// One German word per weight row (20), in alphabetical order A→T —
@@ -149,11 +152,12 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
 		description:
-			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Andersen. ' +
+			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at August Type Foundry. ' +
 			'Details on weights and axis range will be published as the design reaches maturity. ' +
 			'Debuting 2026.',
-		descriptionJa:
-			'gQ は Mokuseki Sans の最新進化形——Andersen が描くネオ・ヒューマニスト・サンセリフです。ウェイトや軸の範囲などの詳細は、デザインの成熟に合わせて公開していきます。2026年デビュー予定。',
+		descriptionDa:
+			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos August Type Foundry. '
+			+ 'Detaljer om vægte og akser offentliggøres, efterhånden som designet modnes. Debut i 2026.',
 		classification: 'Neo Humanist Sans · 12 weights',
 		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
 		weights: WEIGHTS,
@@ -203,11 +207,12 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Steiner',
 		tagline: 'A display typeface in development.',
 		description:
-			'Atom is a display typeface currently in development at Andersen. ' +
+			'Atom is a display typeface currently in development at August Type Foundry. ' +
 			'Further details on its design direction and release schedule will follow. ' +
 			'Coming 2026.',
-		descriptionJa:
-			'Atom は Andersen で現在開発中のディスプレイ書体です。デザインの方向性やリリース時期の詳細は、追ってお知らせします。2026年公開予定。',
+		descriptionDa:
+			'Atom er en display-skrift under udvikling hos August Type Foundry. '
+			+ 'Nærmere om retning og udgivelsestidspunkt følger. Planlagt til 2026.',
 		classification: 'Neo Grotesque · in development',
 		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
 		weights: WEIGHTS,

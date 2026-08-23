@@ -1,8 +1,8 @@
 <svelte:head>
-	<title>About — Andersen</title>
+	<title>About — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Andersen — an independent type foundry from Tokyo. Studio statement and philosophy."
+		content="August Type Foundry — an independent type foundry from Tokyo. Studio statement and philosophy."
 	/>
 </svelte:head>
 
@@ -10,15 +10,18 @@
 	<div class="About__inner">
 		<!-- 1 — Foundry -->
 		<section class="block">
-			<h2 class="gq">Andersen</h2>
+			<h2 class="gq">August Type Foundry</h2>
 			<p class="en" lang="en">
-				Andersen is an independent type foundry, founded in Tokyo in 2026. We cross
+				August Type Foundry is an independent type foundry, founded in Tokyo in 2026. We cross
 				histories, cultures, and eras, reinterpret their context, and draw type through a
 				contemporary eye. Anchored in retail families and bespoke commissions, we keep searching for
 				forms not yet seen.
 			</p>
-			<p class="ja" lang="ja">
-				アンデルセンは、東京を拠点に2026年に設立した独立系のタイプファウンドリーです。歴史・文化・時代を交差させ、その文脈を読み替えながら、現代の視点で書体を描きます。リテール書体とビスポーク書体を軸に、まだ見ぬ形を探求し続けます。
+			<p class="da" lang="da">
+				August Type Foundry er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser
+				historier, kulturer og epoker, gentolker deres sammenhæng og tegner skrift gennem et
+				nutidigt blik. Med udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at
+				lede efter former, der endnu ikke er set.
 			</p>
 		</section>
 
@@ -34,15 +37,22 @@
 				quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's
 				Rotis — never the surface, only the soil.
 			</p>
-			<p class="ja" lang="ja">
-				第一弾の Steiner は、20ウェイトのネオ・ヒューマニスト・サンセリフ（可変フォント）です。その名と気質はルドルフ・シュタイナーに由来します——形を固定されたものでなく絶えざる変容として見るゲーテ的な自然観と、人間を万物の尺度とする人智学。文字は「構築された」のではなく「育った」ように、曲線は有機的に、プロポーションは人間的に。ヒューマニストの系譜は表層ではなく土壌として静かに息づいています——ジョンストンの1916年ロンドン地下鉄書体、Gill Sans、Neuzeit、オトル・アイヒャーの Rotis。
+			<p class="da" lang="da">
+				Vores første udgivelse, Steiner, er en neo-humanistisk grotesk i tyve vægte, tegnet som
+				variabel skrift. Den har sit navn — og sit temperament — fra Rudolf Steiner: en goethesk
+				læsning af naturen, hvor formen aldrig ligger fast, men altid er under forvandling, og en
+				antroposofi, der holder mennesket som målestok. Bogstaverne skal føles groede snarere end
+				konstruerede — organiske i kurverne, menneskelige i proportionen. Den humanistiske slægt
+				løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl
+				Aichers Rotis — aldrig overfladen, kun jorden.
 			</p>
 			<p class="en" lang="en">
 				A typeface is never the meaning itself. It is the medium meaning passes through — doing the
 				quiet work of carrying a thought from one mind to another.
 			</p>
-			<p class="ja" lang="ja">
-				書体は決して意味そのものではありません。意味が通り抜ける媒体として、ある思考を一つの心から別の心へと静かに運びます。
+			<p class="da" lang="da">
+				En skrift er aldrig betydningen selv. Den er det medium, betydningen passerer igennem — det
+				stille arbejde med at bære en tanke fra ét sind til et andet.
 			</p>
 		</section>
 
@@ -55,8 +65,12 @@
 				freedom of use. We keep the same discipline in the catalogue itself — a small, considered
 				library rather than a sprawling one — so every release stays measured and intentional.
 			</p>
-			<p class="ja" lang="ja">
-				字間は詰めた状態で出荷します。緩く組んだ書体を後から締めることはできませんが、締めて組んだ書体は使い手に呼吸の余地を残します。制約こそが使用の自由を生む、と私たちは考えます。同じ規律をカタログ自体にも保ち——肥大したライブラリではなく、小さく吟味されたライブラリとして——すべてのリリースを抑制的で意図的なものに保ちます。
+			<p class="da" lang="da">
+				Vi udsender skriften med stram udslutning. En skrift sat løst kan aldrig strammes igen, men
+				en skrift sat stramt giver brugeren plads til at trække vejret. Begrænsning er efter vores
+				overbevisning det, der skaber friheden i brugen. Vi holder den samme disciplin i selve
+				kataloget — et lille, gennemtænkt bibliotek frem for et vidtløftigt — så hver udgivelse
+				forbliver afmålt og bevidst.
 			</p>
 		</section>
 
@@ -68,9 +82,11 @@
 				no subscription. Desktop, Web, App and Books licences are available, and bespoke commissions
 				— a proprietary typeface tuned to a single identity — sit alongside the retail library.
 			</p>
-			<p class="ja" lang="ja">
-				まず可変フォントとして、ファミリー単位で販売します。ライセンスは買い切り——一度の支払いで永続利用、サブスクリプションはありません。Desktop / Web / App / Books
-				の各ライセンスを用意し、ビスポーク（単一のアイデンティティに調律した専用書体）の制作も、リテール・ライブラリと並んで承ります。
+			<p class="da" lang="da">
+				Variabel skrift først, solgt som familie. Licenser er evigtgyldige — betal én gang, brug for
+				altid, uden abonnement. Der findes licenser til Desktop, Web, App og Bøger, og
+				bespoke-opgaver — en egen skrift stemt til én identitet — står side om side med
+				retail-biblioteket.
 			</p>
 		</section>
 
@@ -81,9 +97,9 @@
 				For licensing, custom commissions, or anything else, write to
 				<a href="mailto:hi@august.tf">hi@august.tf</a>. We are based in Tokyo, Japan.
 			</p>
-			<p class="ja" lang="ja">
-				ライセンス、カスタム制作、その他のお問い合わせは
-				<a href="mailto:hi@august.tf">hi@august.tf</a> までご連絡ください。東京を拠点に活動しています。
+			<p class="da" lang="da">
+				Skriv til <a href="mailto:hi@august.tf">hi@august.tf</a> om licenser, særopgaver eller hvad
+				som helst andet. Vi holder til i Tokyo, Japan.
 			</p>
 		</section>
 	</div>
@@ -135,19 +151,20 @@
 		margin: 0 0 6px;
 	}
 
-	/* Japanese — Tazugane Light, ~1.75px smaller than the Latin so the two
-	   scripts read at a matched visual size. Latin runs inside JA keep Steiner. */
-	.About .ja {
-		font-family: 'Steiner', 'TazuganeGothicStdN-Light', 'Tazugane Gothic StdN',
-			'Tazugane Gothic', 'Hiragino Sans W3', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+	/* Danish — the second language runs in Steiner like the English, one step
+	   lighter and a touch smaller so the pair reads as primary + secondary
+	   rather than as two competing texts. (The Japanese it replaced needed a
+	   CJK stack; Danish does not.) */
+	.About .da {
 		font-weight: 300;
-		font-size: calc(var(--fs-p) - 1.75px);
-		line-height: 1.85;
+		font-size: calc(var(--fs-p) - 1px);
+		line-height: 1.7;
+		opacity: 0.75;
 		margin: 0 0 28px;
 	}
 
-	/* Last JA in a section shouldn't add extra trailing space before block gap */
-	.About .ja:last-child {
+	/* Last secondary paragraph in a section shouldn't add trailing space */
+	.About .da:last-child {
 		margin-bottom: 0;
 	}
 

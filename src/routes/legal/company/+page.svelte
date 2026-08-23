@@ -1,6 +1,6 @@
 <svelte:head>
-	<title>Company — Andersen</title>
-	<meta name="description" content="Andersen — company information." />
+	<title>Company — August Type Foundry</title>
+	<meta name="description" content="August Type Foundry — company information." />
 </svelte:head>
 
 <main class="Company">
@@ -8,7 +8,7 @@
 		<h1>Company</h1>
 
 		<p class="Company__lead">
-			Andersen is a brand operated by Mirai Service Co., Ltd.
+			August Type Foundry is a brand operated by Mirai Service Co., Ltd.
 		</p>
 
 		<dl class="Company__facts">

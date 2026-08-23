@@ -18,10 +18,10 @@
 </script>
 
 <svelte:head>
-	<title>Andersen — Steiner</title>
+	<title>August Type Foundry — Steiner</title>
 	<meta
 		name="description"
-		content="Andersen — an independent type foundry from Tokyo. Steiner, a 20-weight neo-humanist variable typeface."
+		content="August Type Foundry — an independent type foundry from Tokyo. Steiner, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
@@ -81,7 +81,7 @@
 				<span>Custom type</span> <span>for corporate</span> <span>identity</span>
 			</h2>
 			<p class="Custom__body">
-				Beyond our retail library, Andersen designs bespoke typefaces for brands and
+				Beyond our retail library, August Type Foundry designs bespoke typefaces for brands and
 				institutions — a proprietary voice, drawn from the first sketch to a fully realised
 				family. A custom typeface is the most enduring asset a brand can own: it travels
 				across every screen, surface, and language while remaining unmistakably yours.
@@ -97,7 +97,7 @@
 		<div class="Office__inner">
 			<p class="Office__label">Design Office</p>
 			<p class="Office__text">
-				Andersen is the pragmatic type design practice led by a creative office
+				August Type Foundry is the pragmatic type design practice led by a creative office
 				in Tokyo.
 			</p>
 			<div class="Office__links">
@@ -119,7 +119,7 @@
 	.Home {
 		--red: var(--color-signal);
 		/* One display size shared by every section title (Make it yours / Custom
-		   type… / Andersen is…). Bounded by viewport HEIGHT as well as
+		   type… / August Type Foundry is…). Bounded by viewport HEIGHT as well as
 		   width, so a long statement still wraps inside its 100dvh section on a
 		   short laptop instead of pushing the section taller. */
 		--display-fs: clamp(40px, min(7vw, 9.5vh), 88px);

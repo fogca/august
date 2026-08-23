@@ -4,10 +4,10 @@
   Keep the licence URL in the font name table (nameID 13/14) pointed here.
 -->
 <svelte:head>
-	<title>Licence (EULA) — Andersen</title>
+	<title>Licence (EULA) — August Type Foundry</title>
 	<meta
 		name="description"
-		content="End User Licence Agreement for Andersen fonts — Desktop, Web, App, and Books."
+		content="End User Licence Agreement for August Type Foundry fonts — Desktop, Web, App, and Books."
 	/>
 </svelte:head>
 
@@ -15,7 +15,7 @@
 	<div class="Legal__inner">
 		<h1>End User Licence Agreement</h1>
 		<p class="Legal__lead">
-			These terms govern your use of fonts purchased from Andersen (a brand of Mirai
+			These terms govern your use of fonts purchased from August Type Foundry (a brand of Mirai
 			Service Co., Ltd.). By downloading or using the Fonts you agree to them. The Sales Receipt
 			and licence document delivered with the Fonts record exactly what you are licensed for.
 		</p>
@@ -34,7 +34,7 @@
 			<h2>2. Licence grant</h2>
 			<p>
 				We grant the Licensee a perpetual, worldwide, non-exclusive licence to use the Fonts within
-				the scope on the Sales Receipt. The Fonts remain the property of Andersen; this
+				the scope on the Sales Receipt. The Fonts remain the property of August Type Foundry; this
 				is a licence, not a sale of the software. Pay once — there is no subscription.
 			</p>
 		</section>
@@ -108,7 +108,7 @@
 		<section class="Legal__block">
 			<h2>10. Warranty &amp; liability</h2>
 			<p>
-				The Fonts are provided “as is.” To the extent permitted by law, Andersen is not
+				The Fonts are provided “as is.” To the extent permitted by law, August Type Foundry is not
 				liable for indirect or consequential losses, and our total liability is limited to the
 				amount you paid for the licence. Nothing here excludes liability that cannot be excluded by
 				law.

@@ -6,10 +6,10 @@
 </script>
 
 <svelte:head>
-	<title>Fonts — Andersen</title>
+	<title>Fonts — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Andersen typeface catalogue — Steiner and upcoming releases."
+		content="August Type Foundry typeface catalogue — Steiner and upcoming releases."
 	/>
 </svelte:head>
 
@@ -17,7 +17,7 @@
 	<div class="Fonts__inner">
 		<header class="Fonts__head">
 			<h1 class="Fonts__heading">Fonts</h1>
-			<p class="Fonts__sub">All typefaces from Andersen.</p>
+			<p class="Fonts__sub">All typefaces from August Type Foundry.</p>
 		</header>
 
 		<ul class="Fonts__list" aria-label="Typeface catalogue">

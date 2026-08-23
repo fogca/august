@@ -43,7 +43,7 @@
 </script>
 
 <svelte:head>
-	<title>{tf.name} — Andersen</title>
+	<title>{tf.name} — August Type Foundry</title>
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 
@@ -113,8 +113,8 @@
 		<h1 class="FontDetail__name">{tf.name}</h1>
 		<p class="FontDetail__tagline">{tf.tagline}</p>
 		<p class="FontDetail__description">{tf.description}</p>
-		{#if tf.descriptionJa}
-			<p class="FontDetail__description-ja" lang="ja">{tf.descriptionJa}</p>
+		{#if tf.descriptionDa}
+			<p class="FontDetail__description-da" lang="da">{tf.descriptionDa}</p>
 		{/if}
 	</div>
 
@@ -381,13 +381,15 @@
 	/* Japanese running translation — Tazugane Light, ~1.75px smaller than the
 	   Latin. Latin runs inside JA use the page typeface (var(--type-font)).
 	   font-family needs !important to beat the page-wide :global(*) font rule. */
-	.FontDetail .FontDetail__description-ja {
-		font-family: var(--type-font, 'Steiner'), 'TazuganeGothicStdN-Light',
-			'Tazugane Gothic StdN', 'Tazugane Gothic', 'Hiragino Sans W3', 'Hiragino Sans',
-			'Yu Gothic', sans-serif !important;
+	/* Danish runs in the typeface itself — no CJK fallback stack needed now that
+	   the secondary language is Latin. Lighter and slightly smaller so it reads
+	   as a translation under the English, not as a second headline. */
+	.FontDetail .FontDetail__description-da {
+		font-family: var(--type-font, 'Steiner'), sans-serif !important;
 		font-weight: 300;
-		font-size: calc(var(--fs-p) - 1.75px);
-		line-height: 1.85;
+		font-size: calc(var(--fs-p) - 1px);
+		line-height: 1.7;
+		opacity: 0.75;
 		letter-spacing: 0;
 		color: var(--color-text);
 		max-width: 64ch;
