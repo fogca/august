@@ -56,6 +56,42 @@
 		</div>
 	</section>
 
+	<!-- Alfred (ochre) — the next typeface, announced by its logotype alone -->
+	<section class="Alfred">
+		<svg
+			class="Alfred__mark"
+			viewBox="0 0 469 117"
+			role="img"
+			aria-label="Alfred"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				fill="currentColor"
+				d="M55.4 2.72998L90.05 98.88L99.22 116.33H78.44L76.94 101.55L68.5 77.38H28.44L20.01 101.53L18.42 116.33H0C0 116.33 7.18 104.72 9.71 97.7C11.38 93.08 35.41 28.28 35.41 28.28L34.57 16.76L55.4 2.72998ZM32.38 66.02H64.54L48.46 20.09L32.38 66.02Z"
+			/>
+			<path
+				fill="currentColor"
+				d="M312.87 116.33L318.54 91.28V20.09L312.87 4.33002H375.34L367.12 19.4L331.18 15.53V51.85H366.12L360.55 66.16L331.18 63.05V105.13C354.57 105.13 381.37 98.48 381.37 98.48L376.51 116.33H312.88H312.87Z"
+			/>
+			<path
+				fill="currentColor"
+				d="M117.52 63.05V105.13C140.91 105.13 167.71 98.48 167.71 98.48L162.85 116.33H99.22L104.89 91.28V20.09L99.22 9.99L117.52 0V63.05ZM117.52 15.53V51.85Z"
+			/>
+			<path
+				fill="currentColor"
+				d="M167.71 116.33L173.38 91.28V23.56L167.71 4.32001H230.18L221.96 19.39L186.02 15.52V51.84H220.96L215.39 66.15L186.02 63.04V98.03L188.87 116.32H167.71V116.33Z"
+			/>
+			<path
+				fill="currentColor"
+				d="M402.81 116.33H380.22L385.83 96.94V19.07L383.11 4.33002H407.95C435.99 4.33002 468.81 21.15 468.81 57.05C468.81 103.52 431.66 116.33 402.82 116.33H402.81ZM398.48 15.22V105.27H408.09C429.56 105.27 454.24 90.69 454.24 57.04C454.24 34.45 432.45 15.22 408.09 15.22H398.48Z"
+			/>
+			<path
+				fill="currentColor"
+				d="M232.76 4.34003L235.96 15.54V98.08L234.36 116.31H249.72L248.12 104.63V65.76L261.56 65.92L285.55 105.75V116.31H311.78L273.07 64.8C280.75 64.8 300.74 56.8 300.74 36.65C300.74 18.26 286.66 4.34003 232.76 4.34003ZM248.12 16.18C273.07 16.18 288.27 26.1 288.27 36.33C288.27 48.17 276.59 54.4 248.12 54.4V16.18Z"
+			/>
+		</svg>
+	</section>
+
 	<!-- Buy (red) — the license, plainly -->
 	<section class="Buy">
 		<div class="Buy__inner">
@@ -291,6 +327,32 @@
 		.Hero__cta {
 			align-self: center;
 			min-width: 280px;
+		}
+	}
+
+	/* --- Alfred (ochre) --- */
+	.Alfred {
+		background: #d59514;
+		color: #000000;
+		min-height: 100vh;
+		min-height: 100dvh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-inline: var(--padding);
+	}
+
+	.Alfred__mark {
+		display: block;
+		/* Cap the mark at its drawn size on wide screens, let it fill the
+		   column on narrow ones. */
+		width: min(469px, 100%);
+		height: auto;
+	}
+
+	@media (min-width: 768px) {
+		.Alfred__mark {
+			width: min(469px, 42vw);
 		}
 	}
 
