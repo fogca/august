@@ -91,10 +91,11 @@
 	.Footer {
 		font-family: 'Steiner', sans-serif;
 		font-weight: var(--fw-ui);
-		background: #000;
+		/* Same red as the Buy/licence section (base.css :root token) */
+		background: var(--color-signal);
 		color: #fff;
 		padding: 64px 0 24px;
-		margin-top: 120px;
+		margin-top: 0;
 		/* sit above the cover-reveal sections (z-index:1) above it */
 		position: relative;
 		z-index: 2;
