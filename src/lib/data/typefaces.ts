@@ -107,31 +107,9 @@ export const TYPEFACES: Typeface[] = [
 			'Seelenkalender',
 			'Tierwelt'
 		],
-		// Typeface-page hero: alphabet cycling white-on-black (the portrait below
-		// still serves the /fonts index slide).
-		heroGlyphCycle: true,
-		// Hero background — Rudolf Steiner portrait (1905, Otto Rietmann; public domain)
-		thumbnail: '/images/Steiner/06_R.-Steiner-1905-Foto-Rietmann.jpg',
-		imageCredit:
-			'Rudolf Steiner — photograph by Otto Rietmann, 1905. Public domain, courtesy of the Rudolf Steiner Archive, Dornach.',
-		// Page specimens (DrawBot / drawbot-skia — see Steiner/00_master/Visuals/page_specimens.py)
-		specimens: [
-			{
-				title: 'Specimens',
-				columns: 2,
-				ratio: '16 / 10',
-				items: [
-					{ src: '/images/specimens/steiner/currency_f6.png', caption: 'Currency — Book' },
-					{ src: '/images/specimens/steiner/ligatures_f6.png', caption: 'Ligatures — fi fl ff ffi ffl' }
-				]
-			},
-			{
-				title: 'Weight',
-				columns: 2,
-				ratio: '4 / 5',
-				items: [{ src: '/images/specimens/steiner/ag_anim_f6.gif', caption: 'ag — wght 1 → 950' }]
-			}
-		],
+		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
+		// used on the home page (see Home__custom's video-specimen commit).
+		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		hero: {
 			label: 'Neo Humanist Sans',

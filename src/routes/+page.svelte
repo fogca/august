@@ -39,10 +39,8 @@
 			<!-- Steiner's wght axis, 1 (Hair) -> 950 (Ultra), swept across a row of
 			     "a"s (STN services_type_VF_animation source, re-encoded with its
 			     90deg display-matrix rotation baked into the pixels — browsers are
-			     inconsistent about honouring rotation side-data on <video>). Same
-			     landscape file on both breakpoints; only .Hero__video's CSS differs
-			     — PC shows it as encoded, SP rotates it 90deg to fill the taller,
-			     narrower frame. -->
+			     inconsistent about honouring rotation side-data on <video>). Shown
+			     upright at every breakpoint. -->
 			<video
 				bind:this={heroVideo}
 				class="Hero__video"
@@ -249,8 +247,7 @@
 	.Hero {
 		display: flex;
 		flex-direction: column;
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: 100svh;
 		/* Pure black, matching the video's own ground exactly — the frame edge
 		   should disappear, not read as a lighter rectangle on black. */
 		background: #000000;
@@ -304,33 +301,14 @@
 		min-height: 0;
 	}
 
-	/* PC: shown as encoded (landscape, 1350:1080) — scaled to fit the flex:1
-	   specimen area without overflowing it, same pattern as .Alfred__mark. */
+	/* Shown as encoded (landscape, 1350:1080) on every breakpoint — scaled to
+	   fit the flex:1 specimen area without overflowing it, same pattern as
+	   .Alfred__mark. No rotation: upright at both PC and SP. */
 	.Hero__video {
 		display: block;
 		width: min(900px, 78vw);
 		height: auto;
 		max-height: 100%;
-	}
-
-	@media (max-width: 767.98px) {
-		/* Clip whatever the rotation pushes outside the frame. */
-		.Hero__specimen {
-			overflow: hidden;
-		}
-
-		/* Rotate 90deg for the taller, narrower phone frame. Pre-rotation
-		   height is set to the viewport width (100vw), so post-rotation the
-		   video's effective WIDTH exactly fills the screen — its now-taller
-		   effective height (AR 1350:1080 -> 125vw) overflows top/bottom and
-		   is cropped by .Hero__specimen's overflow:hidden above, centred. */
-		.Hero__video {
-			width: auto;
-			max-width: none;
-			height: 100vw;
-			max-height: none;
-			transform: rotate(90deg);
-		}
 	}
 
 	.Hero__bottom {
@@ -413,8 +391,7 @@
 	.Alfred {
 		display: flex;
 		flex-direction: column;
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: 100svh;
 		background: #d59514;
 		color: #000000;
 		padding-top: clamp(48px, 8vh, 72px);
@@ -510,8 +487,7 @@
 	.Asta {
 		display: flex;
 		flex-direction: column;
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: 100svh;
 		background: #cdd6e6;
 		color: #ffffff;
 		padding-top: clamp(48px, 8vh, 72px);
@@ -614,8 +590,7 @@
 	.Buy {
 		background: var(--red);
 		color: #ffffff;
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: 100svh;
 		display: flex;
 		align-items: center;
 		padding-inline: var(--padding);
@@ -696,8 +671,7 @@
 
 	/* --- Custom type service (black) --- */
 	.Home__custom {
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: 100svh;
 		display: flex;
 		align-items: center;
 		background: #000000;
@@ -791,8 +765,7 @@
 
 	/* --- Design office (white) — full screen, centered, uppercase --- */
 	.Office {
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: 100svh;
 		background: #ffffff;
 		color: #000000;
 		display: flex;

@@ -1,13 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { onScroll, scrollToEl } from '$lib/scroll';
-	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
-	import GlyphSpecimen from '$lib/components/fonts/GlyphSpecimen.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
-	import ImageGallery from '$lib/components/fonts/ImageGallery.svelte';
 	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
-	import type { GalleryItem } from '$lib/components/fonts/ImageGallery.svelte';
 	import type { PageData } from './$types.js';
 
 	let { data }: { data: PageData } = $props();
@@ -30,11 +26,6 @@
 		update();
 		return onScroll(update);
 	});
-
-	// Placeholder gallery items until real exports are dropped in (image-driven:
-	// add `src` to each to show the export).
-	const inUseItems: GalleryItem[] = [{}, {}, {}, {}];
-	const otherItems: GalleryItem[] = [{}, {}, {}];
 
 	// Smooth-scroll the fixed CTA to the on-page buy block.
 	function scrollToBuy() {
@@ -83,9 +74,9 @@
 			<p class="FontDetail__hero-credit">{tf.imageCredit}</p>
 		{/if}
 
-		{#if !tf.heroGlyphCycle}
-			<!-- The cycling alphabet is the centrepiece on its own; a wordmark on
-			     top of it would just collide. -->
+		{#if !tf.heroGlyphCycle && !tf.heroVideo}
+			<!-- The cycling alphabet and the wght-sweep video are both centrepieces
+			     on their own; a wordmark on top of either would just collide. -->
 			<div class="FontDetail__hero-center">
 				<span class="FontDetail__hero-name">{tf.name}</span>
 			</div>
@@ -118,36 +109,11 @@
 		{/if}
 	</div>
 
-	<TypeTester
-		weights={tf.weights}
-		fontFamily={tf.fontFamily}
-		defaultTexts={tf.defaultTexts}
-		available={isAvailable}
-	/>
-
-	<!-- A–Z / a–z / symbols — three large specimen rows -->
-	<GlyphSpecimen fontFamily={tf.fontFamily} />
-
 	<!-- Full glyph set -->
 	<GlyphSet fontFamily={tf.fontFamily} title="Glyph set" />
 
 	<!-- OpenType features (live OFF → ON demos) -->
 	<OpenTypeFeatures fontFamily={tf.fontFamily} />
-
-	<!-- Specimens — per-typeface galleries when present, else placeholders -->
-	{#if tf.specimens && tf.specimens.length}
-		{#each tf.specimens as gallery (gallery.title)}
-			<ImageGallery
-				title={gallery.title}
-				items={gallery.items}
-				columns={gallery.columns ?? 2}
-				ratio={gallery.ratio ?? '16 / 10'}
-			/>
-		{/each}
-	{:else}
-		<ImageGallery title="In Use" items={inUseItems} columns={2} ratio="16 / 10" />
-		<ImageGallery title="Other" items={otherItems} columns={3} ratio="4 / 5" />
-	{/if}
 
 	<!-- On-page buy block (the fixed CTA scrolls here) -->
 	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">

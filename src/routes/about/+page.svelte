@@ -10,7 +10,7 @@
 	<div class="About__inner">
 		<!-- 1 — Foundry -->
 		<section class="block">
-			<h2 class="gq">August Type Foundry</h2>
+			<h2>August Type Foundry</h2>
 			<p class="en" lang="en">
 				August Type Foundry is an independent type foundry, founded in Tokyo in 2026. We cross
 				histories, cultures, and eras, reinterpret their context, and draw type through a
@@ -55,53 +55,6 @@
 				stille arbejde med at bære en tanke fra ét sind til et andet.
 			</p>
 		</section>
-
-		<!-- 3 — How we draw -->
-		<section class="block">
-			<h2>How we draw</h2>
-			<p class="en" lang="en">
-				We ship spacing tight by default. A face set loose can never be tightened back, but a face
-				set tight leaves the operator room to breathe. Constraint, we believe, is what generates the
-				freedom of use. We keep the same discipline in the catalogue itself — a small, considered
-				library rather than a sprawling one — so every release stays measured and intentional.
-			</p>
-			<p class="da" lang="da">
-				Vi udsender skriften med stram udslutning. En skrift sat løst kan aldrig strammes igen, men
-				en skrift sat stramt giver brugeren plads til at trække vejret. Begrænsning er efter vores
-				overbevisning det, der skaber friheden i brugen. Vi holder den samme disciplin i selve
-				kataloget — et lille, gennemtænkt bibliotek frem for et vidtløftigt — så hver udgivelse
-				forbliver afmålt og bevidst.
-			</p>
-		</section>
-
-		<!-- 4 — How we release -->
-		<section class="block">
-			<h2>How we release</h2>
-			<p class="en" lang="en">
-				Variable font first, sold as a family. Licences are perpetual — pay once, use forever, with
-				no subscription. Desktop, Web, App and Books licences are available, and bespoke commissions
-				— a proprietary typeface tuned to a single identity — sit alongside the retail library.
-			</p>
-			<p class="da" lang="da">
-				Variabel skrift først, solgt som familie. Licenser er evigtgyldige — betal én gang, brug for
-				altid, uden abonnement. Der findes licenser til Desktop, Web, App og Bøger, og
-				bespoke-opgaver — en egen skrift stemt til én identitet — står side om side med
-				retail-biblioteket.
-			</p>
-		</section>
-
-		<!-- 5 — Contact -->
-		<section class="block">
-			<h2>Contact</h2>
-			<p class="en" lang="en">
-				For licensing, custom commissions, or anything else, write to
-				<a href="mailto:hi@august.tf">hi@august.tf</a>. We are based in Tokyo, Japan.
-			</p>
-			<p class="da" lang="da">
-				Skriv til <a href="mailto:hi@august.tf">hi@august.tf</a> om licenser, særopgaver eller hvad
-				som helst andet. Vi holder til i Tokyo, Japan.
-			</p>
-		</section>
 	</div>
 </main>
 
@@ -128,14 +81,17 @@
 		}
 	}
 
+	/* Wider column and bigger type throughout — with only the foundry and
+	   Asger statements left on the page, the previous 640px/12px text setting
+	   (tuned for five stacked sections) reads sparse. */
 	.About__inner {
-		max-width: 640px;
+		max-width: 760px;
 		margin: 0 auto;
 		padding-inline: var(--padding);
 	}
 
 	.block {
-		margin-bottom: 48px;
+		margin-bottom: 80px;
 	}
 
 	.block:last-child {
@@ -143,12 +99,17 @@
 	}
 
 	.About h2 {
-		margin: 0 0 12px;
+		font-size: clamp(28px, 4vw, 44px);
+		line-height: 1.15;
+		margin: 0 0 20px;
 	}
 
-	/* English (Latin) — base p size (Steiner). */
+	/* English (Latin) — explicit 13px, one step up from base.css's --fs-p
+	   (12px), matching the rest of the page's larger scale. */
 	.About .en {
-		margin: 0 0 6px;
+		font-size: 13px;
+		line-height: 1.75;
+		margin: 0 0 8px;
 	}
 
 	/* Danish — the second language runs in Steiner like the English, one step
@@ -157,8 +118,8 @@
 	   CJK stack; Danish does not.) */
 	.About .da {
 		font-weight: 300;
-		font-size: calc(var(--fs-p) - 1px);
-		line-height: 1.7;
+		font-size: 12px;
+		line-height: 1.75;
 		opacity: 0.75;
 		margin: 0 0 28px;
 	}
@@ -166,11 +127,6 @@
 	/* Last secondary paragraph in a section shouldn't add trailing space */
 	.About .da:last-child {
 		margin-bottom: 0;
-	}
-
-	/* Foundry wordmark in gQ (Mokuseki Sans) */
-	.About .gq {
-		font-family: 'Mokuseki Sans', 'Steiner', sans-serif;
 	}
 
 	.About a {
