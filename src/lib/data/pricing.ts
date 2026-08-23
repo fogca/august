@@ -126,7 +126,7 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 		packages: [
 			{
 				id: 'steiner-complete',
-				label: 'Steiner Complete',
+				label: 'Asger Complete',
 				detail: '20 weights — Hairline to Ultra',
 				styles: STEINER_WEIGHTS,
 				italic: false,

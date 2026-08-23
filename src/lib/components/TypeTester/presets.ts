@@ -56,8 +56,8 @@ export const ALIGN_DEFAULT: AlignValue = 'left';
 // Preset texts (bilingual intentional — .notdef shows for unsupported chars)
 export const PRESETS: Record<string, string> = {
 	pangram: 'The quick brown fox jumps over the lazy dog 1234567890',
-	word: 'Steiner',
+	word: 'Asger',
 	numbers: '0123456789',
 	symbols: '. , - ; : ! ? & @ # $ %',
-	bilingual: 'Steiner — 意味を運ぶ媒質\nThe aether carries meaning before sight.'
+	bilingual: 'Asger — 意味を運ぶ媒質\nThe aether carries meaning before sight.'
 };

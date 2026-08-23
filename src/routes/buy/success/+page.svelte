@@ -42,7 +42,7 @@
 		{/if}
 
 		<p class="Success__body">
-			Thank you for purchasing Steiner.
+			Thank you for purchasing Asger.
 			{#if order?.email}
 				Your fonts, EULA, and license certificate will be delivered to
 				<strong>{order.email}</strong> within 24 hours.

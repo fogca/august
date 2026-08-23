@@ -39,6 +39,10 @@
 
 	// Mobile panel: typeface shortcuts + page links
 	const fonts = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
+	// Announced but not yet released: shown in the menu for completeness, dimmed
+	// and inert. They stay out of TYPEFACES' visible set on purpose so /fonts and
+	// /fonts/[slug] keep 404-ing until there is a real page to link to.
+	const UPCOMING: string[] = ['Alfred', 'Asta'];
 	const PAGES: NavItem[] = [
 		{ label: 'Buy', href: '/buy' },
 		{ label: 'About', href: '/about' },
@@ -81,7 +85,7 @@
 	</nav>
 
 	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Foundry — home">
-		<Logo height={29} />
+		<Logo height={31} />
 	</a>
 </header>
 
@@ -104,6 +108,9 @@
 				<ul class="MenuPanel__list">
 					{#each fonts as f (f.slug)}
 						<li><a href="/fonts/{f.slug}" onclick={close}>{f.name}</a></li>
+					{/each}
+					{#each UPCOMING as name (name)}
+						<li><span class="MenuPanel__soon" aria-disabled="true">{name}</span></li>
 					{/each}
 				</ul>
 			</div>
@@ -204,7 +211,7 @@
 		}
 
 		.Header__logo :global(.Logo) {
-			height: 20px !important;
+			height: 22px !important;
 		}
 	}
 
@@ -290,6 +297,19 @@
 	.MenuPanel__list a:hover,
 	.MenuPanel__pages a:hover {
 		opacity: 0.55;
+	}
+
+	/* Unreleased faces: same slot, half-strength, and never interactive. */
+	.MenuPanel__soon {
+		font-size: 11px;
+		line-height: 1.5;
+		letter-spacing: 0;
+		color: #000;
+		opacity: 0.4;
+		white-space: nowrap;
+		cursor: default;
+		pointer-events: none;
+		user-select: none;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

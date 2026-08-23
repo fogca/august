@@ -33,11 +33,11 @@
 		<!-- Column 1: brand + ethos -->
 		<section class="Footer__col Footer__col--brand">
 			<a href="/" class="Footer__logo" aria-label="August Type Foundry — home">
-				<Logo height={25} />
+				<Logo height={27} />
 			</a>
 			<p class="Footer__tagline">
 				A type foundry from Tokyo.<br />
-				Steiner — released 2026.
+				Asger — released 2026.
 			</p>
 		</section>
 

@@ -27,7 +27,7 @@
 	<OpenTypeReference />
 
 	<nav class="OTPage__foot">
-		<a href="/fonts/steiner">← Steiner</a>
+		<a href="/fonts/steiner">← Asger</a>
 	</nav>
 </main>
 

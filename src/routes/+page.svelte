@@ -18,18 +18,20 @@
 </script>
 
 <svelte:head>
-	<title>August Type Foundry — Steiner</title>
+	<title>August Type Foundry — Asger</title>
 	<meta
 		name="description"
-		content="August Type Foundry — an independent type foundry from Tokyo. Steiner, a 20-weight neo-humanist variable typeface."
+		content="August Type Foundry — an independent type foundry from Tokyo. Asger, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
 <main class="Home">
 	<!-- Hero (white) — the Steiner "Aa" specimen, per Figma 313:176 -->
 	<section class="Hero">
-		<p class="Hero__name">Steiner Sans</p>
-		<p class="Hero__headline">Our very first typeface</p>
+		<p class="Hero__headline">Debut typeface</p>
+		<p class="Hero__name">
+			<span class="Title__face">Asger</span> <span class="Title__foundry">August</span>
+		</p>
 		<div class="Hero__specimen">
 			<!-- Each glyph sits in a fixed-width cell: an invisible Ultra-weight
 			     ghost reserves the widest box, and the animated glyph is centred
@@ -47,7 +49,7 @@
 		<div class="Hero__bottom">
 			<div class="Hero__meta">
 				<div class="Hero__meta-left">
-					<p class="Hero__meta-name">Steiner Sans</p>
+					<p class="Hero__meta-name">Asger August</p>
 					<p class="Hero__meta-class">Neo Humanist Sans</p>
 				</div>
 				<span class="Hero__meta-version">v1.00000</span>
@@ -56,40 +58,58 @@
 		</div>
 	</section>
 
-	<!-- Alfred (ochre) — the next typeface, announced by its logotype alone -->
+	<!-- Alfred (ochre) — title in Asger at the Hero's name position, logotype
+	     large and centred in the specimen slot below it. -->
 	<section class="Alfred">
-		<svg
-			class="Alfred__mark"
-			viewBox="0 0 469 117"
-			role="img"
-			aria-label="Alfred"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				fill="currentColor"
-				d="M55.4 2.72998L90.05 98.88L99.22 116.33H78.44L76.94 101.55L68.5 77.38H28.44L20.01 101.53L18.42 116.33H0C0 116.33 7.18 104.72 9.71 97.7C11.38 93.08 35.41 28.28 35.41 28.28L34.57 16.76L55.4 2.72998ZM32.38 66.02H64.54L48.46 20.09L32.38 66.02Z"
-			/>
-			<path
-				fill="currentColor"
-				d="M312.87 116.33L318.54 91.28V20.09L312.87 4.33002H375.34L367.12 19.4L331.18 15.53V51.85H366.12L360.55 66.16L331.18 63.05V105.13C354.57 105.13 381.37 98.48 381.37 98.48L376.51 116.33H312.88H312.87Z"
-			/>
-			<path
-				fill="currentColor"
-				d="M117.52 63.05V105.13C140.91 105.13 167.71 98.48 167.71 98.48L162.85 116.33H99.22L104.89 91.28V20.09L99.22 9.99L117.52 0V63.05ZM117.52 15.53V51.85Z"
-			/>
-			<path
-				fill="currentColor"
-				d="M167.71 116.33L173.38 91.28V23.56L167.71 4.32001H230.18L221.96 19.39L186.02 15.52V51.84H220.96L215.39 66.15L186.02 63.04V98.03L188.87 116.32H167.71V116.33Z"
-			/>
-			<path
-				fill="currentColor"
-				d="M402.81 116.33H380.22L385.83 96.94V19.07L383.11 4.33002H407.95C435.99 4.33002 468.81 21.15 468.81 57.05C468.81 103.52 431.66 116.33 402.82 116.33H402.81ZM398.48 15.22V105.27H408.09C429.56 105.27 454.24 90.69 454.24 57.04C454.24 34.45 432.45 15.22 408.09 15.22H398.48Z"
-			/>
-			<path
-				fill="currentColor"
-				d="M232.76 4.34003L235.96 15.54V98.08L234.36 116.31H249.72L248.12 104.63V65.76L261.56 65.92L285.55 105.75V116.31H311.78L273.07 64.8C280.75 64.8 300.74 56.8 300.74 36.65C300.74 18.26 286.66 4.34003 232.76 4.34003ZM248.12 16.18C273.07 16.18 288.27 26.1 288.27 36.33C288.27 48.17 276.59 54.4 248.12 54.4V16.18Z"
-			/>
-		</svg>
+		<p class="Alfred__name">
+			<span class="Title__face">Alfred</span> <span class="Title__foundry">August</span>
+		</p>
+		<div class="Alfred__specimen">
+			<svg
+				class="Alfred__mark"
+				viewBox="0 0 469 117"
+				role="img"
+				aria-label="Alfred"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					fill="currentColor"
+					d="M55.4 2.72998L90.05 98.88L99.22 116.33H78.44L76.94 101.55L68.5 77.38H28.44L20.01 101.53L18.42 116.33H0C0 116.33 7.18 104.72 9.71 97.7C11.38 93.08 35.41 28.28 35.41 28.28L34.57 16.76L55.4 2.72998ZM32.38 66.02H64.54L48.46 20.09L32.38 66.02Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M312.87 116.33L318.54 91.28V20.09L312.87 4.33002H375.34L367.12 19.4L331.18 15.53V51.85H366.12L360.55 66.16L331.18 63.05V105.13C354.57 105.13 381.37 98.48 381.37 98.48L376.51 116.33H312.88H312.87Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M117.52 63.05V105.13C140.91 105.13 167.71 98.48 167.71 98.48L162.85 116.33H99.22L104.89 91.28V20.09L99.22 9.99L117.52 0V63.05ZM117.52 15.53V51.85Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M167.71 116.33L173.38 91.28V23.56L167.71 4.32001H230.18L221.96 19.39L186.02 15.52V51.84H220.96L215.39 66.15L186.02 63.04V98.03L188.87 116.32H167.71V116.33Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M402.81 116.33H380.22L385.83 96.94V19.07L383.11 4.33002H407.95C435.99 4.33002 468.81 21.15 468.81 57.05C468.81 103.52 431.66 116.33 402.82 116.33H402.81ZM398.48 15.22V105.27H408.09C429.56 105.27 454.24 90.69 454.24 57.04C454.24 34.45 432.45 15.22 408.09 15.22H398.48Z"
+				/>
+				<path
+					fill="currentColor"
+					d="M232.76 4.34003L235.96 15.54V98.08L234.36 116.31H249.72L248.12 104.63V65.76L261.56 65.92L285.55 105.75V116.31H311.78L273.07 64.8C280.75 64.8 300.74 56.8 300.74 36.65C300.74 18.26 286.66 4.34003 232.76 4.34003ZM248.12 16.18C273.07 16.18 288.27 26.1 288.27 36.33C288.27 48.17 276.59 54.4 248.12 54.4V16.18Z"
+				/>
+			</svg>
+		</div>
+		<div class="Alfred__bottom">
+			<div class="Alfred__meta">
+				<div class="Alfred__meta-left">
+					<p class="Alfred__meta-name">Alfred August</p>
+					<p class="Alfred__meta-class">Neo Classic</p>
+				</div>
+				<span class="Alfred__meta-version">In development</span>
+			</div>
+			<!-- Deliberately a span, not an <a>: there is no Alfred page yet, so the
+			     control must not be clickable, focusable, or announced as a link. -->
+			<span class="Alfred__cta" aria-disabled="true">Coming Soon</span>
+		</div>
 	</section>
 
 	<!-- Buy (red) — the license, plainly -->
@@ -98,12 +118,12 @@
 			<p class="Buy__eyebrow">License</p>
 			<h2 class="Buy__heading">Make it yours.</h2>
 			<p class="Buy__body">
-				Steiner Complete gathers the whole family — 20 weights from Hair to Ultra, drawn as
-				a single variable font and delivered with statics, for desktop and web alike. One
-				perpetual license from €420: no seat renewals, no page-view tiers, no expiry. Buy it
-				once and it stays yours, across every project you take on.
+				Asger Complete gathers the whole family — 20 weights from Hair to Ultra, drawn as a single
+				variable font and delivered with statics, for desktop and web alike. One perpetual license
+				from €420: no seat renewals, no page-view tiers, no expiry. Buy it once and it stays yours,
+				across every project you take on.
 			</p>
-			<a class="Buy__cta" href="/buy">Buy Steiner <Arrow size={10} /></a>
+			<a class="Buy__cta" href="/buy">Buy Asger <Arrow size={10} /></a>
 		</div>
 	</section>
 
@@ -118,9 +138,9 @@
 			</h2>
 			<p class="Custom__body">
 				Beyond our retail library, August Type Foundry designs bespoke typefaces for brands and
-				institutions — a proprietary voice, drawn from the first sketch to a fully realised
-				family. A custom typeface is the most enduring asset a brand can own: it travels
-				across every screen, surface, and language while remaining unmistakably yours.
+				institutions — a proprietary voice, drawn from the first sketch to a fully realised family.
+				A custom typeface is the most enduring asset a brand can own: it travels across every
+				screen, surface, and language while remaining unmistakably yours.
 			</p>
 			<a class="Custom__cta" href="mailto:hi@august.tf?subject=Custom%20typeface%20enquiry">
 				Enquire <Arrow size={10} />
@@ -133,8 +153,7 @@
 		<div class="Office__inner">
 			<p class="Office__label">Design Office</p>
 			<p class="Office__text">
-				August Type Foundry is the pragmatic type design practice led by a creative office
-				in Tokyo.
+				August Type Foundry is the pragmatic type design practice led by a creative office in Tokyo.
 			</p>
 			<div class="Office__links">
 				<a class="Office__link" href="/about">About type foundry <Arrow size={9} /></a>
@@ -159,6 +178,18 @@
 		   width, so a long statement still wraps inside its 100dvh section on a
 		   short laptop instead of pushing the section taller. */
 		--display-fs: clamp(40px, min(7vw, 9.5vh), 88px);
+		/* Section titles run one step above --fw-base (320) at every
+		   breakpoint. Kept as a token so the two title rules stay in sync
+		   rather than hardcoding a weight per component. */
+		--display-fw: 350;
+		/* Section titles read as two words at two weights: the typeface name
+		   carries, the foundry name recedes. Steiner is variable (wght 1–950),
+		   so these are real interpolated weights, not synthetic. */
+		--title-fw-face: 400;
+		--title-fw-foundry: 200;
+		/* Titles drop to a 36px floor on phones — one step under the
+		   shared --display-fs floor, which the other sections keep. */
+		--title-fs: clamp(36px, min(7vw, 9.5vh), 88px);
 	}
 
 	/* --- Hero (white) — Steiner "Aa" specimen --- */
@@ -177,11 +208,19 @@
 	/* Typeface name leads, set at h2 scale in sentence case. */
 	.Hero__name {
 		font-family: 'Steiner', sans-serif;
-		font-size: var(--display-fs);
+		font-size: var(--title-fs);
 		line-height: var(--lh-h2);
-		font-weight: var(--fw-base);
+		font-weight: var(--display-fw);
 		text-align: center;
 		margin: 0;
+	}
+
+	.Title__face {
+		font-weight: var(--title-fw-face);
+	}
+
+	.Title__foundry {
+		font-weight: var(--title-fw-foundry);
 	}
 
 	.Hero__headline {
@@ -330,30 +369,101 @@
 		}
 	}
 
-	/* --- Alfred (ochre) --- */
+	/* --- Alfred (ochre) — mirrors the Hero's composition exactly --- */
 	.Alfred {
-		background: #d59514;
-		color: #000000;
+		display: flex;
+		flex-direction: column;
 		min-height: 100vh;
 		min-height: 100dvh;
+		background: #d59514;
+		color: #000000;
+		padding-top: clamp(48px, 8vh, 72px);
+		padding-bottom: var(--gutter);
+		padding-inline: var(--gutter);
+	}
+
+	/* Same slot and scale as .Hero__name, set in Asger. */
+	.Alfred__name {
+		font-family: 'Steiner', sans-serif;
+		font-size: var(--title-fs);
+		line-height: var(--lh-h2);
+		font-weight: var(--display-fw);
+		text-align: center;
+		margin: 0;
+	}
+
+	.Alfred__specimen {
+		flex: 1;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding-inline: var(--padding);
+		min-height: 0;
 	}
 
+	/* The logotype is the specimen — sized off the viewport like .Hero__aa. */
 	.Alfred__mark {
 		display: block;
-		/* Cap the mark at its drawn size on wide screens, let it fill the
-		   column on narrow ones. */
-		width: min(469px, 100%);
+		width: min(1040px, 82vw);
 		height: auto;
+		max-height: 100%;
 	}
 
-	@media (min-width: 768px) {
-		.Alfred__mark {
-			width: min(469px, 42vw);
-		}
+	.Alfred__bottom {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.Alfred__meta {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 20px;
+		font-family: 'Steiner', sans-serif;
+	}
+
+	.Alfred__meta-left {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.Alfred__meta-name {
+		font-size: 11px;
+		font-weight: var(--fw-ui);
+		margin: 0;
+	}
+
+	.Alfred__meta-class {
+		font-size: 11px;
+		opacity: 0.55;
+		margin: 0;
+	}
+
+	.Alfred__meta-version {
+		font-size: 11px;
+		opacity: 0.55;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Same box as .Hero__cta, held in a disabled state — no hover, no pointer,
+	   no focus, and it never receives events. */
+	.Alfred__cta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 50px;
+		background: #000000;
+		color: #ffffff;
+		font-family: 'Steiner', sans-serif;
+		font-size: 16px;
+		font-weight: var(--fw-ui);
+		text-transform: uppercase;
+		letter-spacing: 0.025em;
+		text-decoration: none;
+		cursor: default;
+		pointer-events: none;
+		user-select: none;
 	}
 
 	/* --- Buy (red) --- */

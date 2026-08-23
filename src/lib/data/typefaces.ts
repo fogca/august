@@ -66,18 +66,18 @@ export interface Typeface {
 export const TYPEFACES: Typeface[] = [
 	{
 		slug: 'steiner',
-		name: 'Steiner',
+		name: 'Asger',
 		order: 1,
 		status: 'available',
 		fontFamily: 'Steiner',
 		tagline: 'The formative forces of the word, made visible.',
 		description:
-			"Steiner is a 20-weight neo-humanist sans-serif variable font. " +
+			"Asger is a 20-weight neo-humanist sans-serif variable font. " +
 			"It takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature, where form is never fixed but always in metamorphosis, and an anthroposophy that holds the human being as the measure of things. " +
 			"Humanist-geometric — the mechanical and the organic coexist in every glyph, held together by formative force. " +
 			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
 		descriptionDa:
-			'Steiner er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
+			'Asger er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
 			+ 'Den har sit navn — og sit temperament — fra Rudolf Steiner: en goethesk læsning af naturen, hvor formen aldrig ligger fast, men altid er under forvandling, og en antroposofi, der holder mennesket som målestok. '
 			+ 'Humanistisk-geometrisk — det mekaniske og det organiske findes side om side i hvert tegn, holdt sammen af formende kraft. '
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
@@ -249,6 +249,39 @@ export const TYPEFACES: Typeface[] = [
 			comingSoon: true,
 			intro: 'The very first Neo Grotesque from our foundry.',
 			statement: 'Geometry, breathing.'
+		}
+	},
+	{
+		// Sibling face to Asger — registered so the slug and data shape exist.
+		// Everything below the name is provisional: no drawings, no font files,
+		// no agreed classification. Hidden until the design has something to show.
+		slug: 'asta',
+		name: 'Asta',
+		order: 4,
+		status: 'in-development',
+		hidden: true,
+		// No font files yet — render as Steiner for preview purposes
+		fontFamily: 'Steiner',
+		tagline: 'Sibling to Asger.',
+		description:
+			'Asta is a sibling to Asger, in development at August Type Foundry. ' +
+			'Details on its design direction, weights and release schedule will follow.',
+		descriptionDa:
+			'Asta er en søsterskrift til Asger, under udvikling hos August Type Foundry. '
+			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
+		classification: 'In development',
+		// Provisional weights — same axis as Asger until the spec is finalised
+		weights: WEIGHTS,
+		defaultTexts: ['Asta'],
+		theme: { bg: '#d59514', fg: '#000000' },
+		hero: {
+			label: 'In development',
+			vol: 'vol.04',
+			subtitle: '(Coming Soon)',
+			debut: 'Coming Soon',
+			comingSoon: true,
+			intro: 'A sibling to Asger.',
+			statement: 'Coming soon.'
 		}
 	}
 ];

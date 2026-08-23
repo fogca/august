@@ -27,9 +27,9 @@
 
 		<!-- 2 — Steiner (aligned with the Steiner page) -->
 		<section class="block">
-			<h2>Steiner — the formative forces of the word, made visible</h2>
+			<h2>Asger — the formative forces of the word, made visible</h2>
 			<p class="en" lang="en">
-				Our first release, Steiner, is a twenty-weight neo-humanist sans-serif variable font. It
+				Our first release, Asger, is a twenty-weight neo-humanist sans-serif variable font. It
 				takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature,
 				where form is never fixed but always in metamorphosis, and an anthroposophy that holds the
 				human being as the measure of things. The letters are made to feel grown rather than
@@ -38,7 +38,7 @@
 				Rotis — never the surface, only the soil.
 			</p>
 			<p class="da" lang="da">
-				Vores første udgivelse, Steiner, er en neo-humanistisk grotesk i tyve vægte, tegnet som
+				Vores første udgivelse, Asger, er en neo-humanistisk grotesk i tyve vægte, tegnet som
 				variabel skrift. Den har sit navn — og sit temperament — fra Rudolf Steiner: en goethesk
 				læsning af naturen, hvor formen aldrig ligger fast, men altid er under forvandling, og en
 				antroposofi, der holder mennesket som målestok. Bogstaverne skal føles groede snarere end

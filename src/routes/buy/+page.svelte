@@ -106,7 +106,7 @@
 	<title>Buy — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Purchase Steiner Complete — a 20-weight variable family. Desktop, Web, App, and Books licenses available."
+		content="Purchase Asger Complete — a 20-weight variable family. Desktop, Web, App, and Books licenses available."
 	/>
 </svelte:head>
 
@@ -116,7 +116,7 @@
 		<div class="BuyPage__title-block">
 			<h1 class="BuyPage__heading">Make it yours.</h1>
 			<p class="BuyPage__sub">
-				Steiner Complete — every weight, Hairline to Ultra. Choose a license, pay once, yours to keep.
+				Asger Complete — every weight, Hairline to Ultra. Choose a license, pay once, yours to keep.
 			</p>
 		</div>
 		<!-- Currency toggle: always visible -->

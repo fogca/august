@@ -9,7 +9,7 @@
 	<title>Fonts — August Type Foundry</title>
 	<meta
 		name="description"
-		content="August Type Foundry typeface catalogue — Steiner and upcoming releases."
+		content="August Type Foundry typeface catalogue — Asger and upcoming releases."
 	/>
 </svelte:head>
 
