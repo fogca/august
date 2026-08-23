@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { onScroll, scrollToEl } from '$lib/scroll';
+	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
 	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
@@ -108,6 +109,13 @@
 			<p class="FontDetail__description-da" lang="da">{tf.descriptionDa}</p>
 		{/if}
 	</div>
+
+	<TypeTester
+		weights={tf.weights}
+		fontFamily={tf.fontFamily}
+		defaultTexts={tf.defaultTexts}
+		available={isAvailable}
+	/>
 
 	<!-- Full glyph set -->
 	<GlyphSet fontFamily={tf.fontFamily} title="Glyph set" />
