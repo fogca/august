@@ -102,11 +102,17 @@
 {/if}
 
 <style>
-	/* 2-column grid — full-bleed (no padding), white lines, center divider. */
+	/* 2-column grid — full-bleed (no padding), center divider. Lines default to
+	   dark (var(--color-line)) for a white/light card; .is-active swaps them
+	   to the original translucent white for a dark card. */
 	.StyleList {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		border-top: 2px solid rgba(255, 255, 255, 0.6);
+		border-top: 2px solid var(--color-line);
+	}
+
+	.StyleList.is-active {
+		border-top-color: rgba(255, 255, 255, 0.6);
 	}
 
 	.StyleList__row {
@@ -115,7 +121,11 @@
 		gap: 10px;
 		padding: 8px 0;
 		min-height: 40px;
-		border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+		border-bottom: 2px solid var(--color-line);
+	}
+
+	.StyleList.is-active .StyleList__row {
+		border-bottom-color: rgba(255, 255, 255, 0.6);
 	}
 
 	/* Outer edges align with the head (var(--padding)); 12px around the divider */
@@ -125,9 +135,13 @@
 	}
 
 	.StyleList__row:nth-child(even) {
-		border-left: 2px solid rgba(255, 255, 255, 0.6);
+		border-left: 2px solid var(--color-line);
 		padding-left: 12px;
 		padding-right: var(--padding);
+	}
+
+	.StyleList.is-active .StyleList__row:nth-child(even) {
+		border-left-color: rgba(255, 255, 255, 0.6);
 	}
 
 	/* Selectable rows (gQ): toggle individual weights */

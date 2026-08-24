@@ -1,7 +1,7 @@
 <script lang="ts">
 	// /buy — August Type Foundry license purchase page.
 	// Three-step flow (Klim Type Foundry-style): Typeface → License → Weights.
-	// Only one product is on sale today (Asger Complete), but Step 1 already
+	// Only one product is on sale today (Asger), but Step 1 already
 	// reads from getFlatPackages() rather than hardcoding it, so a second
 	// typeface going on sale just adds a second card — no page changes.
 
@@ -29,6 +29,13 @@
 	// ── Step 1: Typeface ──────────────────────────────────────
 
 	const TYPEFACES: FlatPackage[] = getFlatPackages();
+	// Announced but not yet for sale — shown for completeness, greyed out and
+	// inert (same idea as the Header menu's UPCOMING list). Not real
+	// FlatPackages: no pricing exists for either yet.
+	const UPCOMING_TYPEFACES: { name: string; detail: string }[] = [
+		{ name: 'Alfred', detail: 'Neo Classic · in development' },
+		{ name: 'Asta', detail: 'Sibling to Asger · in development' }
+	];
 	// Pre-selected: today there is exactly one purchasable typeface, so
 	// requiring a click before Steps 2/3 unlock would be pure friction. The
 	// card is still a real, clickable step — the moment a second typeface
@@ -41,7 +48,7 @@
 	}
 
 	// ── Step 3: Weights ────────────────────────────────────────
-	// Purely informational — Asger Complete always delivers all 20 weights at
+	// Purely informational — Asger always delivers all 20 weights at
 	// one price, so ticking weights off doesn't change what you receive or
 	// what you pay. It's here so a buyer can mark the ones they'll reach for
 	// first, and because a flat "here's everything" list is less useful than
@@ -158,7 +165,7 @@
 	<title>Buy — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Purchase Asger Complete — a 20-weight variable family. Desktop, Web, App, and Books licenses available."
+		content="Purchase Asger — a 20-weight variable family. Desktop, Web, App, and Books licenses available."
 	/>
 </svelte:head>
 
@@ -200,6 +207,17 @@
 					</span>
 				</button>
 			{/each}
+			<!-- Deliberately a div, not a button: nothing to sell yet, so nothing
+			     to click — same treatment as the Header menu's UPCOMING list. -->
+			{#each UPCOMING_TYPEFACES as tf (tf.name)}
+				<div class="TypefaceCard is-disabled" aria-disabled="true">
+					<span class="TypefaceCard__radio" aria-hidden="true"></span>
+					<span class="TypefaceCard__body">
+						<span class="TypefaceCard__name">{tf.name}</span>
+						<span class="TypefaceCard__detail">{tf.detail}</span>
+					</span>
+				</div>
+			{/each}
 		</div>
 	</div>
 
@@ -234,7 +252,6 @@
 				</div>
 				<StyleList
 					pkg={selectedPackage}
-					active
 					selectable
 					selected={selectedWeights}
 					onToggle={toggleWeight}
@@ -370,6 +387,15 @@
 		color: #ffffff;
 	}
 
+	/* Announced, not yet for sale: same grey card, dimmed and inert — never a
+	   hover state, never a click. */
+	.TypefaceCard.is-disabled {
+		opacity: 0.4;
+		cursor: default;
+		pointer-events: none;
+		user-select: none;
+	}
+
 	.TypefaceCard__radio {
 		width: 11px;
 		height: 11px;
@@ -434,10 +460,13 @@
 		flex-direction: column;
 		width: 100%;
 		max-width: 480px;
-		/* Always the dark/"active" ground StyleList's white-on-dark row dividers
-		   assume — this step doesn't gate on a license being chosen. */
-		background: #222222;
-		color: #ffffff;
+		/* White base, black grid lines — a checked row inverts to solid black
+		   (StyleList's .is-on treatment), so the state read is a stark
+		   white-to-black flip instead of grey-on-grey. Bordered for definition
+		   against the page's own white background. */
+		background: #ffffff;
+		color: #000000;
+		border: 1px solid var(--color-line);
 	}
 
 	.WeightPanel__head {

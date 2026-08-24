@@ -19,7 +19,9 @@
 	const LEGAL: LinkItem[] = [
 		{ label: 'EULA', href: '/legal/eula' },
 		{ label: 'Privacy', href: '/legal/privacy' },
-		{ label: '特定商取引法', href: '/legal/tokusho' },
+		// The page itself stays Japanese (it's Japan's mandatory commercial-
+		// transactions disclosure — the content has to be, this label doesn't).
+		{ label: 'Legal Notice', href: '/legal/tokusho' },
 		{ label: 'Company', href: '/legal/company' }
 	];
 
@@ -36,13 +38,14 @@
 				<Logo height={27} />
 			</a>
 			<p class="Footer__tagline">
-				A type foundry from Tokyo.<br />
+				A type foundry.<br />
 				Asger — released 2026.
 			</p>
 		</section>
 
-		<!-- Column 2: site nav (no heading, direct links) -->
-		<nav class="Footer__col" aria-label="Footer navigation">
+		<!-- Column 2: site nav (no heading, direct links — its first item,
+		     Fonts, is what lines up with "Email" opposite it on mobile). -->
+		<nav class="Footer__col Footer__col--nav" aria-label="Footer navigation">
 			<ul class="Footer__list">
 				{#each SITE_NAV as item (item.href)}
 					<li><a href={item.href}>{item.label}</a></li>
@@ -51,7 +54,7 @@
 		</nav>
 
 		<!-- Column 3: social / contact -->
-		<section class="Footer__col">
+		<section class="Footer__col Footer__col--email">
 			<h3 class="Footer__heading">Email</h3>
 			<ul class="Footer__list">
 				{#each SOCIAL as item (item.href)}
@@ -68,7 +71,7 @@
 		</section>
 
 		<!-- Column 4: contact -->
-		<section class="Footer__col">
+		<section class="Footer__col Footer__col--contact">
 			<h3 class="Footer__heading">Contact</h3>
 			<p class="Footer__note">Licensing, custom type, and general enquiries.</p>
 			<ul class="Footer__list">
@@ -83,7 +86,7 @@
 				<li><a href={item.href}>{item.label}</a></li>
 			{/each}
 		</ul>
-		<p class="Footer__copy">© {YEAR} August Type Foundry · Tokyo, Japan</p>
+		<p class="Footer__copy">© {YEAR} August Type Foundry</p>
 	</div>
 </footer>
 
@@ -123,16 +126,42 @@
 		border: 0;
 	}
 
+	/* Mobile: brand spans full width; nav ("Links") and Email+Contact
+	   ("Contact") sit side by side below it as two columns — nav's first
+	   item (Fonts) lines up with the Email heading opposite it since neither
+	   column carries its own extra heading above that row. */
 	.Footer__grid {
 		display: grid;
-		grid-template-columns: 1fr;
-		gap: 48px;
+		grid-template-columns: 1fr 1fr;
+		grid-template-areas:
+			'brand  brand'
+			'nav    email'
+			'nav    contact';
+		column-gap: 16px;
+		row-gap: 32px;
 		padding-inline: 16px;
+	}
+
+	.Footer__col--brand {
+		grid-area: brand;
+	}
+
+	.Footer__col--nav {
+		grid-area: nav;
+	}
+
+	.Footer__col--email {
+		grid-area: email;
+	}
+
+	.Footer__col--contact {
+		grid-area: contact;
 	}
 
 	@media (min-width: 768px) {
 		.Footer__grid {
 			grid-template-columns: 2fr 1fr 1fr 2fr;
+			grid-template-areas: 'brand nav email contact';
 			gap: 32px;
 			padding-inline: 32px;
 		}
@@ -170,7 +199,10 @@
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;
 		opacity: 0.6;
-		margin: 0;
+		/* .Footer__col's flex gap (16px) already spaces every child; pull 3px
+		   off just below the heading, tightening the label-to-content gap
+		   without touching the other gaps in the same column. */
+		margin: 0 0 -3px;
 	}
 
 	.Footer__list {

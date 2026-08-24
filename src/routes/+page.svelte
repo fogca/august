@@ -664,10 +664,11 @@
 		   breaker more places to break, so short justified lines don't have to
 		   stretch a single word's spaces to fill the width. */
 		text-align: justify;
+		text-align-last: center;
 		text-justify: inter-word;
 		hyphens: auto;
 		/* Narrow column — wraps sooner, so the copy block reads tall, not wide. */
-		max-width: 80%;
+		max-width: 90%;
 		margin: 0 auto 36px;
 	}
 
@@ -757,7 +758,12 @@
 		line-height: 1.7;
 		letter-spacing: 0.02em;
 		opacity: 0.85;
-		max-width: 80%;
+		/* Same magazine-style justification as .Buy__body — see its comment. */
+		text-align: justify;
+		text-align-last: center;
+		text-justify: inter-word;
+		hyphens: auto;
+		max-width: 90%;
 		margin: 0 auto 32px;
 	}
 
