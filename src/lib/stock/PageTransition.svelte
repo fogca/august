@@ -89,6 +89,11 @@
 
 	let needsEntryAnim = false;
 	let activeSkipFadeIn = false;
+	// Tracks the in-flight outgoing timeline so a navigation that interrupts
+	// another one can kill it outright, rather than leaving its callbacks to
+	// fire late against a route that's already moved on (see the kill call
+	// below for what that leaves stuck).
+	let activeTimeline: gsap.core.Timeline | null = null;
 
 	onNavigate((navigation) => {
 		if (!navigation.from) return;
@@ -98,6 +103,16 @@
 			'(prefers-reduced-motion: reduce)'
 		).matches;
 		if (prefersReducedMotion) return;
+
+		// A second navigation starting before the first has finished its ~1.2s
+		// outgoing+fade-in cycle leaves that first cycle's callbacks (including
+		// the .darken-overlay backgroundColor reset, which only runs in the
+		// fade-in's onComplete) never firing — nothing else was going to clear
+		// its armed 'black' background-color. Kill anything still running
+		// before arming a new cycle, so only the latest navigation's callbacks
+		// ever get to run.
+		activeTimeline?.kill();
+		gsap.killTweensOf(['.page-wrapper', '.darken-overlay', '.transition-panel']);
 
 		needsEntryAnim = true;
 		activeSkipFadeIn = skipFadeIn;
@@ -133,9 +148,11 @@
 							transformOrigin: 'center center'
 						});
 					}
+					activeTimeline = null;
 					resolve();
 				}
 			});
+			activeTimeline = tl;
 
 			tl.to(
 				'.page-wrapper',
@@ -162,6 +179,18 @@
 	});
 
 	afterNavigate(() => {
+		// Unconditional safety net, ahead of the needsEntryAnim gate below:
+		// .darken-overlay only stays safe for Safari's toolbar-tinting sampler
+		// (see the CSS note) while its background-color is 'transparent', and
+		// that only gets restored ~1.2s after a navigation settles (the fade-in
+		// tween's onComplete, further down). Navigate again inside that window
+		// — a second link tapped before the first page has finished fading in —
+		// and needsEntryAnim gets consumed by the FIRST afterNavigate while the
+		// SECOND onNavigate has already re-armed the overlay to black; nothing
+		// then guarantees its own reset ever runs. Force it back to transparent
+		// on every settled navigation, independent of which one armed it.
+		if (browser) gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
+
 		if (!needsEntryAnim) return;
 		needsEntryAnim = false;
 		if (!browser) return;
