@@ -60,7 +60,7 @@
 				</div>
 				<span class="Hero__meta-version">v1.00000</span>
 			</div>
-			<a class="Hero__cta" href="/fonts/steiner">Discover</a>
+			<a class="Hero__cta" href="/fonts/steiner"><span class="CtaLabel">Discover</span></a>
 		</div>
 	</section>
 
@@ -114,7 +114,7 @@
 			</div>
 			<!-- Deliberately a span, not an <a>: there is no Alfred page yet, so the
 			     control must not be clickable, focusable, or announced as a link. -->
-			<span class="Alfred__cta" aria-disabled="true">Coming Soon</span>
+			<span class="Alfred__cta" aria-disabled="true"><span class="CtaLabel">Coming Soon</span></span>
 		</div>
 	</section>
 
@@ -159,7 +159,7 @@
 			</div>
 			<!-- Deliberately a span, not an <a>: there is no Asta page yet, so the
 			     control must not be clickable, focusable, or announced as a link. -->
-			<span class="Asta__cta" aria-disabled="true">Coming Soon</span>
+			<span class="Asta__cta" aria-disabled="true"><span class="CtaLabel">Coming Soon</span></span>
 		</div>
 	</section>
 
@@ -169,12 +169,12 @@
 			<p class="Buy__eyebrow">License</p>
 			<h2 class="Buy__heading">Make it yours.</h2>
 			<p class="Buy__body">
-				Asger Complete gathers the whole family — 20 weights from Hair to Ultra, drawn as a single
-				variable font and delivered with statics, for desktop and web alike. One perpetual license
-				from €420: no seat renewals, no page-view tiers, no expiry. Buy it once and it stays yours,
-				across every project you take on.
+				Every typeface in our library ships as a single variable font, delivered with statics for
+				desktop and web alike. Licenses are perpetual — pay once, use forever, with no
+				subscription, no seat renewals, and no expiry. Desktop, Web, App and Books licenses are
+				available, priced per typeface you choose.
 			</p>
-			<a class="Buy__cta" href="/buy">Buy Asger <Arrow size={10} /></a>
+			<a class="Buy__cta" href="/buy">Buy Typeface <Arrow size={10} /></a>
 		</div>
 	</section>
 
@@ -241,6 +241,20 @@
 		/* Titles drop to a 36px floor on phones — one step under the
 		   shared --display-fs floor, which the other sections keep. */
 		--title-fs: clamp(36px, min(7vw, 9.5vh), 88px);
+	}
+
+	@media (max-width: 767.98px) {
+		.Home {
+			/* Fixed, not fluid — the clamp's vw/vh terms only matter once the
+			   title has room to grow past 36px, which doesn't happen inside the
+			   phone range anyway (see the clamp above); pin it so every SP width
+			   reads at the same size instead of drifting toward the 767px edge. */
+			--title-fs: 36px;
+			/* A touch heavier than desktop at this size — 400/200 read thin
+			   this small. */
+			--title-fw-face: 500;
+			--title-fw-foundry: 300;
+		}
 	}
 
 	/* --- Hero (black) — Asger variable-weight video specimen --- */
@@ -347,6 +361,14 @@
 		font-size: 11px;
 		opacity: 0.55;
 		font-variant-numeric: tabular-nums;
+	}
+
+	/* Shared by every fixed-height link box on this page (Discover / both
+	   Coming Soon labels) — the box itself stays put; only the text glyphs
+	   nudge down 1.5px to sit optically centred. */
+	.CtaLabel {
+		display: inline-block;
+		transform: translateY(1.5px);
 	}
 
 	.Hero__cta {
@@ -634,6 +656,16 @@
 		font-variation-settings: 'wght' 360;
 		line-height: 1.7;
 		letter-spacing: 0.02em;
+		/* Magazine-style justification: stretch the SPACE BETWEEN words only.
+		   text-justify defaults to inter-word in every browser that matters
+		   here, but state it explicitly — inter-character (or its `distribute`
+		   alias) is what produces the letter-by-letter gaps inside words that
+		   make justified English look broken. hyphens:auto gives the line
+		   breaker more places to break, so short justified lines don't have to
+		   stretch a single word's spaces to fill the width. */
+		text-align: justify;
+		text-justify: inter-word;
+		hyphens: auto;
 		/* Narrow column — wraps sooner, so the copy block reads tall, not wide. */
 		max-width: 80%;
 		margin: 0 auto 36px;
