@@ -132,12 +132,16 @@
 	   column carries its own extra heading above that row. */
 	.Footer__grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		/* auto, not 1fr 1fr: nav's links (Fonts/About/Buy/Contact) are short
+		   and a rigid 50/50 split left a wide dead gap inside that column on
+		   top of the real column-gap. Hug the nav to its content instead and
+		   let the fixed 40px gap do the actual separating. */
+		grid-template-columns: auto 1fr;
 		grid-template-areas:
 			'brand  brand'
 			'nav    email'
 			'nav    contact';
-		column-gap: 16px;
+		column-gap: 40px;
 		row-gap: 32px;
 		padding-inline: 16px;
 	}

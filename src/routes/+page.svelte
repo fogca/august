@@ -318,11 +318,19 @@
 	/* Shown as encoded (landscape, 1350:1080) on every breakpoint — scaled to
 	   fit the flex:1 specimen area without overflowing it, same pattern as
 	   .Alfred__mark. No rotation: upright at both PC and SP. */
+	/* Bigger than before (was min(900px,78vw)) to read closer to the size the
+	   same video plays at on the font-detail page. Still width-driven, NOT
+	   height:100% — .Hero__specimen's height comes from flex:1 inside a
+	   min-height (not height) container, so it's never a definite value;
+	   percentage-height on the video resolved against that indeterminate
+	   height and fed back into it, ballooning the whole Hero section past
+	   the viewport. max-height is capped in vh (viewport-relative, not a
+	   percentage of the flex parent) to sidestep that loop entirely. */
 	.Hero__video {
 		display: block;
-		width: min(900px, 78vw);
+		width: min(1200px, 90vw);
 		height: auto;
-		max-height: 100%;
+		max-height: 65vh;
 	}
 
 	.Hero__bottom {
@@ -369,6 +377,11 @@
 	.CtaLabel {
 		display: inline-block;
 		transform: translateY(1.5px);
+		/* base.css sets color directly on every span, including this one —
+		   without this it hardcodes black regardless of context. Hero's CTA is
+		   black-on-white already, so that bug was invisible there; Alfred/Asta's
+		   Coming Soon is white-on-black, so it disappeared. Inherit for real. */
+		color: inherit;
 	}
 
 	.Hero__cta {
