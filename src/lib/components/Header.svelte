@@ -66,16 +66,9 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
-	<!-- Mobile-only Menu / Close toggle -->
-	<button
-		class="Header__toggle"
-		type="button"
-		onclick={toggle}
-		aria-expanded={open}
-		aria-controls="primary-nav"
-	>
-		{open ? 'Close' : 'Menu'}
-	</button>
+	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Foundry — home">
+		<Logo height={31} />
+	</a>
 
 	<!-- Desktop-only inline nav -->
 	<nav class="Header__nav" aria-label="Primary navigation">
@@ -84,9 +77,21 @@
 		{/each}
 	</nav>
 
-	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Foundry — home">
-		<Logo height={31} />
-	</a>
+	<!-- Mobile-only: Buy stays one tap away even with the menu closed, Menu/Close
+	     toggles the panel. Grouped together on the right; the logo (above)
+	     takes the left. -->
+	<div class="Header__actions">
+		<a class="Header__buy" href="/buy" onclick={close}>Buy</a>
+		<button
+			class="Header__toggle"
+			type="button"
+			onclick={toggle}
+			aria-expanded={open}
+			aria-controls="primary-nav"
+		>
+			{open ? 'Close' : 'Menu'}
+		</button>
+	</div>
 </header>
 
 {#if open}
@@ -166,6 +171,24 @@
 	}
 
 
+	/* Mobile-only group: Buy + Menu/Close, together on the right. Desktop
+	   hides the whole group in favour of .Header__nav. */
+	.Header__actions {
+		order: 2;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.Header__buy {
+		font-size: 14px;
+		font-weight: var(--fw-ui);
+		color: inherit;
+		text-decoration: none;
+		letter-spacing: 0;
+		padding: 4px 8px;
+	}
+
 	.Header__toggle {
 		background: transparent;
 		border: 0;
@@ -195,6 +218,9 @@
 	}
 
 	.Header__logo {
+		/* Mobile: logo leads on the left; .Header__actions (order: 2) takes the
+		   right. Desktop below flips this — nav leads, logo trails. */
+		order: 1;
 		font-size: 20px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
@@ -216,15 +242,17 @@
 	}
 
 	@media (min-width: 768px) {
-		.Header__toggle {
+		.Header__actions {
 			display: none;
 		}
 
 		.Header__nav {
 			display: flex;
+			order: 1;
 		}
 
 		.Header__logo {
+			order: 2;
 			font-size: 22px;
 			padding: 4px 0;
 		}

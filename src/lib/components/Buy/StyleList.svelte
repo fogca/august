@@ -207,4 +207,22 @@
 	.StyleList.is-active .StyleList__ital {
 		opacity: 1;
 	}
+
+	/* base.css sets color directly on every div/span, which breaks the
+	   color:inherit chain above at .StyleList__row (itself a plain div the
+	   global rule repaints black) — on a dark/active card this made every
+	   unselected row's label, "Aa" preview, and checkbox outline render
+	   invisible black-on-black. Force them white explicitly, same fix as
+	   .StyleList__row.is-on already gets (this is deliberately equal
+	   specificity to those .is-on rules and placed after them, so an
+	   on-row's white text resolves to the same colour either way). */
+	.StyleList.is-active .StyleList__name,
+	.StyleList.is-active .StyleList__preview,
+	.StyleList.is-active .StyleList__num {
+		color: var(--color-bg);
+	}
+
+	.StyleList.is-active .StyleList__check {
+		border-color: var(--color-bg);
+	}
 </style>

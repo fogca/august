@@ -128,9 +128,4 @@
 	.About .da:last-child {
 		margin-bottom: 0;
 	}
-
-	.About a {
-		text-decoration: underline;
-		text-underline-offset: 3px;
-	}
 </style>

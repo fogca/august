@@ -21,9 +21,22 @@
 		 * Only updates the tier preview — does not add the license to the cart.
 		 */
 		ontierstep: (licenseType: LicenseType, tierIndex: number) => void;
+		/** Overridable heading — lets a numbered step flow read "2 — License". */
+		title?: string;
+		hint?: string;
 	}
 
-	let { currency, cartItems, packages, tierSelections, onselect, onremove, ontierstep }: Props = $props();
+	let {
+		currency,
+		cartItems,
+		packages,
+		tierSelections,
+		onselect,
+		onremove,
+		ontierstep,
+		title = 'License',
+		hint = 'Choose one or more license types and set your scale.'
+	}: Props = $props();
 
 	const isActive = (lt: LicenseType): boolean => cartItems.some((i) => i.licenseType === lt);
 
@@ -155,8 +168,8 @@
 </script>
 
 <div class="LicensePicker">
-	<h2 class="LicensePicker__title">License</h2>
-	<p class="LicensePicker__hint">Choose one or more license types and set your scale.</p>
+	<h2 class="LicensePicker__title">{title}</h2>
+	<p class="LicensePicker__hint">{hint}</p>
 
 	<div class="LicensePicker__rows">
 		{#each LICENSES as license (license.id)}
