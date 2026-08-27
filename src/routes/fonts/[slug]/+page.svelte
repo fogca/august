@@ -3,6 +3,7 @@
 	import { onScroll, scrollToEl } from '$lib/scroll';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
+	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
 	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
 	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
 	import type { PageData } from './$types.js';
@@ -96,12 +97,11 @@
 
 	<!-- Body: name + tagline + description (normal scroll) -->
 	<div class="FontDetail__body">
-		<div class="FontDetail__info">
-			<p class="FontDetail__classification">{tf.classification}</p>
-			{#if !isAvailable}
+		{#if !isAvailable}
+			<div class="FontDetail__info">
 				<span class="FontDetail__badge">Coming Soon</span>
-			{/if}
-		</div>
+			</div>
+		{/if}
 		<h1 class="FontDetail__name">{tf.name}</h1>
 		<p class="FontDetail__tagline">{tf.tagline}</p>
 		<p class="FontDetail__description">{tf.description}</p>
@@ -119,6 +119,11 @@
 
 	<!-- Full glyph set -->
 	<GlyphSet fontFamily={tf.fontFamily} title="Glyph set" />
+
+	<!-- Editorial showcase — currency / punctuation / symbols / fractions,
+	     each set large on its own row. Flows directly into OpenType Features
+	     below (same black ground, no seam). -->
+	<GlyphShowcase fontFamily={tf.fontFamily} />
 
 	<!-- OpenType features (live OFF → ON demos) -->
 	<OpenTypeFeatures fontFamily={tf.fontFamily} />
@@ -169,6 +174,13 @@
 		height: 100vh;
 		height: 100dvh;
 		overflow: hidden;
+	}
+
+	/* SP: square (1:1), not full viewport height — height driven by width. */
+	@media (max-width: 767.98px) {
+		.FontDetail__hero {
+			height: 100vw;
+		}
 	}
 
 	.FontDetail__hero-bg {
@@ -300,14 +312,6 @@
 		align-items: center;
 		gap: 12px;
 		margin-bottom: 16px;
-	}
-
-	.FontDetail__classification {
-		font-family: 'Steiner', sans-serif;
-		font-size: 13px;
-		color: var(--color-text-mute);
-		letter-spacing: 0;
-		margin: 0;
 	}
 
 	.FontDetail__badge {

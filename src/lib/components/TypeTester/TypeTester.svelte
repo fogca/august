@@ -61,15 +61,12 @@
 		padding-inline: 0;
 	}
 
+	/* Unlike .TypeTester itself (padding-inline:0 so WeightRow's border lines
+	   can span full-bleed), the header text needs real inset at every size —
+	   it was sitting flush against the screen edge on mobile. */
 	.TypeTester__header {
 		padding-bottom: 32px;
-		padding-inline: 0;
-	}
-
-	@media (min-width: 768px) {
-		.TypeTester__header {
-			padding-inline: var(--padding);
-		}
+		padding-inline: var(--padding);
 	}
 
 	.TypeTester__title {
