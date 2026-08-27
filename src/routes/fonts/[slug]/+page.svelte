@@ -312,11 +312,14 @@
 	.FontDetail__body {
 		padding: 64px var(--padding) 40px;
 		max-width: 720px;
+		margin-inline: auto;
+		text-align: center;
 	}
 
 	.FontDetail__info {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 12px;
 		margin-bottom: 16px;
 	}
@@ -359,6 +362,7 @@
 		/* size/line-height from base p (12px) */
 		letter-spacing: 0;
 		color: var(--color-text);
+		text-align: center;
 		max-width: 64ch;
 		margin: 0;
 	}

@@ -11,12 +11,6 @@ export const WEIGHTS: WeightDef[] = [1, ...Array.from({ length: 19 }, (_, i) => 
 	(n) => ({ id: n, name: String(n), axisValue: n === 1 ? 1 : n * 10 })
 );
 
-// Running text appended under each weight's word in the Type Tester.
-// Typography's own vocabulary — general rather than Steiner-specific, and
-// still on-brand for a foundry talking about its own craft.
-export const TESTER_PARAGRAPH =
-	'Type is drawn twice — once as a letter, once as the space around it. What the eye reads is never just ink; it is the rhythm between.';
-
 // Maximum characters allowed in the textarea
 export const MAX_CHARS = 500;
 

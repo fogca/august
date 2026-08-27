@@ -1,8 +1,9 @@
 <script lang="ts">
 	// Editorial glyph showcase — a handful of categories (currency, punctuation,
-	// symbols, fractions), each set large on its own row, rather than GlyphSet's
-	// dense reference grid. Black/white, matching OpenTypeFeatures directly
-	// below it; the two read as one continuous dark block.
+	// symbols, fractions), each framed in its own 21:9 box with the glyphs set
+	// large and centred, rather than GlyphSet's dense reference grid. Black/
+	// white, matching OpenTypeFeatures directly below it; the two read as one
+	// continuous dark block.
 	interface Category {
 		label: string;
 		glyphs: string;
@@ -27,9 +28,9 @@
 <section class="GlyphShowcase" aria-label={title}>
 	<p class="GlyphShowcase__label">{title}</p>
 
-	<div class="GlyphShowcase__rows">
+	<div class="GlyphShowcase__grid">
 		{#each categories as cat (cat.label)}
-			<div class="GlyphShowcase__row">
+			<div class="GlyphShowcase__box">
 				<span class="GlyphShowcase__cat">{cat.label}</span>
 				<span class="GlyphShowcase__glyphs" style="font-family: '{fontFamily}', sans-serif;">
 					{cat.glyphs}
@@ -55,24 +56,28 @@
 		margin: 0 0 40px;
 	}
 
-	.GlyphShowcase__rows {
+	.GlyphShowcase__grid {
 		display: flex;
 		flex-direction: column;
+		gap: 20px;
 	}
 
-	.GlyphShowcase__row {
+	/* Framed box, not a divider line — width matches the section's own inset
+	   (unchanged), height follows it at 21:9. */
+	.GlyphShowcase__box {
+		position: relative;
+		aspect-ratio: 21 / 9;
+		border: 1px solid rgba(255, 255, 255, 0.3);
 		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		padding: 20px 0;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
-	}
-
-	.GlyphShowcase__row:last-child {
-		border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+		align-items: center;
+		justify-content: center;
+		padding: 16px 48px;
 	}
 
 	.GlyphShowcase__cat {
+		position: absolute;
+		top: 16px;
+		left: 20px;
 		font-family: 'Steiner', sans-serif;
 		font-size: var(--fs-h6);
 		letter-spacing: 0.04em;
@@ -81,24 +86,13 @@
 	}
 
 	.GlyphShowcase__glyphs {
-		font-size: clamp(28px, 6vw, 56px);
-		line-height: 1.3;
+		font-size: clamp(32px, 7vw, 80px);
+		line-height: 1.2;
 		letter-spacing: 0.04em;
+		text-align: center;
 		color: #fff;
-		/* Long punctuation/symbol rows wrap on phones rather than overflowing. */
+		/* Long punctuation/symbol rows wrap inside the box rather than
+		   overflowing it. */
 		overflow-wrap: break-word;
-	}
-
-	@media (min-width: 768px) {
-		.GlyphShowcase__row {
-			flex-direction: row;
-			align-items: baseline;
-			gap: 32px;
-		}
-
-		.GlyphShowcase__cat {
-			flex-shrink: 0;
-			width: 140px;
-		}
 	}
 </style>

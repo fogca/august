@@ -5,14 +5,14 @@
 	import {
 		MOBILE_BREAKPOINT_PX,
 		WEIGHT_ROW_SIZE_DEFAULT_DESKTOP,
-		WEIGHT_ROW_SIZE_DEFAULT_MOBILE,
-		TESTER_PARAGRAPH
+		WEIGHT_ROW_SIZE_DEFAULT_MOBILE
 	} from './presets.js';
 
 	interface Props {
 		weights: WeightDef[];
 		fontFamily: string;
-		/** Per-weight default words — row i uses defaultTexts[i % length] */
+		/** Per-weight default text (word + its own definition) — row i uses
+		 *  defaultTexts[i % length], shown as-is (no shared text appended). */
 		defaultTexts: string[];
 		/** When false, show an "in development" notice */
 		available?: boolean;
@@ -42,7 +42,7 @@
 		{#each weights as weight, i (weight.id)}
 			<WeightRow
 				{weight}
-				defaultText={`${defaultTexts[i % defaultTexts.length]}\n${TESTER_PARAGRAPH}`}
+				defaultText={defaultTexts[i % defaultTexts.length]}
 				{fontFamily}
 				{initialSize}
 			/>
