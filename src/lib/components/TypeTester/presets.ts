@@ -11,16 +11,11 @@ export const WEIGHTS: WeightDef[] = [1, ...Array.from({ length: 19 }, (_, i) => 
 	(n) => ({ id: n, name: String(n), axisValue: n === 1 ? 1 : n * 10 })
 );
 
-// Default tester text — bridges Steiner (medium) and Steiner's anthroposophy
-export const DEFAULT_TEXT = 'The aether carries Rudolf Steiner anthroposophy.';
-
 // Running text appended under each weight's word in the Type Tester.
-// German (anthroposophy register) is shown now.
-export const TESTER_PARAGRAPH_DE =
-	'Das Denken ist eine stille Tätigkeit des Willens. Zwischen Wachen und Träumen bewegt sich die Seele durch Welten, die wir selten beim Namen nennen.';
-// English alternative — kept for later use, NOT currently displayed.
-export const TESTER_PARAGRAPH_EN =
-	'The human being, Steiner held, is woven of four bodies — the physical, the etheric, the astral, and the I — each unfolding in its own seven-year season.';
+// Typography's own vocabulary — general rather than Steiner-specific, and
+// still on-brand for a foundry talking about its own craft.
+export const TESTER_PARAGRAPH =
+	'Type is drawn twice — once as a letter, once as the space around it. What the eye reads is never just ink; it is the rhythm between.';
 
 // Maximum characters allowed in the textarea
 export const MAX_CHARS = 500;

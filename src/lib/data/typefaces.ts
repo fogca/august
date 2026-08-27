@@ -83,29 +83,29 @@ export const TYPEFACES: Typeface[] = [
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		weights: WEIGHTS,
-		// One German word per weight row (20), in alphabetical order A→T —
-		// Steiner / anthroposophy & nature vocabulary
+		// One word per weight row (20), in alphabetical order A→T — typography's
+		// own vocabulary, general rather than Steiner/anthroposophy-specific.
 		defaultTexts: [
-			'Anthroposophie',
-			'Bildekräfte',
-			'Christusimpuls',
-			'Dreigliederung',
-			'Eurythmie',
-			'Freiheit',
-			'Goetheanum',
-			'Herzdenken',
-			'Imagination',
-			'Jahreslauf',
-			'Keimkraft',
-			'Lebenskraft',
-			'Metamorphose',
-			'Naturreich',
-			'Organismus',
-			'Pflanzenwelt',
-			'Quelle',
-			'Rhythmus',
-			'Seelenkalender',
-			'Tierwelt'
+			'Aperture',
+			'Baseline',
+			'Counter',
+			'Descender',
+			'Ear',
+			'Finial',
+			'Glyph',
+			'Hairline',
+			'Italic',
+			'Junction',
+			'Kerning',
+			'Ligature',
+			'Metrics',
+			'Numeral',
+			'Overshoot',
+			'Proportion',
+			'Quotation',
+			'Rhythm',
+			'Serif',
+			'Terminal'
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
