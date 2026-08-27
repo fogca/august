@@ -53,7 +53,7 @@
 				<GlyphCycle />
 			{:else if tf.heroVideo}
 				<video
-					class="FontDetail__hero-media"
+					class="FontDetail__hero-media FontDetail__hero-video"
 					src={tf.heroVideo}
 					muted
 					loop
@@ -193,6 +193,13 @@
 		height: 100%;
 		object-fit: cover;
 		display: block;
+	}
+
+	/* Zoomed in past a plain cover-fit — the "a" row reads as a few large
+	   glyphs rather than a smaller repeating strip, matching how large the
+	   same video plays on the home page. */
+	.FontDetail__hero-video {
+		transform: scale(1.6);
 	}
 
 	.FontDetail__hero-placeholder {
