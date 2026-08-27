@@ -348,7 +348,11 @@
 		font-size: 18px;
 		line-height: 1.4;
 		letter-spacing: 0;
-		margin: 0 0 16px;
+		/* max-width narrower than .FontDetail__body makes this its own box —
+		   text-align:center on the parent only centers text INSIDE that box,
+		   not the box itself, so without margin-inline:auto it sits flush left
+		   (visibly off-centre under the h1 above it). */
+		margin: 0 auto 16px;
 		max-width: 56ch;
 	}
 
@@ -364,7 +368,9 @@
 		color: var(--color-text);
 		text-align: center;
 		max-width: 64ch;
-		margin: 0;
+		/* Same fix as .FontDetail__tagline — margin-inline:auto centres the box
+		   itself, not just the text inside it. */
+		margin: 0 auto;
 	}
 
 	/* Japanese running translation — Tazugane Light, ~1.75px smaller than the
@@ -381,8 +387,10 @@
 		opacity: 0.75;
 		letter-spacing: 0;
 		color: var(--color-text);
+		text-align: center;
 		max-width: 64ch;
-		margin: 12px 0 0;
+		/* Same centred-box fix as .FontDetail__description above it. */
+		margin: 12px auto 0;
 	}
 
 	/* ── On-page buy block ── */
