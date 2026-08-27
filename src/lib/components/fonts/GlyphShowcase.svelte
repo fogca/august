@@ -42,7 +42,9 @@
 
 <style>
 	.GlyphShowcase {
-		background: #000;
+		/* Same red as Buy/Footer (base.css :root token), not the OpenTypeFeatures
+		   black it flows into below — a deliberate seam between the two now. */
+		background: var(--color-signal);
 		color: #fff;
 		padding: 80px var(--padding) 60px;
 		border-top: 1px solid rgba(255, 255, 255, 0.15);
