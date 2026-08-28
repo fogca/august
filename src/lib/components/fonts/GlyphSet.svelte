@@ -56,8 +56,19 @@
 	let selected = $state<GlyphEntry>(DEFAULT_GLYPH);
 
 	const xHeight = $derived(xHeightFor(selectedWeight.axisValue));
-	const capLineTop = (ASCENDER - CAP_HEIGHT) / UPM; // fraction from top of the preview box
-	const baselineTop = ASCENDER / UPM;
+
+	// The preview box is exactly one em tall (its height equals the glyph's
+	// font-size), so a metric at `units` above the baseline sits at
+	// (ASCENDER - units) / UPM down from the top. The glyph's own baseline lands
+	// at ASCENDER / UPM because the box uses line-height 1 with typo metrics
+	// that sum to the em — measured, not assumed.
+	const metricLines = $derived([
+		{ label: 'Ascender', value: ASCENDER, top: 0 },
+		{ label: 'Cap height', value: CAP_HEIGHT, top: (ASCENDER - CAP_HEIGHT) / UPM },
+		{ label: 'x-Height', value: xHeight, top: (ASCENDER - xHeight) / UPM },
+		{ label: 'Baseline', value: 0, top: ASCENDER / UPM },
+		{ label: 'Descender', value: DESCENDER, top: 1 }
+	]);
 
 	const groups = $derived(
 		GLYPH_CATEGORY_ORDER.map((cat) => ({
@@ -149,40 +160,23 @@
 			</div>
 			<p class="GlyphSet__glyph-name">{selected.name}</p>
 
-			<dl class="GlyphSet__metrics">
-				<div class="GlyphSet__metric">
-					<dt>Ascender</dt>
-					<dd>{ASCENDER}</dd>
-				</div>
-				<div class="GlyphSet__metric">
-					<dt>Cap height</dt>
-					<dd>{CAP_HEIGHT}</dd>
-				</div>
-				<div class="GlyphSet__metric">
-					<dt>x-Height</dt>
-					<dd>{xHeight}</dd>
-				</div>
-			</dl>
-
-			<div class="GlyphSet__preview" style="font-family: '{fontFamily}', sans-serif;">
-				<span class="GlyphSet__guide" style="top: {capLineTop * 100}%"></span>
-				<span class="GlyphSet__guide" style="top: {baselineTop * 100}%"></span>
+			<div class="GlyphSet__diagram" style="font-family: '{fontFamily}', sans-serif;">
 				<span
 					class="GlyphSet__preview-glyph"
-					style="font-variation-settings: 'wght' {selectedWeight.axisValue};"
-				>{selected.char}</span>
+					style="font-variation-settings: 'wght' {selectedWeight.axisValue};">{selected.char}</span>
+
+				{#each metricLines as m (m.label)}
+					<div
+						class="GlyphSet__mline"
+						class:is-edge={m.top === 1}
+						style="top: {m.top * 100}%"
+					>
+						<span class="GlyphSet__mlabel">{m.label}</span>
+						<span class="GlyphSet__mvalue">{m.value}</span>
+					</div>
+				{/each}
 			</div>
 
-			<dl class="GlyphSet__metrics">
-				<div class="GlyphSet__metric">
-					<dt>Baseline</dt>
-					<dd>0</dd>
-				</div>
-				<div class="GlyphSet__metric">
-					<dt>Descender</dt>
-					<dd>{DESCENDER}</dd>
-				</div>
-			</dl>
 		</aside>
 
 		<div class="GlyphSet__grid-scroll" bind:this={scrollEl}>
@@ -291,49 +285,22 @@
 		margin: 0;
 	}
 
-	.GlyphSet__metrics {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		margin: 0;
-	}
 
-	.GlyphSet__metric {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		font-family: 'Steiner', sans-serif;
-		font-size: var(--fs-h6);
-		letter-spacing: 0;
-		border-bottom: 1px solid var(--color-line);
-		padding-bottom: 6px;
-	}
 
-	.GlyphSet__metric dt {
-		color: var(--color-text-mute);
-	}
 
-	.GlyphSet__metric dd {
-		margin: 0;
-		color: var(--color-text);
-		font-variation-settings: normal;
-	}
 
 	/* The big glyph preview — guides sit at cap-height / baseline, computed
 	   from the font's own metrics (not from where the browser happens to lay
 	   the text out), so they stay correct regardless of the glyph rendered. */
-	.GlyphSet__preview {
+
+
+	/* The box is exactly one em tall, so a metric line placed at
+	   (ascender - units) / upm from the top lands on the real metric. The glyph
+	   is set at the same size with line-height 1, which puts its baseline at
+	   ascender/upm — the two agree by construction, not by eye. */
+	.GlyphSet__diagram {
 		position: relative;
 		height: 220px;
-		overflow: hidden;
-	}
-
-	.GlyphSet__guide {
-		position: absolute;
-		left: 0;
-		right: 0;
-		height: 1px;
-		background: var(--color-line);
 	}
 
 	.GlyphSet__preview-glyph {
@@ -347,8 +314,44 @@
 		color: var(--color-text);
 	}
 
+	.GlyphSet__mline {
+		position: absolute;
+		left: 0;
+		right: 0;
+		border-top: 1px solid var(--color-line);
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		font-family: 'Steiner', sans-serif;
+		font-size: var(--fs-h6);
+		font-variation-settings: normal;
+		letter-spacing: 0;
+		line-height: 1.4;
+		pointer-events: none;
+	}
+
+	/* Labels sit just under their own rule; the bottom line reads above its
+	   rule instead so it stays inside the box. */
+	.GlyphSet__mline span {
+		padding-top: 2px;
+	}
+
+	.GlyphSet__mline.is-edge span {
+		padding-top: 0;
+		transform: translateY(-100%);
+	}
+
+	.GlyphSet__mlabel {
+		color: var(--color-text-mute);
+	}
+
+	.GlyphSet__mvalue {
+		color: var(--color-text);
+	}
+
 	@media (min-width: 768px) {
-		.GlyphSet__preview,
+		.GlyphSet__diagram,
 		.GlyphSet__preview-glyph {
 			height: 320px;
 			font-size: 320px;
@@ -433,7 +436,11 @@
 		.GlyphSet__meta {
 			width: auto;
 			min-width: 0;
-			justify-content: space-between;
+			/* Was space-between, which pushed the header, the glyph name and the
+			   diagram to opposite ends of a full-height column — the metric
+			   labels ended up nowhere near the lines they name. */
+			justify-content: flex-start;
+			gap: 24px;
 		}
 
 		.GlyphSet__grid-scroll {
