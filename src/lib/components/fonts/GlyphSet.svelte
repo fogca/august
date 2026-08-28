@@ -3,6 +3,8 @@
 	// independently-scrolling, category-grouped glyph grid (right). Pattern
 	// referenced from Increments Type's /fonts/[slug] Glyphs page — click any
 	// tile to inspect it; only the grid scrolls, the panel stays put.
+	import { onMount } from 'svelte';
+	import { onScroll } from '$lib/scroll';
 	import { WEIGHTS } from '$lib/components/TypeTester/presets.js';
 	import {
 		STEINER_GLYPHS,
@@ -65,6 +67,58 @@
 		}))
 	);
 
+	// Scroll-driven A-Z. The section is taller than the viewport; the panel
+	// sticks for that distance and the scroll progress across it picks one of
+	// the 26 capitals. Clicking a tile still works — it just parks the scroll
+	// driver until the reader scrolls again, so the two never fight.
+	const AZ = $derived(
+		'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+			.split('')
+			.map((c) => STEINER_GLYPHS.find((g) => g.char === c))
+			.filter((g): g is GlyphEntry => !!g)
+	);
+
+	let sectionEl = $state<HTMLElement>();
+	let scrollEl = $state<HTMLElement>();
+	let pickedByClick = false;
+
+	// Keep the highlighted tile in view while the scroll walks A-Z. Only nudges
+	// the grid's own scroller, never the page.
+	$effect(() => {
+		const cp = selected.codepoint;
+		if (!scrollEl) return;
+		const cell = scrollEl.querySelector<HTMLElement>(`[data-cp="${cp}"]`);
+		if (!cell) return;
+		const top = cell.offsetTop - scrollEl.clientHeight / 2 + cell.offsetHeight / 2;
+		scrollEl.scrollTo({ top, behavior: 'smooth' });
+	});
+
+	onMount(() => {
+		const update = () => {
+			if (!sectionEl || pickedByClick || AZ.length === 0) return;
+			const rect = sectionEl.getBoundingClientRect();
+			const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+			const range = rect.height - viewportHeight;
+			if (range <= 0) return;
+			const progress = Math.min(1, Math.max(0, -rect.top / range));
+			const i = Math.min(AZ.length - 1, Math.floor(progress * AZ.length));
+			if (AZ[i] && AZ[i].codepoint !== selected.codepoint) selected = AZ[i];
+		};
+		update();
+		return onScroll(update);
+	});
+
+	function pick(g: GlyphEntry) {
+		selected = g;
+		// Hand control back to the scroll on the reader's next move.
+		pickedByClick = true;
+		const release = () => {
+			pickedByClick = false;
+			window.removeEventListener('scroll', release);
+		};
+		window.addEventListener('scroll', release, { passive: true, once: true });
+	}
+
 	function onWeightChange(e: Event) {
 		const id = Number((e.currentTarget as HTMLSelectElement).value);
 		const w = WEIGHTS.find((w) => w.id === id);
@@ -72,9 +126,10 @@
 	}
 </script>
 
-<section class="GlyphSet" aria-label={title}>
+<section class="GlyphSet" aria-label={title} bind:this={sectionEl}>
 	<p class="GlyphSet__label">{title}</p>
 
+	<div class="GlyphSet__pin">
 	<div class="GlyphSet__panel">
 		<aside class="GlyphSet__meta" aria-label="Selected glyph">
 			<div class="GlyphSet__meta-head">
@@ -130,7 +185,7 @@
 			</dl>
 		</aside>
 
-		<div class="GlyphSet__grid-scroll">
+		<div class="GlyphSet__grid-scroll" bind:this={scrollEl}>
 			{#each groups as group (group.cat)}
 				<div class="GlyphSet__group">
 					<p class="GlyphSet__group-label">{group.label}</p>
@@ -140,8 +195,9 @@
 								type="button"
 								class="GlyphSet__cell"
 								class:is-active={selected.codepoint === g.codepoint}
+								data-cp={g.codepoint}
 								style="font-variation-settings: 'wght' {selectedWeight.axisValue};"
-								onclick={() => (selected = g)}
+								onclick={() => pick(g)}
 								aria-label={g.name}
 								aria-pressed={selected.codepoint === g.codepoint}
 							>{g.char}</button>
@@ -151,12 +207,18 @@
 			{/each}
 		</div>
 	</div>
+	</div>
 </section>
 
 <style>
 	.GlyphSet {
 		padding: 40px var(--padding) 48px;
 		border-top: 1px solid var(--color-line);
+	}
+
+	/* Mobile: no pinning — the section is its own height and scrolls normally. */
+	.GlyphSet__pin {
+		display: block;
 	}
 
 	.GlyphSet__label {
@@ -344,15 +406,27 @@
 	/* Desktop: fixed-width metrics panel stays put; only the grid scrolls,
 	   inside a panel height the panel itself defines. */
 	@media (min-width: 768px) {
-		/* 35 / 65 split. Grid rather than flex: fr units divide what is left
-		   after the gap, so the two columns land on the ratio exactly instead of
-		   each having to subtract half the gap from a percentage. */
+		/* Scroll distance for the A-Z run: the section is far taller than the
+		   viewport and the panel sticks inside it, so scrolling through this
+		   block steps the preview from A to Z. 26 letters at roughly a third of
+		   a screen each. */
+		.GlyphSet {
+			padding-bottom: 0;
+		}
+
+		.GlyphSet__pin {
+			height: 900vh;
+		}
+
 		.GlyphSet__panel {
+			position: sticky;
+			top: 72px;
 			display: grid;
 			grid-template-columns: 35fr 65fr;
 			align-items: stretch;
 			gap: 48px;
-			height: min(76vh, 720px);
+			height: calc(100vh - 120px);
+			height: calc(100dvh - 120px);
 			min-height: 560px;
 		}
 
