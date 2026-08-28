@@ -24,26 +24,26 @@
 		</script>
 		<!-- Per-page <meta name="description"> comes from each route's svelte:head -->
 		<!-- Global design tokens and reset (bump ?v= whenever base.css changes) -->
-		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20260828a" />
+		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20260828b" />
 		<!-- Steiner VF — latest export (version in the filename).
 		     Declared under two family names from the SAME file: 'Steiner'
 		     (kept stable — most components still hardcode this) and
-		     'Steiner VF72' (versioned; --font-en/--font-ja below use this one,
+		     'Steiner VF73' (versioned; --font-en/--font-ja below use this one,
 		     so anything reading var(--font-en)'s computed value sees the
 		     build number). Bump both the URL and the second name's suffix
 		     together on every export. -->
 		<style>
 			@font-face {
 				font-family: 'Steiner';
-				src: url('%sveltekit.assets%/fonts/Steiner-VF72.woff2?v=20260828c') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Steiner-VF73.woff2?v=20260828d') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
 			@font-face {
-				font-family: 'Steiner VF72';
-				src: url('%sveltekit.assets%/fonts/Steiner-VF72.woff2?v=20260828c') format('woff2-variations');
+				font-family: 'Steiner VF73';
+				src: url('%sveltekit.assets%/fonts/Steiner-VF73.woff2?v=20260828d') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -70,8 +70,8 @@
 			/* Site-wide font: Steiner for all elements (chairman directive).
 			   The versioned name goes first — see the @font-face comment above. */
 			:root {
-				--font-en: 'Steiner VF72', 'Steiner', 'Helvetica Neue', Arial, sans-serif;
-				--font-ja: 'Steiner VF72', 'Steiner', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-en: 'Steiner VF73', 'Steiner', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Steiner VF73', 'Steiner', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 			}
 
 			html,

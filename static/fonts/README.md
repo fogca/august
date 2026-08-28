@@ -5,7 +5,7 @@ outside the repo (Projects/brands/August/Steiner/00_master/Export/).
 
 | File | Used by | Loaded from |
 |------|---------|-------------|
-| `Steiner-VF72.woff2` | Site-wide primary typeface (variable, wght 1–950) | `src/app.html` @font-face |
+| `Steiner-VF73.woff2` | Site-wide primary typeface (variable, wght 1–950) | `src/app.html` @font-face |
 | `MokusekiSans08-Regular.woff2` | Home-page wordmark, general use (v08) | `src/app.html` @font-face |
 | `MokusekiSans01-Regular.woff2` | ANDERSEN logotype on the top-page KV (v01, first cut) | `src/app.html` @font-face |
 | `otref-inter.woff2` | /opentype feature-reference demos | `OpenTypeReference.svelte` |
