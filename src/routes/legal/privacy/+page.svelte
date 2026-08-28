@@ -167,7 +167,7 @@
 	   left inset rather than a percentage margin, and no width cap. */
 	@media (min-width: 768px) {
 		.Legal__inner {
-			padding-left: 25vw;
+			padding-left: 37.5vw;
 		}
 	}
 
