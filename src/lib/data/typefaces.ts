@@ -110,29 +110,31 @@ export const TYPEFACES: Typeface[] = [
 			languages: '93'
 		},
 		weights: WEIGHTS,
-		// One row per weight, titled with the number and the name it carries —
-		// the specimen says which step it is while showing it.
+		// One statement, broken across the twenty rows: read top to bottom it
+		// runs as a single paragraph while the weight climbs under it, so the
+		// scroll demonstrates the argument the words are making. Kept factual
+		// rather than lyrical — the foundry describes itself as pragmatic.
 		defaultTexts: [
-			'1 HAIR / Hair',
-			'5 LINE / Line',
-			'10 THIN / Thin',
-			'15 ULTRALIGHT / UltraLight',
-			'20 EXTRALIGHT / ExtraLight',
-			'25 SEMILIGHT / SemiLight',
-			'30 LIGHT / Light',
-			'35 BOOK / Book',
-			'40 REGULAR / Regular',
-			'45 TEXT / Text',
-			'50 MEDIUM / Medium',
-			'55 DEMIBOLD / Demibold',
-			'60 SEMIBOLD / Semibold',
-			'65 DARK / Dark',
-			'70 BOLD / Bold',
-			'75 ULTRABOLD / UltraBold',
-			'80 EXTRABOLD / ExtraBold',
-			'85 HEAVY / Heavy',
-			'90 BLACK / Black',
-			'95 ULTRA / Ultra'
+			'A variable font',
+			'is drawn twice:',
+			'once at its lightest,',
+			'once at its heaviest.',
+			'Everything between',
+			'is interpolation —',
+			'arithmetic, not drawing.',
+			'Which is why',
+			'every step here',
+			'was corrected by hand.',
+			'Counters close,',
+			'junctions fill,',
+			'spacing tightens',
+			'as the weight climbs,',
+			'and none of it',
+			'happens on its own.',
+			'Twenty weights,',
+			'because the difference',
+			'between them',
+			'is where the work is.'
 		],
 		// Body copy under each word: what that weight is actually for. Long
 		// enough to show the face setting real paragraphs, not just a caption.
