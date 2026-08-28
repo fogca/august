@@ -41,9 +41,13 @@
 	// Mobile panel: typeface shortcuts + page links
 	const fonts = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
 	// Announced but not yet released: shown in the menu for completeness, dimmed
-	// and inert. They stay out of TYPEFACES' visible set on purpose so /fonts and
-	// /fonts/[slug] keep 404-ing until there is a real page to link to.
-	const UPCOMING: string[] = ['Alfred', 'Asta'];
+	// and inert. Meant for typefaces that stay out of TYPEFACES' visible set on
+	// purpose, so /fonts and /fonts/[slug] keep 404-ing until there is a real
+	// page to link to. Alfred and Asta were re-shown in TYPEFACES on 2026-08-29
+	// (temporary, at the user's request) and so come through `fonts` above now —
+	// left out here to avoid listing each of them twice. Put them back if
+	// `hidden` in typefaces.ts is reverted to true.
+	const UPCOMING: string[] = [];
 	// Mirrors the desktop nav (the Fonts group above stands in for its "Fonts"
 	// link, and the language switch is appended after these).
 	const PAGES: NavItem[] = [

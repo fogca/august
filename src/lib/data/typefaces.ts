@@ -204,9 +204,11 @@ export const TYPEFACES: Typeface[] = [
 		name: 'gQ',
 		order: 2,
 		status: 'in-development',
-		// Withdrawn from the public site for the Steiner-only launch (2026-07).
-		// Weight count / spec are not final — do not re-list until they are.
-		hidden: true,
+		// Re-shown 2026-08-29 at the user's request (temporary — "一旦"),
+		// even though weight count / spec are not yet final. Originally
+		// withdrawn for the Steiner-only launch (2026-07); re-hide once
+		// that's a concern again.
+		hidden: false,
 		// Latest Mokuseki Sans (v08) webfont
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
@@ -269,7 +271,9 @@ export const TYPEFACES: Typeface[] = [
 		name: 'Atom',
 		order: 3,
 		status: 'in-development',
-		hidden: true,
+		// Re-shown 2026-08-29 at the user's request (temporary) — no
+		// drawings exist yet, the card renders in Steiner as a placeholder.
+		hidden: false,
 		// No font files yet — render as Steiner for preview purposes
 		fontFamily: 'Steiner',
 		tagline: 'A display typeface in development.',
@@ -327,12 +331,13 @@ export const TYPEFACES: Typeface[] = [
 	{
 		// Sibling face to Asger — registered so the slug and data shape exist.
 		// Everything below the name is provisional: no drawings, no font files,
-		// no agreed classification. Hidden until the design has something to show.
+		// no agreed classification. Re-shown 2026-08-29 at the user's request
+		// (temporary) even though there's nothing but a placeholder specimen.
 		slug: 'asta',
 		name: 'Asta',
 		order: 4,
 		status: 'in-development',
-		hidden: true,
+		hidden: false,
 		// No font files yet — render as Steiner for preview purposes
 		fontFamily: 'Steiner',
 		tagline: 'Sibling to Asger.',
@@ -366,14 +371,14 @@ export const TYPEFACES: Typeface[] = [
 	},
 	{
 		// Announced on the home page (ochre section, own logotype) and in the
-		// mobile menu's UPCOMING list, but not yet registered here — added so
-		// it has a slug and a catalogue specimen ready for when it is unhidden.
-		// Everything below is provisional, same as Asta.
+		// mobile menu's UPCOMING list. Registered here with a catalogue
+		// specimen; everything below is provisional, same as Asta. Re-shown
+		// 2026-08-29 at the user's request (temporary).
 		slug: 'alfred',
 		name: 'Alfred',
 		order: 5,
 		status: 'in-development',
-		hidden: true,
+		hidden: false,
 		// No font files yet — render as Steiner for preview purposes
 		fontFamily: 'Steiner',
 		tagline: 'A Neo Classic in development.',
