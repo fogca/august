@@ -159,6 +159,15 @@
 		}
 	}
 
+	/* PC: a 60vh band rather than a full screen, so the name and the body copy
+	   below it are already in view on landing. */
+	@media (min-width: 768px) {
+		.FontDetail__hero {
+			height: 60vh;
+			height: 60dvh;
+		}
+	}
+
 	.FontDetail__hero-bg {
 		position: absolute;
 		inset: 0;
@@ -253,6 +262,14 @@
 		flex-direction: column;
 		gap: 8px;
 		z-index: 2;
+	}
+
+	/* PC: a flat 30px inset — same specificity as the rule above, so it has to
+	   come after it to win. */
+	@media (min-width: 768px) {
+		.FontDetail__hero-foot {
+			padding: 30px;
+		}
 	}
 
 	.FontDetail__hero-label {
