@@ -387,7 +387,7 @@
 	/* font-size comes from the inline style (its own slider); everything else
 	   is fixed here. Editable, so it needs the same affordances as the word. */
 	.WeightRow__note {
-		line-height: 1.4;
+		line-height: 1.3;
 		letter-spacing: 0;
 		color: var(--color-text);
 		margin: 0;
