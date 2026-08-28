@@ -95,7 +95,7 @@
 
 <div class="WeightRow" role="listitem">
 	<div class="WeightRow__meta">
-		<span class="label-name">{weight.name} {weight.label.toUpperCase()}</span>
+		<span class="label-name">{weight.name}</span>
 		<span class="label-axis">wght {weight.axisValue}</span>
 		<label class="WeightRow__size">
 			<span class="size-icon size-icon--sm">A</span>

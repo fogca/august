@@ -110,29 +110,29 @@ export const TYPEFACES: Typeface[] = [
 			languages: '93'
 		},
 		weights: WEIGHTS,
-		// One row per weight, titled with that weight's own name — the specimen
-		// says what it is while showing it.
+		// One row per weight, titled with the number and the name it carries —
+		// the specimen says which step it is while showing it.
 		defaultTexts: [
-			'Hair',
-			'Line',
-			'Thin',
-			'UltraLight',
-			'ExtraLight',
-			'SemiLight',
-			'Light',
-			'Book',
-			'Regular',
-			'Text',
-			'Medium',
-			'Demibold',
-			'Semibold',
-			'Dark',
-			'Bold',
-			'UltraBold',
-			'ExtraBold',
-			'Heavy',
-			'Black',
-			'Ultra'
+			'1 HAIR / Hair',
+			'5 LINE / Line',
+			'10 THIN / Thin',
+			'15 ULTRALIGHT / UltraLight',
+			'20 EXTRALIGHT / ExtraLight',
+			'25 SEMILIGHT / SemiLight',
+			'30 LIGHT / Light',
+			'35 BOOK / Book',
+			'40 REGULAR / Regular',
+			'45 TEXT / Text',
+			'50 MEDIUM / Medium',
+			'55 DEMIBOLD / Demibold',
+			'60 SEMIBOLD / Semibold',
+			'65 DARK / Dark',
+			'70 BOLD / Bold',
+			'75 ULTRABOLD / UltraBold',
+			'80 EXTRABOLD / ExtraBold',
+			'85 HEAVY / Heavy',
+			'90 BLACK / Black',
+			'95 ULTRA / Ultra'
 		],
 		// Body copy under each word: what that weight is actually for. Long
 		// enough to show the face setting real paragraphs, not just a caption.
