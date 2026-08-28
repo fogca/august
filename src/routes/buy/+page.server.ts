@@ -1,7 +1,7 @@
 // /buy server actions — Stripe Checkout
 //
-// The client form only declares WHAT is being bought (license types + tiers +
-// currency + educational flag). All prices are recomputed server-side from
+// The client form only declares WHAT is being bought (license kind + tier +
+// educational flag). All prices are recomputed server-side from
 // $lib/data/pricing so a tampered form cannot change the charge.
 //
 // Env: STRIPE_SECRET_KEY (see .env.example). Without it the action falls back
@@ -12,23 +12,22 @@ import { env } from '$env/dynamic/private';
 import { dev } from '$app/environment';
 import type { Actions } from './$types';
 import {
-	LICENSES,
 	TYPEFACE_PRICING,
 	getPrice,
 	getGrossPrice,
-	getTierLabel
+	getTierName,
+	getTierLabel,
+	PROJECT_LICENSE_EUR,
+	PROJECT_LICENSE_LABEL
 } from '$lib/data/pricing';
-import type { Currency, LicenseType } from '$lib/data/pricing';
 import { computeTotal } from '$lib/data/discounts';
-import type { CartItem } from '$lib/data/discounts';
+import type { CartItem, CartItemKind } from '$lib/data/discounts';
 
 const STEINER = TYPEFACE_PRICING[0].packages[0];
 
-const SUPPORTED_CURRENCIES: Currency[] = ['EUR', 'JPY', 'USD'];
-
-// Stripe expects minor units except for zero-decimal currencies (JPY).
-function toStripeAmount(amount: number, currency: Currency): number {
-	return currency === 'JPY' ? Math.round(amount) : Math.round(amount * 100);
+// EUR only — Stripe expects minor units (cents).
+function toStripeAmount(amount: number): number {
+	return Math.round(amount * 100);
 }
 
 export const actions: Actions = {
@@ -36,46 +35,56 @@ export const actions: Actions = {
 		const data = await request.formData();
 
 		// ── Parse + validate the order ─────────────────────────
-		const currency = String(data.get('currency') ?? 'EUR') as Currency;
-		if (!SUPPORTED_CURRENCIES.includes(currency)) {
-			return fail(400, { message: 'Unsupported currency.' });
-		}
 		const isStudent = data.get('educational') === '1';
 
-		const licenses = data.getAll('item_license').map(String) as LicenseType[];
-		const tiers = data.getAll('item_tier').map((t) => Number(t));
-		if (licenses.length === 0 || licenses.length !== tiers.length) {
+		const kinds = data.getAll('item_kind').map(String) as CartItemKind[];
+		const tiersRaw = data.getAll('item_tier').map(String);
+		if (kinds.length === 0) {
 			return fail(400, { message: 'No license selected.' });
 		}
 
 		// ── Recompute prices server-side ───────────────────────
 		const items: CartItem[] = [];
 		const lineDescriptions: string[] = [];
-		for (let i = 0; i < licenses.length; i++) {
-			const license = LICENSES.find((l) => l.id === licenses[i]);
-			const tierIndex = tiers[i];
-			if (!license || !Number.isInteger(tierIndex)) {
+		for (let i = 0; i < kinds.length; i++) {
+			const kind = kinds[i];
+			if (kind !== 'tier' && kind !== 'project') {
 				return fail(400, { message: 'Invalid license selection.' });
 			}
-			const price = getPrice(STEINER, license, tierIndex, currency);
-			const gross = getGrossPrice(STEINER, license, tierIndex, currency);
+
+			if (kind === 'project') {
+				items.push({
+					kind: 'project',
+					tierIndex: null,
+					basePrice: PROJECT_LICENSE_EUR,
+					grossPrice: PROJECT_LICENSE_EUR,
+					packageId: STEINER.id
+				});
+				lineDescriptions.push(PROJECT_LICENSE_LABEL);
+				continue;
+			}
+
+			const tierIndex = Number(tiersRaw[i]);
+			if (!Number.isInteger(tierIndex)) {
+				return fail(400, { message: 'Invalid license selection.' });
+			}
+			const price = getPrice(STEINER, tierIndex);
+			const gross = getGrossPrice(STEINER, tierIndex);
 			if (price === null || gross === null) {
-				// Enterprise tier — handled via /contact, not self-serve checkout
+				// Global tier — handled via /contact, not self-serve checkout
 				return fail(400, { message: 'This scale requires a custom quote — please contact us.' });
 			}
 			items.push({
-				licenseType: license.id,
-				tierId: String(tierIndex),
+				kind: 'tier',
 				tierIndex,
 				basePrice: price,
 				grossPrice: gross,
 				packageId: STEINER.id
 			});
-			lineDescriptions.push(`${license.label} (${getTierLabel(license, tierIndex)})`);
+			lineDescriptions.push(`${getTierName(tierIndex)} (${getTierLabel(tierIndex)})`);
 		}
 
 		const { total } = computeTotal({
-			currency,
 			items,
 			isStudent,
 			packageDef: STEINER,
@@ -115,8 +124,8 @@ export const actions: Actions = {
 					{
 						quantity: 1,
 						price_data: {
-							currency: currency.toLowerCase(),
-							unit_amount: toStripeAmount(total, currency),
+							currency: 'eur',
+							unit_amount: toStripeAmount(total),
 							product_data: {
 								name: `${STEINER.label} — ${STEINER.detail}`,
 								description:

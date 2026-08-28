@@ -5,21 +5,13 @@
 	// reads from getFlatPackages() rather than hardcoding it, so a second
 	// typeface going on sale just adds a second card — no page changes.
 
-	import {
-		LICENSES,
-		getPrice,
-		getGrossPrice,
-		getFlatPackages,
-		type FlatPackage
-	} from '$lib/data/pricing';
-	import type { LicenseType, Currency } from '$lib/data/pricing';
+	import { getPrice, getGrossPrice, getFlatPackages, type FlatPackage } from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
 	import { computeTotal } from '$lib/data/discounts';
 
 	import LicensePicker from '$lib/components/Buy/LicensePicker.svelte';
 	import EducationalToggle from '$lib/components/Buy/EducationalToggle.svelte';
 	import CartSummary from '$lib/components/Buy/CartSummary.svelte';
-	import CurrencyToggle from '$lib/components/Buy/CurrencyToggle.svelte';
 	import StyleList from '$lib/components/Buy/StyleList.svelte';
 	import type { ActionData } from './$types';
 
@@ -82,9 +74,9 @@
 
 	// ── State ──────────────────────────────────────────────
 
-	let tierSelections = $state<Map<LicenseType, number>>(new Map());
+	// At most one selection is ever active (see LicensePicker) — one item per
+	// selected package, all sharing the same kind/tier.
 	let cartItems = $state<CartItem[]>([]);
-	let currency = $state<Currency>('EUR');
 	let isStudent = $state(false);
 
 	// ── Computed ────────────────────────────────────────────
@@ -92,7 +84,6 @@
 	const hasLicense = $derived(cartItems.length > 0);
 
 	const cartState = $derived({
-		currency,
 		items: cartItems,
 		isStudent,
 		packageDef: selectedPackage,
@@ -103,61 +94,18 @@
 
 	// ── Handlers ────────────────────────────────────────────
 
-	/** Build a cart item for a license × tier at the current currency. */
-	function buildItem(licenseType: LicenseType, tierIndex: number): CartItem | null {
-		if (!selectedPackage) return null;
-		const license = LICENSES.find((l) => l.id === licenseType)!;
-		const price = getPrice(selectedPackage, license, tierIndex, currency);
-		const gross = getGrossPrice(selectedPackage, license, tierIndex, currency);
-		if (price === null || gross === null) return null;
-		return {
-			licenseType,
-			tierId: String(tierIndex),
-			tierIndex,
-			basePrice: price,
-			grossPrice: gross,
-			packageId: selectedPackage.id
-		};
-	}
-
-	/** License toggled on, or tier changed on an active license. */
-	function handleTierSelect(item: CartItem) {
-		const next = new Map(tierSelections);
-		next.set(item.licenseType, item.tierIndex);
-		tierSelections = next;
-
-		const built = buildItem(item.licenseType, item.tierIndex);
-		if (!built) return;
-		const idx = cartItems.findIndex((i) => i.licenseType === item.licenseType);
-		cartItems =
-			idx >= 0 ? cartItems.map((ci, i) => (i === idx ? built : ci)) : [...cartItems, built];
+	/** Tier or Project License selected — replaces any previous selection. */
+	function handleSelect(item: CartItem) {
+		cartItems = [item];
 	}
 
 	/** Tier changed inline from the cart. */
 	function handleTierChange(item: CartItem) {
-		cartItems = cartItems.map((ci) => (ci.licenseType === item.licenseType ? item : ci));
-		const next = new Map(tierSelections);
-		next.set(item.licenseType, item.tierIndex);
-		tierSelections = next;
+		cartItems = [item];
 	}
 
-	/** Stepper used on an inactive license card — preview only. */
-	function handleTierStep(lt: LicenseType, tierIndex: number) {
-		const next = new Map(tierSelections);
-		next.set(lt, tierIndex);
-		tierSelections = next;
-	}
-
-	function removeLicense(licenseType: LicenseType) {
-		tierSelections = new Map([...tierSelections].filter(([k]) => k !== licenseType));
-		cartItems = cartItems.filter((i) => i.licenseType !== licenseType);
-	}
-
-	function handleCurrencyChange(c: Currency) {
-		currency = c;
-		cartItems = cartItems
-			.map((i) => buildItem(i.licenseType, i.tierIndex))
-			.filter((i): i is CartItem => i !== null);
+	function removeLicense() {
+		cartItems = [];
 	}
 </script>
 
@@ -165,7 +113,7 @@
 	<title>Buy — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Purchase Asger — a 20-weight variable family. Desktop, Web, App, and Books licenses available."
+		content="Purchase Asger — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
 	/>
 </svelte:head>
 
@@ -175,10 +123,6 @@
 		<div class="BuyPage__title-block">
 			<h1 class="BuyPage__heading">Make it yours.</h1>
 			<p class="BuyPage__sub">Choose your typeface, license, and weights. Pay once, yours to keep.</p>
-		</div>
-		<!-- Currency toggle: always visible -->
-		<div class="BuyPage__currency">
-			<CurrencyToggle value={currency} onchange={handleCurrencyChange} />
 		</div>
 	</div>
 
@@ -225,13 +169,10 @@
 	<div class="BuyStep">
 		<LicensePicker
 			title="2 — License"
-			{currency}
 			{cartItems}
-			{tierSelections}
 			packages={selectedPackage ? [selectedPackage] : []}
-			onselect={handleTierSelect}
+			onselect={handleSelect}
 			onremove={removeLicense}
-			ontierstep={handleTierStep}
 		/>
 	</div>
 
@@ -270,7 +211,6 @@
 		<CartSummary
 			inline
 			{isStudent}
-			{currency}
 			items={cartItems}
 			{subtotal}
 			{discounts}
@@ -301,14 +241,9 @@
 		}
 	}
 
-	/* ── Title + currency row ── */
+	/* ── Title row ── */
 	.BuyPage__top {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 24px;
 		margin-bottom: 40px;
-		flex-wrap: wrap;
 	}
 
 	.BuyPage__heading {
@@ -324,11 +259,6 @@
 		font-size: 12px;
 		color: var(--color-text-mute);
 		letter-spacing: 0;
-	}
-
-	.BuyPage__currency {
-		padding-top: 4px;
-		flex-shrink: 0;
 	}
 
 	/* ── Steps (shared) ── */

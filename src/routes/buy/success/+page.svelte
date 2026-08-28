@@ -6,9 +6,9 @@
 	let { data }: { data: PageData } = $props();
 	const order = $derived(data.order);
 
-	function formatAmount(amount: number, currency: string): string {
-		const locale = currency === 'JPY' ? 'ja-JP' : 'en-US';
-		return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount);
+	// EUR only — matches $lib/data/pricing's formatPrice locale choice.
+	function formatAmount(amount: number): string {
+		return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
 	}
 </script>
 
@@ -36,7 +36,7 @@
 				{/if}
 				<div class="Success__fact">
 					<dt>Total</dt>
-					<dd>{formatAmount(order.amount, order.currency)}</dd>
+					<dd>{formatAmount(order.amount)}</dd>
 				</div>
 			</dl>
 		{/if}

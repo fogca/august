@@ -1,169 +1,114 @@
 <script lang="ts">
-	// License picker — toggle select + stepper for tier; no dropdown.
-	// Card click = toggle license on/off.
-	// Arrow buttons (‹ ›) = change tier independently without affecting selection state.
-	import { LICENSES, TIER_DEFS, getPrice, getGrossPrice, getTierLabel, formatPrice } from '$lib/data/pricing';
-	import type { LicenseType, Currency, PackageDef } from '$lib/data/pricing';
+	// License picker — single choice: pick a company-size tier (bundled full
+	// commercial use, except Individual which stays desktop-only) or a flat
+	// Project License for agency-on-behalf-of-client purchases. Only one
+	// selection is active at a time.
+	//
+	// Replaces the old model of independently toggleable Desktop / Web / App /
+	// Books licence cards, each with its own tier — one unified licence per
+	// tier now covers every use case, so there is nothing left to combine.
+	import {
+		TIER_DEFS,
+		getPrice,
+		getGrossPrice,
+		getTierScope,
+		SCOPE_BLURB,
+		PROJECT_LICENSE_EUR,
+		PROJECT_LICENSE_LABEL,
+		PROJECT_LICENSE_BLURB,
+		formatPrice
+	} from '$lib/data/pricing';
+	import type { PackageDef } from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
 
 	interface Props {
-		currency: Currency;
 		cartItems: CartItem[];
 		/** All currently selected packages — used for price resolution. */
 		packages: PackageDef[];
-		/** Per-license tier selections (maintained in parent). */
-		tierSelections: Map<LicenseType, number>;
-		/** Called when a license card is toggled or tier changes on an active license. */
+		/** Called when a tier or the Project License is selected. */
 		onselect: (item: CartItem) => void;
-		onremove: (licenseType: LicenseType) => void;
-		/**
-		 * Called when the stepper is used on an INACTIVE license card.
-		 * Only updates the tier preview — does not add the license to the cart.
-		 */
-		ontierstep: (licenseType: LicenseType, tierIndex: number) => void;
+		/** Called when the active selection is cleared. */
+		onremove: () => void;
 		/** Overridable heading — lets a numbered step flow read "2 — License". */
 		title?: string;
 		hint?: string;
 	}
 
 	let {
-		currency,
 		cartItems,
 		packages,
-		tierSelections,
 		onselect,
 		onremove,
-		ontierstep,
 		title = 'License',
-		hint = 'Choose one or more license types and set your scale.'
+		hint = 'Choose your organisation size, or a Project License if you are buying on behalf of a client.'
 	}: Props = $props();
 
-	const isActive = (lt: LicenseType): boolean => cartItems.some((i) => i.licenseType === lt);
+	// At most one selection is ever active — every package (today, always one)
+	// carries the same kind/tier, so the first item represents the selection.
+	const activeItem = $derived<CartItem | null>(cartItems[0] ?? null);
+	const activeTier = $derived(activeItem?.kind === 'tier' ? activeItem.tierIndex : null);
+	const activeIsProject = $derived(activeItem?.kind === 'project');
 
-	// License type whose enterprise tier was requested — shows the inline quote notice
-	let enterpriseNotice = $state<LicenseType | null>(null);
+	// Shows the inline custom-quote notice when the Global tier is picked
+	let enterpriseNotice = $state(false);
 
-	/** Current tier index for a license (default 1). */
-	function currentTierIndex(lt: LicenseType): number {
-		return tierSelections.get(lt) ?? 1;
-	}
-
-	/**
-	 * Price preview for a license card at its currently previewed tier.
-	 * Returns null for the enterprise tier (custom quote).
-	 */
-	function cardPrice(lt: LicenseType): number | null {
+	function tierPrice(tierIndex: number): number | null {
 		if (packages.length === 0) return null;
-		const license = LICENSES.find((l) => l.id === lt)!;
-		return getPrice(packages[0], license, currentTierIndex(lt), currency);
+		return getPrice(packages[0], tierIndex);
 	}
 
-	/** Human-readable tier label for a given license + tier index. */
-	function tierLabelFor(lt: LicenseType, tierIndex: number): string {
-		const license = LICENSES.find((l) => l.id === lt)!;
-		return getTierLabel(license, tierIndex);
-	}
-
-	/**
-	 * Toggle the license card.
-	 * Inactive → activate with current (or default) tier.
-	 * Active → deactivate.
-	 */
-	function toggleCard(lt: LicenseType) {
-		if (isActive(lt)) {
-			// Deselecting also retires any enterprise-quote notice for this license
-			if (enterpriseNotice === lt) enterpriseNotice = null;
-			onremove(lt);
-			return;
-		}
-		const license = LICENSES.find((l) => l.id === lt)!;
-		const tierIndex = currentTierIndex(lt);
+	function selectTier(tierIndex: number) {
 		const tier = TIER_DEFS.find((t) => t.index === tierIndex);
-
 		if (tier?.multiplier === null) {
-			// Enterprise tier has no self-serve price — show the inline quote notice
+			// Global has no self-serve price — show the inline quote notice
 			// instead of navigating away (which would silently discard the cart).
-			enterpriseNotice = lt;
+			enterpriseNotice = true;
 			return;
 		}
-		if (enterpriseNotice === lt) enterpriseNotice = null;
+		enterpriseNotice = false;
 
-		if (packages.length > 0) {
-			// Resolve price against first selected package;
-			// parent handleTierSelect handles all packages internally.
-			const pkg = packages[0];
-			const price = getPrice(pkg, license, tierIndex, currency);
-			const gross = getGrossPrice(pkg, license, tierIndex, currency);
+		if (packages.length === 0) {
+			onselect({ kind: 'tier', tierIndex, basePrice: 0, grossPrice: 0, packageId: '' });
+			return;
+		}
+		for (const pkg of packages) {
+			const price = getPrice(pkg, tierIndex);
+			const gross = getGrossPrice(pkg, tierIndex);
+			onselect({ kind: 'tier', tierIndex, basePrice: price ?? 0, grossPrice: gross ?? 0, packageId: pkg.id });
+		}
+	}
+
+	function selectProject() {
+		enterpriseNotice = false;
+		if (packages.length === 0) {
+			onselect({ kind: 'project', tierIndex: null, basePrice: 0, grossPrice: 0, packageId: '' });
+			return;
+		}
+		for (const pkg of packages) {
 			onselect({
-				licenseType: lt,
-				tierId: String(tierIndex),
-				tierIndex,
-				basePrice: price ?? 0,
-				grossPrice: gross ?? 0,
+				kind: 'project',
+				tierIndex: null,
+				basePrice: PROJECT_LICENSE_EUR,
+				grossPrice: PROJECT_LICENSE_EUR,
 				packageId: pkg.id
 			});
-		} else {
-			// No packages yet — placeholder; price resolved later.
-			onselect({
-				licenseType: lt,
-				tierId: String(tierIndex),
-				tierIndex,
-				basePrice: 0,
-				grossPrice: 0,
-				packageId: ''
-			});
 		}
 	}
 
-	/**
-	 * Set the tier for a license from the dropdown.
-	 * Inactive card → just preview the tier (no cart change).
-	 * Active card → update tier across all selected packages.
-	 * Tier 12 (enterprise) on an ACTIVE card is unpriceable: keep the cart at the
-	 * current tier, revert the select, and show the inline quote notice (matching
-	 * toggleCard / CartSummary) instead of desyncing tierSelections from the cart.
-	 */
-	function setTier(lt: LicenseType, next: number, el?: HTMLSelectElement) {
-		if (next === currentTierIndex(lt)) return;
-		const license = LICENSES.find((l) => l.id === lt)!;
-		const tier = TIER_DEFS.find((t) => t.index === next);
-
-		if (!isActive(lt)) {
-			ontierstep(lt, next);
-			enterpriseNotice = tier?.multiplier === null ? lt : enterpriseNotice === lt ? null : enterpriseNotice;
+	function toggleTier(tierIndex: number) {
+		if (activeTier === tierIndex) {
+			onremove();
 			return;
 		}
+		selectTier(tierIndex);
+	}
 
-		if (tier?.multiplier === null) {
-			if (el) el.value = String(currentTierIndex(lt));
-			enterpriseNotice = lt;
+	function toggleProject() {
+		if (activeIsProject) {
+			onremove();
 			return;
 		}
-		if (enterpriseNotice === lt) enterpriseNotice = null;
-
-		if (packages.length > 0) {
-			for (const pkg of packages) {
-				const price = getPrice(pkg, license, next, currency);
-				const gross = getGrossPrice(pkg, license, next, currency);
-				onselect({
-					licenseType: lt,
-					tierId: String(next),
-					tierIndex: next,
-					basePrice: price ?? 0,
-					grossPrice: gross ?? 0,
-					packageId: pkg.id
-				});
-			}
-		} else {
-			onselect({
-				licenseType: lt,
-				tierId: String(next),
-				tierIndex: next,
-				basePrice: 0,
-				grossPrice: 0,
-				packageId: ''
-			});
-		}
+		selectProject();
 	}
 </script>
 
@@ -172,54 +117,63 @@
 	<p class="LicensePicker__hint">{hint}</p>
 
 	<div class="LicensePicker__rows">
-		{#each LICENSES as license (license.id)}
-			{@const active = isActive(license.id)}
-			{@const tierIndex = currentTierIndex(license.id)}
-			<div class="LicensePicker__card" class:is-active={active}>
-				<!-- Card body: click = toggle selection -->
-				<button
-					type="button"
-					class="LicensePicker__head"
-					onclick={() => toggleCard(license.id)}
-					aria-pressed={active}
-					aria-label={`${active ? 'Deselect' : 'Select'} ${license.label} license`}
-				>
-					<span class="LicensePicker__radio" aria-hidden="true">
-						{#if active}<span class="LicensePicker__dot"></span>{/if}
-					</span>
+		{#each TIER_DEFS as tier (tier.index)}
+			{@const active = activeTier === tier.index}
+			{@const scope = getTierScope(tier.index)}
+			<button
+				type="button"
+				class="LicensePicker__card"
+				class:is-active={active}
+				onclick={() => toggleTier(tier.index)}
+				aria-pressed={active}
+				aria-label={`${active ? 'Deselect' : 'Select'} ${tier.name} license`}
+			>
+				<span class="LicensePicker__radio" aria-hidden="true">
+					{#if active}<span class="LicensePicker__dot"></span>{/if}
+				</span>
 
-					<span class="LicensePicker__body">
-						<span class="LicensePicker__name">{license.label}</span>
-						<span class="LicensePicker__blurb">{license.blurb}</span>
-					</span>
-				</button>
+				<span class="LicensePicker__body">
+					<span class="LicensePicker__name">{tier.name}</span>
+					<span class="LicensePicker__blurb">{tier.label} — {SCOPE_BLURB[scope]}</span>
+				</span>
 
-				<!-- Tier dropdown: shows all tiers at once; independent of card toggle -->
-				<div class="LicensePicker__tier">
-					<select
-						class="LicensePicker__select"
-						aria-label={`${license.label} license scale`}
-						value={tierIndex}
-						onchange={(e) => setTier(license.id, Number(e.currentTarget.value), e.currentTarget)}
-					>
-						{#each TIER_DEFS as t (t.index)}
-							<option value={t.index}>{tierLabelFor(license.id, t.index)}</option>
-						{/each}
-					</select>
+				<span class="LicensePicker__price">
 					{#if packages.length > 0}
-						{@const price = cardPrice(license.id)}
-						<span class="LicensePicker__price">
-							{price === null ? 'Custom quote' : formatPrice(price, currency)}
-						</span>
+						{@const price = tierPrice(tier.index)}
+						{price === null ? 'Custom quote' : formatPrice(price)}
 					{/if}
-				</div>
-			</div>
-			{#if enterpriseNotice === license.id}
+				</span>
+			</button>
+			{#if enterpriseNotice && tier.multiplier === null}
 				<p class="LicensePicker__enterprise" role="status">
 					This scale requires a custom quote — <a href="/contact">contact us</a>.
 				</p>
 			{/if}
 		{/each}
+
+		<p class="LicensePicker__divider">or, buying for a client</p>
+
+		<button
+			type="button"
+			class="LicensePicker__card"
+			class:is-active={activeIsProject}
+			onclick={toggleProject}
+			aria-pressed={activeIsProject}
+			aria-label={`${activeIsProject ? 'Deselect' : 'Select'} ${PROJECT_LICENSE_LABEL}`}
+		>
+			<span class="LicensePicker__radio" aria-hidden="true">
+				{#if activeIsProject}<span class="LicensePicker__dot"></span>{/if}
+			</span>
+
+			<span class="LicensePicker__body">
+				<span class="LicensePicker__name">{PROJECT_LICENSE_LABEL}</span>
+				<span class="LicensePicker__blurb">{PROJECT_LICENSE_BLURB}</span>
+			</span>
+
+			<span class="LicensePicker__price">
+				{#if packages.length > 0}{formatPrice(PROJECT_LICENSE_EUR)}{/if}
+			</span>
+		</button>
 	</div>
 </div>
 
@@ -252,10 +206,27 @@
 		gap: 8px;
 	}
 
+	.LicensePicker__divider {
+		font-family: 'Steiner', sans-serif;
+		font-size: 11px;
+		font-variation-settings: 'wght' 350;
+		color: var(--color-text-mute);
+		text-align: center;
+		margin: 8px 0;
+	}
+
 	.LicensePicker__card {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
+		width: 100%;
+		gap: 14px;
+		padding: 16px 18px;
 		background: var(--color-bg-gray);
+		border: 0;
+		cursor: pointer;
+		text-align: left;
+		font: inherit;
+		color: var(--color-text);
 		transition:
 			background 0.15s ease,
 			color 0.15s ease;
@@ -267,37 +238,16 @@
 		color: var(--color-bg);
 	}
 
-	.LicensePicker__card.is-active .LicensePicker__name,
-	.LicensePicker__card.is-active .LicensePicker__blurb,
-	.LicensePicker__card.is-active .LicensePicker__radio {
-		color: var(--color-bg);
+	/* base.css sets color directly on nested spans, breaking the inherit
+	   chain — force every descendant to actually inherit the card's colour. */
+	.LicensePicker__card :global(*) {
+		color: inherit;
 	}
 
-	/* Selected radio: solid white fill */
-	.LicensePicker__card.is-active .LicensePicker__radio {
-		background: var(--color-bg);
-		border-color: var(--color-bg);
-	}
-
-	/* Card head: label + blurb area (clickable toggle) */
-	.LicensePicker__head {
-		display: flex;
-		align-items: flex-start;
-		gap: 14px;
-		flex: 1;
-		min-width: 0;
-		padding: 20px 18px 16px;
-		background: transparent;
-		border: 0;
-		cursor: pointer;
-		text-align: left;
-	}
-
-	/* Left-edge radio — fills when this license type is selected */
+	/* Left-edge radio — fills when this tier is selected */
 	.LicensePicker__radio {
 		width: 11px;
 		height: 11px;
-		margin-top: 4px;
 		border: 1px solid currentColor;
 		border-radius: 50%;
 		flex-shrink: 0;
@@ -318,12 +268,12 @@
 		min-width: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 6px;
+		gap: 4px;
 	}
 
 	.LicensePicker__name {
 		font-family: 'Steiner', sans-serif;
-		font-size: 18px;
+		font-size: 16px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 	}
@@ -332,30 +282,16 @@
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
 		line-height: 1.5;
-		color: var(--color-text-mute);
+		opacity: 0.7;
 	}
 
-	/* ── Tier dropdown — top-right, beside the licence name ── */
-	.LicensePicker__tier {
-		flex-shrink: 0;
-		padding: 18px 18px 16px 0;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 6px;
-	}
-
-	/* Live price preview for the selected tier (updates with tier + currency) */
 	.LicensePicker__price {
+		flex-shrink: 0;
 		font-family: 'Steiner', sans-serif;
-		font-size: 12px;
+		font-size: 13px;
 		font-variation-settings: 'wght' 450;
 		letter-spacing: 0;
 		white-space: nowrap;
-	}
-
-	.LicensePicker__card.is-active .LicensePicker__price {
-		color: var(--color-bg);
 	}
 
 	/* Inline enterprise-quote notice (replaces the old hard redirect to /contact) */
@@ -363,51 +299,12 @@
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
 		line-height: 1.5;
-		margin: 0;
-		padding: 8px 18px 0;
+		margin: -4px 0 0;
+		padding: 0 18px;
 	}
 
 	.LicensePicker__enterprise a {
 		text-decoration: underline;
 		text-underline-offset: 2px;
-	}
-
-	.LicensePicker__select {
-		width: auto;
-		min-width: 104px;
-		max-width: 150px;
-		padding: 7px 28px 7px 10px;
-		background: var(--color-bg);
-		border: 1px solid var(--color-line);
-		border-radius: 0;
-		cursor: pointer;
-		font-family: 'Steiner', sans-serif;
-		font-size: 12px;
-		color: var(--color-text);
-		letter-spacing: 0;
-		-webkit-appearance: none;
-		appearance: none;
-		/* chevron */
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23000' fill='none' stroke-width='1'/%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-position: right 12px center;
-		transition: border-color 120ms;
-	}
-
-	.LicensePicker__select:hover {
-		border-color: var(--color-text);
-	}
-
-	.LicensePicker__card.is-active .LicensePicker__select {
-		font-weight: var(--fw-ui);
-		background-color: transparent;
-		color: var(--color-bg);
-		border-color: rgba(255, 255, 255, 0.4);
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23fff' fill='none' stroke-width='1'/%3E%3C/svg%3E");
-	}
-
-	/* Keep the native dropdown list readable (dark text on system bg) */
-	.LicensePicker__card.is-active .LicensePicker__select option {
-		color: var(--color-text);
 	}
 </style>

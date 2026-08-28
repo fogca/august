@@ -1,84 +1,77 @@
 // Pricing data for August Type Foundry
-// Architecture: typeface → package → license type → tier
-// Prices are computed from EUR base prices via conversion functions.
-// All EUR base prices are the minimum-tier (tier 1) values.
+// Architecture: typeface → package → tier (one bundled licence per tier).
+// EUR only — the foundry's single sale currency. No JPY/USD conversion.
 
-export type LicenseType = 'desktop' | 'web' | 'app' | 'books';
-export type Currency = 'EUR' | 'JPY' | 'USD';
-
-// null = "Contact us" (Tier 12 — enterprise)
+// null = "Contact us" (Global tier — no self-serve price)
 export type Price = number | null;
 
-// ── Currency ──────────────────────────────────────────────────────────────────
+// ── Formatting ───────────────────────────────────────────────────────────────
 
-export const CURRENCY_SYMBOLS: Record<Currency, string> = {
-	EUR: '€',
-	JPY: '¥',
-	USD: '$'
-};
-
-export const CURRENCY_LOCALE: Record<Currency, string> = {
-	EUR: 'de-DE',
-	JPY: 'ja-JP',
-	USD: 'en-US'
-};
-
-// EUR is the base currency. Same numbers as quoted (€40/style, €480 Full, etc.).
-// JPY / USD are derived from EUR.
-
-// EUR → JPY: round to nearest ¥100
-function eurToJpy(eur: number): number {
-	return Math.round((eur * 160) / 100) * 100;
-}
-
-// EUR → USD: round to nearest integer
-function eurToUsd(eur: number): number {
-	return Math.round(eur * 1.08);
-}
-
-export function formatPrice(price: Price, currency: Currency): string {
+export function formatPrice(price: Price): string {
 	if (price === null) return 'Contact';
-	const sym = CURRENCY_SYMBOLS[currency];
-	if (currency === 'JPY') {
-		return `${sym}${price.toLocaleString('ja-JP')}`;
-	}
-	return `${sym}${price.toLocaleString('en-US')}`;
+	return `€${price.toLocaleString('de-DE')}`;
 }
 
-// ── Tier curve ────────────────────────────────────────────────────────────────
+// ── Tier curve ───────────────────────────────────────────────────────────────
 
 export interface TierDef {
-	index: number; // 1–12
-	// Desktop / Web labels
-	desktopLabel: string;
-	webLabel: string;
-	// App / Books labels
-	appLabel: string;
-	booksLabel: string;
+	index: number; // 1–7
+	name: string; // Individual / Team / Studio / Agency / Brand / Firm / Global
+	label: string; // company-size range shown to buyers
 	multiplier: number | null; // null = Contact
 }
 
-// 12-step multiplier curve (Tier 1 = ×1.0 base).
-// Convex on purpose: individuals and small studios stay close to base, while
-// large organisations carry the revenue. The old ×1.0-8.0 curve charged a
-// 1,000-seat company only 4.6x, roughly a fifth of the industry norm, which
-// forced the entry price to carry everything.
+// 7-step multiplier curve (Tier 1 = ×1.0 base). Convex on purpose: individuals
+// and small teams stay close to base, large organisations carry the revenue.
+// Replaces the old 12-tier × 4-licence-axis (Desktop/Web/App/Books, each with
+// its own users/pageviews/downloads/copies scale) model. One axis — company
+// size — one price per tier: no more choosing which licence type(s) to buy.
+//
+// Team-and-up multipliers are the old Desktop-only multiplier at the nearest
+// breakpoint times a graduated "bundle uplift" (bigger orgs were more likely
+// to have needed more than one of the old licence types already, so they
+// absorb more of the uplift; Individual carries none — see getTierScope).
+// Starting point, not a precise derivation — no real sales-mix data exists
+// yet to calibrate against; revisit once purchases accumulate.
 export const TIER_DEFS: TierDef[] = [
-	{ index: 1,  desktopLabel: '1–2 users',         webLabel: 'up to 10,000 PV / mo',  appLabel: 'up to 10,000 downloads',   booksLabel: 'up to 5,000 copies',    multiplier: 1.0  },
-	{ index: 2,  desktopLabel: 'up to 10 users',    webLabel: 'up to 25,000 PV / mo',  appLabel: 'up to 50,000 downloads',   booksLabel: 'up to 50,000 copies',   multiplier: 1.8  },
-	{ index: 3,  desktopLabel: 'up to 25 users',    webLabel: 'up to 50,000 PV / mo',  appLabel: 'up to 100,000 downloads',  booksLabel: 'up to 100,000 copies',  multiplier: 2.8  },
-	{ index: 4,  desktopLabel: 'up to 50 users',    webLabel: 'up to 100,000 PV / mo',    appLabel: 'up to 500,000 downloads',  booksLabel: 'up to 500,000 copies',  multiplier: 4.2  },
-	{ index: 5,  desktopLabel: 'up to 100 users',   webLabel: 'up to 250,000 PV / mo',  appLabel: 'up to 1,000,000 downloads',    booksLabel: 'up to 1,000,000 copies',    multiplier: 6.0  },
-	{ index: 6,  desktopLabel: 'up to 250 users',   webLabel: 'up to 500,000 PV / mo',    appLabel: 'up to 5,000,000 downloads',    booksLabel: 'up to 5,000,000 copies',    multiplier: 9.0  },
-	{ index: 7,  desktopLabel: 'up to 500 users',   webLabel: 'up to 1,000,000 PV / mo',   appLabel: 'up to 10,000,000 downloads',   booksLabel: 'up to 10,000,000 copies',   multiplier: 13.0  },
-	{ index: 8,  desktopLabel: 'up to 1,000 users', webLabel: 'up to 2,500,000 PV / mo',   appLabel: 'up to 25,000,000 downloads',   booksLabel: 'up to 25,000,000 copies',   multiplier: 20.0  },
-	{ index: 9,  desktopLabel: 'up to 2,500 users', webLabel: 'up to 5,000,000 PV / mo',   appLabel: 'up to 50,000,000 downloads',   booksLabel: 'up to 50,000,000 copies',   multiplier: 30.0  },
-	{ index: 10, desktopLabel: 'up to 5,000 users', webLabel: 'up to 10,000,000 PV / mo',  appLabel: 'up to 100,000,000 downloads',  booksLabel: 'up to 100,000,000 copies',  multiplier: 45.0  },
-	{ index: 11, desktopLabel: 'up to 10,000 users',webLabel: 'up to 25,000,000 PV / mo',  appLabel: 'up to 250,000,000 downloads',  booksLabel: 'up to 250,000,000 copies',  multiplier: 65.0  },
-	{ index: 12, desktopLabel: '10,000+ users',     webLabel: '25,000,000+ PV / mo',       appLabel: '250,000,000+ downloads',       booksLabel: '250,000,000+ copies',       multiplier: null }
+	{ index: 1, name: 'Individual', label: '1 person', multiplier: 1.0 },
+	{ index: 2, name: 'Team', label: 'up to 10', multiplier: 2.0 },
+	{ index: 3, name: 'Studio', label: 'up to 30', multiplier: 3.6 },
+	{ index: 4, name: 'Agency', label: 'up to 50', multiplier: 5.5 },
+	{ index: 5, name: 'Brand', label: 'up to 100', multiplier: 8.4 },
+	{ index: 6, name: 'Firm', label: 'up to 500', multiplier: 20.7 },
+	{ index: 7, name: 'Global', label: '500+', multiplier: null }
 ];
 
-// ── Package definitions ───────────────────────────────────────────────────────
+// Individual is the one tier scoped to desktop-only use (print, PDF, locally
+// installed applications) — same narrow scope as before. Team and above
+// bundle full commercial use — web embedding, app/game embedding, and
+// broadcast/streaming — into that same single price; there is no separate
+// Web / App / Books purchase any more.
+export type TierScope = 'desktop' | 'full';
+
+export function getTierScope(tierIndex: number): TierScope {
+	return tierIndex === 1 ? 'desktop' : 'full';
+}
+
+export const SCOPE_BLURB: Record<TierScope, string> = {
+	desktop: 'Desktop use only — print, PDF, and locally installed applications.',
+	full: 'Full commercial use — desktop, web, app/game, and broadcast/streaming.'
+};
+
+export function getTierDef(tierIndex: number): TierDef | undefined {
+	return TIER_DEFS.find((t) => t.index === tierIndex);
+}
+
+export function getTierLabel(tierIndex: number): string {
+	return getTierDef(tierIndex)?.label ?? '';
+}
+
+export function getTierName(tierIndex: number): string {
+	return getTierDef(tierIndex)?.name ?? '';
+}
+
+// ── Package definitions ──────────────────────────────────────────────────────
 
 export type TypefaceSlug = 'steiner' | 'gq' | 'atom';
 
@@ -99,7 +92,7 @@ export interface PackageDef {
 	selectable?: boolean;
 	// Per-style EUR for selectable packages.
 	perStyleEur?: number;
-	// Base EUR price at Tier 1 (Desktop/Web/Books, ×1 multiplier). Same numbers as quoted.
+	// Base EUR price at Tier 1 (Individual, ×1 multiplier). Same numbers as quoted.
 	baseEur: number;
 	// Gross EUR before package discount (for anchoring display)
 	grossEur: number;
@@ -130,7 +123,7 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 				detail: '20 weights — Hairline to Ultra',
 				styles: STEINER_WEIGHTS,
 				italic: false,
-				// Tier-1 (1-2 users) price: EUR21 per weight across the 20.
+				// Individual-tier price: EUR21 per weight across the 20.
 				// Deliberately above the Future Fonts band — that platform is the
 				// work-in-progress channel and prices below the finished release
 				// by design. Moves up when the italic ships.
@@ -153,116 +146,44 @@ export function getPackage(slug: TypefaceSlug, packageId: string): PackageDef | 
 	return getTypefacePricing(slug)?.packages.find((p) => p.id === packageId);
 }
 
-// ── License type definitions ──────────────────────────────────────────────────
+// ── Price calculation ────────────────────────────────────────────────────────
 
-export interface LicenseDef {
-	id: LicenseType;
-	label: string;
-	axisLabel: string;
-	blurb: string;
-	// App license applies ×2 multiplier on top of the base
-	baseMultiplier: number;
-}
-
-export const LICENSES: LicenseDef[] = [
-	{
-		id: 'desktop',
-		label: 'Desktop',
-		axisLabel: 'users',
-		blurb: 'For use in print, PDF, and locally installed applications.',
-		baseMultiplier: 1
-	},
-	{
-		id: 'web',
-		label: 'Web',
-		axisLabel: 'monthly pageviews',
-		blurb: 'Perpetual license for web use. Covers the stated monthly pageview volume.',
-		baseMultiplier: 1
-	},
-	{
-		id: 'app',
-		label: 'App',
-		axisLabel: 'downloads',
-		blurb: 'For mobile and desktop applications (iOS, Android, etc.).',
-		baseMultiplier: 2
-	},
-	{
-		id: 'books',
-		label: 'Books',
-		axisLabel: 'copies',
-		blurb: 'For books, magazines, and printed editorial publications.',
-		baseMultiplier: 1
-	}
-];
-
-// ── Price calculation ─────────────────────────────────────────────────────────
-
-// Compute EUR price for a given package × license × tier combination.
+// Compute EUR price for a given package × tier combination.
 // Returns null for the enterprise (Contact) tier.
-export function computeEur(pkg: PackageDef, license: LicenseDef, tierIndex: number): Price {
-	const tier = TIER_DEFS.find((t) => t.index === tierIndex);
+export function computeEur(pkg: PackageDef, tierIndex: number): Price {
+	const tier = getTierDef(tierIndex);
 	if (!tier || tier.multiplier === null) return null;
-	return Math.round(pkg.baseEur * license.baseMultiplier * tier.multiplier);
+	return Math.round(pkg.baseEur * tier.multiplier);
 }
 
 // Compute gross EUR (before package discount) for anchoring display
-export function computeGrossEur(pkg: PackageDef, license: LicenseDef, tierIndex: number): Price {
-	const tier = TIER_DEFS.find((t) => t.index === tierIndex);
+export function computeGrossEur(pkg: PackageDef, tierIndex: number): Price {
+	const tier = getTierDef(tierIndex);
 	if (!tier || tier.multiplier === null) return null;
-	return Math.round(pkg.grossEur * license.baseMultiplier * tier.multiplier);
+	return Math.round(pkg.grossEur * tier.multiplier);
 }
 
-// Convert a base-EUR price to the requested currency
-export function convertPrice(eur: Price, currency: Currency): Price {
-	if (eur === null) return null;
-	if (currency === 'EUR') return eur;
-	if (currency === 'JPY') return eurToJpy(eur);
-	return eurToUsd(eur);
+export function getPrice(pkg: PackageDef, tierIndex: number): Price {
+	return computeEur(pkg, tierIndex);
 }
 
-// Full price lookup: package × license × tier → Price in requested currency
-export function getPrice(
-	pkg: PackageDef,
-	license: LicenseDef,
-	tierIndex: number,
-	currency: Currency
-): Price {
-	const eur = computeEur(pkg, license, tierIndex);
-	return convertPrice(eur, currency);
+export function getGrossPrice(pkg: PackageDef, tierIndex: number): Price {
+	return computeGrossEur(pkg, tierIndex);
 }
 
-// Gross price in requested currency (for anchoring)
-export function getGrossPrice(
-	pkg: PackageDef,
-	license: LicenseDef,
-	tierIndex: number,
-	currency: Currency
-): Price {
-	const eur = computeGrossEur(pkg, license, tierIndex);
-	return convertPrice(eur, currency);
-}
+// ── Project / Client License ─────────────────────────────────────────────────
+// Flat-priced, single-brand-scoped licence for a design studio or agency
+// buying on behalf of one client. Full scope (desktop/web/app/broadcast) like
+// Team-and-above, but restricted to one named brand identity — not
+// transferable to the buyer's other projects or clients. Priced independent
+// of both the agency's own tier and the client's company size: a narrower
+// product, not a discount off either. Sits between Individual and Team.
+export const PROJECT_LICENSE_EUR = 650;
+export const PROJECT_LICENSE_LABEL = 'Project License';
+export const PROJECT_LICENSE_BLURB =
+	'For a studio or agency buying on behalf of one client. Full commercial use, scoped to a single brand identity — not a company-wide licence.';
 
-// Tier label for a given license type
-export function getTierLabel(license: LicenseDef, tierIndex: number): string {
-	const tier = TIER_DEFS.find((t) => t.index === tierIndex);
-	if (!tier) return '';
-	switch (license.id) {
-		case 'desktop': return tier.desktopLabel;
-		case 'web':     return tier.webLabel;
-		case 'app':     return tier.appLabel;
-		case 'books':   return tier.booksLabel;
-	}
-}
-
-// ── Legacy helpers (kept for getLicense compatibility) ────────────────────────
-
-export function getLicense(id: LicenseType): LicenseDef {
-	const found = LICENSES.find((l) => l.id === id);
-	if (!found) throw new Error(`Unknown license: ${id}`);
-	return found;
-}
-
-// ── Flat package list for the Select Fonts section ────────────────────────────
+// ── Flat package list for the Select Fonts section ───────────────────────────
 
 // IDs excluded from the "Select Fonts" flat listing
 const EXCLUDED_FROM_FLAT: string[] = [];

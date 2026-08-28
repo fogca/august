@@ -1,14 +1,19 @@
 <script lang="ts">
-	// Cart summary — License > Fonts hierarchy.
-	// Supports multiple selected packages.
-	// Tier changes use arrow stepper instead of dropdown.
+	// Cart summary — single License selection + selected typeface package(s).
+	// Tier changes use an inline dropdown; Project License has no tier to change.
 	import { enhance } from '$app/forms';
-	import { formatPrice, getLicense, getTierLabel, TIER_DEFS, getPrice, getGrossPrice } from '$lib/data/pricing';
-	import type { Currency, LicenseType, PackageDef } from '$lib/data/pricing';
+	import {
+		formatPrice,
+		getTierName,
+		TIER_DEFS,
+		getPrice,
+		getGrossPrice,
+		PROJECT_LICENSE_LABEL
+	} from '$lib/data/pricing';
+	import type { PackageDef } from '$lib/data/pricing';
 	import type { CartItem, AppliedDiscount } from '$lib/data/discounts';
 
 	interface Props {
-		currency: Currency;
 		items: CartItem[];
 		subtotal: number;
 		discounts: AppliedDiscount[];
@@ -17,7 +22,7 @@
 		packageDefs: PackageDef[];
 		mobileExpanded?: boolean;
 		onMobileToggle?: () => void;
-		onremove: (licenseType: LicenseType) => void;
+		onremove: () => void;
 		/** Called when a tier is changed inline from the cart. */
 		onTierChange: (item: CartItem) => void;
 		/** Remove a font package from the order. */
@@ -31,7 +36,6 @@
 	}
 
 	let {
-		currency,
 		items,
 		subtotal,
 		discounts,
@@ -52,68 +56,50 @@
 	// True while the checkout POST is in flight (until Stripe redirect unloads the page)
 	let submitting = $state(false);
 
-	// License type whose enterprise tier was requested — shows the inline quote notice
-	let enterpriseNotice = $state<LicenseType | null>(null);
+	// Shows the inline custom-quote notice when the Global tier is picked
+	let enterpriseNotice = $state(false);
 
-	// Deduplicated list of active license types (in cart)
-	const activeLicenses = $derived<LicenseType[]>(
-		[...new Set(items.map((i) => i.licenseType))]
-	);
+	// Only one selection is ever active — every package shares the same
+	// kind/tier, so the first item represents the selection.
+	const activeItem = $derived<CartItem | null>(items[0] ?? null);
 
-	/** Sum of charged (post-package) prices for a license across selected packages. */
-	function licensePrice(lt: LicenseType): number {
-		return items.filter((i) => i.licenseType === lt).reduce((s, i) => s + i.basePrice, 0);
+	function licenseName(item: CartItem): string {
+		return item.kind === 'project' ? PROJECT_LICENSE_LABEL : getTierName(item.tierIndex ?? 1);
+	}
+
+	/** Sum of charged (post-package) prices across selected packages. */
+	function licensePrice(): number {
+		return items.reduce((s, i) => s + i.basePrice, 0);
 	}
 
 	/**
-	 * Get current tier index for a given license+package combo.
-	 * All packages share the same tier per license, so we can use any matching item.
+	 * Change tier for the active selection across all packages (from the cart
+	 * dropdown). The Global tier (multiplier null) has no self-serve price:
+	 * keep the cart untouched, revert the select, and show an inline
+	 * custom-quote notice instead of hard-navigating away. No-op for a
+	 * Project License selection — it has no tier to change.
 	 */
-	function currentTierIndex(lt: LicenseType): number {
-		return items.find((i) => i.licenseType === lt)?.tierIndex ?? 1;
-	}
-
-	function tierOptionLabel(lt: LicenseType, tierIndex: number): string {
-		return getTierLabel(getLicense(lt), tierIndex);
-	}
-
-	/**
-	 * Set the tier for a license across all packages (from the cart dropdown).
-	 * The enterprise tier (multiplier null) has no self-serve price: keep the cart
-	 * untouched, revert the select, and show an inline custom-quote notice instead
-	 * of hard-navigating away (which used to silently destroy the cart).
-	 */
-	function setTier(lt: LicenseType, next: number, el?: HTMLSelectElement) {
-		const current = currentTierIndex(lt);
+	function setTier(next: number, el?: HTMLSelectElement) {
+		if (!activeItem || activeItem.kind !== 'tier') return;
+		const current = activeItem.tierIndex ?? 1;
 		if (next === current) return;
 
 		const tier = TIER_DEFS.find((t) => t.index === next);
 		if (tier?.multiplier === null) {
 			if (el) el.value = String(current);
-			enterpriseNotice = lt;
+			enterpriseNotice = true;
 			return;
 		}
-		if (enterpriseNotice === lt) enterpriseNotice = null;
+		enterpriseNotice = false;
 
-		const license = getLicense(lt);
 		for (const pkg of packageDefs) {
-			const price = getPrice(pkg, license, next, currency);
-			const gross = getGrossPrice(pkg, license, next, currency);
+			const price = getPrice(pkg, next);
+			const gross = getGrossPrice(pkg, next);
 			if (price === null || gross === null) continue;
-			const existingItem = items.find((i) => i.licenseType === lt && i.packageId === pkg.id);
+			const existingItem = items.find((i) => i.packageId === pkg.id);
 			if (!existingItem) continue;
-			onTierChange({
-				...existingItem,
-				tierId: String(next),
-				tierIndex: next,
-				basePrice: price,
-				grossPrice: gross
-			});
+			onTierChange({ ...existingItem, tierIndex: next, basePrice: price, grossPrice: gross });
 		}
-	}
-
-	function licenseLabel(lt: LicenseType): string {
-		return getLicense(lt).label;
 	}
 </script>
 
@@ -137,14 +123,10 @@
 		aria-controls="cart-details"
 	>
 		<span class="CartSummary__mobile-label">
-			{#if hasItems}
-				{activeLicenses.length} licence{activeLicenses.length > 1 ? 's' : ''} selected
-			{:else}
-				No licence selected
-			{/if}
+			{hasItems ? 'License selected' : 'No license selected'}
 		</span>
 		<span class="CartSummary__mobile-total" aria-live="polite" role="status">
-			{hasItems ? formatPrice(total, currency) : '—'}
+			{hasItems ? formatPrice(total) : '—'}
 		</span>
 		<span class="CartSummary__mobile-chevron" aria-hidden="true">
 			{mobileExpanded ? '▾' : '▴'}
@@ -158,45 +140,46 @@
 			<p class="CartSummary__empty">Choose a licence type and font package to begin.</p>
 		{:else}
 			<!-- License section -->
-			<section class="CartSummary__section">
-				<h3 class="CartSummary__heading">License</h3>
-				<ul class="CartSummary__licences">
-					{#each activeLicenses as lt (lt)}
-						{@const tierIndex = currentTierIndex(lt)}
+			{#if activeItem}
+				<section class="CartSummary__section">
+					<h3 class="CartSummary__heading">License</h3>
+					<ul class="CartSummary__licences">
 						<li class="CartSummary__licence">
 							<div class="CartSummary__licence-main">
-								<span class="CartSummary__licence-type">{licenseLabel(lt)}</span>
-								<!-- Tier select -->
-								<select
-									class="CartSummary__select"
-									aria-label={`${licenseLabel(lt)} scale`}
-									value={tierIndex}
-									onchange={(e) => setTier(lt, Number(e.currentTarget.value), e.currentTarget)}
-								>
-									{#each TIER_DEFS as t (t.index)}
-										<option value={t.index}>{tierOptionLabel(lt, t.index)}</option>
-									{/each}
-								</select>
-								<span class="CartSummary__licence-price">{formatPrice(licensePrice(lt), currency)}</span>
+								<span class="CartSummary__licence-type">{licenseName(activeItem)}</span>
+								{#if activeItem.kind === 'tier'}
+									<!-- Tier select -->
+									<select
+										class="CartSummary__select"
+										aria-label="License scale"
+										value={activeItem.tierIndex}
+										onchange={(e) => setTier(Number(e.currentTarget.value), e.currentTarget)}
+									>
+										{#each TIER_DEFS as t (t.index)}
+											<option value={t.index}>{t.name} — {t.label}</option>
+										{/each}
+									</select>
+								{/if}
+								<span class="CartSummary__licence-price">{formatPrice(licensePrice())}</span>
 								<button
 									type="button"
 									class="CartSummary__remove"
 									onclick={() => {
-										if (enterpriseNotice === lt) enterpriseNotice = null;
-										onremove(lt);
+										enterpriseNotice = false;
+										onremove();
 									}}
-									aria-label={`Remove ${licenseLabel(lt)} license`}
+									aria-label={`Remove ${licenseName(activeItem)} license`}
 								>×</button>
 							</div>
-							{#if enterpriseNotice === lt && activeLicenses.includes(lt)}
+							{#if enterpriseNotice}
 								<p class="CartSummary__enterprise" role="status">
 									This scale requires a custom quote — <a href="/contact">contact us</a>.
 								</p>
 							{/if}
 						</li>
-					{/each}
-				</ul>
-			</section>
+					</ul>
+				</section>
+			{/if}
 
 			<!-- Fonts section — list all selected packages -->
 			{#if packageDefs.length > 0}
@@ -220,26 +203,23 @@
 			{/if}
 
 			<!-- Totals — "Full price" is the gross (pre-discount) anchor; the per-line
-			     license prices above are launch (post-package) prices -->
+			     license price above is the launch (post-package) price -->
 			<section class="CartSummary__totals">
 				<div class="CartSummary__row">
 					<span>Full price</span>
-					<span class="CartSummary__row-currency">{currency}</span>
-					<span class="CartSummary__row-amount">{formatPrice(subtotal, currency)}</span>
+					<span class="CartSummary__row-amount">{formatPrice(subtotal)}</span>
 				</div>
 
 				{#each discounts as discount (discount.id + discount.label)}
 					<div class="CartSummary__row CartSummary__row--discount">
 						<span>{discount.label}</span>
-						<span class="CartSummary__row-currency">{currency}</span>
-						<span class="CartSummary__row-amount">−{formatPrice(discount.amount, currency)}</span>
+						<span class="CartSummary__row-amount">−{formatPrice(discount.amount)}</span>
 					</div>
 				{/each}
 
 				<div class="CartSummary__row CartSummary__row--total">
 					<span>Total</span>
-					<span class="CartSummary__row-currency">{currency}</span>
-					<span class="CartSummary__row-amount">{formatPrice(total, currency)}</span>
+					<span class="CartSummary__row-amount">{formatPrice(total)}</span>
 				</div>
 			</section>
 
@@ -261,14 +241,13 @@
 					};
 				}}
 			>
-				<input type="hidden" name="currency" value={currency} />
 				<input type="hidden" name="educational" value={isStudent ? '1' : '0'} />
 				{#each packageDefs as pkg}
 					<input type="hidden" name="package_id" value={pkg.id} />
 				{/each}
 				{#each items as item}
-					<input type="hidden" name="item_license" value={item.licenseType} />
-					<input type="hidden" name="item_tier" value={item.tierId} />
+					<input type="hidden" name="item_kind" value={item.kind} />
+					<input type="hidden" name="item_tier" value={item.tierIndex ?? ''} />
 					<input type="hidden" name="item_price" value={item.basePrice} />
 					<input type="hidden" name="item_package" value={item.packageId} />
 				{/each}
@@ -528,15 +507,10 @@
 
 	.CartSummary__row {
 		display: grid;
-		grid-template-columns: 1fr auto auto;
+		grid-template-columns: 1fr auto;
 		gap: 12px;
 		align-items: baseline;
 		font-size: 13px;
-	}
-
-	.CartSummary__row-currency {
-		font-size: 11px;
-		opacity: 0.55;
 	}
 
 	.CartSummary__row-amount {

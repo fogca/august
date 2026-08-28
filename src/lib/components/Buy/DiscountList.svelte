@@ -1,15 +1,13 @@
 <script lang="ts">
 	// Renders the list of applied discounts with label and amount.
 	import { formatPrice } from '$lib/data/pricing';
-	import type { Currency } from '$lib/data/pricing';
 	import type { AppliedDiscount } from '$lib/data/discounts';
 
 	interface Props {
 		discounts: AppliedDiscount[];
-		currency: Currency;
 	}
 
-	let { discounts, currency }: Props = $props();
+	let { discounts }: Props = $props();
 </script>
 
 {#if discounts.length > 0}
@@ -17,7 +15,7 @@
 		{#each discounts as d (d.id)}
 			<li class="DiscountList__item">
 				<span class="DiscountList__label">{d.label}</span>
-				<span class="DiscountList__amount">−{formatPrice(d.amount, currency)}</span>
+				<span class="DiscountList__amount">−{formatPrice(d.amount)}</span>
 			</li>
 		{/each}
 	</ul>

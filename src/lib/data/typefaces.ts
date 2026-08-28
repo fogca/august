@@ -62,6 +62,12 @@ export interface Typeface {
 	}[];
 	/** Hero slide colour theme — gives each typeface a distinct light/dark tone. */
 	theme: { bg: string; fg: string };
+	/** Catalogue card background on /fonts. Always paired with black text (per
+	 *  card design, not this token) — so keep these light. Deliberately its own
+	 *  field rather than reusing `theme`: the hero tone is tuned for a
+	 *  full-bleed dark section and several of them (#000, #15181C) would not
+	 *  hold black text. */
+	catalogBg: string;
 	/** Hero metadata (per Figma SP design 280:104 / 274:18) */
 	hero: {
 		label: string; // e.g. 'Neo Humanist Sans'
@@ -172,6 +178,7 @@ export const TYPEFACES: Typeface[] = [
 		specimen: ['København → Basel', 'SK 674 / 08:45 / 12A', 'Boarding 08:10'],
 		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
+		catalogBg: '#DCE7EF',
 		hero: {
 			label: 'Neo Humanist Sans',
 			vol: 'vol.01',
@@ -226,6 +233,7 @@ export const TYPEFACES: Typeface[] = [
 		specimen: ['Wien → Praha', 'OS 712 / 14:20 / 8C', 'Boarding 13:45'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
+		catalogBg: '#EDEAE3',
 		hero: {
 			label: 'Neo Humanist Sans',
 			vol: 'vol.02',
@@ -282,6 +290,7 @@ export const TYPEFACES: Typeface[] = [
 		thumbnail: '/images/fonts/atom.png',
 		specimen: ['Lisboa → Zürich', 'LX 2085 / 19:05 / 22F', 'Boarding 18:30'],
 		theme: { bg: '#15181C', fg: '#ffffff' },
+		catalogBg: '#E7EDD9',
 		hero: {
 			label: 'Neo Grotesque',
 			vol: 'vol.03',
@@ -315,6 +324,7 @@ export const TYPEFACES: Typeface[] = [
 		weights: WEIGHTS,
 		defaultTexts: ['Asta'],
 		theme: { bg: '#d59514', fg: '#000000' },
+		catalogBg: '#F3E2C0',
 		hero: {
 			label: 'In development',
 			vol: 'vol.04',

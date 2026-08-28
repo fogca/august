@@ -1,8 +1,19 @@
 <script lang="ts">
 	import { TYPEFACES } from '$lib/data/typefaces.js';
+	import { getPackage } from '$lib/data/pricing.js';
+	import type { TypefaceSlug } from '$lib/data/pricing.js';
 
 	// Sort by order (ascending) to guarantee display sequence
 	const typefaces = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
+
+	// "From €X" for the ones that have a package priced — Tier-1 Desktop.
+	// tf.slug is a plain string (typefaces.ts predates the narrower pricing
+	// union); getPackage simply returns undefined for slugs it doesn't know,
+	// so the cast is safe.
+	function fromPrice(slug: string): string | null {
+		const pkg = getPackage(slug as TypefaceSlug, `${slug}-complete`);
+		return pkg ? `From €${pkg.baseEur}` : null;
+	}
 </script>
 
 <svelte:head>
@@ -14,48 +25,51 @@
 </svelte:head>
 
 <main class="Fonts">
-	<div class="Fonts__inner">
-		<header class="Fonts__head">
-			<h1 class="Fonts__heading">Fonts</h1>
-			<p class="Fonts__sub">All typefaces from August Type Foundry.</p>
-		</header>
+	<header class="Fonts__head">
+		<h1 class="Fonts__heading">Fonts</h1>
+	</header>
 
-		<ul class="Fonts__list" aria-label="Typeface catalogue">
-			{#each typefaces as tf (tf.slug)}
-				<li class="FontCard">
-					<a href="/fonts/{tf.slug}" class="FontCard__link" aria-label="View {tf.name}">
-						<!-- Specimen: a plausible piece of work set in the face itself,
-						     rather than the typeface's own name. -->
-						<div class="FontCard__specimen" style="font-family: '{tf.fontFamily}', sans-serif;">
-							{#if tf.specimen && tf.specimen.length}
-								<span class="FontCard__spec-lead">{tf.specimen[0]}</span>
-								{#each tf.specimen.slice(1) as line (line)}
-									<span class="FontCard__spec-line">{line}</span>
-								{/each}
-							{:else}
-								<span class="FontCard__spec-lead">{tf.name}</span>
-							{/if}
-						</div>
+	<!-- Grid referenced from increments.cc/fonts: two equal columns on desktop,
+	     one on mobile, hairlines standing in for gaps (no real gutter — the
+	     border is the gap). Each card carries its own catalogBg (§typefaces.ts)
+	     so the grid reads as swatches, not a plain list. -->
+	<div class="Fonts__grid" aria-label="Typeface catalogue">
+		{#each typefaces as tf (tf.slug)}
+			<a href="/fonts/{tf.slug}" class="FontCard" aria-label="View {tf.name}">
+				<div class="FontCard__meta">
+					<span class="FontCard__name">{tf.name}</span>
+					<span class="FontCard__sep">•</span>
+					<span class="FontCard__classification">{tf.classification}</span>
+				</div>
 
-						<div class="FontCard__meta">
-							<span class="FontCard__classification">{tf.classification}</span>
+				<!-- Specimen: a plausible piece of work set in the face itself,
+				     rather than the typeface's own name — the tagline decided
+				     for the catalogue. Text is always black, whatever catalogBg
+				     is, per the card design. -->
+				<div
+					class="FontCard__specimen"
+					style="background: {tf.catalogBg}; font-family: '{tf.fontFamily}', sans-serif;"
+				>
+					{#if tf.specimen && tf.specimen.length}
+						<span class="FontCard__spec-lead">{tf.specimen[0]}</span>
+						{#each tf.specimen.slice(1) as line (line)}
+							<span class="FontCard__spec-line">{line}</span>
+						{/each}
+					{:else}
+						<span class="FontCard__spec-lead">{tf.name}</span>
+					{/if}
+				</div>
 
-							{#if tf.status === 'in-development'}
-								<span class="FontCard__badge" aria-label="Status: coming soon">
-									Coming Soon
-								</span>
-							{/if}
-						</div>
-
-						{#if tf.status === 'available'}
-							<div class="FontCard__cta">
-								<span class="FontCard__buy">Buy →</span>
-							</div>
-						{/if}
-					</a>
-				</li>
-			{/each}
-		</ul>
+				<div class="FontCard__foot">
+					{#if tf.status === 'available'}
+						<span class="FontCard__price">{fromPrice(tf.slug)}</span>
+					{:else}
+						<span class="FontCard__price">Coming soon</span>
+					{/if}
+					<span class="FontCard__view">View</span>
+				</div>
+			</a>
+		{/each}
 	</div>
 </main>
 
@@ -65,7 +79,6 @@
 		min-height: 100dvh;
 		padding-top: 96px;
 		padding-bottom: 96px;
-		padding-inline: var(--padding);
 	}
 
 	@media (min-width: 768px) {
@@ -74,13 +87,9 @@
 		}
 	}
 
-	.Fonts__inner {
-		max-width: 960px;
-		margin: 0 auto;
-	}
-
 	.Fonts__head {
-		margin-bottom: 64px;
+		padding-inline: var(--padding);
+		margin-bottom: 48px;
 	}
 
 	.Fonts__heading {
@@ -88,93 +97,62 @@
 		font-size: clamp(36px, 6vw, 64px);
 		letter-spacing: 0;
 		line-height: 1.05;
-		margin: 0 0 12px;
-	}
-
-	.Fonts__sub {
-		font-family: 'Steiner', sans-serif;
-		font-size: 13px;
-		font-variation-settings: 'wght' 350;
-		color: var(--color-text-mute);
-		line-height: 1.5;
 		margin: 0;
 	}
 
-	/* Catalogue list — full-width stacked cards */
-	.Fonts__list {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Card */
-	.FontCard {
+	/* 1 column on phones, 2 equal columns from tablet up — no grid-gap: the
+	   border on each card stands in for it, same as the reference. */
+	.Fonts__grid {
+		display: grid;
+		grid-template-columns: 1fr;
 		border-top: 1px solid var(--color-line);
 	}
 
-	.FontCard:last-child {
-		border-bottom: 1px solid var(--color-line);
-	}
-
-	.FontCard__link {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 16px;
-		padding-block: 32px;
-		text-decoration: none;
-		color: inherit;
-		transition: opacity 0.15s ease;
-	}
-
-	.FontCard__link:hover {
-		opacity: 0.7;
-	}
-
 	@media (min-width: 768px) {
-		.FontCard__link {
-			grid-template-columns: 1fr auto;
-			grid-template-rows: auto auto;
-			align-items: center;
-			padding-block: 40px;
+		.Fonts__grid {
+			grid-template-columns: 1fr 1fr;
 		}
 	}
 
-	/* Large specimen text */
-	.FontCard__specimen {
+	.FontCard {
 		display: flex;
 		flex-direction: column;
-		line-height: 0.95;
-		letter-spacing: 0;
-		grid-column: 1;
-		/* Tabular figures and a slashed zero: a boarding pass is exactly the
-		   setting those features exist for, so the specimen demonstrates them
-		   rather than describing them. */
-		font-variant-numeric: tabular-nums slashed-zero;
+		text-decoration: none;
+		color: var(--color-text);
+		border-bottom: 1px solid var(--color-line);
+		padding-inline: var(--padding);
+		transition: opacity 0.15s ease;
 	}
 
-	.FontCard__spec-lead {
-		font-size: clamp(40px, 7.5vw, 92px);
+	.FontCard:hover {
+		opacity: 0.75;
 	}
 
-	/* The detail lines sit at roughly a third of the lead — enough to read as
-	   ticket data rather than as a second headline. */
-	.FontCard__spec-line {
-		font-size: clamp(15px, 2.4vw, 30px);
-		line-height: 1.3;
+	/* Vertical hairline between the two desktop columns: right border on the
+	   left card of every row (odd items in a 2-col grid). */
+	@media (min-width: 768px) {
+		.FontCard:nth-child(odd) {
+			border-right: 1px solid var(--color-line);
+		}
 	}
 
-	.FontCard__spec-line:first-of-type {
-		margin-top: 14px;
-	}
-
-	/* Meta row: classification + badge */
 	.FontCard__meta {
 		display: flex;
-		align-items: center;
-		gap: 12px;
-		grid-column: 1;
+		align-items: baseline;
+		gap: 8px;
+		padding-block: 20px;
+	}
+
+	.FontCard__name {
+		font-family: 'Steiner', sans-serif;
+		font-size: 15px;
+		font-weight: var(--fw-ui);
+		letter-spacing: 0;
+	}
+
+	.FontCard__sep {
+		color: var(--color-text-mute);
+		opacity: 0.6;
 	}
 
 	.FontCard__classification {
@@ -185,35 +163,60 @@
 		letter-spacing: 0;
 	}
 
-	.FontCard__badge {
-		font-family: 'Steiner', sans-serif;
-		font-size: 10px;
-		font-weight: var(--fw-ui);
+	/* Specimen block — the card's swatch of colour. Fixed aspect so every card
+	   in the grid holds the same proportions regardless of how many lines its
+	   specimen runs. Text is always black: catalogBg is chosen light enough
+	   for that pairing (see typefaces.ts). */
+	.FontCard__specimen {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		aspect-ratio: 16 / 10;
+		color: #000;
+		text-align: center;
+		line-height: 0.95;
 		letter-spacing: 0;
+		padding: 24px;
+		font-variant-numeric: tabular-nums slashed-zero;
+	}
+
+	.FontCard__spec-lead {
+		font-size: clamp(28px, 4.8vw, 56px);
+	}
+
+	.FontCard__spec-line {
+		font-size: clamp(12px, 1.5vw, 18px);
+		line-height: 1.3;
+	}
+
+	.FontCard__spec-line:first-of-type {
+		margin-top: 12px;
+	}
+
+	.FontCard__foot {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding-block: 20px;
+		margin-top: auto;
+	}
+
+	.FontCard__price {
+		font-family: 'Steiner', sans-serif;
+		font-size: 13px;
 		color: var(--color-text-mute);
-		border: 1px solid var(--color-line);
-		padding: 2px 8px;
-		opacity: 0.7;
-	}
-
-	/* Buy CTA — desktop: right column, mobile: below meta */
-	.FontCard__cta {
-		grid-column: 1;
-	}
-
-	@media (min-width: 768px) {
-		.FontCard__cta {
-			grid-column: 2;
-			grid-row: 1 / 3;
-			align-self: center;
-		}
-	}
-
-	.FontCard__buy {
-		font-family: 'Steiner', sans-serif;
-		font-size: 14px;
-		font-weight: var(--fw-ui);
 		letter-spacing: 0;
+	}
+
+	.FontCard__view {
+		font-family: 'Steiner', sans-serif;
+		font-size: 13px;
+		letter-spacing: 0;
+		border: 1px solid var(--color-line);
+		border-radius: 999px;
+		padding: 8px 18px;
 		white-space: nowrap;
 	}
 </style>

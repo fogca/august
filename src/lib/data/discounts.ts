@@ -11,8 +11,7 @@
 // | Early Bird      | −30% | Package (on top)    |
 // | Educational     | −30% | Package (on top)    |
 
-import type { Currency } from './pricing';
-import type { PackageDef, LicenseDef } from './pricing';
+import type { PackageDef } from './pricing';
 
 export type DiscountId = 'early-bird' | 'educational';
 
@@ -22,17 +21,19 @@ export const EARLY_BIRD_ACTIVE = false;
 export const EARLY_BIRD_RATE = 0.3;
 export const EDUCATIONAL_RATE = 0.3;
 
+// 'tier' = standard company-size licence (tierIndex set).
+// 'project' = flat-priced Project License, single-brand scope (tierIndex null).
+export type CartItemKind = 'tier' | 'project';
+
 export interface CartItem {
-	licenseType: import('./pricing').LicenseType;
-	tierId: string; // "tierIndex" encoded as string, e.g. "1", "2", ...
-	tierIndex: number;
-	basePrice: number; // post-package price in selected currency (at selected tier)
-	grossPrice: number; // pre-package price in selected currency (for anchoring)
+	kind: CartItemKind;
+	tierIndex: number | null;
+	basePrice: number; // post-package price in EUR (at selected tier, or flat Project License price)
+	grossPrice: number; // pre-package price in EUR (for anchoring)
 	packageId: string;
 }
 
 export interface CartState {
-	currency: Currency;
 	items: CartItem[];
 	isStudent: boolean;
 	// Selected packages info for display (supports multiple selections)
