@@ -16,7 +16,7 @@
 	}
 
 	const DEFAULT_CATEGORIES: Category[] = [
-		{ label: 'Currency', glyphs: '$ € £ ¥' },
+		{ label: 'Currency', glyphs: '¤ $ € £ ¥ ¢ ₩ ₽ ₺ ₱' },
 		{ label: 'Punctuation', glyphs: '. , : ; … ! ? — – ( ) [ ] / \\ |' },
 		{ label: 'Symbols', glyphs: '& @ # * % § ¶ © ® ™' },
 		{ label: 'Fractions', glyphs: '½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞' }
