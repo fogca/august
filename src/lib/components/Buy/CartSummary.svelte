@@ -19,6 +19,9 @@
 		total: number;
 		/** All selected packages (multi-package support). */
 		packageDefs: PackageDef[];
+		/** Step 3's selected style names — sent to checkout so the server prices
+		 *  and fulfils exactly what was picked, not just a tier. */
+		selectedStyles: string[];
 		mobileExpanded?: boolean;
 		onMobileToggle?: () => void;
 		/** Render as an always-open in-flow block (no collapsing sticky bar). */
@@ -36,6 +39,7 @@
 		discounts,
 		total,
 		packageDefs,
+		selectedStyles,
 		mobileExpanded = false,
 		onMobileToggle,
 		inline = false,
@@ -113,14 +117,10 @@
 								<span class="CartSummary__licence-price">{formatPrice(licensePrice())}</span>
 								<button type="button" class="CartSummary__edit" onclick={editStep1}>Edit</button>
 							</div>
-							{#if intakeMeta.licenseeName || intakeMeta.clientName}
+							{#if intakeMeta.licenseeName}
 								<p class="CartSummary__licensee">
-									{#if intakeMeta.path === 'project'}
-										{intakeMeta.licenseeName} → for {intakeMeta.clientName}
-									{:else}
-										{intakeMeta.licenseeName}
-										{#if intakeMeta.usageBand}· {intakeMeta.usageBand} people{#if intakeMeta.totalHeadcount} (total {intakeMeta.totalHeadcount}){/if}{/if}
-									{/if}
+									{intakeMeta.licenseeName}
+									{#if intakeMeta.usageBand}· {intakeMeta.usageBand} people{/if}
 								</p>
 							{/if}
 						</li>
@@ -184,8 +184,6 @@
 			>
 				<input type="hidden" name="educational" value={isStudent ? '1' : '0'} />
 				<input type="hidden" name="licensee_name" value={intakeMeta.licenseeName} />
-				<input type="hidden" name="client_name" value={intakeMeta.clientName} />
-				<input type="hidden" name="total_headcount" value={intakeMeta.totalHeadcount ?? ''} />
 				{#each packageDefs as pkg}
 					<input type="hidden" name="package_id" value={pkg.id} />
 				{/each}
@@ -194,6 +192,9 @@
 					<input type="hidden" name="item_tier" value={item.tierIndex ?? ''} />
 					<input type="hidden" name="item_price" value={item.basePrice} />
 					<input type="hidden" name="item_package" value={item.packageId} />
+				{/each}
+				{#each selectedStyles as style}
+					<input type="hidden" name="selected_style" value={style} />
 				{/each}
 				<button type="submit" class="CartSummary__checkout-btn" disabled={submitting}>
 					{submitting ? 'Redirecting…' : 'Checkout'}

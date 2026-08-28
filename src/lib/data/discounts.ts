@@ -81,24 +81,28 @@ export function computeTotal(cart: CartState): {
 	const base = baseSubtotal(items);
 	const discounts: AppliedDiscount[] = [];
 
-	// Package discount(s): one row per package that has a discount
+	// Package discount(s): one row per package whose items are actually
+	// discounted right now. Derived from the items themselves (gross vs.
+	// base), not a static rate on the package — the full-set discount in
+	// $lib/data/pricing is conditional on selected style count, so whether
+	// it applies can only be read off the priced cart items, not the
+	// package definition alone.
 	const pkgList = packageDefs && packageDefs.length > 0 ? packageDefs : packageDef ? [packageDef] : [];
 	for (const pkg of pkgList) {
-		if (pkg.discountRate > 0) {
-			// Items belonging to this package
-			const pkgItems = items.filter((i) => i.packageId === pkg.id);
-			if (pkgItems.length === 0) continue;
-			const pkgGross = grossSubtotal(pkgItems);
-			const pkgBase = baseSubtotal(pkgItems);
-			const pkgAmount = pkgGross - pkgBase;
-			const pct = Math.round(pkg.discountRate * 100);
-			discounts.push({
-				id: 'package',
-				label: `${pkg.label} (−${pct}%)`,
-				rate: pkg.discountRate,
-				amount: pkgAmount
-			});
-		}
+		// Items belonging to this package
+		const pkgItems = items.filter((i) => i.packageId === pkg.id);
+		if (pkgItems.length === 0) continue;
+		const pkgGross = grossSubtotal(pkgItems);
+		const pkgBase = baseSubtotal(pkgItems);
+		const pkgAmount = pkgGross - pkgBase;
+		if (pkgAmount <= 0) continue;
+		const pct = Math.round((pkgAmount / pkgGross) * 100);
+		discounts.push({
+			id: 'package',
+			label: `${pkg.label} (−${pct}%)`,
+			rate: pkgAmount / pkgGross,
+			amount: pkgAmount
+		});
 	}
 
 	// Educational: −30% on post-package subtotal

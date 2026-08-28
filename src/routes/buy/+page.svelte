@@ -3,14 +3,16 @@
 	// Four-step flow: About you (intake) → Typeface → Weights, with a running
 	// order summary. The intake step comes first and on purpose: rather than
 	// a free-browse tier picker showing every tier's price side by side, it
-	// asks who the licence is for, derives the one applicable tier from that
-	// answer (see LicenseIntake / resolveTierForHeadcount), and only that one
-	// price is ever shown from here on.
+	// asks who the licence is for and resolves the one tier whose per-style
+	// rate applies (see LicenseIntake) — no other tier's price is ever shown.
+	// The actual total is tier × selected style count (see $lib/data/pricing's
+	// computeEur), so it isn't known until Step 3 has a selection either —
+	// this page is what joins the two.
 	// Only one product is on sale today (Asger), but Step 2 already
 	// reads from getFlatPackages() rather than hardcoding it, so a second
 	// typeface going on sale just adds a second card — no page changes.
 
-	import { getFlatPackages, type FlatPackage } from '$lib/data/pricing';
+	import { getFlatPackages, getPrice, getGrossPrice, formatPrice, type FlatPackage } from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
 	import { computeTotal } from '$lib/data/discounts';
 
@@ -25,20 +27,15 @@
 
 	// ── Step 1: About you (intake) ───────────────────────────────
 	// LicenseIntake owns its own field state internally and reports the
-	// resolved cart item (or null, while unresolved) + receipt metadata up
-	// via this callback.
+	// resolved tier (or null, while unresolved) + receipt metadata up via
+	// this callback. Pricing the actual cart item happens below, once Step
+	// 3's style count is also known.
 
-	let intakeItem = $state<CartItem | null>(null);
-	let intakeMeta = $state<IntakeMeta>({
-		path: null,
-		licenseeName: '',
-		clientName: '',
-		totalHeadcount: null,
-		usageBand: null
-	});
+	let resolvedTierIndex = $state<number | null>(null);
+	let intakeMeta = $state<IntakeMeta>({ licenseeName: '', usageBand: null });
 
-	function handleIntakeResolve(item: CartItem | null, meta: IntakeMeta) {
-		intakeItem = item;
+	function handleIntakeResolve(tierIndex: number | null, meta: IntakeMeta) {
+		resolvedTierIndex = tierIndex;
 		intakeMeta = meta;
 	}
 
@@ -63,12 +60,13 @@
 		selectedPackageId = id;
 	}
 
-	// ── Step 3: Weights ────────────────────────────────────────
-	// Purely informational — Asger always delivers all 20 weights at
-	// one price, so ticking weights off doesn't change what you receive or
-	// what you pay. It's here so a buyer can mark the ones they'll reach for
-	// first, and because a flat "here's everything" list is less useful than
-	// one you can actually work with.
+	// ── Step 3: Select styles ────────────────────────────────────
+	// Pricing is per-style (see $lib/data/pricing's computeEur): the tier
+	// resolved in Step 1 sets a rate per style, and how many are selected
+	// here sets the count that rate applies to. Selecting every style
+	// (Complete Collection) earns a 50% discount off that rate; a
+	// hand-picked subset (Individual) pays it straight — same total price
+	// either way buys either the full 20 or half that count, on purpose.
 
 	let selectedWeights = $state<Set<string>>(new Set(selectedPackage?.styles ?? []));
 
@@ -78,11 +76,6 @@
 		selectedWeights = new Set(selectedPackage?.styles ?? []);
 	});
 
-	const allWeightsSelected = $derived(
-		(selectedPackage?.styles?.length ?? 0) > 0 &&
-			selectedWeights.size === (selectedPackage?.styles?.length ?? 0)
-	);
-
 	function toggleWeight(name: string) {
 		const next = new Set(selectedWeights);
 		if (next.has(name)) next.delete(name);
@@ -90,11 +83,39 @@
 		selectedWeights = next;
 	}
 
-	/** The one control "from the top" of the list — selects everything when
-	 *  anything is missing, clears everything when it's already complete. */
-	function toggleSelectAllWeights() {
-		selectedWeights = allWeightsSelected ? new Set() : new Set(selectedPackage?.styles ?? []);
+	function setsEqual(a: Set<string>, b: Set<string>): boolean {
+		if (a.size !== b.size) return false;
+		for (const v of a) if (!b.has(v)) return false;
+		return true;
 	}
+
+	// Complete Collection — the same round-radio card as Typeface selection.
+	// Reads "active" only while the current selection exactly matches the
+	// full set, so a hand edit in the grid below honestly drops the
+	// highlight instead of keeping a stale claim.
+	const completeSet = $derived(new Set(selectedPackage?.styles ?? []));
+	const isCompleteActive = $derived(completeSet.size > 0 && setsEqual(selectedWeights, completeSet));
+
+	function selectComplete() {
+		selectedWeights = new Set(completeSet);
+	}
+
+	function clearAllWeights() {
+		selectedWeights = new Set();
+	}
+
+	// Complete Collection's price — null until Step 1 has resolved a tier
+	// (no rate to price against yet).
+	const completePrice = $derived(
+		resolvedTierIndex !== null && selectedPackage
+			? getPrice(selectedPackage, resolvedTierIndex, completeSet.size)
+			: null
+	);
+	const completeGross = $derived(
+		resolvedTierIndex !== null && selectedPackage
+			? getGrossPrice(selectedPackage, resolvedTierIndex, completeSet.size)
+			: null
+	);
 
 	// ── State ──────────────────────────────────────────────
 
@@ -102,12 +123,24 @@
 
 	// ── Computed ────────────────────────────────────────────
 
-	// Purely derived from the intake resolution × the selected typeface —
-	// no separate mutation path, so there is nothing that can drift out of
-	// sync with what the intake step actually resolved.
-	const cartItems = $derived<CartItem[]>(
-		intakeItem && selectedPackage ? [{ ...intakeItem, packageId: selectedPackage.id }] : []
-	);
+	// Joins Step 1's resolved tier with Step 3's selected style count — the
+	// actual chargeable total isn't known until both exist, so this is where
+	// the real CartItem gets priced (see $lib/data/pricing's computeEur).
+	const cartItems = $derived.by<CartItem[]>(() => {
+		if (resolvedTierIndex === null || !selectedPackage || selectedWeights.size === 0) return [];
+		const price = getPrice(selectedPackage, resolvedTierIndex, selectedWeights.size);
+		const gross = getGrossPrice(selectedPackage, resolvedTierIndex, selectedWeights.size);
+		if (price === null || gross === null) return [];
+		return [
+			{
+				kind: 'tier',
+				tierIndex: resolvedTierIndex,
+				basePrice: price,
+				grossPrice: gross,
+				packageId: selectedPackage.id
+			}
+		];
+	});
 
 	const hasLicense = $derived(cartItems.length > 0);
 
@@ -184,20 +217,46 @@
 		</div>
 	</div>
 
-	<!-- Step 3 — Weights (informational: Complete always ships every weight
-	     shown here at one price — this just lets a buyer mark the ones
-	     they'll reach for first). -->
+	<!-- Step 3 — Select styles (informational: Complete always ships every
+	     weight shown here at one price — this just lets a buyer mark the
+	     ones they'll reach for first). -->
 	{#if selectedPackage?.styles?.length}
 		<div class="BuyStep">
-			<p class="BuyStep__eyebrow">3 — Weights</p>
+			<p class="BuyStep__eyebrow">3 — Select styles</p>
 			<div class="WeightPanel">
-				<div class="WeightPanel__head">
-					<span class="WeightPanel__count">
-						{selectedWeights.size} / {selectedPackage.styles.length} selected
-					</span>
-					<button type="button" class="WeightPanel__all" onclick={toggleSelectAllWeights}>
-						{allWeightsSelected ? 'Clear all' : 'Select all'}
+				<!-- Complete Collection — same round-radio card as Typeface
+				     selection, formatted identically to it: name, "N weights"
+				     detail, price at the right (struck-through gross → the
+				     discounted final, once Step 1 has resolved a rate). -->
+				<div class="WeightPanel__collections">
+					<button
+						type="button"
+						class="TypefaceCard WeightPanel__collection"
+						class:is-active={isCompleteActive}
+						onclick={selectComplete}
+						aria-pressed={isCompleteActive}
+					>
+						<span class="TypefaceCard__radio" aria-hidden="true">
+							{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
+						</span>
+						<span class="TypefaceCard__body">
+							<span class="TypefaceCard__name">Complete Collection</span>
+							<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span>
+						</span>
+						{#if completePrice !== null}
+							<span class="TypefaceCard__price">
+								{#if completeGross !== null && completeGross > completePrice}
+									<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
+								{/if}
+								<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
+							</span>
+						{/if}
 					</button>
+				</div>
+
+				<div class="WeightPanel__head">
+					<span class="WeightPanel__label">Individual styles</span>
+					<button type="button" class="WeightPanel__all" onclick={clearAllWeights}>Clear all</button>
 				</div>
 				<StyleList
 					pkg={selectedPackage}
@@ -225,6 +284,7 @@
 			{discounts}
 			{total}
 			packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
+			selectedStyles={hasLicense ? [...selectedWeights] : []}
 			errorMessage={form?.message ?? null}
 		/>
 	</div>
@@ -387,19 +447,62 @@
 		color: inherit;
 	}
 
-	/* ── Step 3: Weights ── */
+	/* Optional right-aligned price slot — only Step 3's Complete Collection
+	   card uses this; Step 2's typeface cards render without it. */
+	.TypefaceCard__price {
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 2px;
+		margin-left: auto;
+		padding-left: 12px;
+	}
+
+	.TypefaceCard__price-gross {
+		font-family: 'Steiner', sans-serif;
+		font-size: 11px;
+		text-decoration: line-through;
+		opacity: 0.5;
+		color: inherit;
+	}
+
+	.TypefaceCard__price-final {
+		font-family: 'Steiner', sans-serif;
+		font-size: 15px;
+		font-weight: var(--fw-strong);
+		letter-spacing: 0;
+		color: inherit;
+	}
+
+	/* ── Step 3: Select styles ── */
 	.WeightPanel {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 		max-width: 480px;
-		/* White base, black grid lines — a checked row inverts to solid black
-		   (StyleList's .is-on treatment), so the state read is a stark
-		   white-to-black flip instead of grey-on-grey. Bordered for definition
-		   against the page's own white background. */
-		background: #ffffff;
-		color: #000000;
+		/* Same light-card language as Step 1/2 — bordered, not filled, so the
+		   long style list underneath doesn't read as a heavy block. Selection
+		   in StyleList reads through opacity, not a background invert, so
+		   there's no dark state to design around here any more. */
+		background: var(--color-bg);
+		color: var(--color-text);
 		border: 1px solid var(--color-line);
+	}
+
+	/* Complete Collection card — reuses .TypefaceCard wholesale (same
+	   round-radio card as Step 2), just wrapped with its own padding and a
+	   width override since it's nested one level deeper than Step 2's own
+	   list. */
+	.WeightPanel__collections {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 18px 18px 0;
+	}
+
+	.WeightPanel__collection {
+		max-width: none;
 	}
 
 	.WeightPanel__head {
@@ -410,12 +513,12 @@
 		padding: 20px var(--padding) 14px;
 	}
 
-	.WeightPanel__count {
+	.WeightPanel__label {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
-		opacity: 0.7;
-		font-variant-numeric: tabular-nums;
+		font-weight: var(--fw-strong);
 		letter-spacing: 0;
+		color: var(--color-text-mute);
 	}
 
 	/* The "from the top" select-all control */
@@ -424,7 +527,7 @@
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
-		color: inherit;
+		color: var(--color-text);
 		background: transparent;
 		border: 0;
 		padding: 0;

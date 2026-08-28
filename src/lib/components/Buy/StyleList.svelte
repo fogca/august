@@ -1,18 +1,17 @@
 <script lang="ts">
-	// StyleList — the styles bundled in a package, as a simple 2-column grid.
-	//  - non-italic packages (current): weight list split in half (e.g. 20 → 10×2).
-	//  - italic packages: same weight's upright (left) + italic (right) — unused
-	//    until Steiner ships real italic masters.
-	// Lives inside the package card; colours inherit so it adapts to the
-	// card's selected (inverted) state.
+	// StyleList — the styles bundled in a package, as a clean 2-column grid:
+	// left column takes the first half in order, right column the second
+	// half, paired row by row. Each row uses the same round radio-dot
+	// language as Typeface/Collection selection elsewhere on /buy — square
+	// checkboxes read as a different control family, so this stays circular
+	// even though many rows can be "on" at once. Selection reads through
+	// opacity, not a background/colour invert.
 	import type { PackageDef } from '$lib/data/pricing';
 	import { WEIGHTS } from '$lib/components/TypeTester/presets';
 
 	interface Props {
 		pkg: PackageDef;
-		/** Whether the parent card is selected (inverted). Makes all text fully white. */
-		active?: boolean;
-		/** When true, each style row is an individually toggleable selection (gQ). */
+		/** When true, each style row is an individually toggleable selection. */
 		selectable?: boolean;
 		/** Selected style names (when selectable). */
 		selected?: Set<string>;
@@ -20,7 +19,7 @@
 		onToggle?: (name: string) => void;
 	}
 
-	let { pkg, active = false, selectable = false, selected, onToggle }: Props = $props();
+	let { pkg, selectable = false, selected, onToggle }: Props = $props();
 
 	// Resolve wght axis value from weight name; falls back to 400 if not found.
 	function axisValue(weightName: string): number {
@@ -36,6 +35,9 @@
 		italic: boolean;
 	}
 
+	// Row pairs — left column is the first half in source order, right
+	// column the second half (e.g. 1–45 left, 50–95 right for Steiner's 20
+	// weights), not an interleaved split.
 	const rows = $derived.by<{ left: Cell; right: Cell | null }[]>(() => {
 		if (hasItalic) {
 			return styles.map((n) => ({
@@ -75,7 +77,9 @@
 			: undefined}
 	>
 		{#if selectable}
-			<span class="StyleList__check" aria-hidden="true"></span>
+			<span class="StyleList__radio" aria-hidden="true">
+				<span class="StyleList__dot"></span>
+			</span>
 		{/if}
 		<span
 			class="StyleList__preview"
@@ -84,12 +88,11 @@
 		<span class="StyleList__name">
 			{c.name}{#if c.italic}<span class="StyleList__ital">Italic</span>{/if}
 		</span>
-		<span class="StyleList__num">{c.wght}</span>
 	</div>
 {/snippet}
 
 {#if styles.length > 0}
-	<div class="StyleList" class:is-active={active}>
+	<div class="StyleList">
 		{#each rows as row, i (i)}
 			{@render cell(row.left)}
 			{#if row.right}
@@ -102,141 +105,103 @@
 {/if}
 
 <style>
-	/* 2-column grid — full-bleed (no padding), center divider. Lines default to
-	   dark (var(--color-line)) for a white/light card; .is-active swaps them
-	   to the original translucent white for a dark card. */
+	/* 2-column grid — left = first half in order, right = second half,
+	   paired row by row. Full-bleed with a center divider. */
 	.StyleList {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		border-top: 2px solid var(--color-line);
-	}
-
-	.StyleList.is-active {
-		border-top-color: rgba(255, 255, 255, 0.6);
+		border-top: 1px solid var(--color-line);
 	}
 
 	.StyleList__row {
 		display: flex;
 		align-items: center;
 		gap: 10px;
-		padding: 8px 0;
-		min-height: 40px;
-		border-bottom: 2px solid var(--color-line);
+		padding: 12px 0;
+		min-height: 44px;
+		border-bottom: 1px solid var(--color-line);
+		opacity: 1;
+		transition: opacity 150ms ease;
 	}
 
-	.StyleList.is-active .StyleList__row {
-		border-bottom-color: rgba(255, 255, 255, 0.6);
+	.StyleList__row.is-selectable {
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
 	}
 
-	/* Outer edges align with the head (var(--padding)); 12px around the divider */
+	/* Selection reads through opacity alone — no background/colour invert. */
+	.StyleList__row.is-selectable:not(.is-on) {
+		opacity: 0.35;
+	}
+
+	.StyleList__row.is-selectable:not(.is-on):hover {
+		opacity: 0.6;
+	}
+
+	/* Outer edges align with the panel's own padding; a little breathing
+	   room around the center divider. */
 	.StyleList__row:nth-child(odd) {
 		padding-left: var(--padding);
 		padding-right: 12px;
 	}
 
 	.StyleList__row:nth-child(even) {
-		border-left: 2px solid var(--color-line);
+		border-left: 1px solid var(--color-line);
 		padding-left: 12px;
 		padding-right: var(--padding);
 	}
 
-	.StyleList.is-active .StyleList__row:nth-child(even) {
-		border-left-color: rgba(255, 255, 255, 0.6);
-	}
-
-	/* Selectable rows (gQ): toggle individual weights */
-	.StyleList__row.is-selectable {
-		cursor: pointer;
-		-webkit-tap-highlight-color: transparent;
-	}
-
-	/* Checkbox indicator — fills when the weight is selected */
-	.StyleList__check {
+	/* Round radio — same outline-+-fill language as TypefaceCard/CollectionCard. */
+	.StyleList__radio {
 		width: 11px;
 		height: 11px;
 		flex-shrink: 0;
 		border: 1px solid currentColor;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
-	/* Selected weight: only this row goes black (the card itself stays grey) */
-	.StyleList__row.is-on {
-		background: var(--color-text);
-		color: var(--color-bg);
+	.StyleList__dot {
+		width: 3px;
+		height: 3px;
+		border-radius: 50%;
+		background: currentColor;
+		opacity: 0;
+		transition: opacity 150ms ease;
 	}
 
-	.StyleList__row.is-on .StyleList__name,
-	.StyleList__row.is-on .StyleList__preview {
-		color: var(--color-bg);
+	.StyleList__row.is-on .StyleList__dot {
+		opacity: 1;
 	}
 
-	.StyleList__row.is-on .StyleList__num {
-		color: var(--color-bg);
-		opacity: 0.6;
-	}
-
-	.StyleList__row.is-on .StyleList__check {
-		background: var(--color-bg);
-		border-color: var(--color-bg);
-	}
-
-	/* "Aa" preview glyph — inherits card text colour */
+	/* "Aa" preview glyph */
 	.StyleList__preview {
 		font-family: 'Steiner', sans-serif;
 		font-size: 18px;
 		line-height: 1;
 		flex-shrink: 0;
-		width: 30px;
+		width: 28px;
 		text-align: center;
-		color: inherit;
+		color: var(--color-text);
 	}
 
 	.StyleList__name {
 		font-family: 'Steiner', sans-serif;
-		font-size: 11px;
-		font-variation-settings: 'wght' 350;
+		font-size: 12px;
+		font-variation-settings: 'wght' 400;
 		line-height: 1.25;
-		color: inherit;
+		color: var(--color-text);
 		letter-spacing: 0;
+		font-variant-numeric: tabular-nums;
 	}
 
 	/* "Italic" on its own line */
 	.StyleList__ital {
 		display: block;
-		font-style: italic;
-		opacity: 0.7;
-	}
-
-	/* Weight number (e.g. 50, 150) — right-aligned, muted */
-	.StyleList__num {
-		margin-left: auto;
-		font-family: 'Steiner', sans-serif;
 		font-size: 10px;
-		color: inherit;
-		opacity: 0.45;
-		font-variant-numeric: tabular-nums;
-	}
-
-	/* Selected card: all text fully white (drop muting) */
-	.StyleList.is-active .StyleList__num,
-	.StyleList.is-active .StyleList__ital {
-		opacity: 1;
-	}
-
-	/* base.css sets color directly on every div/span, which breaks the
-	   color:inherit chain above at .StyleList__row (itself a plain div the
-	   global rule repaints black) — on a dark/active card this made every
-	   unselected row's label, "Aa" preview, and checkbox outline render
-	   invisible black-on-black. Force them white explicitly, same fix as
-	   .StyleList__row.is-on already gets (this is deliberately equal
-	   specificity to those .is-on rules and placed after them, so an
-	   on-row's white text resolves to the same colour either way). */
-	.StyleList.is-active .StyleList__name,
-	.StyleList.is-active .StyleList__preview,
-	.StyleList.is-active .StyleList__num {
-		color: var(--color-bg);
-	}
-
-	.StyleList.is-active .StyleList__check {
-		border-color: var(--color-bg);
+		font-style: italic;
+		color: var(--color-text-mute);
 	}
 </style>

@@ -37,14 +37,26 @@ export const actions: Actions = {
 		// ── Parse + validate the order ─────────────────────────
 		const isStudent = data.get('educational') === '1';
 		const licenseeName = String(data.get('licensee_name') ?? '').trim().slice(0, 200);
+		// Project License isn't reachable from the current /buy intake form
+		// (see LicenseIntake) — kept here so the server still handles it
+		// correctly if that path is reintroduced.
 		const clientName = String(data.get('client_name') ?? '').trim().slice(0, 200);
-		const totalHeadcountRaw = data.get('total_headcount');
-		const totalHeadcount = totalHeadcountRaw ? Number(totalHeadcountRaw) : null;
 
 		const kinds = data.getAll('item_kind').map(String) as CartItemKind[];
 		const tiersRaw = data.getAll('item_tier').map(String);
 		if (kinds.length === 0) {
 			return fail(400, { message: 'No license selected.' });
+		}
+
+		// Selected styles — required for a 'tier' item, since price is now
+		// per-style × how many were picked (see $lib/data/pricing's
+		// computeEur). Validate against the real style list so a tampered
+		// form can't invent styles or inflate/deflate the count.
+		const selectedStyles = data.getAll('selected_style').map(String);
+		const validStyles = new Set(STEINER.styles ?? []);
+		const styleCount = selectedStyles.filter((s) => validStyles.has(s)).length;
+		if (styleCount !== selectedStyles.length) {
+			return fail(400, { message: 'Invalid style selection.' });
 		}
 
 		// ── Recompute prices server-side ───────────────────────
@@ -77,18 +89,21 @@ export const actions: Actions = {
 			if (!Number.isInteger(tierIndex)) {
 				return fail(400, { message: 'Invalid license selection.' });
 			}
-
-			// Individual (tier 1) needs no organisation details. Team-and-above
-			// is where the intake step's rigor actually gets enforced: the tier
-			// itself came from a fixed-range select (see LicenseIntake), not a
-			// freely typed number, so there is no separate headcount to
-			// cross-check it against — just require the organisation is named.
-			if (tierIndex > 1 && (!licenseeName || !totalHeadcount || !Number.isInteger(totalHeadcount) || totalHeadcount < 1)) {
-				return fail(400, { message: 'Please fill in your organisation details in Step 1.' });
+			if (styleCount < 1) {
+				return fail(400, { message: 'Please select at least one style in Step 3.' });
 			}
 
-			const price = getPrice(STEINER, tierIndex);
-			const gross = getGrossPrice(STEINER, tierIndex);
+			// Tier 1 (Individual, not currently offered by the intake form —
+			// see LicenseIntake) needs no organisation name. Every other tier
+			// came from a fixed-range select, not a freely typed number, so
+			// there's no separate headcount to cross-check — just require the
+			// organisation is named.
+			if (tierIndex > 1 && !licenseeName) {
+				return fail(400, { message: 'Please fill in your organisation name in Step 1.' });
+			}
+
+			const price = getPrice(STEINER, tierIndex, styleCount);
+			const gross = getGrossPrice(STEINER, tierIndex, styleCount);
 			if (price === null || gross === null) {
 				// Global tier — handled via /contact, not self-serve checkout
 				return fail(400, { message: 'This scale requires a custom quote — please contact us.' });
@@ -101,7 +116,7 @@ export const actions: Actions = {
 				packageId: STEINER.id
 			});
 			lineDescriptions.push(
-				`${getTierName(tierIndex)} (${getTierLabel(tierIndex)})${licenseeName ? ` — ${licenseeName}` : ''}`
+				`${getTierName(tierIndex)} (${getTierLabel(tierIndex)}) — ${styleCount} style${styleCount === 1 ? '' : 's'}${licenseeName ? ` — ${licenseeName}` : ''}`
 			);
 		}
 
@@ -163,8 +178,11 @@ export const actions: Actions = {
 					client_name: clientName,
 					organisation_size:
 						items[0]?.kind === 'tier' && items[0].tierIndex && items[0].tierIndex > 1
-							? `${getTierLabel(items[0].tierIndex)}${totalHeadcount ? ` (total ${totalHeadcount})` : ''}`
-							: ''
+							? getTierLabel(items[0].tierIndex)
+							: '',
+					// What to actually deliver — the Sales Receipt's fulfilment record,
+					// not just a headcount tier, now that style count drives price.
+					selected_styles: selectedStyles.join(',').slice(0, 490)
 				},
 				success_url: `${url.origin}/buy/success?session_id={CHECKOUT_SESSION_ID}`,
 				cancel_url: `${url.origin}/buy`
