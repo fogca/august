@@ -122,6 +122,7 @@
 		weights={tf.weights}
 		fontFamily={tf.fontFamily}
 		defaultTexts={tf.defaultTexts}
+		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
 	/>
 

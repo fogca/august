@@ -14,11 +14,13 @@
 		/** Per-weight default word — row i uses defaultTexts[i % length]. One
 		 *  word per row: at the default size a sentence would fill the row. */
 		defaultTexts: string[];
+		/** Body text set under each word, paired by the same index. */
+		defaultNotes?: string[];
 		/** When false, show an "in development" notice */
 		available?: boolean;
 	}
 
-	let { weights, fontFamily, defaultTexts, available = true }: Props = $props();
+	let { weights, fontFamily, defaultTexts, defaultNotes, available = true }: Props = $props();
 
 	// Viewport-dependent default size (evaluated once on mount)
 	const initialSize =
@@ -43,6 +45,7 @@
 			<WeightRow
 				{weight}
 				defaultText={defaultTexts[i % defaultTexts.length]}
+				defaultNote={defaultNotes?.[i % defaultNotes.length]}
 				{fontFamily}
 				{initialSize}
 			/>

@@ -7,6 +7,8 @@
 		weight: WeightDef;
 		/** Each row owns its text independently; this sets the initial value. */
 		defaultText: string;
+		/** Body text under the word. Fixed size — the slider drives the word only. */
+		defaultNote?: string;
 		/** CSS font-family name — allows different typefaces to share this component */
 		fontFamily: string;
 		/** Starting size in px */
@@ -15,7 +17,7 @@
 		initialAlign?: AlignValue;
 	}
 
-	let { weight, defaultText, fontFamily, initialSize = 125, initialAlign = 'center' }: Props = $props();
+	let { weight, defaultText, defaultNote, fontFamily, initialSize = 125, initialAlign = 'center' }: Props = $props();
 
 	const SIZE_MIN = 12;
 	const SIZE_MAX = 200;
@@ -137,6 +139,22 @@
       text-align: {align};
     "
 	></div>
+
+	{#if defaultNote}
+		<!-- Body copy under the word. Deliberately a fixed size and not editable:
+		     the row reads as a title with a paragraph, and the slider stays a
+		     control for the specimen above it. -->
+		<p
+			class="WeightRow__note"
+			style="
+        font-family: '{fontFamily}', sans-serif;
+        font-variation-settings: 'wght' {weight.axisValue};
+        text-align: {align};
+      "
+		>
+			{defaultNote}
+		</p>
+	{/if}
 </div>
 
 <style>
@@ -170,7 +188,8 @@
 	}
 
 	.WeightRow__meta,
-	.WeightRow__text {
+	.WeightRow__text,
+	.WeightRow__note {
 		padding-inline: var(--padding);
 	}
 
@@ -306,6 +325,27 @@
 		stroke-width: 1;
 		fill: none;
 		stroke-linecap: round;
+	}
+
+	.WeightRow__note {
+		/* SP size; the desktop step is in the media block below. */
+		font-size: 16px;
+		line-height: 1.5;
+		letter-spacing: 0;
+		color: var(--color-text);
+		margin: 0;
+		max-width: 60ch;
+		margin-inline: auto;
+	}
+
+	/* Must follow the rule above, not precede it: a media query adds no
+	   specificity, so source order decides. */
+	@media (min-width: 768px) {
+		.WeightRow__note {
+			font-size: 32px;
+			line-height: 1.35;
+			max-width: 44ch;
+		}
 	}
 
 	.WeightRow__text {

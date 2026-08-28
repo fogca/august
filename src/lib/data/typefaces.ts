@@ -38,6 +38,8 @@ export interface Typeface {
 	weights: WeightDef[];
 	/** Per-weight default words for the Type Tester — row i uses defaultTexts[i % length] */
 	defaultTexts: string[];
+	/** Body text set under each word, paired by the same index. */
+	defaultNotes?: string[];
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
 	thumbnail?: string;
@@ -132,6 +134,30 @@ export const TYPEFACES: Typeface[] = [
 			'Rhythm',
 			'Serif',
 			'Terminal'
+		],
+		// Each word's definition, set small beneath it — the tester reads as a
+		// title with a paragraph rather than twenty loose words.
+		defaultNotes: [
+			'The partial opening in letters like c, e, and s.',
+			'The invisible line every letter without a descender sits on.',
+			'The enclosed or partially enclosed space inside a letter, as in o or e.',
+			'The part of a letter that drops below the baseline, as in p or y.',
+			'The small stroke projecting from the top right of a lowercase g.',
+			'A tapered or curved stroke end, without a serif, as in f or r.',
+			'The drawn shape a font uses to represent a character.',
+			'The thinnest stroke a typeface draws, most visible in its heaviest weights.',
+			'A distinct, slanted design drawn stroke by stroke — not a slanted copy of the roman.',
+			'The point where two strokes meet or cross, as in the arms of a k.',
+			'The adjustment of space between two specific letters, like A and V.',
+			'Two or more letters joined into a single glyph, as in fi or fl.',
+			'The widths and side-bearings that decide how letters space themselves.',
+			'A figure, drawn either lining (cap-height) or old-style (with descenders).',
+			'The slight excess round letters need past the baseline to look aligned.',
+			'The relationship between a letter\u2019s height, width, and stroke weight.',
+			'The curved marks that frame speech, distinct from the straight prime.',
+			'The visual cadence a typeface holds across its counters and spacing.',
+			'The small stroke finishing a main stroke — absent here, by design.',
+			'The end of any stroke that isn\u2019t a serif.'
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
