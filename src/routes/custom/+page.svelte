@@ -10,8 +10,20 @@
 </svelte:head>
 
 <main class="Custom">
+	<!-- Full-bleed hero, first thing on the page. No photo dropped in yet —
+	     swap the placeholder below for a real commission image at
+	     /images/custom/hero.jpg (or pass one in via a prop) when there is one. -->
+	<section class="Custom__hero" aria-hidden="true">
+		<div class="Custom__hero-placeholder">
+			<span class="Custom__hero-placeholder-label">Custom</span>
+		</div>
+	</section>
+
+	<div class="Custom__head">
+		<h1>Custom Typeface for Corporate Identity</h1>
+	</div>
+
 	<div class="Custom__inner">
-		<h1>Custom type</h1>
 		<p class="Custom__lead en" lang="en">
 			Beyond our retail library, August draws bespoke typefaces for brands and institutions — a
 			proprietary voice, from the first sketch to a fully realised family. A custom typeface is the
@@ -102,13 +114,61 @@
 	.Custom {
 		min-height: 100vh;
 		min-height: 100dvh;
-		padding-block: 96px;
+		/* No padding-top: the hero is full-bleed against the very top of the
+		   page, above the header's own space. */
+		padding-bottom: 96px;
+	}
+
+	/* Hero — full width, first thing on the page. Mobile: square (100vw), same
+	   convention as the typeface-page hero. Desktop: a flat 75vh band. */
+	.Custom__hero {
+		width: 100%;
+		height: 100vw;
+		overflow: hidden;
 	}
 
 	@media (min-width: 768px) {
-		.Custom {
-			padding-top: 120px;
+		.Custom__hero {
+			height: 75vh;
+			height: 75dvh;
 		}
+	}
+
+	.Custom__hero-placeholder {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-bg-dark);
+	}
+
+	.Custom__hero-placeholder-label {
+		font-family: 'Steiner', sans-serif;
+		font-size: clamp(60px, 15vw, 220px);
+		letter-spacing: 0;
+		color: #fff;
+		opacity: 0.15;
+		user-select: none;
+	}
+
+	/* Title: flush against the page's normal left edge, its own row — not
+	   indented with the body below it. */
+	.Custom__head {
+		padding-inline: var(--padding);
+		padding-top: 48px;
+		margin-bottom: 40px;
+	}
+
+	@media (min-width: 768px) {
+		.Custom__head {
+			padding-top: 72px;
+		}
+	}
+
+	.Custom h1 {
+		margin: 0;
+		max-width: 20ch;
 	}
 
 	.Custom__inner {
@@ -116,15 +176,13 @@
 	}
 
 	/* PC: same offset mechanism as the Legal/EULA template — a viewport-relative
-	   left inset rather than a percentage margin, and no width cap. */
+	   left inset rather than a percentage margin, and no width cap. Left
+	   flush on mobile; on desktop this is what makes the body read as
+	   starting further right than the title above it. */
 	@media (min-width: 768px) {
 		.Custom__inner {
 			padding-left: 37.5vw;
 		}
-	}
-
-	.Custom h1 {
-		margin: 0 0 24px;
 	}
 
 	.Custom__lead {

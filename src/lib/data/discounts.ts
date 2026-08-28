@@ -45,7 +45,7 @@ export interface AppliedDiscount {
 	id: DiscountId | 'package';
 	label: string;
 	rate: number;
-	amount: number; // savings in selected currency (positive = savings)
+	amount: number; // savings in EUR (positive = savings)
 }
 
 // Gross subtotal: sum of gross prices (before package discount) per item
