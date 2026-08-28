@@ -40,9 +40,22 @@ export interface Typeface {
 	defaultTexts: string[];
 	/** Body text set under each word, paired by the same index. */
 	defaultNotes?: string[];
-	/** Catalogue specimen: a plausible piece of work set in the face itself,
-	 *  rather than the typeface's own name. Line 1 is set large, the rest small. */
-	specimen?: string[];
+	/** Catalogue specimen: a boarding pass set in the face itself, rather than
+	 *  the typeface's own name — a plausible piece of work, not a pangram.
+	 *  IATA-style three-letter codes, so the sizes/cases actually asked for
+	 *  (caps at the airport-code size, mixed case in the small print) are what
+	 *  the card demonstrates. */
+	specimen?: {
+		flightNo: string; // e.g. 'SK 674'
+		fromCode: string; // 3-letter airport code, e.g. 'CPH'
+		fromCity: string;
+		toCode: string;
+		toCity: string;
+		date: string; // e.g. '29 SEP'
+		gate: string;
+		time: string;
+		seat: string;
+	};
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
 	thumbnail?: string;
@@ -172,10 +185,21 @@ export const TYPEFACES: Typeface[] = [
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
 		// Catalogue specimen: a boarding pass, which is where a humanist sans earns
-		// its living (Frutiger was drawn for airport signage). One setting exercises
-		// caps, tabular figures and the extended Latin, and it cites no person — so
-		// it stays true whatever the name's story turns out to be.
-		specimen: ['København → Basel', 'SK 674 / 08:45 / 12A', 'Boarding 08:10'],
+		// its living (Frutiger was drawn for airport signage). IATA codes at cap
+		// size, mixed case in the fine print, tabular figures in the grid — one
+		// setting exercises all three, and it cites no person, so it stays true
+		// whatever the name's story turns out to be.
+		specimen: {
+			flightNo: 'SK 674',
+			fromCode: 'CPH',
+			fromCity: 'Copenhagen',
+			toCode: 'BSL',
+			toCity: 'Basel',
+			date: '29 SEP',
+			gate: 'A34',
+			time: '08:45',
+			seat: '12A'
+		},
 		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		catalogBg: '#DCE7EF',
@@ -230,7 +254,17 @@ export const TYPEFACES: Typeface[] = [
 			'Bildung',
 			'Gestalt'
 		],
-		specimen: ['Wien → Praha', 'OS 712 / 14:20 / 8C', 'Boarding 13:45'],
+		specimen: {
+			flightNo: 'OS 712',
+			fromCode: 'VIE',
+			fromCity: 'Vienna',
+			toCode: 'PRG',
+			toCity: 'Prague',
+			date: '12 OCT',
+			gate: '8C',
+			time: '14:20',
+			seat: '9F'
+		},
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
 		catalogBg: '#EDEAE3',
@@ -288,7 +322,17 @@ export const TYPEFACES: Typeface[] = [
 			'Urstoff'
 		],
 		thumbnail: '/images/fonts/atom.png',
-		specimen: ['Lisboa → Zürich', 'LX 2085 / 19:05 / 22F', 'Boarding 18:30'],
+		specimen: {
+			flightNo: 'LX 2085',
+			fromCode: 'LIS',
+			fromCity: 'Lisbon',
+			toCode: 'ZRH',
+			toCity: 'Zürich',
+			date: '3 NOV',
+			gate: '22F',
+			time: '19:05',
+			seat: '14C'
+		},
 		theme: { bg: '#15181C', fg: '#ffffff' },
 		catalogBg: '#E7EDD9',
 		hero: {
