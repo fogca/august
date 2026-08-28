@@ -24,9 +24,17 @@
 			{#each typefaces as tf (tf.slug)}
 				<li class="FontCard">
 					<a href="/fonts/{tf.slug}" class="FontCard__link" aria-label="View {tf.name}">
-						<!-- Specimen: typeface name rendered in its own font -->
+						<!-- Specimen: a plausible piece of work set in the face itself,
+						     rather than the typeface's own name. -->
 						<div class="FontCard__specimen" style="font-family: '{tf.fontFamily}', sans-serif;">
-							{tf.name}
+							{#if tf.specimen && tf.specimen.length}
+								<span class="FontCard__spec-lead">{tf.specimen[0]}</span>
+								{#each tf.specimen.slice(1) as line (line)}
+									<span class="FontCard__spec-line">{line}</span>
+								{/each}
+							{:else}
+								<span class="FontCard__spec-lead">{tf.name}</span>
+							{/if}
 						</div>
 
 						<div class="FontCard__meta">
@@ -135,10 +143,30 @@
 
 	/* Large specimen text */
 	.FontCard__specimen {
-		font-size: clamp(48px, 10vw, 120px);
+		display: flex;
+		flex-direction: column;
 		line-height: 0.95;
 		letter-spacing: 0;
 		grid-column: 1;
+		/* Tabular figures and a slashed zero: a boarding pass is exactly the
+		   setting those features exist for, so the specimen demonstrates them
+		   rather than describing them. */
+		font-variant-numeric: tabular-nums slashed-zero;
+	}
+
+	.FontCard__spec-lead {
+		font-size: clamp(40px, 7.5vw, 92px);
+	}
+
+	/* The detail lines sit at roughly a third of the lead — enough to read as
+	   ticket data rather than as a second headline. */
+	.FontCard__spec-line {
+		font-size: clamp(15px, 2.4vw, 30px);
+		line-height: 1.3;
+	}
+
+	.FontCard__spec-line:first-of-type {
+		margin-top: 14px;
 	}
 
 	/* Meta row: classification + badge */

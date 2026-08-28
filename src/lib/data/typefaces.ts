@@ -40,6 +40,9 @@ export interface Typeface {
 	defaultTexts: string[];
 	/** Body text set under each word, paired by the same index. */
 	defaultNotes?: string[];
+	/** Catalogue specimen: a plausible piece of work set in the face itself,
+	 *  rather than the typeface's own name. Line 1 is set large, the rest small. */
+	specimen?: string[];
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
 	thumbnail?: string;
@@ -162,6 +165,11 @@ export const TYPEFACES: Typeface[] = [
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
+		// Catalogue specimen: a boarding pass, which is where a humanist sans earns
+		// its living (Frutiger was drawn for airport signage). One setting exercises
+		// caps, tabular figures and the extended Latin, and it cites no person — so
+		// it stays true whatever the name's story turns out to be.
+		specimen: ['København → Basel', 'SK 674 / 08:45 / 12A', 'Boarding 08:10'],
 		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		hero: {
@@ -215,6 +223,7 @@ export const TYPEFACES: Typeface[] = [
 			'Bildung',
 			'Gestalt'
 		],
+		specimen: ['Wien → Praha', 'OS 712 / 14:20 / 8C', 'Boarding 13:45'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
 		hero: {
@@ -271,6 +280,7 @@ export const TYPEFACES: Typeface[] = [
 			'Urstoff'
 		],
 		thumbnail: '/images/fonts/atom.png',
+		specimen: ['Lisboa → Zürich', 'LX 2085 / 19:05 / 22F', 'Boarding 18:30'],
 		theme: { bg: '#15181C', fg: '#ffffff' },
 		hero: {
 			label: 'Neo Grotesque',
