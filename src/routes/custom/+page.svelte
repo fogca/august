@@ -19,12 +19,13 @@
 		</div>
 	</section>
 
-	<div class="Custom__head">
-		<h1>Custom Typeface for Corporate Identity</h1>
-	</div>
+	<div class="Custom__split">
+		<div class="Custom__head">
+			<h1>Custom Typeface for Corporate Identity</h1>
+		</div>
 
-	<div class="Custom__inner">
-		<p class="Custom__lead en" lang="en">
+		<div class="Custom__inner">
+			<p class="Custom__lead en" lang="en">
 			Beyond our retail library, August draws bespoke typefaces for brands and institutions — a
 			proprietary voice, from the first sketch to a fully realised family. A custom typeface is the
 			most enduring asset a brand can own: it travels across every screen, surface and language
@@ -107,6 +108,7 @@
 				<a href="mailto:hi@august.tf?subject=Custom%20typeface%20enquiry">hi@august.tf</a>.
 			</p>
 		</section>
+		</div>
 	</div>
 </main>
 
@@ -121,8 +123,13 @@
 
 	/* Hero — full width, first thing on the page. Mobile: square (100vw), same
 	   convention as the typeface-page hero. Desktop: a flat 75vh band. */
+	/* Explicit 100vw rather than width:100% — width:100% only ever matches the
+	   parent's content box, so it stays correct even if .Custom ever gains
+	   inline padding upstream. The negative margin cancels 100vw's own
+	   scrollbar-width overshoot so it doesn't force horizontal scroll. */
 	.Custom__hero {
-		width: 100%;
+		width: 100vw;
+		margin-inline: calc(50% - 50vw);
 		height: 100vw;
 		overflow: hidden;
 	}
@@ -152,17 +159,32 @@
 		user-select: none;
 	}
 
-	/* Title: flush against the page's normal left edge, its own row — not
-	   indented with the body below it. */
+	/* Mobile: title stacked above the body, both flush left — plain block
+	   flow, no flex. Desktop: a 40/60 flex row instead, so the two columns
+	   start at the same Y (align-items: flex-start) rather than the title
+	   sitting above the body as a separate block. */
+	.Custom__split {
+		padding-top: 48px;
+	}
+
+	@media (min-width: 768px) {
+		.Custom__split {
+			display: flex;
+			align-items: flex-start;
+			padding-top: 72px;
+		}
+	}
+
 	.Custom__head {
 		padding-inline: var(--padding);
-		padding-top: 48px;
 		margin-bottom: 40px;
 	}
 
 	@media (min-width: 768px) {
 		.Custom__head {
-			padding-top: 72px;
+			flex: 0 0 40%;
+			max-width: 40%;
+			margin-bottom: 0;
 		}
 	}
 
@@ -175,13 +197,13 @@
 		padding-inline: var(--padding);
 	}
 
-	/* PC: same offset mechanism as the Legal/EULA template — a viewport-relative
-	   left inset rather than a percentage margin, and no width cap. Left
-	   flush on mobile; on desktop this is what makes the body read as
-	   starting further right than the title above it. */
+	/* Desktop: the right-hand 60% of the flex row — replaces the old
+	   viewport-relative left inset now that the split is flex-driven. */
 	@media (min-width: 768px) {
 		.Custom__inner {
-			padding-left: 37.5vw;
+			flex: 0 0 60%;
+			max-width: 60%;
+			padding-left: 0;
 		}
 	}
 

@@ -1,8 +1,9 @@
 <!--
   End User Licence Agreement — one Article-numbered mini-agreement per
-  licence type (Desktop / Web / App / Books), matching what's actually
-  sold on /buy. Layout: a sticky sidebar (scrollspy-highlighted) beside
-  the stacked sections — content lives in $lib/data/eula.ts.
+  licence sold on /buy (Individual / Organisation / Project License),
+  matching the tiers in $lib/data/pricing.ts. Layout: a sticky sidebar
+  (scrollspy-highlighted) beside the stacked sections — content lives in
+  $lib/data/eula.ts.
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
@@ -41,7 +42,7 @@
 	<title>Licence (EULA) — August Type Foundry</title>
 	<meta
 		name="description"
-		content="End User Licence Agreement for August Type Foundry fonts — Desktop, Web, App, and Books."
+		content="End User Licence Agreement for August Type Foundry fonts — Individual, Organisation, and Project licenses."
 	/>
 </svelte:head>
 
@@ -67,9 +68,9 @@
 
 		<div class="Eula__content">
 			<p class="Eula__lead">
-				August Type Foundry fonts are licensed, not sold. Each licence type below — Desktop, Web,
-				App, and Books — is its own standalone agreement; your Sales Receipt records which one(s)
-				you have bought and at what tier.
+				August Type Foundry fonts are licensed, not sold. Each licence below — Individual,
+				Organisation, and Project License — is its own standalone agreement; your Sales Receipt
+				records which one you have bought and at what tier.
 			</p>
 
 			{#each EULA_SECTIONS as section, i (section.id)}
@@ -93,7 +94,7 @@
 				{/if}
 			{/each}
 
-			<p class="Eula__note">Version 1.0 — August 2026.</p>
+			<p class="Eula__note">Version 2.0 — August 2026.</p>
 		</div>
 	</div>
 </main>
