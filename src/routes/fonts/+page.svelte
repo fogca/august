@@ -181,17 +181,11 @@
 		font-variant-numeric: tabular-nums slashed-zero;
 	}
 
-	.FontCard__spec-lead {
-		font-size: clamp(28px, 4.8vw, 56px);
-	}
-
+	/* All three lines of the specimen at one size — a block of set copy, not a
+	   headline-plus-caption. */
+	.FontCard__spec-lead,
 	.FontCard__spec-line {
-		font-size: clamp(12px, 1.5vw, 18px);
-		line-height: 1.3;
-	}
-
-	.FontCard__spec-line:first-of-type {
-		margin-top: 12px;
+		font-size: clamp(28px, 4.4vw, 52px);
 	}
 
 	.FontCard__foot {

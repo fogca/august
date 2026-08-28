@@ -21,25 +21,24 @@ export interface TierDef {
 	multiplier: number | null; // null = Contact
 }
 
-// 7-step multiplier curve (Tier 1 = ×1.0 base). Convex on purpose: individuals
-// and small teams stay close to base, large organisations carry the revenue.
-// Replaces the old 12-tier × 4-licence-axis (Desktop/Web/App/Books, each with
-// its own users/pageviews/downloads/copies scale) model. One axis — company
-// size — one price per tier: no more choosing which licence type(s) to buy.
-//
-// Team-and-up multipliers are the old Desktop-only multiplier at the nearest
-// breakpoint times a graduated "bundle uplift" (bigger orgs were more likely
-// to have needed more than one of the old licence types already, so they
-// absorb more of the uplift; Individual carries none — see getTierScope).
+// 7-step multiplier curve (Tier 1 = ×1.0 base). Headcount breakpoints step
+// ×5 / ×2 / ×5 / ×2 / ×5 (1 → 5 → 10 → 50 → 100 → 500); the multiplier
+// mirrors that rhythm — roughly ×2.0 per ×5 headcount jump, ×1.5 per ×2
+// jump — so a bigger jump in who's covered gets a proportionally bigger
+// jump in price, not the flatter curve a straight reuse of the old
+// breakpoints' multipliers would give once Studio's ceiling dropped to 10.
+// Convex overall: individuals and small teams stay close to base, large
+// organisations carry the revenue. One axis — company size — one price per
+// tier: no separate Desktop / Web / App / Books purchase to choose between.
 // Starting point, not a precise derivation — no real sales-mix data exists
 // yet to calibrate against; revisit once purchases accumulate.
 export const TIER_DEFS: TierDef[] = [
 	{ index: 1, name: 'Individual', label: '1 person', multiplier: 1.0 },
-	{ index: 2, name: 'Team', label: 'up to 10', multiplier: 2.0 },
-	{ index: 3, name: 'Studio', label: 'up to 30', multiplier: 3.6 },
-	{ index: 4, name: 'Agency', label: 'up to 50', multiplier: 5.5 },
-	{ index: 5, name: 'Brand', label: 'up to 100', multiplier: 8.4 },
-	{ index: 6, name: 'Firm', label: 'up to 500', multiplier: 20.7 },
+	{ index: 2, name: 'Team', label: 'up to 5', multiplier: 2.0 },
+	{ index: 3, name: 'Studio', label: 'up to 10', multiplier: 3.0 },
+	{ index: 4, name: 'Agency', label: 'up to 50', multiplier: 6.0 },
+	{ index: 5, name: 'Brand', label: 'up to 100', multiplier: 9.0 },
+	{ index: 6, name: 'Firm', label: 'up to 500', multiplier: 18.0 },
 	{ index: 7, name: 'Global', label: '500+', multiplier: null }
 ];
 
@@ -123,14 +122,15 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 				detail: '20 weights — Hairline to Ultra',
 				styles: STEINER_WEIGHTS,
 				italic: false,
-				// Individual-tier price: EUR21 per weight across the 20.
-				// Deliberately above the Future Fonts band — that platform is the
-				// work-in-progress channel and prices below the finished release
-				// by design. Moves up when the italic ships.
-				baseEur: 420,
+				// Individual-tier price: EUR12.50 per weight across the 20.
+				// Softened from the original €420 launch price to lower the
+				// entry-price barrier (2026-08 pricing pass) — still above the
+				// Future Fonts band, which is the work-in-progress channel and
+				// prices below the finished release by design.
+				baseEur: 250,
 				// No standing discount: an anchor that never expires reads as a
 				// fake list price.
-				grossEur: 420,
+				grossEur: 250,
 				discountRate: 0
 			}
 		]
@@ -178,7 +178,7 @@ export function getGrossPrice(pkg: PackageDef, tierIndex: number): Price {
 // transferable to the buyer's other projects or clients. Priced independent
 // of both the agency's own tier and the client's company size: a narrower
 // product, not a discount off either. Sits between Individual and Team.
-export const PROJECT_LICENSE_EUR = 650;
+export const PROJECT_LICENSE_EUR = 600;
 export const PROJECT_LICENSE_LABEL = 'Project License';
 export const PROJECT_LICENSE_BLURB =
 	'For a studio or agency buying on behalf of one client. Full commercial use, scoped to a single brand identity — not a company-wide licence.';

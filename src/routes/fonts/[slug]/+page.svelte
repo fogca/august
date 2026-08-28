@@ -142,7 +142,7 @@
 		{#if isAvailable}
 			<p class="FontBuy__eyebrow">License</p>
 			<h2 class="FontBuy__heading">{tf.name}</h2>
-			<p class="FontBuy__price">From €420 · perpetual license, pay once</p>
+			<p class="FontBuy__price">From €250 · perpetual license, pay once</p>
 			<ul class="FontBuy__licenses">
 				<li>Desktop</li>
 				<li>Web</li>
