@@ -64,15 +64,6 @@
 			</div>
 		{/if}
 
-		<div class="FontDetail__hero-foot">
-			<p class="FontDetail__hero-label">{tf.hero.label}</p>
-			<div class="FontDetail__hero-meta">
-				<span>{tf.hero.vol}</span>
-				<span>{tf.name}</span>
-				<span class="FontDetail__hero-sub">{tf.hero.subtitle}</span>
-				<span class="FontDetail__hero-debut">{tf.hero.debut}</span>
-			</div>
-		</div>
 	</section>
 
 	<!-- Body: oversized name, then description (left) and the spec table (right) -->
@@ -289,52 +280,11 @@
 		color: currentColor;
 	}
 
-	.FontDetail__hero-foot {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		padding: var(--gutter);
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		z-index: 2;
-	}
 
-	/* PC: a flat 30px inset — same specificity as the rule above, so it has to
-	   come after it to win. */
-	@media (min-width: 768px) {
-		.FontDetail__hero-foot {
-			padding: 30px;
-		}
-	}
 
-	.FontDetail__hero-label {
-		font-family: 'Steiner', sans-serif;
-		font-size: 11px;
-		line-height: 1.5;
-		letter-spacing: 0;
-		opacity: 0.9;
-		margin: 0;
-	}
 
-	.FontDetail__hero-meta {
-		display: flex;
-		gap: 14px;
-		align-items: baseline;
-		font-family: 'Steiner', sans-serif;
-		font-size: 11px;
-		line-height: 1.4;
-		letter-spacing: 0;
-	}
 
-	.FontDetail__hero-sub {
-		opacity: 0.75;
-	}
 
-	.FontDetail__hero-debut {
-		margin-left: auto;
-	}
 
 	/* Hero text over media is plain white (via `.white` on the hero) — no inversion. */
 

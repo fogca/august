@@ -179,7 +179,7 @@
 	</section>
 
 	<!-- Custom type service (black) — v1 cover reveal -->
-	<section class="Home__custom" use:coverReveal>
+	<section class="Home__custom" id="custom" use:coverReveal>
 		<div class="Custom__inner">
 			<p class="Custom__eyebrow">Bespoke</p>
 			<!-- Spans, not <br>: they stay inline on desktop and become the three

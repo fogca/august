@@ -30,10 +30,11 @@
 
 	type NavItem = { label: string; href: string };
 
-	// Desktop inline nav (unchanged)
+	// Desktop inline nav. "Custom" jumps to the bespoke section on the home
+	// page — there is no standalone route for it yet.
 	const NAV: NavItem[] = [
 		{ label: 'Fonts', href: '/fonts' },
-		{ label: 'About', href: '/about' },
+		{ label: 'Custom', href: '/#custom' },
 		{ label: 'Buy', href: '/buy' }
 	];
 
@@ -75,6 +76,8 @@
 		{#each NAV as item (item.href)}
 			<a class="Header__nav-link" href={item.href}>{item.label}</a>
 		{/each}
+		<!-- Current language. Inert until the EN/DA switch is wired up. -->
+		<span class="Header__nav-link Header__lang" aria-current="true">EN</span>
 	</nav>
 
 	<!-- Mobile-only: Buy stays one tap away even with the menu closed, Menu/Close
