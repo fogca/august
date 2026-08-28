@@ -93,17 +93,14 @@
 	}
 
 	.Legal__inner {
-		max-width: 680px;
 		padding-inline: var(--padding);
 	}
 
-	/* PC: the block sits inside the right 75% of the viewport — the title
-	   (and everything else, left-aligned by default) starts flush at that
-	   25% seam rather than being centered on the page. */
+	/* PC: same offset mechanism as the EULA template — a viewport-relative
+	   left inset rather than a percentage margin, and no width cap. */
 	@media (min-width: 768px) {
 		.Legal__inner {
-			margin-left: 25%;
-			margin-right: 0;
+			padding-left: 25vw;
 		}
 	}
 
@@ -145,6 +142,22 @@
 	.Legal a {
 		text-decoration: underline;
 		text-underline-offset: 3px;
+	}
+
+	/* Font size/weight per the EULA template: 14px mobile (base), 16px
+	   desktop, light weight — applied to the lead paragraph and every fact's
+	   value (dt labels stay at their existing muted style). */
+	.Legal__lead,
+	.Legal__fact dd {
+		font-size: 14px;
+		font-weight: var(--fw-light);
+	}
+
+	@media (min-width: 768px) {
+		.Legal__lead,
+		.Legal__fact dd {
+			font-size: 16px;
+		}
 	}
 
 	@media (max-width: 640px) {

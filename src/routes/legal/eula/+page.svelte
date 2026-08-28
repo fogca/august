@@ -1,8 +1,42 @@
 <!--
-  End User Licence Agreement — matches the scope sold at /buy (Desktop = users,
-  Web = monthly pageviews, App = downloads, Books = copies).
-  Keep the licence URL in the font name table (nameID 13/14) pointed here.
+  End User Licence Agreement — one Article-numbered mini-agreement per
+  licence type (Desktop / Web / App / Books), matching what's actually
+  sold on /buy. Layout: a sticky sidebar (scrollspy-highlighted) beside
+  the stacked sections — content lives in $lib/data/eula.ts.
 -->
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { EULA_SECTIONS } from '$lib/data/eula.js';
+
+	let activeId = $state(EULA_SECTIONS[0].id);
+
+	onMount(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						activeId = entry.target.id;
+					}
+				}
+			},
+			// Counts a section "active" once its heading has cleared the fixed
+			// header, and before the next section's heading arrives.
+			{ rootMargin: '-140px 0px -75% 0px', threshold: 0 }
+		);
+
+		const els = EULA_SECTIONS.map((s) => document.getElementById(s.id)).filter(
+			(el): el is HTMLElement => !!el
+		);
+		els.forEach((el) => observer.observe(el));
+
+		return () => observer.disconnect();
+	});
+
+	function jumpTo(id: string) {
+		document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	}
+</script>
+
 <svelte:head>
 	<title>Licence (EULA) — August Type Foundry</title>
 	<meta
@@ -11,182 +45,224 @@
 	/>
 </svelte:head>
 
-<main class="Legal">
-	<div class="Legal__inner">
-		<h1>End User Licence Agreement</h1>
-		<p class="Legal__lead">
-			These terms govern your use of fonts purchased from August Type Foundry (a brand of Mirai
-			Service Co., Ltd.). By downloading or using the Fonts you agree to them. The Sales Receipt
-			and licence document delivered with the Fonts record exactly what you are licensed for.
-		</p>
+<main class="Eula">
+	<div class="Eula__layout">
+		<nav class="Eula__nav" aria-label="Licence sections">
+			<ul>
+				{#each EULA_SECTIONS as section (section.id)}
+					<li>
+						<button
+							type="button"
+							class="Eula__nav-link"
+							class:is-active={activeId === section.id}
+							onclick={() => jumpTo(section.id)}
+							aria-current={activeId === section.id ? 'true' : undefined}
+						>
+							{section.navLabel}
+						</button>
+					</li>
+				{/each}
+			</ul>
+		</nav>
 
-		<section class="Legal__block">
-			<h2>1. Definitions</h2>
-			<p>
-				<strong>Fonts</strong> — the font software you purchased. <strong>Licensee</strong> — the
-				person or company named on the Sales Receipt. <strong>User</strong> — a person who installs
-				or uses the Fonts. <strong>Sales Receipt</strong> — the order confirmation and licence
-				document, which is the authoritative record of your licence scope.
+		<div class="Eula__content">
+			<p class="Eula__lead">
+				August Type Foundry fonts are licensed, not sold. Each licence type below — Desktop, Web,
+				App, and Books — is its own standalone agreement; your Sales Receipt records which one(s)
+				you have bought and at what tier.
 			</p>
-		</section>
 
-		<section class="Legal__block">
-			<h2>2. Licence grant</h2>
-			<p>
-				We grant the Licensee a perpetual, worldwide, non-exclusive licence to use the Fonts within
-				the scope on the Sales Receipt. The Fonts remain the property of August Type Foundry; this
-				is a licence, not a sale of the software. Pay once — there is no subscription.
-			</p>
-		</section>
+			{#each EULA_SECTIONS as section, i (section.id)}
+				<section class="Eula__section" id={section.id}>
+					<h1>{section.heading}</h1>
+					<p class="Eula__intro">{section.intro}</p>
 
-		<section class="Legal__block">
-			<h2>3. Desktop licence</h2>
-			<p>
-				Covers installation and use of the Fonts to create artwork, documents, and images. Scope is
-				measured by the number of Users in your organisation (per the tier on your Sales Receipt);
-				each User may install the Fonts on the devices they personally use. Desktop licences do not
-				cover live website embedding (Web), application embedding (App), or commercial ebook
-				embedding (Books) — those are separate licences.
-			</p>
-		</section>
+					{#each section.articles as article (article.number)}
+						<div class="Eula__article">
+							<h2>Article {article.number}: {article.title}</h2>
+							<ol class="Eula__clauses">
+								{#each article.clauses as clause}
+									<li>{clause}</li>
+								{/each}
+							</ol>
+						</div>
+					{/each}
+				</section>
+				{#if i < EULA_SECTIONS.length - 1}
+					<div class="Eula__divider" aria-hidden="true"></div>
+				{/if}
+			{/each}
 
-		<section class="Legal__block">
-			<h2>4. Web licence</h2>
-			<p>
-				Covers self-hosting the supplied WOFF2 webfonts via <code>@font-face</code> on the website(s)
-				identified with your order, up to the monthly pageview volume on your Sales Receipt. Only the
-				WOFF2 files we supply may be used on the web; the desktop OTF/TTF must not be used in
-				<code>@font-face</code>. Additional sites or higher traffic require an upgraded or additional
-				licence.
-			</p>
-		</section>
-
-		<section class="Legal__block">
-			<h2>5. App licence</h2>
-			<p>
-				Covers embedding the Fonts in a single mobile or desktop application, up to the number of
-				downloads on your Sales Receipt. Each additional application requires its own licence.
-			</p>
-		</section>
-
-		<section class="Legal__block">
-			<h2>6. Books licence</h2>
-			<p>
-				Covers embedding the Fonts in a single ebook / digital publication title, up to the number of
-				copies on your Sales Receipt. Each additional title requires its own licence.
-			</p>
-		</section>
-
-		<section class="Legal__block">
-			<h2>7. Embedding, modification &amp; transfer</h2>
-			<p>
-				You may embed the Fonts in PDFs and documents in a manner consistent with your licence. You
-				may not rename, reverse-engineer, decompile, or redistribute the Fonts, or create derivative
-				font software from them, without our written permission. The licence may not be transferred,
-				sub-licensed, or shared with a third party without our prior written consent.
-			</p>
-		</section>
-
-		<section class="Legal__block">
-			<h2>8. Compliance &amp; upgrades</h2>
-			<p>
-				You agree to take reasonable measures to keep the Fonts from being used outside your licensed
-				scope. If your usage grows beyond the tier on your Sales Receipt, you agree to upgrade the
-				licence. At our request, you agree to confirm that your usage matches your Sales Receipt.
-			</p>
-		</section>
-
-		<section class="Legal__block">
-			<h2>9. Termination</h2>
-			<p>
-				This licence terminates automatically if you breach it. On termination you must stop using
-				and delete all copies of the Fonts. Sections that by their nature should survive (ownership,
-				liability) continue after termination.
-			</p>
-		</section>
-
-		<section class="Legal__block">
-			<h2>10. Warranty &amp; liability</h2>
-			<p>
-				The Fonts are provided “as is.” To the extent permitted by law, August Type Foundry is not
-				liable for indirect or consequential losses, and our total liability is limited to the
-				amount you paid for the licence. Nothing here excludes liability that cannot be excluded by
-				law.
-			</p>
-		</section>
-
-		<section class="Legal__block">
-			<h2>11. Governing law</h2>
-			<p>
-				This agreement is governed by the laws of Japan, and disputes are subject to the
-				jurisdiction of the courts of Japan. For licence questions, contact
-				<a href="mailto:hi@august.tf">hi@august.tf</a>.
-			</p>
-		</section>
-
-		<p class="Legal__note">Version 1.0 — July 2026.</p>
+			<p class="Eula__note">Version 1.0 — August 2026.</p>
+		</div>
 	</div>
 </main>
 
 <style>
-	.Legal {
+	.Eula {
 		min-height: 100vh;
 		min-height: 100dvh;
 		padding-block: 96px;
 	}
 
 	@media (min-width: 768px) {
-		.Legal {
+		.Eula {
 			padding-top: 120px;
 		}
 	}
 
-	.Legal__inner {
-		max-width: 680px;
+	.Eula__layout {
 		padding-inline: var(--padding);
 	}
 
-	/* PC: the block sits inside the right 75% of the viewport — the title
-	   (and everything else, left-aligned by default) starts flush at that
-	   25% seam rather than being centered on the page. */
+	/* PC: unlike the other legal pages, the sidebar stays near the left edge
+	   (normal page padding) — matching the reference screenshot — and it's
+	   the wide gap before the content column that does the "leaning right"
+	   work, not a margin pushing the whole layout over. */
 	@media (min-width: 768px) {
-		.Legal__inner {
-			margin-left: 25%;
-			margin-right: 0;
+		.Eula__layout {
+			display: flex;
+			align-items: flex-start;
+			gap: 25vw;
 		}
 	}
 
-	.Legal h1 {
-		margin: 0 0 24px;
+	/* Mobile: a horizontal, wrapping pill row — no sticky (little vertical
+	   room to spare on a phone), just a quick way to skip to a section. */
+	.Eula__nav {
+		margin-bottom: 32px;
 	}
 
-	.Legal__lead {
-		margin-bottom: 36px;
-		max-width: 64ch;
+	.Eula__nav ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
 	}
 
-	.Legal__block {
-		margin-bottom: 26px;
-		max-width: 66ch;
+	.Eula__nav-link {
+		font-family: 'Steiner', sans-serif;
+		font-size: 12px;
+		letter-spacing: 0;
+		color: var(--color-text-mute);
+		background: transparent;
+		border: 1px solid var(--color-line);
+		border-radius: 999px;
+		padding: 6px 14px;
+		cursor: pointer;
+		transition: color 0.15s, border-color 0.15s, background-color 0.15s;
 	}
 
-	.Legal__block h2 {
-		margin: 0 0 8px;
+	.Eula__nav-link.is-active {
+		color: var(--color-bg);
+		background: var(--color-text);
+		border-color: var(--color-text);
 	}
 
-	.Legal__block code {
-		font-family: var(--font-system, monospace);
-		font-size: 0.92em;
-		opacity: 0.85;
+	@media (min-width: 768px) {
+		.Eula__nav {
+			flex: none;
+			width: 140px;
+			margin-bottom: 0;
+			position: sticky;
+			top: 140px;
+			align-self: flex-start;
+		}
+
+		.Eula__nav ul {
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		.Eula__nav-link {
+			font-size: 13px;
+			text-align: left;
+			border: none;
+			border-radius: 0;
+			padding: 0;
+			background: transparent;
+		}
+
+		.Eula__nav-link.is-active {
+			color: var(--color-text);
+			background: transparent;
+			font-weight: var(--fw-strong);
+		}
 	}
 
-	.Legal__note {
+	.Eula__content {
+		min-width: 0;
+	}
+
+	.Eula__lead {
+		margin-bottom: 48px;
+		max-width: 60ch;
+		color: var(--color-text-mute);
+	}
+
+	.Eula__section {
+		padding-inline: 0;
+	}
+
+	.Eula__section h1 {
+		font-size: clamp(28px, 4vw, 40px);
+		margin: 0 0 20px;
+	}
+
+	.Eula__intro {
+		margin-bottom: 32px;
+		max-width: 100%;
+	}
+
+	.Eula__article {
+		margin-bottom: 28px;
+	}
+
+	.Eula__article h2 {
+		font-size: var(--fs-h3);
+		margin: 0 0 10px;
+	}
+
+	.Eula__clauses {
+		margin: 0;
+		padding-left: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.Eula__clauses li {
+		line-height: 1.6;
+	}
+
+	/* Font size per spec: 14px mobile (base), 16px desktop. */
+	.Eula p,
+	.Eula ol {
+		font-size: 14px;
+		font-weight: var(--fw-light);
+	}
+
+	@media (min-width: 768px) {
+		.Eula p,
+		.Eula ol {
+			font-size: 16px;
+		}
+	}
+
+	.Eula__divider {
+		border-top: 1px solid var(--color-line);
+		margin: 56px 0;
+	}
+
+	.Eula__note {
 		margin-top: 40px;
 		font-size: 11px;
 		opacity: 0.5;
 	}
 
-	.Legal a {
+	.Eula a {
 		text-decoration: underline;
 		text-underline-offset: 3px;
 	}

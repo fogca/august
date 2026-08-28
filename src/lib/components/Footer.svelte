@@ -21,8 +21,9 @@
 		{ label: 'Privacy', href: '/legal/privacy' },
 		// Japan's mandatory commercial-transactions disclosure (特定商取引法).
 		// Presented in English for now (2026-08) — facts unchanged, language only.
-		{ label: 'Legal Notice', href: '/legal/tokusho' },
-		{ label: 'Company', href: '/legal/company' }
+		// Already covers seller name/address/contact, so the separate Company
+		// page (removed 2026-08) was redundant with this one.
+		{ label: 'Legal Notice', href: '/legal/tokusho' }
 	];
 
 	const YEAR = new Date().getFullYear();

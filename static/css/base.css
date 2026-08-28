@@ -122,6 +122,7 @@ a {
      Change --fw-base to reweight the entire site. Components must NOT
      hardcode weights; use these tokens (or inherit). */
   --fw-base:   320;  /* default text weight (body inherits everywhere) */
+  --fw-light:  300;  /* lighter body copy — matches the Steiner "Light" named stop */
   --fw-ui:     450;  /* UI accents: nav, buttons, labels */
   --fw-strong: 500;  /* emphasis / sub-headings */
 
