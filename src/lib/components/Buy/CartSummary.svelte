@@ -1,20 +1,19 @@
 <script lang="ts">
-	// Cart summary — single License selection + selected typeface package(s).
-	// Tier changes use an inline dropdown; Project License has no tier to change.
+	// Cart summary — read-only receipt of what Step 1 (About you) resolved,
+	// plus the selected typeface package(s). There is nothing to pick here
+	// any more: the licence is a consequence of the intake step's answers,
+	// not a free choice, so no tier dropdown — only an "Edit" link back to
+	// Step 1 for changing the answers themselves.
 	import { enhance } from '$app/forms';
-	import {
-		formatPrice,
-		getTierName,
-		TIER_DEFS,
-		getPrice,
-		getGrossPrice,
-		PROJECT_LICENSE_LABEL
-	} from '$lib/data/pricing';
+	import { formatPrice, getTierName, PROJECT_LICENSE_LABEL } from '$lib/data/pricing';
 	import type { PackageDef } from '$lib/data/pricing';
 	import type { CartItem, AppliedDiscount } from '$lib/data/discounts';
+	import type { IntakeMeta } from '$lib/components/Buy/LicenseIntake.svelte';
 
 	interface Props {
 		items: CartItem[];
+		/** Step 1's resolved answers — shown here for confirmation and sent to checkout. */
+		intakeMeta: IntakeMeta;
 		subtotal: number;
 		discounts: AppliedDiscount[];
 		total: number;
@@ -22,11 +21,6 @@
 		packageDefs: PackageDef[];
 		mobileExpanded?: boolean;
 		onMobileToggle?: () => void;
-		onremove: () => void;
-		/** Called when a tier is changed inline from the cart. */
-		onTierChange: (item: CartItem) => void;
-		/** Remove a font package from the order. */
-		onremovepackage: (packageId: string) => void;
 		/** Render as an always-open in-flow block (no collapsing sticky bar). */
 		inline?: boolean;
 		/** Educational discount active — forwarded to checkout. */
@@ -37,15 +31,13 @@
 
 	let {
 		items,
+		intakeMeta,
 		subtotal,
 		discounts,
 		total,
 		packageDefs,
 		mobileExpanded = false,
 		onMobileToggle,
-		onremove,
-		onTierChange,
-		onremovepackage,
 		inline = false,
 		isStudent = false,
 		errorMessage = null
@@ -55,9 +47,6 @@
 
 	// True while the checkout POST is in flight (until Stripe redirect unloads the page)
 	let submitting = $state(false);
-
-	// Shows the inline custom-quote notice when the Global tier is picked
-	let enterpriseNotice = $state(false);
 
 	// Only one selection is ever active — every package shares the same
 	// kind/tier, so the first item represents the selection.
@@ -72,34 +61,8 @@
 		return items.reduce((s, i) => s + i.basePrice, 0);
 	}
 
-	/**
-	 * Change tier for the active selection across all packages (from the cart
-	 * dropdown). The Global tier (multiplier null) has no self-serve price:
-	 * keep the cart untouched, revert the select, and show an inline
-	 * custom-quote notice instead of hard-navigating away. No-op for a
-	 * Project License selection — it has no tier to change.
-	 */
-	function setTier(next: number, el?: HTMLSelectElement) {
-		if (!activeItem || activeItem.kind !== 'tier') return;
-		const current = activeItem.tierIndex ?? 1;
-		if (next === current) return;
-
-		const tier = TIER_DEFS.find((t) => t.index === next);
-		if (tier?.multiplier === null) {
-			if (el) el.value = String(current);
-			enterpriseNotice = true;
-			return;
-		}
-		enterpriseNotice = false;
-
-		for (const pkg of packageDefs) {
-			const price = getPrice(pkg, next);
-			const gross = getGrossPrice(pkg, next);
-			if (price === null || gross === null) continue;
-			const existingItem = items.find((i) => i.packageId === pkg.id);
-			if (!existingItem) continue;
-			onTierChange({ ...existingItem, tierIndex: next, basePrice: price, grossPrice: gross });
-		}
+	function editStep1() {
+		document.getElementById('step-1')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}
 </script>
 
@@ -137,7 +100,7 @@
 	<div class="CartSummary__details" id="cart-details" aria-live="polite" role="status">
 		{#if !hasItems}
 			<h3 class="CartSummary__heading">Your order</h3>
-			<p class="CartSummary__empty">Choose a licence type and font package to begin.</p>
+			<p class="CartSummary__empty">Answer Step 1 and choose a font package to begin.</p>
 		{:else}
 			<!-- License section -->
 			{#if activeItem}
@@ -147,33 +110,17 @@
 						<li class="CartSummary__licence">
 							<div class="CartSummary__licence-main">
 								<span class="CartSummary__licence-type">{licenseName(activeItem)}</span>
-								{#if activeItem.kind === 'tier'}
-									<!-- Tier select -->
-									<select
-										class="CartSummary__select"
-										aria-label="License scale"
-										value={activeItem.tierIndex}
-										onchange={(e) => setTier(Number(e.currentTarget.value), e.currentTarget)}
-									>
-										{#each TIER_DEFS as t (t.index)}
-											<option value={t.index}>{t.name} — {t.label}</option>
-										{/each}
-									</select>
-								{/if}
 								<span class="CartSummary__licence-price">{formatPrice(licensePrice())}</span>
-								<button
-									type="button"
-									class="CartSummary__remove"
-									onclick={() => {
-										enterpriseNotice = false;
-										onremove();
-									}}
-									aria-label={`Remove ${licenseName(activeItem)} license`}
-								>×</button>
+								<button type="button" class="CartSummary__edit" onclick={editStep1}>Edit</button>
 							</div>
-							{#if enterpriseNotice}
-								<p class="CartSummary__enterprise" role="status">
-									This scale requires a custom quote — <a href="/contact">contact us</a>.
+							{#if intakeMeta.licenseeName || intakeMeta.clientName}
+								<p class="CartSummary__licensee">
+									{#if intakeMeta.path === 'project'}
+										{intakeMeta.licenseeName} → for {intakeMeta.clientName}
+									{:else}
+										{intakeMeta.licenseeName}
+										{#if intakeMeta.usageBand}· {intakeMeta.usageBand} people{#if intakeMeta.totalHeadcount} (total {intakeMeta.totalHeadcount}){/if}{/if}
+									{/if}
 								</p>
 							{/if}
 						</li>
@@ -190,12 +137,6 @@
 							<li class="CartSummary__package-row">
 								<span class="CartSummary__package-name">{pkg.label}</span>
 								<span class="CartSummary__package-detail">{pkg.detail}</span>
-								<button
-									type="button"
-									class="CartSummary__remove"
-									onclick={() => onremovepackage(pkg.id)}
-									aria-label={`Remove ${pkg.label}`}
-								>×</button>
 							</li>
 						{/each}
 					</ul>
@@ -242,6 +183,9 @@
 				}}
 			>
 				<input type="hidden" name="educational" value={isStudent ? '1' : '0'} />
+				<input type="hidden" name="licensee_name" value={intakeMeta.licenseeName} />
+				<input type="hidden" name="client_name" value={intakeMeta.clientName} />
+				<input type="hidden" name="total_headcount" value={intakeMeta.totalHeadcount ?? ''} />
 				{#each packageDefs as pkg}
 					<input type="hidden" name="package_id" value={pkg.id} />
 				{/each}
@@ -398,68 +342,39 @@
 		flex-shrink: 0;
 	}
 
-	/* ── Tier select (in cart) ── */
-	.CartSummary__select {
-		flex: 1;
-		min-width: 0;
-		max-width: 180px;
-		margin-left: auto;
-		padding: 6px 28px 6px 10px;
-		background: var(--color-bg);
-		border: 1px solid var(--color-line);
-		border-radius: 0;
-		cursor: pointer;
-		font-family: 'Steiner', sans-serif;
-		font-size: 11px;
-		color: var(--color-text);
-		letter-spacing: 0;
-		-webkit-appearance: none;
-		appearance: none;
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23000' fill='none' stroke-width='1'/%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-position: right 10px center;
-		transition: border-color 120ms;
-	}
-
-	.CartSummary__select:hover {
-		border-color: var(--color-text);
-	}
-
 	.CartSummary__licence-price {
 		flex-shrink: 0;
+		margin-left: auto;
 		font-size: 12px;
 		font-variation-settings: 'wght' 450;
 		white-space: nowrap;
 	}
 
-	/* Inline enterprise-quote notice (replaces the old hard redirect to /contact) */
-	.CartSummary__enterprise {
+	/* Who the licence names — company/purchaser (+ client for Project License),
+	   and the declared headcount for context. */
+	.CartSummary__licensee {
 		margin: 0;
 		padding: 0 14px 10px;
 		font-size: 11px;
 		line-height: 1.5;
-		color: var(--color-text);
+		color: var(--color-text-mute);
 	}
 
-	.CartSummary__enterprise a {
-		text-decoration: underline;
-		text-underline-offset: 2px;
-	}
-
-	.CartSummary__remove {
+	.CartSummary__edit {
+		flex-shrink: 0;
 		background: transparent;
 		border: 0;
 		font: inherit;
-		font-size: 18px;
-		line-height: 1;
+		font-size: 11px;
 		color: var(--color-text-mute);
 		cursor: pointer;
 		padding: 0 4px;
-		flex-shrink: 0;
+		text-decoration: underline;
+		text-underline-offset: 2px;
 		transition: color 120ms;
 	}
 
-	.CartSummary__remove:hover {
+	.CartSummary__edit:hover {
 		color: var(--color-text);
 	}
 
@@ -480,10 +395,6 @@
 		padding: 10px 14px;
 		background: var(--color-bg);
 		font-size: 13px;
-	}
-
-	.CartSummary__package-row .CartSummary__remove {
-		margin-left: auto;
 	}
 
 	.CartSummary__package-name {

@@ -17,6 +17,8 @@ export interface SuccessOrder {
 	currency: string;
 	licenses: string | null;
 	educational: boolean;
+	licenseeName: string | null;
+	clientName: string | null;
 }
 
 export const load: PageServerLoad = async ({ url }) => {
@@ -63,7 +65,9 @@ export const load: PageServerLoad = async ({ url }) => {
 		amount,
 		currency,
 		licenses: session.metadata?.licenses ?? null,
-		educational: session.metadata?.educational === 'yes'
+		educational: session.metadata?.educational === 'yes',
+		licenseeName: session.metadata?.licensee_name || null,
+		clientName: session.metadata?.client_name || null
 	};
 
 	return { order };

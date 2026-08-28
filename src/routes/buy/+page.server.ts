@@ -36,6 +36,10 @@ export const actions: Actions = {
 
 		// ── Parse + validate the order ─────────────────────────
 		const isStudent = data.get('educational') === '1';
+		const licenseeName = String(data.get('licensee_name') ?? '').trim().slice(0, 200);
+		const clientName = String(data.get('client_name') ?? '').trim().slice(0, 200);
+		const totalHeadcountRaw = data.get('total_headcount');
+		const totalHeadcount = totalHeadcountRaw ? Number(totalHeadcountRaw) : null;
 
 		const kinds = data.getAll('item_kind').map(String) as CartItemKind[];
 		const tiersRaw = data.getAll('item_tier').map(String);
@@ -53,6 +57,11 @@ export const actions: Actions = {
 			}
 
 			if (kind === 'project') {
+				// Project License needs both the purchasing studio/agency and the
+				// named client Brand on record — the Sales Receipt's Purchaser/Brand.
+				if (!licenseeName || !clientName) {
+					return fail(400, { message: 'A Project License needs your studio name and a client name.' });
+				}
 				items.push({
 					kind: 'project',
 					tierIndex: null,
@@ -60,7 +69,7 @@ export const actions: Actions = {
 					grossPrice: PROJECT_LICENSE_EUR,
 					packageId: STEINER.id
 				});
-				lineDescriptions.push(PROJECT_LICENSE_LABEL);
+				lineDescriptions.push(`${PROJECT_LICENSE_LABEL} — ${licenseeName} for ${clientName}`);
 				continue;
 			}
 
@@ -68,6 +77,16 @@ export const actions: Actions = {
 			if (!Number.isInteger(tierIndex)) {
 				return fail(400, { message: 'Invalid license selection.' });
 			}
+
+			// Individual (tier 1) needs no organisation details. Team-and-above
+			// is where the intake step's rigor actually gets enforced: the tier
+			// itself came from a fixed-range select (see LicenseIntake), not a
+			// freely typed number, so there is no separate headcount to
+			// cross-check it against — just require the organisation is named.
+			if (tierIndex > 1 && (!licenseeName || !totalHeadcount || !Number.isInteger(totalHeadcount) || totalHeadcount < 1)) {
+				return fail(400, { message: 'Please fill in your organisation details in Step 1.' });
+			}
+
 			const price = getPrice(STEINER, tierIndex);
 			const gross = getGrossPrice(STEINER, tierIndex);
 			if (price === null || gross === null) {
@@ -81,7 +100,9 @@ export const actions: Actions = {
 				grossPrice: gross,
 				packageId: STEINER.id
 			});
-			lineDescriptions.push(`${getTierName(tierIndex)} (${getTierLabel(tierIndex)})`);
+			lineDescriptions.push(
+				`${getTierName(tierIndex)} (${getTierLabel(tierIndex)})${licenseeName ? ` — ${licenseeName}` : ''}`
+			);
 		}
 
 		const { total } = computeTotal({
@@ -137,7 +158,13 @@ export const actions: Actions = {
 				metadata: {
 					package: STEINER.id,
 					licenses: licensesSummary,
-					educational: isStudent ? 'yes' : 'no'
+					educational: isStudent ? 'yes' : 'no',
+					licensee_name: licenseeName,
+					client_name: clientName,
+					organisation_size:
+						items[0]?.kind === 'tier' && items[0].tierIndex && items[0].tierIndex > 1
+							? `${getTierLabel(items[0].tierIndex)}${totalHeadcount ? ` (total ${totalHeadcount})` : ''}`
+							: ''
 				},
 				success_url: `${url.origin}/buy/success?session_id={CHECKOUT_SESSION_ID}`,
 				cancel_url: `${url.origin}/buy`

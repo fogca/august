@@ -1,15 +1,20 @@
 <script lang="ts">
 	// /buy — August Type Foundry license purchase page.
-	// Three-step flow (Klim Type Foundry-style): Typeface → License → Weights.
-	// Only one product is on sale today (Asger), but Step 1 already
+	// Four-step flow: About you (intake) → Typeface → Weights, with a running
+	// order summary. The intake step comes first and on purpose: rather than
+	// a free-browse tier picker showing every tier's price side by side, it
+	// asks who the licence is for, derives the one applicable tier from that
+	// answer (see LicenseIntake / resolveTierForHeadcount), and only that one
+	// price is ever shown from here on.
+	// Only one product is on sale today (Asger), but Step 2 already
 	// reads from getFlatPackages() rather than hardcoding it, so a second
 	// typeface going on sale just adds a second card — no page changes.
 
-	import { getPrice, getGrossPrice, getFlatPackages, type FlatPackage } from '$lib/data/pricing';
+	import { getFlatPackages, type FlatPackage } from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
 	import { computeTotal } from '$lib/data/discounts';
 
-	import LicensePicker from '$lib/components/Buy/LicensePicker.svelte';
+	import LicenseIntake, { type IntakeMeta } from '$lib/components/Buy/LicenseIntake.svelte';
 	import EducationalToggle from '$lib/components/Buy/EducationalToggle.svelte';
 	import CartSummary from '$lib/components/Buy/CartSummary.svelte';
 	import StyleList from '$lib/components/Buy/StyleList.svelte';
@@ -18,7 +23,26 @@
 	// Checkout action result — carries the error message when the action fails.
 	let { form }: { form: ActionData } = $props();
 
-	// ── Step 1: Typeface ──────────────────────────────────────
+	// ── Step 1: About you (intake) ───────────────────────────────
+	// LicenseIntake owns its own field state internally and reports the
+	// resolved cart item (or null, while unresolved) + receipt metadata up
+	// via this callback.
+
+	let intakeItem = $state<CartItem | null>(null);
+	let intakeMeta = $state<IntakeMeta>({
+		path: null,
+		licenseeName: '',
+		clientName: '',
+		totalHeadcount: null,
+		usageBand: null
+	});
+
+	function handleIntakeResolve(item: CartItem | null, meta: IntakeMeta) {
+		intakeItem = item;
+		intakeMeta = meta;
+	}
+
+	// ── Step 2: Typeface ──────────────────────────────────────
 
 	const TYPEFACES: FlatPackage[] = getFlatPackages();
 	// Announced but not yet for sale — shown for completeness, greyed out and
@@ -74,12 +98,16 @@
 
 	// ── State ──────────────────────────────────────────────
 
-	// At most one selection is ever active (see LicensePicker) — one item per
-	// selected package, all sharing the same kind/tier.
-	let cartItems = $state<CartItem[]>([]);
 	let isStudent = $state(false);
 
 	// ── Computed ────────────────────────────────────────────
+
+	// Purely derived from the intake resolution × the selected typeface —
+	// no separate mutation path, so there is nothing that can drift out of
+	// sync with what the intake step actually resolved.
+	const cartItems = $derived<CartItem[]>(
+		intakeItem && selectedPackage ? [{ ...intakeItem, packageId: selectedPackage.id }] : []
+	);
 
 	const hasLicense = $derived(cartItems.length > 0);
 
@@ -91,22 +119,6 @@
 	});
 
 	const { subtotal, discounts, total } = $derived(computeTotal(cartState));
-
-	// ── Handlers ────────────────────────────────────────────
-
-	/** Tier or Project License selected — replaces any previous selection. */
-	function handleSelect(item: CartItem) {
-		cartItems = [item];
-	}
-
-	/** Tier changed inline from the cart. */
-	function handleTierChange(item: CartItem) {
-		cartItems = [item];
-	}
-
-	function removeLicense() {
-		cartItems = [];
-	}
 </script>
 
 <svelte:head>
@@ -122,13 +134,20 @@
 	<div class="BuyPage__top">
 		<div class="BuyPage__title-block">
 			<h1 class="BuyPage__heading">Make it yours.</h1>
-			<p class="BuyPage__sub">Choose your typeface, license, and weights. Pay once, yours to keep.</p>
+			<p class="BuyPage__sub">Tell us who it's for, then pick your typeface and weights. Pay once, yours to keep.</p>
 		</div>
 	</div>
 
-	<!-- Step 1 — Typeface -->
+	<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
+	     the script header comment. -->
+	<div class="BuyStep" id="step-1">
+		<p class="BuyStep__eyebrow">1 — About you</p>
+		<LicenseIntake packages={selectedPackage ? [selectedPackage] : []} onresolve={handleIntakeResolve} />
+	</div>
+
+	<!-- Step 2 — Typeface -->
 	<div class="BuyStep">
-		<p class="BuyStep__eyebrow">1 — Typeface</p>
+		<p class="BuyStep__eyebrow">2 — Typeface</p>
 		<div class="TypefaceList">
 			{#each TYPEFACES as tf (tf.id)}
 				{@const active = tf.id === selectedPackageId}
@@ -163,17 +182,6 @@
 				</div>
 			{/each}
 		</div>
-	</div>
-
-	<!-- Step 2 — License -->
-	<div class="BuyStep">
-		<LicensePicker
-			title="2 — License"
-			{cartItems}
-			packages={selectedPackage ? [selectedPackage] : []}
-			onselect={handleSelect}
-			onremove={removeLicense}
-		/>
 	</div>
 
 	<!-- Step 3 — Weights (informational: Complete always ships every weight
@@ -212,14 +220,12 @@
 			inline
 			{isStudent}
 			items={cartItems}
+			{intakeMeta}
 			{subtotal}
 			{discounts}
 			{total}
 			packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
 			errorMessage={form?.message ?? null}
-			onremove={removeLicense}
-			onremovepackage={() => (cartItems = [])}
-			onTierChange={handleTierChange}
 		/>
 	</div>
 </div>
@@ -266,9 +272,6 @@
 		margin-bottom: 40px;
 	}
 
-	/* Same visual language as LicensePicker's own eyebrow title (11px, muted) —
-	   Step 2 passes this exact text in via LicensePicker's `title` prop instead
-	   of duplicating a wrapper eyebrow, so all three read as one family. */
 	.BuyStep__eyebrow {
 		font-family: 'Steiner', sans-serif;
 		font-size: 11px;
@@ -311,7 +314,7 @@
 		color: inherit;
 	}
 
-	/* Selected: same colour inversion as an active LicensePicker card */
+	/* Selected: same colour inversion as an active LicenseIntake path card */
 	.TypefaceCard.is-active {
 		background: #222222;
 		color: #ffffff;

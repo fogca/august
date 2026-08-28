@@ -34,6 +34,12 @@
 						<dd>{order.licenses}{order.educational ? ' · Educational' : ''}</dd>
 					</div>
 				{/if}
+				{#if order.licenseeName}
+					<div class="Success__fact">
+						<dt>Licensed to</dt>
+						<dd>{order.licenseeName}{order.clientName ? ` (for ${order.clientName})` : ''}</dd>
+					</div>
+				{/if}
 				<div class="Success__fact">
 					<dt>Total</dt>
 					<dd>{formatAmount(order.amount)}</dd>

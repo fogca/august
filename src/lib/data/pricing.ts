@@ -18,6 +18,12 @@ export interface TierDef {
 	index: number; // 1–7
 	name: string; // Individual / Team / Studio / Agency / Brand / Firm / Global
 	label: string; // company-size range shown to buyers
+	// Machine-readable headcount ceiling for this tier — null only for
+	// Individual (not headcount-derived, see getTierScope) and Global
+	// (uncapped/Contact). Used by resolveTierForHeadcount to derive a tier
+	// from a declared usage headcount, instead of letting a buyer freely
+	// browse and pick any tier regardless of their actual size.
+	maxHeadcount: number | null;
 	multiplier: number | null; // null = Contact
 }
 
@@ -33,13 +39,13 @@ export interface TierDef {
 // Starting point, not a precise derivation — no real sales-mix data exists
 // yet to calibrate against; revisit once purchases accumulate.
 export const TIER_DEFS: TierDef[] = [
-	{ index: 1, name: 'Individual', label: '1 person', multiplier: 1.0 },
-	{ index: 2, name: 'Team', label: 'up to 5', multiplier: 2.0 },
-	{ index: 3, name: 'Studio', label: 'up to 10', multiplier: 3.0 },
-	{ index: 4, name: 'Agency', label: 'up to 50', multiplier: 6.0 },
-	{ index: 5, name: 'Brand', label: 'up to 100', multiplier: 9.0 },
-	{ index: 6, name: 'Firm', label: 'up to 500', multiplier: 18.0 },
-	{ index: 7, name: 'Global', label: '500+', multiplier: null }
+	{ index: 1, name: 'Individual', label: '1 person', maxHeadcount: 1, multiplier: 1.0 },
+	{ index: 2, name: 'Team', label: 'up to 5', maxHeadcount: 5, multiplier: 2.0 },
+	{ index: 3, name: 'Studio', label: 'up to 10', maxHeadcount: 10, multiplier: 3.0 },
+	{ index: 4, name: 'Agency', label: 'up to 50', maxHeadcount: 50, multiplier: 6.0 },
+	{ index: 5, name: 'Brand', label: 'up to 100', maxHeadcount: 100, multiplier: 9.0 },
+	{ index: 6, name: 'Firm', label: 'up to 500', maxHeadcount: 500, multiplier: 18.0 },
+	{ index: 7, name: 'Global', label: '500+', maxHeadcount: null, multiplier: null }
 ];
 
 // Individual is the one tier scoped to desktop-only use (print, PDF, locally

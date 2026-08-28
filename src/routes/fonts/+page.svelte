@@ -42,115 +42,23 @@
 					<span class="FontCard__classification">{tf.classification}</span>
 				</div>
 
-				<!-- Specimen: a boarding pass set in the face itself, rather than the
-				     typeface's own name. Text is always black, whatever catalogBg
-				     is, per the card design. The barcode is the one decorative,
-				     non-type element — everything else here is the specimen. -->
+				<!-- Specimen: a museum-label setting in the face itself, rather than
+				     the typeface's own name (see typefaces.ts — referenced from
+				     increments.cc's Vorkurs card). Text is always black, whatever
+				     catalogBg is, per the card design. Where specimenWeight is set
+				     (Alfred/Asta — no drawings yet) it overrides the tag/lead/desc
+				     hierarchy uniformly, so the placeholder reads as "one weight of
+				     Steiner", not an attempt at the same three-size hierarchy Asger's
+				     real card uses. -->
 				<div
 					class="FontCard__specimen"
 					style="background: {tf.catalogBg}; font-family: '{tf.fontFamily}', sans-serif;"
 				>
 					{#if tf.specimen}
-						{@const s = tf.specimen}
-						<div class="Ticket">
-							<div class="Ticket__flight">
-								<span class="Ticket__label">Flight</span>
-								<span class="Ticket__flight-no">{s.flightNo}</span>
-							</div>
-
-							<div class="Ticket__route">
-								<div class="Ticket__stop">
-									<span class="Ticket__label">From</span>
-									<span class="Ticket__code">{s.fromCode}</span>
-									<span class="Ticket__city">{s.fromCity}</span>
-								</div>
-								<span class="Ticket__arrow" aria-hidden="true">→</span>
-								<div class="Ticket__stop">
-									<span class="Ticket__label">To</span>
-									<span class="Ticket__code">{s.toCode}</span>
-									<span class="Ticket__city">{s.toCity}</span>
-								</div>
-							</div>
-
-							<div class="Ticket__grid">
-								<div class="Ticket__cell">
-									<span class="Ticket__label">Date</span>
-									<span class="Ticket__value">{s.date}</span>
-								</div>
-								<div class="Ticket__cell">
-									<span class="Ticket__label">Gate</span>
-									<span class="Ticket__value">{s.gate}</span>
-								</div>
-								<div class="Ticket__cell">
-									<span class="Ticket__label">Time</span>
-									<span class="Ticket__value">{s.time}</span>
-								</div>
-								<div class="Ticket__cell">
-									<span class="Ticket__label">Seat</span>
-									<span class="Ticket__value">{s.seat}</span>
-								</div>
-							</div>
-
-							<svg
-								class="Ticket__barcode"
-								viewBox="0 0 200 24"
-								preserveAspectRatio="none"
-								aria-hidden="true"
-							>
-								<rect fill="currentColor" x="0" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="4" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="7" y="0" width="3" height="24" />
-								<rect fill="currentColor" x="12" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="15" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="19" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="22" y="0" width="4" height="24" />
-								<rect fill="currentColor" x="28" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="31" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="35" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="38" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="41" y="0" width="3" height="24" />
-								<rect fill="currentColor" x="46" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="50" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="53" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="56" y="0" width="4" height="24" />
-								<rect fill="currentColor" x="62" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="65" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="69" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="72" y="0" width="3" height="24" />
-								<rect fill="currentColor" x="77" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="80" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="83" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="87" y="0" width="4" height="24" />
-								<rect fill="currentColor" x="93" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="96" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="99" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="103" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="106" y="0" width="3" height="24" />
-								<rect fill="currentColor" x="111" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="114" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="118" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="121" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="124" y="0" width="4" height="24" />
-								<rect fill="currentColor" x="130" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="134" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="137" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="140" y="0" width="3" height="24" />
-								<rect fill="currentColor" x="145" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="148" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="152" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="155" y="0" width="4" height="24" />
-								<rect fill="currentColor" x="161" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="164" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="167" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="171" y="0" width="3" height="24" />
-								<rect fill="currentColor" x="176" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="179" y="0" width="2" height="24" />
-								<rect fill="currentColor" x="183" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="186" y="0" width="1" height="24" />
-								<rect fill="currentColor" x="189" y="0" width="4" height="24" />
-								<rect fill="currentColor" x="195" y="0" width="2" height="24" />
-							</svg>
-						</div>
+						{@const wght = tf.specimenWeight ? `font-variation-settings: 'wght' ${tf.specimenWeight};` : ''}
+						<span class="FontCard__spec-tag" style={wght}>{tf.specimen[0]}</span>
+						<span class="FontCard__spec-lead" style={wght}>{tf.specimen[1]}</span>
+						<span class="FontCard__spec-desc" style={wght}>{tf.specimen[2]}</span>
 					{:else}
 						<span class="FontCard__spec-lead">{tf.name}</span>
 					{/if}
@@ -265,6 +173,7 @@
 	   for that pairing (see typefaces.ts). */
 	.FontCard__specimen {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		aspect-ratio: 16 / 10;
@@ -274,100 +183,33 @@
 		font-variant-numeric: tabular-nums slashed-zero;
 	}
 
-	.FontCard__spec-lead {
-		font-size: clamp(28px, 4.4vw, 52px);
+	/* Museum-label hierarchy, referenced from increments.cc's Vorkurs card
+	   ("1964–1969 / JOSEF ALBERS / New Works"): a small date/edition tag, the
+	   dedicatee set large and bold — the actual headline of the card — and a
+	   short descriptor beneath, smaller again. Three sizes, not one uniform
+	   block: the middle line is what carries the specimen. */
+	.FontCard__spec-tag,
+	.FontCard__spec-lead,
+	.FontCard__spec-desc {
+		display: block;
 		text-align: center;
 	}
 
-	/* ── The boarding pass itself ───────────────────────────────────────── */
-	.Ticket {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: clamp(14px, 2.2vw, 22px);
+	.FontCard__spec-tag {
+		font-size: clamp(13px, 1.6vw, 18px);
+		opacity: 0.6;
+		margin-bottom: clamp(6px, 1.2vw, 12px);
 	}
 
-	.Ticket__label {
-		display: block;
-		font-size: clamp(9px, 1vw, 11px);
-		font-weight: var(--fw-ui);
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		opacity: 0.55;
-		margin-bottom: 4px;
-	}
-
-	.Ticket__flight-no {
-		display: block;
-		font-size: clamp(14px, 1.6vw, 18px);
-		font-weight: var(--fw-ui);
+	.FontCard__spec-lead {
+		font-size: clamp(32px, 6vw, 64px);
+		line-height: 1.05;
 		font-variation-settings: 'wght' 650;
 	}
 
-	.Ticket__route {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: clamp(10px, 2vw, 20px);
-	}
-
-	.Ticket__stop {
-		display: flex;
-		flex-direction: column;
-		min-width: 0;
-	}
-
-	.Ticket__stop:last-child {
-		align-items: flex-end;
-		text-align: right;
-	}
-
-	/* The airport code is the headline of the whole specimen — heavy weight,
-	   large size, doing the same job the typeface's own name used to. */
-	.Ticket__code {
-		font-size: clamp(40px, 8vw, 84px);
-		line-height: 0.9;
-		font-variation-settings: 'wght' 750;
-	}
-
-	.Ticket__city {
-		font-size: clamp(11px, 1.3vw, 15px);
-		opacity: 0.7;
-		margin-top: 2px;
-	}
-
-	.Ticket__arrow {
-		font-size: clamp(16px, 2.2vw, 26px);
-		opacity: 0.6;
-		flex: none;
-		align-self: center;
-		padding-top: clamp(10px, 2vw, 20px);
-	}
-
-	.Ticket__grid {
-		display: flex;
-		gap: clamp(16px, 3vw, 32px);
-		border-top: 1px solid currentColor;
-		padding-top: clamp(10px, 1.6vw, 16px);
-		opacity: 1;
-	}
-
-	.Ticket__cell {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.Ticket__value {
-		font-size: clamp(13px, 1.6vw, 18px);
-		font-variation-settings: 'wght' 550;
-	}
-
-	/* Decorative only — not a type specimen, just the prop that says "this is
-	   a boarding pass". Faint, so it reads as texture rather than content. */
-	.Ticket__barcode {
-		width: 100%;
-		height: clamp(14px, 2.4vw, 22px);
-		opacity: 0.55;
+	.FontCard__spec-desc {
+		font-size: clamp(15px, 2.2vw, 24px);
+		margin-top: clamp(6px, 1.2vw, 12px);
 	}
 
 	.FontCard__foot {

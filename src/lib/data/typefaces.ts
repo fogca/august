@@ -40,22 +40,18 @@ export interface Typeface {
 	defaultTexts: string[];
 	/** Body text set under each word, paired by the same index. */
 	defaultNotes?: string[];
-	/** Catalogue specimen: a boarding pass set in the face itself, rather than
-	 *  the typeface's own name — a plausible piece of work, not a pangram.
-	 *  IATA-style three-letter codes, so the sizes/cases actually asked for
-	 *  (caps at the airport-code size, mixed case in the small print) are what
-	 *  the card demonstrates. */
-	specimen?: {
-		flightNo: string; // e.g. 'SK 674'
-		fromCode: string; // 3-letter airport code, e.g. 'CPH'
-		fromCity: string;
-		toCode: string;
-		toCity: string;
-		date: string; // e.g. '29 SEP'
-		gate: string;
-		time: string;
-		seat: string;
-	};
+	/** Catalogue specimen: a museum-exhibition label set in the face itself,
+	 *  rather than the typeface's own name (referenced from increments.cc's
+	 *  Vorkurs card: "1964–1969 / JOSEF ALBERS / New Works" — a typeface that
+	 *  cites the person its design is dedicated to). Exactly three lines, each
+	 *  with a fixed role: [0] a small date or edition tag, [1] the dedicatee
+	 *  or subject, set large, [2] a short descriptor. */
+	specimen?: [string, string, string];
+	/** Renders the specimen at this wght instead of the family's own default —
+	 *  for typefaces with no drawings of their own yet (Alfred, Asta), so their
+	 *  placeholder card at least reads as a different cut of Steiner rather
+	 *  than an identical copy of Asger's. */
+	specimenWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
 	thumbnail?: string;
@@ -184,22 +180,12 @@ export const TYPEFACES: Typeface[] = [
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
-		// Catalogue specimen: a boarding pass, which is where a humanist sans earns
-		// its living (Frutiger was drawn for airport signage). IATA codes at cap
-		// size, mixed case in the fine print, tabular figures in the grid — one
-		// setting exercises all three, and it cites no person, so it stays true
-		// whatever the name's story turns out to be.
-		specimen: {
-			flightNo: 'SK 674',
-			fromCode: 'CPH',
-			fromCity: 'Copenhagen',
-			toCode: 'BSL',
-			toCity: 'Basel',
-			date: '29 SEP',
-			gate: 'A34',
-			time: '08:45',
-			seat: '12A'
-		},
+		// Catalogue specimen, museum-label style: Asger's own description
+		// already states its dedication ("takes its name — and its temperament
+		// — from Rudolf Steiner"), so citing him here is the same move
+		// increments.cc's Vorkurs card makes for Josef Albers, not an invented
+		// biography.
+		specimen: ['1861 – 1925', 'RUDOLF STEINER', 'Formative Forces'],
 		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		catalogBg: '#DCE7EF',
@@ -254,17 +240,9 @@ export const TYPEFACES: Typeface[] = [
 			'Bildung',
 			'Gestalt'
 		],
-		specimen: {
-			flightNo: 'OS 712',
-			fromCode: 'VIE',
-			fromCity: 'Vienna',
-			toCode: 'PRG',
-			toCity: 'Prague',
-			date: '12 OCT',
-			gate: '8C',
-			time: '14:20',
-			seat: '9F'
-		},
+		// No dedicatee to cite — gQ is an in-house evolution, not a namesake
+		// piece — so the label reads as a foundry/edition mark instead.
+		specimen: ['TOKYO', 'MOKUSEKI SANS', 'Latest Cut'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
 		catalogBg: '#EDEAE3',
@@ -322,17 +300,7 @@ export const TYPEFACES: Typeface[] = [
 			'Urstoff'
 		],
 		thumbnail: '/images/fonts/atom.png',
-		specimen: {
-			flightNo: 'LX 2085',
-			fromCode: 'LIS',
-			fromCity: 'Lisbon',
-			toCode: 'ZRH',
-			toCity: 'Zürich',
-			date: '3 NOV',
-			gate: '22F',
-			time: '19:05',
-			seat: '14C'
-		},
+		specimen: ['STUDIES I – III', 'ATOM', 'Display, in Progress'],
 		theme: { bg: '#15181C', fg: '#ffffff' },
 		catalogBg: '#E7EDD9',
 		hero: {
@@ -367,6 +335,12 @@ export const TYPEFACES: Typeface[] = [
 		// Provisional weights — same axis as Asger until the spec is finalised
 		weights: WEIGHTS,
 		defaultTexts: ['Asta'],
+		// Placeholder catalogue specimen — no drawings exist yet, so this is set
+		// in Steiner at a heavier cut than Asger's card (wght 700, vs. the
+		// default ~400) purely so the two placeholder cards don't look like the
+		// same font twice. Replace both once Asta has its own metal.
+		specimen: ['VOL. III', 'ASTA', 'Sibling to Asger'],
+		specimenWeight: 700,
 		theme: { bg: '#d59514', fg: '#000000' },
 		catalogBg: '#F3E2C0',
 		hero: {
@@ -376,6 +350,51 @@ export const TYPEFACES: Typeface[] = [
 			debut: 'Coming Soon',
 			comingSoon: true,
 			intro: 'A sibling to Asger.',
+			statement: 'Coming soon.'
+		}
+	},
+	{
+		// Announced on the home page (ochre section, own logotype) and in the
+		// mobile menu's UPCOMING list, but not yet registered here — added so
+		// it has a slug and a catalogue specimen ready for when it is unhidden.
+		// Everything below is provisional, same as Asta.
+		slug: 'alfred',
+		name: 'Alfred',
+		order: 5,
+		status: 'in-development',
+		hidden: true,
+		// No font files yet — render as Steiner for preview purposes
+		fontFamily: 'Steiner',
+		tagline: 'A Neo Classic in development.',
+		description:
+			'Alfred is a Neo Classic typeface in development at August Type Foundry. ' +
+			'Details on its design direction, weights and release schedule will follow.',
+		descriptionDa:
+			'Alfred er en Neo Classic-skrift under udvikling hos August Type Foundry. '
+			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
+		classification: 'In development',
+		// Provisional weights — same axis as Asger until the spec is finalised
+		weights: WEIGHTS,
+		defaultTexts: ['Alfred'],
+		// Placeholder catalogue specimen — set in Steiner at a lighter cut
+		// (wght 250) than Asger's card or Asta's placeholder (700), so the
+		// three don't read as the same font tripled. Replace once Alfred has
+		// its own metal.
+		specimen: ['VOL. II', 'ALFRED', 'Neo Classic'],
+		specimenWeight: 250,
+		// Matches the home page's ochre Alfred section exactly (#d59514 / black).
+		theme: { bg: '#d59514', fg: '#000000' },
+		// A paler tint of the same ochre — distinct from Asta's catalogBg
+		// (#F3E2C0), which currently also derives from this colour; see the
+		// note where Asta is defined above.
+		catalogBg: '#F6E9C9',
+		hero: {
+			label: 'In development',
+			vol: 'vol.05',
+			subtitle: '(Coming Soon)',
+			debut: 'Coming Soon',
+			comingSoon: true,
+			intro: 'A Neo Classic in development.',
 			statement: 'Coming soon.'
 		}
 	}
