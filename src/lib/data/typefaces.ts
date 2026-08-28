@@ -110,55 +110,53 @@ export const TYPEFACES: Typeface[] = [
 			languages: '93'
 		},
 		weights: WEIGHTS,
-		// One term per weight row (20, alphabetical A→T) — typography's own
-		// vocabulary. Single words only: the tester sets them large, so a
-		// sentence would wrap into a paragraph instead of showing the letters.
+		// One row per weight, titled with that weight's own name — the specimen
+		// says what it is while showing it.
 		defaultTexts: [
-			'Aperture',
-			'Baseline',
-			'Counter',
-			'Descender',
-			'Ear',
-			'Finial',
-			'Glyph',
-			'Hairline',
-			'Italic',
-			'Junction',
-			'Kerning',
-			'Ligature',
-			'Metrics',
-			'Numeral',
-			'Overshoot',
-			'Proportion',
-			'Quotation',
-			'Rhythm',
-			'Serif',
-			'Terminal'
+			'Hair',
+			'Line',
+			'Thin',
+			'UltraLight',
+			'ExtraLight',
+			'SemiLight',
+			'Light',
+			'Book',
+			'Regular',
+			'Text',
+			'Medium',
+			'Demibold',
+			'Semibold',
+			'Dark',
+			'Bold',
+			'UltraBold',
+			'ExtraBold',
+			'Heavy',
+			'Black',
+			'Ultra'
 		],
-		// Body copy under each word — long enough to show the face setting real
-		// paragraphs, not just a caption. Each still explains its own term, so
-		// the row reads as a title with its article rather than filler.
+		// Body copy under each word: what that weight is actually for. Long
+		// enough to show the face setting real paragraphs, not just a caption.
 		defaultNotes: [
-			'The partial opening in letters like c, e and s, measured between the terminals. A wide aperture keeps a face open and legible at small sizes and on screen; a closed one turns the same skeleton mechanical. It is one of the first decisions that separates a humanist sans from a geometric one.',
-			'The invisible line every letter without a descender sits on. It is the strongest alignment in typography — the eye reads along it, and any letter that strays from it looks broken. Round letters must actually cross it slightly to appear level, which is why overshoot exists.',
-			'The enclosed or partially enclosed space inside a letter, as in o, e or a. Counters carry more of a typeface\u2019s character than the strokes around them: their size sets the colour of a page, and their shape decides whether the family stays legible once the weight is pushed to the extremes.',
-			'The part of a letter that drops below the baseline, as in p, y or g. Descender length is a compromise between elegance and economy — long ones give a page rhythm and grace, short ones let lines be set tight. The choice is made once and constrains every line spacing afterwards.',
-			'The small stroke projecting from the top right of a lowercase g. It is a detail almost nobody notices and every type designer argues about, because it is one of the few places where a sans-serif is allowed a gesture that serves no structural purpose at all.',
-			'A tapered or curved stroke end, without a serif, as in f, r or c. Finials are where the drawing hand shows itself: cut them straight and the face turns rational, let them swell or taper and the same skeleton starts to feel written rather than constructed.',
-			'The drawn shape a font uses to represent a character. A character is an idea — the letter A — while a glyph is one particular drawing of it. One character can have many glyphs, which is what stylistic sets, small capitals and old-style figures actually are.',
-			'The thinnest stroke a typeface draws, most visible in its heaviest weights. In a variable family the hairline is also a whole instrument of its own: at the light end of the axis every stroke becomes a hairline, and the design has to hold together with almost no mass left.',
-			'A distinct, slanted design drawn stroke by stroke — not a slanted copy of the roman. A true italic changes the skeleton: a becomes single-storey, the rhythm narrows, and the letters begin to join in spirit if not in fact. Sloping a roman produces something quite different, and worse.',
-			'The point where two strokes meet or cross, as in the arms of a k or the shoulder of an n. Junctions are where weight collects, so they have to be cut back by hand at every weight; left alone they turn into dark blots that break the even colour of a line.',
-			'The adjustment of space between two specific letters, like A and V, where the default fit leaves a hole. Kerning is corrective work, not a substitute for spacing: a well-spaced face needs only a few hundred pairs, a badly spaced one cannot be rescued by thousands.',
-			'Two or more letters joined into a single glyph, as in fi or fl. Ligatures exist because a letter can collide with its neighbour — the dot of an i under the hood of an f. What began as a fix for metal type is now an automatic substitution the font performs while you type.',
-			'The widths and side-bearings that decide how letters space themselves. Metrics are set before kerning and matter far more: they establish the rhythm the whole family inherits, and a face with good metrics reads evenly in any language, including ones the designer never tested.',
-			'A figure, drawn either lining, at cap height and uniform width, or old-style, with ascenders and descenders that let numbers sit inside running text without shouting. Tabular widths keep columns aligned; proportional ones space each figure to its own shape.',
-			'The slight excess round letters need past the baseline and cap line to look aligned. A circle drawn to the same height as a square reads smaller — the eye measures area, not extremes. Overshoot is a correction for perception, and it is why optical alignment always beats mathematical alignment.',
-			'The relationship between a letter\u2019s height, width and stroke weight. Proportion is where a typeface declares its intentions: a tall x-height and open counters for the screen, classical proportions for a book. Change it and every other decision in the family has to be made again.',
-			'The curved marks that frame speech, distinct from the straight prime used for feet and inches. Typing the wrong one is the most common typographic error there is, which is why a serious font draws all four and the software substitutes them for you as you type.',
-			'The visual cadence a typeface holds across its counters and spacing. Rhythm is what you actually read: not individual letters but the alternation of stroke and space repeating along a line. When it is even the page goes quiet; when it stumbles the reader feels it without knowing why.',
-			'The small stroke finishing a main stroke — absent here, by design. A sans-serif does not simply delete them: without serifs to close a stroke, every terminal, every junction and every width has to be redrawn to carry the weight the serifs used to hold.',
-			'The end of any stroke that isn\u2019t a serif. Terminals are cut horizontally, vertically, at an angle or on a curve, and that single decision runs through the whole alphabet. Change the cut and you change the temperament of the face more than any other detail.'
+			'The lightest master, drawn at the very end of the axis where a stroke is barely more than a scratch. It exists for display sizes and for nothing else: set it below thirty points and it disappears into the paper. Every other weight in the family is interpolated away from this extreme.',
+			'Still a hairline, but with enough substance to survive a large heading in print. Use it where the word should read as a drawn line rather than as text — full-bleed titles, exhibition graphics, anything where the letter is looked at before it is read.',
+			'The first weight with a stroke you could call a stroke. Thin holds together in large headlines on screen, where the lighter cuts start to break up against a bright background. It keeps the skeleton legible while giving the page almost nothing in the way of colour.',
+			'A half step, drawn for the moment Thin is a fraction too fragile and ExtraLight a fraction too present. Intermediate weights like this one are the argument for a twenty-step family: the designer picks the exact value the layout needs instead of the nearest one available.',
+			'Light enough to stay elegant, solid enough to hold at moderate sizes. ExtraLight is where a display setting stops being a stunt and becomes usable — a subheading, a pull quote, a caption set larger than its neighbours and still comfortably read.',
+			'Between ExtraLight and Light, this is the weight for long headings set in a wide measure, where a true Light would look heavy and an ExtraLight would look weak. It is the sort of adjustment that used to require redrawing the type; here it is one stop on the axis.',
+			'The lightest weight that reads comfortably in running text at generous sizes. Light gives a page air without draining its colour, which is why it appears so often in editorial layouts, gallery print and anywhere the text is meant to feel unhurried.',
+			'Named for the setting it was made for. Book is a touch lighter than Regular, the difference a page of continuous text needs when it is printed on white paper at a small size — the ink spread that used to happen on press, now compensated for by drawing.',
+			'The default: the weight every other one is measured against. Regular is drawn first and the family is built outward from it, so its proportions, spacing and rhythm are the ones the whole axis inherits. If it is wrong, nothing above or below it can be right.',
+			'A Regular with a little more presence, for small sizes and low-contrast screens where the default thins out. Text is the weight to reach for in interface copy set at fourteen points, or in print on absorbent stock, where Regular alone loses its footing.',
+			'The first weight that reads as deliberate emphasis rather than as body text. Medium carries a subheading without shouting, and holds up in interfaces where Bold would be too strong for the hierarchy but Regular would not register as a level at all.',
+			'Historically the same word as Semibold, kept here as the step below it. Demibold sits where a heading needs weight but the page cannot take the density of a true Semibold — a distinction only visible in a family with steps this fine.',
+			'The workhorse of emphasis. Semibold is heavy enough to separate itself from the text around it and light enough to keep its counters open at small sizes, which is why interfaces reach for it far more often than they reach for Bold.',
+			'Between Semibold and Bold, for the heading that has to dominate a page without turning into a slab. Its counters are still open, its stems still distinct — the last weight on the way up where the letterforms remain more air than ink.',
+			'The standard emphasis weight, and the one every browser means by font-weight: bold. Drawn so that its counters survive at text sizes: the strokes thicken, but the white inside each letter is protected, which is what keeps a bold word readable rather than merely dark.',
+			'Past Bold, where added weight starts to cost legibility. UltraBold is a display weight — a word, a number, a headline. Set a sentence in it and the counters begin to close, and the reader stops reading letters and starts reading shapes.',
+			'A poster weight. ExtraBold is drawn for size and impact, where the counters are large enough in absolute terms to stay open however heavy the stroke around them. In small sizes it becomes a black rectangle with hints of letters inside.',
+			'Heavier still, and by this point the design is about the white, not the black. Every counter has been redrawn by hand: interpolation alone produces blots where strokes meet, so the junctions in this weight are cut back individually.',
+			'The heaviest of the CSS keywords, and the weight most people mean when they say a face is fat. Black holds the maximum ink a letter can carry while remaining unmistakably itself — the point past which the skeleton would have to change shape.',
+			'The upper master, drawn at wght 950. Ultra is the limit of the axis: the counters are as small as the design permits and the stems as wide. Everything between here and Hair is interpolated from these two extremes, which is why both had to be drawn by hand.'
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).

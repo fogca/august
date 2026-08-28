@@ -3,13 +3,46 @@
 // 20 weights: 1, 5, 10, ... 95 (40 = Book, 95 = Ultra).
 export interface WeightDef {
 	id: number;
+	/** Numeric name — the canonical one (name x 10 = wght, except Hair at 1) */
 	name: string;
+	/** Word for the same step. Shown beside the number; the nine CSS keywords
+	 *  sit at their standard axis values so a menu reads as expected. */
+	label: string;
 	axisValue: number;
 }
 
-export const WEIGHTS: WeightDef[] = [1, ...Array.from({ length: 19 }, (_, i) => (i + 1) * 5)].map(
-	(n) => ({ id: n, name: String(n), axisValue: n === 1 ? 1 : n * 10 })
-);
+const WEIGHT_LABELS = [
+	'Hair',
+	'Line',
+	'Thin',
+	'UltraLight',
+	'ExtraLight',
+	'SemiLight',
+	'Light',
+	'Book',
+	'Regular',
+	'Text',
+	'Medium',
+	'Demibold',
+	'Semibold',
+	'Dark',
+	'Bold',
+	'UltraBold',
+	'ExtraBold',
+	'Heavy',
+	'Black',
+	'Ultra'
+];
+
+export const WEIGHTS: WeightDef[] = [
+	1,
+	...Array.from({ length: 19 }, (_, i) => (i + 1) * 5)
+].map((n, i) => ({
+	id: n,
+	name: String(n),
+	label: WEIGHT_LABELS[i],
+	axisValue: n === 1 ? 1 : n * 10
+}));
 
 // Maximum characters allowed in the textarea
 export const MAX_CHARS = 500;
