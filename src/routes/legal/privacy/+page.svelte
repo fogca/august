@@ -189,6 +189,7 @@
 	}
 
 	.Legal__block h2 {
+		font-size: 20px;
 		margin: 0 0 8px;
 	}
 
