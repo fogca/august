@@ -344,8 +344,12 @@
 	/* Desktop: fixed-width metrics panel stays put; only the grid scrolls,
 	   inside a panel height the panel itself defines. */
 	@media (min-width: 768px) {
+		/* 35 / 65 split. Grid rather than flex: fr units divide what is left
+		   after the gap, so the two columns land on the ratio exactly instead of
+		   each having to subtract half the gap from a percentage. */
 		.GlyphSet__panel {
-			flex-direction: row;
+			display: grid;
+			grid-template-columns: 35fr 65fr;
 			align-items: stretch;
 			gap: 48px;
 			height: min(76vh, 720px);
@@ -353,13 +357,12 @@
 		}
 
 		.GlyphSet__meta {
-			flex: none;
-			width: 240px;
+			width: auto;
+			min-width: 0;
 			justify-content: space-between;
 		}
 
 		.GlyphSet__grid-scroll {
-			flex: 1;
 			min-width: 0;
 			overflow-y: auto;
 			padding-right: 8px;
