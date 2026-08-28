@@ -67,7 +67,7 @@
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
 	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Foundry — home">
-		<Logo height={31} />
+		<Logo height={25} />
 	</a>
 
 	<!-- Desktop-only inline nav -->
@@ -139,9 +139,9 @@
 		justify-content: space-between;
 		align-items: center;
 		/* Solid white header bar with a hairline rule (replaces the blend-mode overlay).
-		   viewport-fit=cover lets this bar reach the true screen edge, so add the
-		   notch/Dynamic Island safe area on top of the existing 20px. */
-		padding: calc(20px + env(safe-area-inset-top, 0px)) var(--padding) 15px;
+		   viewport-fit=cover lets this bar reach the true screen edge, so the
+		   notch/Dynamic Island safe area is added on top of the 16px. */
+		padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 12px;
 		/* Kept high (not 1) so the fixed bar stays above z-indexed content sections. */
 		z-index: 100;
 		font-family: 'Steiner', sans-serif;
