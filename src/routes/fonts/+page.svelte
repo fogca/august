@@ -42,17 +42,20 @@
 					<span class="FontCard__classification">{tf.classification}</span>
 				</div>
 
-				<!-- Specimen: a museum-label setting in the face itself, rather than
-				     the typeface's own name (see typefaces.ts — referenced from
-				     increments.cc's Vorkurs card). Text is always black, whatever
-				     catalogBg is, per the card design. Where specimenWeight is set
-				     (Alfred/Asta — no drawings yet) it overrides the tag/lead/desc
-				     hierarchy uniformly, so the placeholder reads as "one weight of
-				     Steiner", not an attempt at the same three-size hierarchy Asger's
-				     real card uses. -->
+				<!-- Specimen: a museum-exhibition label set in the face itself,
+				     rather than the typeface's own name (see typefaces.ts —
+				     referenced from increments.cc's Vorkurs card). All three lines
+				     share one size and one weight — no headline/caption hierarchy —
+				     so the label reads as a single set piece of type, not a mini-
+				     poster. Text is always black; the card's own colour (catalogBg)
+				     only appears on hover, via --spec-bg below. Where specimenWeight
+				     is set (Alfred/Asta — no drawings yet) it overrides the family's
+				     default weight uniformly across all three lines, so the
+				     placeholder reads as "one weight of Steiner", not an attempt at
+				     Asger's real specimen. -->
 				<div
 					class="FontCard__specimen"
-					style="background: {tf.catalogBg}; font-family: '{tf.fontFamily}', sans-serif;"
+					style="--spec-bg: {tf.catalogBg}; font-family: '{tf.fontFamily}', sans-serif;"
 				>
 					{#if tf.specimen}
 						{@const wght = tf.specimenWeight ? `font-variation-settings: 'wght' ${tf.specimenWeight};` : ''}
@@ -167,49 +170,53 @@
 		letter-spacing: 0;
 	}
 
-	/* Specimen block — the card's swatch of colour. Fixed aspect so every card
-	   in the grid holds the same proportions regardless of how much its
-	   specimen sets. Text is always black: catalogBg is chosen light enough
-	   for that pairing (see typefaces.ts). */
+	/* Specimen block — fixed aspect so every card in the grid holds the same
+	   proportions regardless of how much its specimen sets. Text is always
+	   black: catalogBg is chosen light enough for that pairing (see
+	   typefaces.ts) for when the hover rule below brings it in. */
 	.FontCard__specimen {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		aspect-ratio: 16 / 10;
+		background: transparent;
 		color: #000;
 		letter-spacing: 0;
 		padding: clamp(20px, 4vw, 40px);
 		font-variant-numeric: tabular-nums slashed-zero;
+		transition: background-color 0.2s ease;
 	}
 
-	/* Museum-label hierarchy, referenced from increments.cc's Vorkurs card
-	   ("1964–1969 / JOSEF ALBERS / New Works"): a small date/edition tag, the
-	   dedicatee set large and bold — the actual headline of the card — and a
-	   short descriptor beneath, smaller again. Three sizes, not one uniform
-	   block: the middle line is what carries the specimen. */
+	/* Swatch only on hover — see --spec-bg set inline above. At rest the
+	   specimen sits directly on the page background (no colour, no border),
+	   so the grid reads as plain type until a card is hovered. */
+	.FontCard:hover .FontCard__specimen {
+		background: var(--spec-bg);
+	}
+
+	/* Uniform museum-label type: all three lines share one size and one
+	   weight (2026-08-29 — an earlier pass gave the dedicatee line its own
+	   larger, bolder treatment; this reads instead as one continuous set
+	   line, closer to a gallery wall label than a poster headline). The
+	   three lines still carry distinct roles — a date/edition tag, the
+	   dedicatee or institution, a short descriptor — the typography just no
+	   longer distinguishes them. */
 	.FontCard__spec-tag,
 	.FontCard__spec-lead,
 	.FontCard__spec-desc {
 		display: block;
 		text-align: center;
+		font-size: clamp(20px, 3.2vw, 36px);
+		line-height: 1.15;
 	}
 
 	.FontCard__spec-tag {
-		font-size: clamp(13px, 1.6vw, 18px);
-		opacity: 0.6;
-		margin-bottom: clamp(6px, 1.2vw, 12px);
-	}
-
-	.FontCard__spec-lead {
-		font-size: clamp(32px, 6vw, 64px);
-		line-height: 1.05;
-		font-variation-settings: 'wght' 650;
+		margin-bottom: clamp(4px, 1vw, 10px);
 	}
 
 	.FontCard__spec-desc {
-		font-size: clamp(15px, 2.2vw, 24px);
-		margin-top: clamp(6px, 1.2vw, 12px);
+		margin-top: clamp(4px, 1vw, 10px);
 	}
 
 	.FontCard__foot {

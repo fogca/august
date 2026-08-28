@@ -42,10 +42,13 @@ export interface Typeface {
 	defaultNotes?: string[];
 	/** Catalogue specimen: a museum-exhibition label set in the face itself,
 	 *  rather than the typeface's own name (referenced from increments.cc's
-	 *  Vorkurs card: "1964–1969 / JOSEF ALBERS / New Works" — a typeface that
-	 *  cites the person its design is dedicated to). Exactly three lines, each
-	 *  with a fixed role: [0] a small date or edition tag, [1] the dedicatee
-	 *  or subject, set large, [2] a short descriptor. */
+	 *  Vorkurs card: "1964–1969 / JOSEF ALBERS / New Works"). Exactly three
+	 *  lines, each with a fixed role: [0] a small date or edition tag, [1] a
+	 *  dedicatee, or a real museum/exhibition when there is no dedicatee, set
+	 *  large, [2] a short descriptor. Rendered at one uniform size and weight
+	 *  across all three lines (see .FontCard__spec-tag/-lead/-desc in
+	 *  /fonts/+page.svelte) — the reference card's own tag/headline/caption
+	 *  size hierarchy is deliberately not reproduced here. */
 	specimen?: [string, string, string];
 	/** Renders the specimen at this wght instead of the family's own default —
 	 *  for typefaces with no drawings of their own yet (Alfred, Asta), so their
@@ -240,9 +243,13 @@ export const TYPEFACES: Typeface[] = [
 			'Bildung',
 			'Gestalt'
 		],
-		// No dedicatee to cite — gQ is an in-house evolution, not a namesake
-		// piece — so the label reads as a foundry/edition mark instead.
-		specimen: ['TOKYO', 'MOKUSEKI SANS', 'Latest Cut'],
+		// No dedicatee of its own — gQ is an in-house evolution, not a
+		// namesake piece — so the label cites a real institution instead:
+		// the Japan Folk Crafts Museum (Nihon Mingeikan), whose collection
+		// of wood- and stoneware is the closest real-world echo of
+		// "Mokuseki" (木石 — wood, stone). Swap for a different venue if
+		// this particular pairing doesn't hold up.
+		specimen: ['TOKYO, 2026', 'JAPAN FOLK CRAFTS MUSEUM', 'Wood and Stone'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
 		catalogBg: '#EDEAE3',
@@ -300,7 +307,11 @@ export const TYPEFACES: Typeface[] = [
 			'Urstoff'
 		],
 		thumbnail: '/images/fonts/atom.png',
-		specimen: ['STUDIES I – III', 'ATOM', 'Display, in Progress'],
+		// No dedicatee either — cites a real institution whose subject
+		// matches the typeface's own vocabulary above (Materie,
+		// Quantensprung, Urstoff): the Deutsches Museum in Munich, the
+		// world's largest museum of science and technology.
+		specimen: ['MUNICH, 2026', 'DEUTSCHES MUSEUM', 'Matter and Form'],
 		theme: { bg: '#15181C', fg: '#ffffff' },
 		catalogBg: '#E7EDD9',
 		hero: {
