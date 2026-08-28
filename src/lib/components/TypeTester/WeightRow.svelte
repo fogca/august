@@ -172,14 +172,30 @@
 	}
 
 	/* Custom track/thumb — smaller thumb than the native default */
+	/* The visible track is a 1.5px hairline, but the input itself has to be tall
+	   enough to grab with a thumb — a 1.5px-high control is undraggable on
+	   touch. So the box is 24px and transparent, and the hairline is drawn by
+	   the track pseudo-element inside it. `touch-action: none` keeps the drag
+	   from being read as a page scroll. */
 	.WeightRow__size-range {
 		flex: none;
-		width: 60px;
-		height: 1.5px;
+		width: 72px;
+		height: 24px;
 		appearance: none;
 		-webkit-appearance: none;
-		background: var(--color-line);
+		background: transparent;
 		cursor: pointer;
+		touch-action: none;
+	}
+
+	.WeightRow__size-range::-webkit-slider-runnable-track {
+		height: 1.5px;
+		background: var(--color-line);
+	}
+
+	.WeightRow__size-range::-moz-range-track {
+		height: 1.5px;
+		background: var(--color-line);
 	}
 
 	.WeightRow__size-range::-webkit-slider-thumb {
@@ -190,6 +206,8 @@
 		border-radius: 50%;
 		background: var(--color-text);
 		border: none;
+		/* centre the 7px thumb on the 1.5px track */
+		margin-top: -2.75px;
 	}
 
 	.WeightRow__size-range::-moz-range-thumb {

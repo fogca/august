@@ -1,8 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<!-- Decide the display language before first paint (avoids a flash of the
+		     wrong one). An explicit choice from this tab session (sessionStorage,
+		     cleared on tab close) always wins; otherwise fall back to the
+		     browser's own language. Mirrored in lib/state/lang.svelte.ts's
+		     restore() — keep the two in sync. -->
+		<script>
+			try {
+				var savedLang = sessionStorage.getItem('august-lang');
+				var displayLang =
+					savedLang === 'en' || savedLang === 'da'
+						? savedLang
+						: (navigator.language || '').toLowerCase().startsWith('da')
+							? 'da'
+							: 'en';
+				if (displayLang === 'da') {
+					document.documentElement.dataset.lang = 'da';
+				}
+			} catch (e) {}
+		</script>
 		<!-- Per-page <meta name="description"> comes from each route's svelte:head -->
 		<!-- Global design tokens and reset (bump ?v= whenever base.css changes) -->
 		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20260707a" />

@@ -411,6 +411,16 @@
 	/* Danish runs in the typeface itself — no CJK fallback stack needed now that
 	   the secondary language is Latin. Lighter and slightly smaller so it reads
 	   as a translation under the English, not as a second headline. */
+	/* One language at a time — [data-lang] lives on <html>, set by the header
+	   switch (see lib/state/lang.svelte.ts). */
+	:global([data-lang='da']) .FontDetail__description {
+		display: none;
+	}
+
+	:global([data-lang='en']) .FontDetail__description-da {
+		display: none;
+	}
+
 	.FontDetail .FontDetail__description-da {
 		font-family: var(--type-font, 'Steiner'), sans-serif !important;
 		font-weight: 300;

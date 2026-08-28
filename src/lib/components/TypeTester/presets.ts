@@ -26,7 +26,7 @@ export const MOBILE_BREAKPOINT_PX = 768;
 
 // Per-weight-row default sizes (independent tester rows)
 export const WEIGHT_ROW_SIZE_DEFAULT_DESKTOP = 160;
-export const WEIGHT_ROW_SIZE_DEFAULT_MOBILE = 28;
+export const WEIGHT_ROW_SIZE_DEFAULT_MOBILE = 100;
 
 export const LETTER_SPACING_MIN = -0.05;
 export const LETTER_SPACING_MAX = 0.2;

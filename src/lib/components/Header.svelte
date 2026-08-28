@@ -9,6 +9,7 @@
 	import Logo from './Logo.svelte';
 	import { onScroll } from '$lib/scroll';
 	import { TYPEFACES } from '$lib/data/typefaces';
+	import { lang } from '$lib/state/lang.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 
@@ -76,8 +77,20 @@
 		{#each NAV as item (item.href)}
 			<a class="Header__nav-link" href={item.href}>{item.label}</a>
 		{/each}
-		<!-- Current language. Inert until the EN/DA switch is wired up. -->
-		<span class="Header__nav-link Header__lang" aria-current="true">EN</span>
+		<!-- Language switch. Shows the language currently displayed; the choice
+		     is kept for the browsing session, so it survives navigation. -->
+		<button
+			type="button"
+			class="Header__nav-link Header__lang"
+			onclick={() => lang.toggle()}
+			aria-label={lang.current === 'en' ? 'Switch to Danish' : 'Switch to English'}
+		>
+			{lang.current === 'en' ? 'EN' : 'DA'}
+		</button>
+		<!-- The EN/DA label alone doesn't announce what changed. -->
+		<span class="Header__sr" aria-live="polite">
+			{lang.current === 'en' ? 'English' : 'Dansk'}
+		</span>
 	</nav>
 
 	<!-- Mobile-only: Buy stays one tap away even with the menu closed, Menu/Close
@@ -211,11 +224,30 @@
 		align-items: center;
 	}
 
+	.Header__sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
 	.Header__nav-link {
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		color: inherit;
 		text-decoration: none;
+		/* the lang switch is a <button>: strip the UA chrome so it matches the
+		   links beside it */
+		font-family: inherit;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
 		letter-spacing: 0;
 		padding: 4px 0;
 	}

@@ -112,6 +112,16 @@
 		margin: 0 0 8px;
 	}
 
+	/* One language at a time — [data-lang] lives on <html>, set by the header
+	   switch (see lib/state/lang.svelte.ts). */
+	:global([data-lang='da']) .About .en {
+		display: none;
+	}
+
+	:global([data-lang='en']) .About .da {
+		display: none;
+	}
+
 	/* Danish — the second language runs in Steiner like the English, one step
 	   lighter and a touch smaller so the pair reads as primary + secondary
 	   rather than as two competing texts. (The Japanese it replaced needed a
