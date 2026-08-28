@@ -1,74 +1,81 @@
-<!-- 特定商取引法に基づく表記（2026-07 確定） -->
+<!-- Legal Notice — disclosure required under Japan's Act on Specified Commercial
+     Transactions (特定商取引法). Facts must stay accurate; only the
+     presentation language changed (2026-08, English for now). -->
 <svelte:head>
-	<title>特定商取引法に基づく表記 — August Type Foundry</title>
+	<title>Legal Notice — August Type Foundry</title>
 	<meta name="description" content="Specified Commercial Transactions Act disclosure for August Type Foundry." />
 </svelte:head>
 
 <main class="Legal">
 	<div class="Legal__inner">
-		<h1>特定商取引法に基づく表記</h1>
+		<h1>Legal Notice</h1>
 		<p class="Legal__lead">
-			本表記は、特定商取引法（通信販売）に基づき、August Type Foundry のフォント販売について開示するものです。
+			This notice discloses information about August Type Foundry's font sales as required under
+			Japan's Act on Specified Commercial Transactions (特定商取引法).
 		</p>
 
 		<dl class="Legal__facts">
 			<div class="Legal__fact">
-				<dt>販売事業者</dt>
-				<dd>株式会社みらいサービス（屋号：August Type Foundry）</dd>
+				<dt>Seller</dt>
+				<dd>Mirai Service Co., Ltd. (trading as August Type Foundry)</dd>
 			</div>
 			<div class="Legal__fact">
-				<dt>運営統括責任者</dt>
-				<dd>磯部 拓巳</dd>
+				<dt>Person in charge of operations</dt>
+				<dd>Takumi Isobe</dd>
 			</div>
 			<div class="Legal__fact">
-				<dt>所在地</dt>
-				<dd>〒451-0034 愛知県名古屋市西区樋の口町1-16</dd>
+				<dt>Address</dt>
+				<dd>1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan</dd>
 			</div>
 			<div class="Legal__fact">
-				<dt>電話番号</dt>
-				<dd>お客様からのご請求があった場合、遅滞なく電子メールにて開示いたします。</dd>
+				<dt>Phone number</dt>
+				<dd>Disclosed by email without delay upon customer request.</dd>
 			</div>
 			<div class="Legal__fact">
-				<dt>メールアドレス</dt>
+				<dt>Email address</dt>
 				<dd><a href="mailto:hi@august.tf">hi@august.tf</a></dd>
 			</div>
 			<div class="Legal__fact">
-				<dt>販売価格</dt>
+				<dt>Selling price</dt>
 				<dd>
-					各ライセンスの料金は購入ページに表示します（消費税込）。価格はライセンスの種別（Desktop / Web /
-					App / Books）および利用規模により異なります。
+					The price of each licence is shown on the purchase page (tax included). Price varies by
+					licence type (Desktop / Web / App / Books) and scope of use.
 				</dd>
 			</div>
 			<div class="Legal__fact">
-				<dt>商品代金以外の必要料金</dt>
-				<dd>ダウンロード販売のため送料はかかりません。インターネット接続料金等はお客様のご負担となります。</dd>
-			</div>
-			<div class="Legal__fact">
-				<dt>お支払い方法</dt>
-				<dd>クレジットカード決済（Stripe）</dd>
-			</div>
-			<div class="Legal__fact">
-				<dt>お支払い時期</dt>
-				<dd>ご注文確定時にお支払いが確定します。</dd>
-			</div>
-			<div class="Legal__fact">
-				<dt>商品の引渡し時期</dt>
-				<dd>決済完了後、24時間以内にダウンロードリンクを記載したメールにてお届けいたします。</dd>
-			</div>
-			<div class="Legal__fact">
-				<dt>返品・キャンセルについて</dt>
+				<dt>Charges other than the product price</dt>
 				<dd>
-					デジタル商品の性質上、提供（ダウンロード）後の返品・返金はお受けできません。提供データに不具合が
-					ある場合は、速やかに対応いたします。
+					As these are digital downloads, no shipping charge applies. Internet connection charges
+					and similar costs are the customer's responsibility.
 				</dd>
 			</div>
 			<div class="Legal__fact">
-				<dt>動作環境</dt>
-				<dd>OpenType（.otf / .ttf）対応のアプリケーション、および WOFF2 対応のウェブブラウザ。</dd>
+				<dt>Payment method</dt>
+				<dd>Credit card (Stripe)</dd>
+			</div>
+			<div class="Legal__fact">
+				<dt>Payment timing</dt>
+				<dd>Payment is finalised when your order is confirmed.</dd>
+			</div>
+			<div class="Legal__fact">
+				<dt>Delivery timing</dt>
+				<dd>A download link is delivered by email within 24 hours of payment completion.</dd>
+			</div>
+			<div class="Legal__fact">
+				<dt>Returns &amp; cancellations</dt>
+				<dd>
+					Due to the nature of digital goods, we cannot accept returns or refunds once the files
+					have been provided (downloaded). If there is a defect in the delivered files, we will
+					address it promptly.
+				</dd>
+			</div>
+			<div class="Legal__fact">
+				<dt>System requirements</dt>
+				<dd>Applications that support OpenType (.otf / .ttf), and web browsers that support WOFF2.</dd>
 			</div>
 		</dl>
 
-		<p class="Legal__note" lang="ja">最終更新：2026年7月</p>
+		<p class="Legal__note">Last updated: July 2026.</p>
 	</div>
 </main>
 
@@ -87,8 +94,17 @@
 
 	.Legal__inner {
 		max-width: 680px;
-		margin: 0 auto;
 		padding-inline: var(--padding);
+	}
+
+	/* PC: the block sits inside the right 75% of the viewport — the title
+	   (and everything else, left-aligned by default) starts flush at that
+	   25% seam rather than being centered on the page. */
+	@media (min-width: 768px) {
+		.Legal__inner {
+			margin-left: 25%;
+			margin-right: 0;
+		}
 	}
 
 	.Legal h1 {

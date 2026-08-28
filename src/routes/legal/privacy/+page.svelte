@@ -8,7 +8,7 @@
 	<div class="Legal__inner">
 		<h1>Privacy Policy</h1>
 		<p class="Legal__lead">
-			August Type Foundry is a brand operated by Mirai Service Co., Ltd. (株式会社みらいサービス).
+			August Type Foundry is a brand operated by Mirai Service Co., Ltd.
 			This policy explains what personal data we collect when you buy a licence or contact us, and how
 			we use it.
 		</p>
@@ -76,8 +76,17 @@
 
 	.Legal__inner {
 		max-width: 680px;
-		margin: 0 auto;
 		padding-inline: var(--padding);
+	}
+
+	/* PC: the block sits inside the right 75% of the viewport — the title
+	   (and everything else, left-aligned by default) starts flush at that
+	   25% seam rather than being centered on the page. */
+	@media (min-width: 768px) {
+		.Legal__inner {
+			margin-left: 25%;
+			margin-right: 0;
+		}
 	}
 
 	.Legal h1 {

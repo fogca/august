@@ -127,7 +127,7 @@
 	/>
 
 	<!-- Full glyph set -->
-	<GlyphSet fontFamily={tf.fontFamily} title="Glyph set" />
+	<GlyphSet fontFamily={tf.fontFamily} name={tf.name} title="Glyph set" />
 
 	<!-- Editorial showcase — currency / punctuation / symbols / fractions,
 	     each set large on its own row. Flows directly into OpenType Features

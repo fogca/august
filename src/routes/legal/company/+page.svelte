@@ -14,11 +14,11 @@
 		<dl class="Company__facts">
 			<div class="Company__fact">
 				<dt>Operating company</dt>
-				<dd>株式会社みらいサービス（Mirai Service Co., Ltd.）</dd>
+				<dd>Mirai Service Co., Ltd.</dd>
 			</div>
 			<div class="Company__fact">
 				<dt>Registered office</dt>
-				<dd>〒451-0034 名古屋市西区樋の口町1-16</dd>
+				<dd>1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan</dd>
 			</div>
 			<div class="Company__fact">
 				<dt>Capital</dt>
@@ -52,8 +52,17 @@
 
 	.Company__inner {
 		max-width: 640px;
-		margin: 0 auto;
 		padding-inline: var(--padding);
+	}
+
+	/* PC: the block sits inside the right 75% of the viewport — the title
+	   (and everything else, left-aligned by default) starts flush at that
+	   25% seam rather than being centered on the page. */
+	@media (min-width: 768px) {
+		.Company__inner {
+			margin-left: 25%;
+			margin-right: 0;
+		}
 	}
 
 	.Company h1 {

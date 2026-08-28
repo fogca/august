@@ -19,8 +19,8 @@
 	const LEGAL: LinkItem[] = [
 		{ label: 'EULA', href: '/legal/eula' },
 		{ label: 'Privacy', href: '/legal/privacy' },
-		// The page itself stays Japanese (it's Japan's mandatory commercial-
-		// transactions disclosure — the content has to be, this label doesn't).
+		// Japan's mandatory commercial-transactions disclosure (特定商取引法).
+		// Presented in English for now (2026-08) — facts unchanged, language only.
 		{ label: 'Legal Notice', href: '/legal/tokusho' },
 		{ label: 'Company', href: '/legal/company' }
 	];
