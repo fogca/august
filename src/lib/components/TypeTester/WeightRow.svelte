@@ -15,9 +15,50 @@
 		initialAlign?: AlignValue;
 	}
 
-	let { weight, defaultText, fontFamily, initialSize = 160, initialAlign = 'center' }: Props = $props();
+	let { weight, defaultText, fontFamily, initialSize = 125, initialAlign = 'center' }: Props = $props();
+
+	const SIZE_MIN = 12;
+	const SIZE_MAX = 200;
 
 	let size = $state(untrack(() => initialSize));
+	let sliderEl = $state<HTMLInputElement>();
+	let dragging = false;
+
+	function valueFromX(clientX: number) {
+		if (!sliderEl) return size;
+		const r = sliderEl.getBoundingClientRect();
+		const t = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+		return Math.round(SIZE_MIN + t * (SIZE_MAX - SIZE_MIN));
+	}
+
+	function onMove(e: PointerEvent) {
+		if (dragging) size = valueFromX(e.clientX);
+	}
+
+	function endDrag() {
+		dragging = false;
+		window.removeEventListener('pointermove', onMove);
+		window.removeEventListener('pointerup', endDrag);
+		window.removeEventListener('pointercancel', endDrag);
+	}
+
+	// iOS Safari only drags a range input when the touch lands on the thumb
+	// itself — tapping the track does nothing, and the thumb here is 7px. So the
+	// value is driven from the pointer instead: the whole track is grabbable and
+	// the thumb tracks the finger 1:1. Listeners go on window (not
+	// setPointerCapture) so a drag that leaves the control still works without
+	// retargeting the eventual click.
+	function startDrag(e: PointerEvent) {
+		e.preventDefault();
+		dragging = true;
+		size = valueFromX(e.clientX);
+		sliderEl?.focus(); // preventDefault above skips the native focus
+		window.addEventListener('pointermove', onMove);
+		window.addEventListener('pointerup', endDrag);
+		window.addEventListener('pointercancel', endDrag);
+	}
+
+	$effect(() => endDrag);
 	let align = $state<AlignValue>(untrack(() => initialAlign));
 	let el = $state<HTMLElement>();
 
@@ -39,9 +80,11 @@
 			<input
 				class="WeightRow__size-range"
 				type="range"
-				min="12"
-				max="200"
+				min={SIZE_MIN}
+				max={SIZE_MAX}
 				bind:value={size}
+				bind:this={sliderEl}
+				onpointerdown={startDrag}
 				aria-label="{weight.name} size"
 			/>
 			<span class="size-icon size-icon--lg">A</span>

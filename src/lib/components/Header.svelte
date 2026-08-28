@@ -45,10 +45,11 @@
 	// and inert. They stay out of TYPEFACES' visible set on purpose so /fonts and
 	// /fonts/[slug] keep 404-ing until there is a real page to link to.
 	const UPCOMING: string[] = ['Alfred', 'Asta'];
+	// Mirrors the desktop nav (the Fonts group above stands in for its "Fonts"
+	// link, and the language switch is appended after these).
 	const PAGES: NavItem[] = [
-		{ label: 'Buy', href: '/buy' },
-		{ label: 'About', href: '/about' },
-		{ label: 'Contact', href: '/contact' }
+		{ label: 'Custom', href: '/#custom' },
+		{ label: 'Buy', href: '/buy' }
 	];
 
 	function toggle() {
@@ -140,6 +141,16 @@
 				{#each PAGES as item (item.href)}
 					<li><a href={item.href} onclick={close}>{item.label}</a></li>
 				{/each}
+				<li>
+					<button
+						type="button"
+						class="MenuPanel__lang"
+						onclick={() => lang.toggle()}
+						aria-label={lang.current === 'en' ? 'Switch to Danish' : 'Switch to English'}
+					>
+						{lang.current === 'en' ? 'EN' : 'DA'}
+					</button>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -347,7 +358,8 @@
 	}
 
 	.MenuPanel__list a,
-	.MenuPanel__pages a {
+	.MenuPanel__pages a,
+	.MenuPanel__lang {
 		font-size: 11px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -358,8 +370,18 @@
 	}
 
 	.MenuPanel__list a:hover,
-	.MenuPanel__pages a:hover {
+	.MenuPanel__pages a:hover,
+	.MenuPanel__lang:hover {
 		opacity: 0.55;
+	}
+
+	/* a <button> among links — drop the UA chrome so it sits on the same line */
+	.MenuPanel__lang {
+		font-family: inherit;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
 	}
 
 	/* Unreleased faces: same slot, half-strength, and never interactive. */
