@@ -31,11 +31,10 @@
 
 	type NavItem = { label: string; href: string };
 
-	// Desktop inline nav. "Custom" jumps to the bespoke section on the home
-	// page — there is no standalone route for it yet.
+	// Desktop inline nav.
 	const NAV: NavItem[] = [
 		{ label: 'Fonts', href: '/fonts' },
-		{ label: 'Custom', href: '/#custom' },
+		{ label: 'Custom', href: '/custom' },
 		{ label: 'Buy', href: '/buy' }
 	];
 
@@ -48,7 +47,7 @@
 	// Mirrors the desktop nav (the Fonts group above stands in for its "Fonts"
 	// link, and the language switch is appended after these).
 	const PAGES: NavItem[] = [
-		{ label: 'Custom', href: '/#custom' },
+		{ label: 'Custom', href: '/custom' },
 		{ label: 'Buy', href: '/buy' }
 	];
 
