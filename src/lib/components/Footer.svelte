@@ -17,6 +17,13 @@
 	const SOCIAL: LinkItem[] = [];
 
 	const LEGAL: LinkItem[] = [
+		// Plain-language "what's included" guide — sits ahead of the EULA
+		// (the binding contract) rather than under /legal/, since it's a
+		// summary page, not itself a legal document. Note: /license (no
+		// -ing) is already taken — it's a stable redirect to /legal/eula
+		// baked into the shipped fonts' own OpenType nameID 13/14 metadata,
+		// so this page had to take a different URL rather than that one.
+		{ label: 'Licensing', href: '/licensing' },
 		{ label: 'EULA', href: '/legal/eula' },
 		{ label: 'Privacy', href: '/legal/privacy' },
 		// Japan's mandatory commercial-transactions disclosure (特定商取引法).
