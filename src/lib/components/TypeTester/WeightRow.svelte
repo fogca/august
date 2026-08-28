@@ -26,8 +26,8 @@
 		defaultNote,
 		fontFamily,
 		initialSize = 125,
-		initialNoteSize = 32,
-		initialAlign = 'center'
+		initialNoteSize = 48,
+		initialAlign = 'left'
 	}: Props = $props();
 
 	const SIZE_MIN = 12;
@@ -392,12 +392,12 @@
 	/* font-size comes from the inline style (its own slider); everything else
 	   is fixed here. Editable, so it needs the same affordances as the word. */
 	.WeightRow__note {
-		line-height: 1.3;
+		line-height: 1.1;
 		letter-spacing: 0;
 		color: var(--color-text);
 		margin: 0;
 		max-width: 60ch;
-		margin-inline: auto;
+		margin-inline: 0;
 		white-space: pre-wrap;
 		word-break: break-word;
 		cursor: text;

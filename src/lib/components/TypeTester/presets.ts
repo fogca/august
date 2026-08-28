@@ -68,7 +68,7 @@ export const WEIGHT_ROW_SIZE_DEFAULT_MOBILE = 72;
 
 // Body copy under each word — its own slider, so these are just the starting
 // points.
-export const WEIGHT_ROW_NOTE_DEFAULT_DESKTOP = 32;
+export const WEIGHT_ROW_NOTE_DEFAULT_DESKTOP = 48;
 export const WEIGHT_ROW_NOTE_DEFAULT_MOBILE = 16;
 
 export const LETTER_SPACING_MIN = -0.05;
