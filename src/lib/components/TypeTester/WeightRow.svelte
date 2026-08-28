@@ -15,7 +15,7 @@
 		initialAlign?: AlignValue;
 	}
 
-	let { weight, defaultText, fontFamily, initialSize = 64, initialAlign = 'center' }: Props = $props();
+	let { weight, defaultText, fontFamily, initialSize = 160, initialAlign = 'center' }: Props = $props();
 
 	let size = $state(untrack(() => initialSize));
 	let align = $state<AlignValue>(untrack(() => initialAlign));
@@ -250,7 +250,7 @@
 	.WeightRow__text {
 		display: block;
 		width: 100%;
-		/* pre-wrap so the seeded "word\nparagraph" keeps its line break */
+		/* pre-wrap keeps any line break the visitor types in themselves */
 		white-space: pre-wrap;
 		word-break: break-word;
 		min-height: 1em;

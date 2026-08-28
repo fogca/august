@@ -11,8 +11,8 @@
 	interface Props {
 		weights: WeightDef[];
 		fontFamily: string;
-		/** Per-weight default text (word + its own definition) — row i uses
-		 *  defaultTexts[i % length], shown as-is (no shared text appended). */
+		/** Per-weight default word — row i uses defaultTexts[i % length]. One
+		 *  word per row: at the default 160px a sentence would fill the row. */
 		defaultTexts: string[];
 		/** When false, show an "in development" notice */
 		available?: boolean;

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { onScroll, scrollToEl } from '$lib/scroll';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
@@ -14,25 +12,7 @@
 	const tf = $derived(data.typeface);
 	const isAvailable = $derived(tf.status === 'available');
 
-	// Fixed buy bar: hidden (translated down) at the top of the page; slides up
-	// once scrolling starts; and slides back down before the footer (when main ends).
-	let buybarVisible = $state(false);
-	let mainEl: HTMLElement;
-	onMount(() => {
-		const update = () => {
-			const scrolled = window.scrollY > 8;
-			const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-			const atFooter = mainEl ? mainEl.getBoundingClientRect().bottom <= viewportHeight : false;
-			buybarVisible = scrolled && !atFooter;
-		};
-		update();
-		return onScroll(update);
-	});
 
-	// Smooth-scroll the fixed CTA to the on-page buy block.
-	function scrollToBuy() {
-		scrollToEl('#buy');
-	}
 </script>
 
 <svelte:head>
@@ -40,7 +20,7 @@
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 
-<main class="FontDetail" bind:this={mainEl} style="--type-font: '{tf.fontFamily}';">
+<main class="FontDetail" style="--type-font: '{tf.fontFamily}';">
 	<!-- 100vh top-view hero: full-screen media + centered wordmark + meta -->
 	<section
 		class="FontDetail__hero"
@@ -153,18 +133,14 @@
 	</section>
 </main>
 
-<!-- Fixed bottom purchase bar — hidden at the top, slides up once scrolling -->
-<div class="FontDetail__buybar white" class:is-visible={buybarVisible}>
-	<span class="FontDetail__buybar-label">{tf.name} · {tf.classification}</span>
-	<button type="button" class="FontDetail__buybar-cta" onclick={scrollToBuy}>
-		{isAvailable ? 'Buy — from €420' : 'Coming Soon'}
-	</button>
-</div>
+<!-- Fixed bottom purchase bar — hidden for now. The on-page buy block
+     (#buy) is the only purchase entry point. To restore, bring back the
+     scroll listener that drove `buybarVisible` along with this markup. -->
 
 <style>
 	.FontDetail {
-		/* padding-bottom leaves room for the fixed buy bar */
-		padding-bottom: 72px;
+		/* was 72px to clear the fixed buy bar, which is hidden for now */
+		padding-bottom: 0;
 	}
 
 	/* ── 100vh top hero ── */
@@ -471,60 +447,8 @@
 		max-width: 48ch;
 	}
 
-	/* ── Fixed bottom purchase bar ── */
-	.FontDetail__buybar {
-		position: fixed;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 60;
-		/* Extra bottom padding for the home-indicator safe area (viewport-fit=cover
-		   lets this bar reach the true screen edge on notched iPhones); the 56px
-		   content row stays vertically centered above it. */
-		height: calc(56px + env(safe-area-inset-bottom, 0px));
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 16px;
-		padding: 0 var(--gutter) env(safe-area-inset-bottom, 0px);
-		background: var(--color-text);
-		color: var(--color-bg);
-		/* hidden below the fold until scrolling starts */
-		transform: translateY(100%);
-		transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-	}
-
-	.FontDetail__buybar.is-visible {
-		transform: translateY(0);
-	}
-
-	.FontDetail__buybar-label {
-		font-family: 'Steiner', sans-serif;
-		font-size: 12px;
-		letter-spacing: 0;
-		opacity: 0.85;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
-
-	.FontDetail__buybar-cta {
-		font-family: 'Steiner', sans-serif;
-		font-size: 14px;
-		font-weight: var(--fw-ui);
-		letter-spacing: 0;
-		color: var(--color-bg);
-		background: transparent;
-		border: 0;
-		cursor: pointer;
-		padding: 0;
-		white-space: nowrap;
-		transition: opacity 0.15s ease;
-	}
-
-	.FontDetail__buybar-cta:hover {
-		opacity: 0.7;
-	}
+	/* The fixed bottom purchase bar was removed here along with its markup.
+	   Restore both from git history if it comes back. */
 
 	/* All page content (not header/footer) uses the typeface's own font.
 	   `--type-font` is set on .FontDetail; !important overrides the components'

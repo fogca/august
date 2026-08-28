@@ -20,7 +20,7 @@ export interface Typeface {
 	fontFamily: string;
 	tagline: string;
 	description: string;
-	/** Japanese running translation of the description (shown under the English). */
+	/** Danish running translation of the description (shown under the English). */
 	descriptionDa?: string;
 	/** e.g. 'Humanist Sans · 12 weights' */
 	classification: string;
@@ -83,30 +83,30 @@ export const TYPEFACES: Typeface[] = [
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		weights: WEIGHTS,
-		// One term per weight row (20, alphabetical A→T), each paired with its
-		// own definition — typography's own vocabulary, explained on the spot,
-		// rather than one shared paragraph repeated under every row.
+		// One term per weight row (20, alphabetical A→T) — typography's own
+		// vocabulary. Single words only: the tester sets them large, so a
+		// sentence would wrap into a paragraph instead of showing the letters.
 		defaultTexts: [
-			'Aperture\nThe partial opening in letters like c, e, and s.',
-			'Baseline\nThe invisible line every letter without a descender sits on.',
-			'Counter\nThe enclosed or partially enclosed space inside a letter, as in o or e.',
-			'Descender\nThe part of a letter that drops below the baseline, as in p or y.',
-			'Ear\nThe small stroke projecting from the top right of a lowercase g.',
-			'Finial\nA tapered or curved stroke end, without a serif, as in f or r.',
-			'Glyph\nThe drawn shape a font uses to represent a character.',
-			'Hairline\nThe thinnest stroke a typeface draws, most visible in its heaviest weights.',
-			'Italic\nA distinct, slanted design drawn stroke by stroke — not a slanted copy of the roman.',
-			'Junction\nThe point where two strokes meet or cross, as in the arms of a k.',
-			'Kerning\nThe adjustment of space between two specific letters, like A and V.',
-			'Ligature\nTwo or more letters joined into a single glyph, as in fi or fl.',
-			'Metrics\nThe widths and side-bearings that decide how letters space themselves.',
-			'Numeral\nA figure, drawn either lining (cap-height) or old-style (with descenders).',
-			'Overshoot\nThe slight excess round letters need past the baseline to look aligned.',
-			'Proportion\nThe relationship between a letter’s height, width, and stroke weight.',
-			'Quotation\nThe curved marks that frame speech, distinct from the straight prime.',
-			'Rhythm\nThe visual cadence a typeface holds across its counters and spacing.',
-			'Serif\nThe small stroke finishing a main stroke — absent here, by design.',
-			'Terminal\nThe end of any stroke that isn’t a serif.'
+			'Aperture',
+			'Baseline',
+			'Counter',
+			'Descender',
+			'Ear',
+			'Finial',
+			'Glyph',
+			'Hairline',
+			'Italic',
+			'Junction',
+			'Kerning',
+			'Ligature',
+			'Metrics',
+			'Numeral',
+			'Overshoot',
+			'Proportion',
+			'Quotation',
+			'Rhythm',
+			'Serif',
+			'Terminal'
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
