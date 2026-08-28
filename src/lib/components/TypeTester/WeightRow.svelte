@@ -183,7 +183,7 @@
       font-family: '{fontFamily}', sans-serif;
       font-variation-settings: 'wght' {weight.axisValue};
       font-size: {size}px;
-      line-height: 1.15;
+      line-height: 1;
       text-align: {align};
     "
 	></div>
@@ -216,8 +216,10 @@
 	.WeightRow {
 		display: flex;
 		flex-direction: column;
-		gap: 15px;
-		padding-block: 15px 20px;
+		/* No gap: the meta row carries the space under itself, and the specimen
+		   sits directly on the body copy below it. */
+		gap: 0;
+		padding-block: 15px 40px;
 		border-top: 1px solid var(--color-line);
 		width: 100%;
 	}
@@ -230,6 +232,7 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
+		margin-bottom: 40px;
 		color: var(--color-text-mute);
 		font-family: var(--font-en), sans-serif;
 		font-size: 10px;
@@ -405,6 +408,6 @@
 		min-height: 1em;
 		cursor: text;
 		outline: none;
-		padding-block: 8px;
+		padding-block: 8px 0;
 	}
 </style>
