@@ -5,7 +5,9 @@
 	import {
 		MOBILE_BREAKPOINT_PX,
 		WEIGHT_ROW_SIZE_DEFAULT_DESKTOP,
-		WEIGHT_ROW_SIZE_DEFAULT_MOBILE
+		WEIGHT_ROW_SIZE_DEFAULT_MOBILE,
+		WEIGHT_ROW_NOTE_DEFAULT_DESKTOP,
+		WEIGHT_ROW_NOTE_DEFAULT_MOBILE
 	} from './presets.js';
 
 	interface Props {
@@ -23,10 +25,11 @@
 	let { weights, fontFamily, defaultTexts, defaultNotes, available = true }: Props = $props();
 
 	// Viewport-dependent default size (evaluated once on mount)
-	const initialSize =
-		browser && window.innerWidth < MOBILE_BREAKPOINT_PX
-			? WEIGHT_ROW_SIZE_DEFAULT_MOBILE
-			: WEIGHT_ROW_SIZE_DEFAULT_DESKTOP;
+	const isPhone = browser && window.innerWidth < MOBILE_BREAKPOINT_PX;
+	const initialSize = isPhone ? WEIGHT_ROW_SIZE_DEFAULT_MOBILE : WEIGHT_ROW_SIZE_DEFAULT_DESKTOP;
+	const initialNoteSize = isPhone
+		? WEIGHT_ROW_NOTE_DEFAULT_MOBILE
+		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
 </script>
 
 <section class="TypeTester" aria-label="Type Tester — {fontFamily}">
@@ -48,6 +51,7 @@
 				defaultNote={defaultNotes?.[i % defaultNotes.length]}
 				{fontFamily}
 				{initialSize}
+				{initialNoteSize}
 			/>
 		{/each}
 	</div>

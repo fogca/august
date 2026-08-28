@@ -7,38 +7,57 @@
 		weight: WeightDef;
 		/** Each row owns its text independently; this sets the initial value. */
 		defaultText: string;
-		/** Body text under the word. Fixed size — the slider drives the word only. */
+		/** Body copy under the word — editable and resizable like the word itself. */
 		defaultNote?: string;
 		/** CSS font-family name — allows different typefaces to share this component */
 		fontFamily: string;
 		/** Starting size in px */
 		initialSize?: number;
+		/** Starting size in px for the body copy */
+		initialNoteSize?: number;
 		/** Starting text alignment */
 		initialAlign?: AlignValue;
 	}
 
-	let { weight, defaultText, defaultNote, fontFamily, initialSize = 125, initialAlign = 'center' }: Props = $props();
+	let {
+		weight,
+		defaultText,
+		defaultNote,
+		fontFamily,
+		initialSize = 125,
+		initialNoteSize = 32,
+		initialAlign = 'center'
+	}: Props = $props();
 
 	const SIZE_MIN = 12;
 	const SIZE_MAX = 200;
+	const NOTE_MIN = 10;
+	const NOTE_MAX = 96;
 
 	let size = $state(untrack(() => initialSize));
-	let sliderEl = $state<HTMLInputElement>();
-	let dragging = false;
+	let noteSize = $state(untrack(() => initialNoteSize));
+	let align = $state<AlignValue>(untrack(() => initialAlign));
 
-	function valueFromX(clientX: number) {
-		if (!sliderEl) return size;
-		const r = sliderEl.getBoundingClientRect();
+	let el = $state<HTMLElement>();
+	let noteEl = $state<HTMLElement>();
+	let sliderEl = $state<HTMLInputElement>();
+	let noteSliderEl = $state<HTMLInputElement>();
+
+	type Drag = { el: HTMLInputElement; min: number; max: number; apply: (v: number) => void };
+	let drag: Drag | null = null;
+
+	function valueFrom(clientX: number, d: Drag) {
+		const r = d.el.getBoundingClientRect();
 		const t = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
-		return Math.round(SIZE_MIN + t * (SIZE_MAX - SIZE_MIN));
+		return Math.round(d.min + t * (d.max - d.min));
 	}
 
 	function onMove(e: PointerEvent) {
-		if (dragging) size = valueFromX(e.clientX);
+		if (drag) drag.apply(valueFrom(e.clientX, drag));
 	}
 
 	function endDrag() {
-		dragging = false;
+		drag = null;
 		window.removeEventListener('pointermove', onMove);
 		window.removeEventListener('pointerup', endDrag);
 		window.removeEventListener('pointercancel', endDrag);
@@ -50,25 +69,26 @@
 	// the thumb tracks the finger 1:1. Listeners go on window (not
 	// setPointerCapture) so a drag that leaves the control still works without
 	// retargeting the eventual click.
-	function startDrag(e: PointerEvent) {
+	function startDrag(e: PointerEvent, d: Drag | undefined) {
+		if (!d) return;
 		e.preventDefault();
-		dragging = true;
-		size = valueFromX(e.clientX);
-		sliderEl?.focus(); // preventDefault above skips the native focus
+		drag = d;
+		d.apply(valueFrom(e.clientX, d));
+		d.el.focus(); // preventDefault above skips the native focus
 		window.addEventListener('pointermove', onMove);
 		window.addEventListener('pointerup', endDrag);
 		window.addEventListener('pointercancel', endDrag);
 	}
 
 	$effect(() => endDrag);
-	let align = $state<AlignValue>(untrack(() => initialAlign));
-	let el = $state<HTMLElement>();
 
-	// Seed the contenteditable with defaultText on mount.
+	// Seed both contenteditables on mount.
 	$effect(() => {
-		if (el && el.textContent === '') {
-			el.textContent = defaultText;
-		}
+		if (el && el.textContent === '') el.textContent = defaultText;
+	});
+
+	$effect(() => {
+		if (noteEl && defaultNote && noteEl.textContent === '') noteEl.textContent = defaultNote;
 	});
 
 </script>
@@ -86,12 +106,40 @@
 				max={SIZE_MAX}
 				bind:value={size}
 				bind:this={sliderEl}
-				onpointerdown={startDrag}
+				onpointerdown={(e) =>
+					startDrag(e, sliderEl && { el: sliderEl, min: SIZE_MIN, max: SIZE_MAX, apply: (v) => (size = v) })}
 				aria-label="{weight.name} size"
 			/>
 			<span class="size-icon size-icon--lg">A</span>
 			<span class="WeightRow__size-val">{size}px</span>
 		</label>
+
+		{#if defaultNote}
+			<label class="WeightRow__size">
+				<span class="size-icon size-icon--sm">a</span>
+				<input
+					class="WeightRow__size-range"
+					type="range"
+					min={NOTE_MIN}
+					max={NOTE_MAX}
+					bind:value={noteSize}
+					bind:this={noteSliderEl}
+					onpointerdown={(e) =>
+						startDrag(
+							e,
+							noteSliderEl && {
+								el: noteSliderEl,
+								min: NOTE_MIN,
+								max: NOTE_MAX,
+								apply: (v) => (noteSize = v)
+							}
+						)}
+					aria-label="{weight.name} body size"
+				/>
+				<span class="size-icon size-icon--lg">a</span>
+				<span class="WeightRow__size-val">{noteSize}px</span>
+			</label>
+		{/if}
 		<div class="WeightRow__align" role="group" aria-label="Text alignment">
 			{#each (['left', 'center', 'right'] as AlignValue[]) as opt}
 				<button
@@ -144,16 +192,22 @@
 		<!-- Body copy under the word. Deliberately a fixed size and not editable:
 		     the row reads as a title with a paragraph, and the slider stays a
 		     control for the specimen above it. -->
-		<p
+		<div
 			class="WeightRow__note"
+			bind:this={noteEl}
+			contenteditable="true"
+			role="textbox"
+			tabindex="0"
+			aria-multiline="true"
+			aria-label="{weight.name} weight — editable body copy"
+			spellcheck="false"
 			style="
         font-family: '{fontFamily}', sans-serif;
         font-variation-settings: 'wght' {weight.axisValue};
+        font-size: {noteSize}px;
         text-align: {align};
       "
-		>
-			{defaultNote}
-		</p>
+		></div>
 	{/if}
 </div>
 
@@ -327,25 +381,19 @@
 		stroke-linecap: round;
 	}
 
+	/* font-size comes from the inline style (its own slider); everything else
+	   is fixed here. Editable, so it needs the same affordances as the word. */
 	.WeightRow__note {
-		/* SP size; the desktop step is in the media block below. */
-		font-size: 16px;
-		line-height: 1.5;
+		line-height: 1.4;
 		letter-spacing: 0;
 		color: var(--color-text);
 		margin: 0;
 		max-width: 60ch;
 		margin-inline: auto;
-	}
-
-	/* Must follow the rule above, not precede it: a media query adds no
-	   specificity, so source order decides. */
-	@media (min-width: 768px) {
-		.WeightRow__note {
-			font-size: 32px;
-			line-height: 1.35;
-			max-width: 44ch;
-		}
+		white-space: pre-wrap;
+		word-break: break-word;
+		cursor: text;
+		outline: none;
 	}
 
 	.WeightRow__text {

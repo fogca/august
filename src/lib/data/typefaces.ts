@@ -135,29 +135,30 @@ export const TYPEFACES: Typeface[] = [
 			'Serif',
 			'Terminal'
 		],
-		// Each word's definition, set small beneath it — the tester reads as a
-		// title with a paragraph rather than twenty loose words.
+		// Body copy under each word — long enough to show the face setting real
+		// paragraphs, not just a caption. Each still explains its own term, so
+		// the row reads as a title with its article rather than filler.
 		defaultNotes: [
-			'The partial opening in letters like c, e, and s.',
-			'The invisible line every letter without a descender sits on.',
-			'The enclosed or partially enclosed space inside a letter, as in o or e.',
-			'The part of a letter that drops below the baseline, as in p or y.',
-			'The small stroke projecting from the top right of a lowercase g.',
-			'A tapered or curved stroke end, without a serif, as in f or r.',
-			'The drawn shape a font uses to represent a character.',
-			'The thinnest stroke a typeface draws, most visible in its heaviest weights.',
-			'A distinct, slanted design drawn stroke by stroke — not a slanted copy of the roman.',
-			'The point where two strokes meet or cross, as in the arms of a k.',
-			'The adjustment of space between two specific letters, like A and V.',
-			'Two or more letters joined into a single glyph, as in fi or fl.',
-			'The widths and side-bearings that decide how letters space themselves.',
-			'A figure, drawn either lining (cap-height) or old-style (with descenders).',
-			'The slight excess round letters need past the baseline to look aligned.',
-			'The relationship between a letter\u2019s height, width, and stroke weight.',
-			'The curved marks that frame speech, distinct from the straight prime.',
-			'The visual cadence a typeface holds across its counters and spacing.',
-			'The small stroke finishing a main stroke — absent here, by design.',
-			'The end of any stroke that isn\u2019t a serif.'
+			'The partial opening in letters like c, e and s, measured between the terminals. A wide aperture keeps a face open and legible at small sizes and on screen; a closed one turns the same skeleton mechanical. It is one of the first decisions that separates a humanist sans from a geometric one.',
+			'The invisible line every letter without a descender sits on. It is the strongest alignment in typography — the eye reads along it, and any letter that strays from it looks broken. Round letters must actually cross it slightly to appear level, which is why overshoot exists.',
+			'The enclosed or partially enclosed space inside a letter, as in o, e or a. Counters carry more of a typeface\u2019s character than the strokes around them: their size sets the colour of a page, and their shape decides whether the family stays legible once the weight is pushed to the extremes.',
+			'The part of a letter that drops below the baseline, as in p, y or g. Descender length is a compromise between elegance and economy — long ones give a page rhythm and grace, short ones let lines be set tight. The choice is made once and constrains every line spacing afterwards.',
+			'The small stroke projecting from the top right of a lowercase g. It is a detail almost nobody notices and every type designer argues about, because it is one of the few places where a sans-serif is allowed a gesture that serves no structural purpose at all.',
+			'A tapered or curved stroke end, without a serif, as in f, r or c. Finials are where the drawing hand shows itself: cut them straight and the face turns rational, let them swell or taper and the same skeleton starts to feel written rather than constructed.',
+			'The drawn shape a font uses to represent a character. A character is an idea — the letter A — while a glyph is one particular drawing of it. One character can have many glyphs, which is what stylistic sets, small capitals and old-style figures actually are.',
+			'The thinnest stroke a typeface draws, most visible in its heaviest weights. In a variable family the hairline is also a whole instrument of its own: at the light end of the axis every stroke becomes a hairline, and the design has to hold together with almost no mass left.',
+			'A distinct, slanted design drawn stroke by stroke — not a slanted copy of the roman. A true italic changes the skeleton: a becomes single-storey, the rhythm narrows, and the letters begin to join in spirit if not in fact. Sloping a roman produces something quite different, and worse.',
+			'The point where two strokes meet or cross, as in the arms of a k or the shoulder of an n. Junctions are where weight collects, so they have to be cut back by hand at every weight; left alone they turn into dark blots that break the even colour of a line.',
+			'The adjustment of space between two specific letters, like A and V, where the default fit leaves a hole. Kerning is corrective work, not a substitute for spacing: a well-spaced face needs only a few hundred pairs, a badly spaced one cannot be rescued by thousands.',
+			'Two or more letters joined into a single glyph, as in fi or fl. Ligatures exist because a letter can collide with its neighbour — the dot of an i under the hood of an f. What began as a fix for metal type is now an automatic substitution the font performs while you type.',
+			'The widths and side-bearings that decide how letters space themselves. Metrics are set before kerning and matter far more: they establish the rhythm the whole family inherits, and a face with good metrics reads evenly in any language, including ones the designer never tested.',
+			'A figure, drawn either lining, at cap height and uniform width, or old-style, with ascenders and descenders that let numbers sit inside running text without shouting. Tabular widths keep columns aligned; proportional ones space each figure to its own shape.',
+			'The slight excess round letters need past the baseline and cap line to look aligned. A circle drawn to the same height as a square reads smaller — the eye measures area, not extremes. Overshoot is a correction for perception, and it is why optical alignment always beats mathematical alignment.',
+			'The relationship between a letter\u2019s height, width and stroke weight. Proportion is where a typeface declares its intentions: a tall x-height and open counters for the screen, classical proportions for a book. Change it and every other decision in the family has to be made again.',
+			'The curved marks that frame speech, distinct from the straight prime used for feet and inches. Typing the wrong one is the most common typographic error there is, which is why a serious font draws all four and the software substitutes them for you as you type.',
+			'The visual cadence a typeface holds across its counters and spacing. Rhythm is what you actually read: not individual letters but the alternation of stroke and space repeating along a line. When it is even the page goes quiet; when it stumbles the reader feels it without knowing why.',
+			'The small stroke finishing a main stroke — absent here, by design. A sans-serif does not simply delete them: without serifs to close a stroke, every terminal, every junction and every width has to be redrawn to carry the weight the serifs used to hold.',
+			'The end of any stroke that isn\u2019t a serif. Terminals are cut horizontally, vertically, at an angle or on a curve, and that single decision runs through the whole alphabet. Change the cut and you change the temperament of the face more than any other detail.'
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
