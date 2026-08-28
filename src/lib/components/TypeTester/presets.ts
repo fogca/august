@@ -57,6 +57,11 @@ export const FONT_SIZE_DEFAULT = FONT_SIZE_DEFAULT_DESKTOP;
 // Breakpoint at which mobile default applies
 export const MOBILE_BREAKPOINT_PX = 768;
 
+// Temporary switch: hide the large specimen line and its size slider, leaving
+// only the body copy. Flip back to true to restore both — the markup and state
+// are still in WeightRow, just gated.
+export const SHOW_ROW_TITLE = false;
+
 // Per-weight-row default sizes (independent tester rows)
 export const WEIGHT_ROW_SIZE_DEFAULT_DESKTOP = 125;
 export const WEIGHT_ROW_SIZE_DEFAULT_MOBILE = 72;

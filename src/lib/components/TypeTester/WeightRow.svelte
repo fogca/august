@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import { SHOW_ROW_TITLE } from './presets.js';
 	import type { WeightDef } from './presets.js';
 	import type { AlignValue } from './presets.js';
 
@@ -97,22 +98,24 @@
 	<div class="WeightRow__meta">
 		<span class="label-name">{weight.name}</span>
 		<span class="label-axis">wght {weight.axisValue}</span>
-		<label class="WeightRow__size">
-			<span class="size-icon size-icon--sm">A</span>
-			<input
-				class="WeightRow__size-range"
-				type="range"
-				min={SIZE_MIN}
-				max={SIZE_MAX}
-				bind:value={size}
-				bind:this={sliderEl}
-				onpointerdown={(e) =>
-					startDrag(e, sliderEl && { el: sliderEl, min: SIZE_MIN, max: SIZE_MAX, apply: (v) => (size = v) })}
-				aria-label="{weight.name} size"
-			/>
-			<span class="size-icon size-icon--lg">A</span>
-			<span class="WeightRow__size-val">{size}px</span>
-		</label>
+		{#if SHOW_ROW_TITLE}
+			<label class="WeightRow__size">
+				<span class="size-icon size-icon--sm">A</span>
+				<input
+					class="WeightRow__size-range"
+					type="range"
+					min={SIZE_MIN}
+					max={SIZE_MAX}
+					bind:value={size}
+					bind:this={sliderEl}
+					onpointerdown={(e) =>
+						startDrag(e, sliderEl && { el: sliderEl, min: SIZE_MIN, max: SIZE_MAX, apply: (v) => (size = v) })}
+					aria-label="{weight.name} size"
+				/>
+				<span class="size-icon size-icon--lg">A</span>
+				<span class="WeightRow__size-val">{size}px</span>
+			</label>
+		{/if}
 
 		{#if defaultNote}
 			<label class="WeightRow__size">
@@ -170,23 +173,25 @@
 		</div>
 	</div>
 
-	<div
-		class="WeightRow__text"
-		bind:this={el}
-		contenteditable="true"
-		role="textbox"
-		tabindex="0"
-		aria-multiline="true"
-		aria-label="{weight.name} weight — editable preview"
-		spellcheck="false"
-		style="
-      font-family: '{fontFamily}', sans-serif;
-      font-variation-settings: 'wght' {weight.axisValue};
-      font-size: {size}px;
-      line-height: 1;
-      text-align: {align};
-    "
-	></div>
+	{#if SHOW_ROW_TITLE}
+		<div
+			class="WeightRow__text"
+			bind:this={el}
+			contenteditable="true"
+			role="textbox"
+			tabindex="0"
+			aria-multiline="true"
+			aria-label="{weight.name} weight — editable preview"
+			spellcheck="false"
+			style="
+	      font-family: '{fontFamily}', sans-serif;
+	      font-variation-settings: 'wght' {weight.axisValue};
+	      font-size: {size}px;
+	      line-height: 1;
+	      text-align: {align};
+	    "
+		></div>
+	{/if}
 
 	{#if defaultNote}
 		<!-- Body copy under the word. Deliberately a fixed size and not editable:
