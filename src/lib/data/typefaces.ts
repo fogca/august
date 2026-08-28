@@ -94,15 +94,18 @@ export const TYPEFACES: Typeface[] = [
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		// Measured, not estimated: glyph count is the encoded cmap of the shipped
-		// Steiner-VF69.woff2; the language count is Hyperglot 0.7.3 "base support"
-		// on the same source. Formats follow docs/FULFILLMENT.md (still a draft).
+		// Steiner-VF69.woff2. The language count is Hyperglot 0.7.3, base support
+		// restricted to --validity verified — i.e. only languages whose charset
+		// data Hyperglot has checked. Its default (draft data included) reports
+		// 246, which counts a long tail of unverified minority orthographies and
+		// overstates the case. Formats follow docs/FULFILLMENT.md (still a draft).
 		info: {
 			design: 'Takumi Isobe',
 			release: 'July 2026',
 			collection: '20 weights, variable',
 			formats: 'TTF, WOFF2',
 			glyphs: '341',
-			languages: '246'
+			languages: '93'
 		},
 		weights: WEIGHTS,
 		// One term per weight row (20, alphabetical A→T) — typography's own
