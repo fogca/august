@@ -75,7 +75,7 @@
 		</div>
 	</section>
 
-	<!-- Body: name + tagline + description (normal scroll) -->
+	<!-- Body: oversized name, then description (left) and the spec table (right) -->
 	<div class="FontDetail__body">
 		{#if !isAvailable}
 			<div class="FontDetail__info">
@@ -83,11 +83,48 @@
 			</div>
 		{/if}
 		<h1 class="FontDetail__name">{tf.name}</h1>
-		<p class="FontDetail__tagline">{tf.tagline}</p>
-		<p class="FontDetail__description">{tf.description}</p>
-		{#if tf.descriptionDa}
-			<p class="FontDetail__description-da" lang="da">{tf.descriptionDa}</p>
-		{/if}
+
+		<div class="FontDetail__cols">
+			<div class="FontDetail__text">
+				<p class="FontDetail__tagline">{tf.tagline}</p>
+				<p class="FontDetail__description">{tf.description}</p>
+				{#if tf.descriptionDa}
+					<p class="FontDetail__description-da" lang="da">{tf.descriptionDa}</p>
+				{/if}
+			</div>
+
+			{#if tf.info}
+				<aside class="FontDetail__spec" aria-label="Information">
+					<p class="FontDetail__spec-title">Information</p>
+					<dl class="FontDetail__spec-grid">
+						<div class="FontDetail__spec-item">
+							<dt>Design</dt>
+							<dd>{tf.info.design}</dd>
+						</div>
+						<div class="FontDetail__spec-item">
+							<dt>Release</dt>
+							<dd>{tf.info.release}</dd>
+						</div>
+						<div class="FontDetail__spec-item">
+							<dt>Collection</dt>
+							<dd>{tf.info.collection}</dd>
+						</div>
+						<div class="FontDetail__spec-item">
+							<dt>Formats</dt>
+							<dd>{tf.info.formats}</dd>
+						</div>
+						<div class="FontDetail__spec-item">
+							<dt>Glyphs</dt>
+							<dd>{tf.info.glyphs}</dd>
+						</div>
+						<div class="FontDetail__spec-item">
+							<dt>Supported languages</dt>
+							<dd>{tf.info.languages}</dd>
+						</div>
+					</dl>
+				</aside>
+			{/if}
+		</div>
 	</div>
 
 	<TypeTester
@@ -304,9 +341,60 @@
 	/* ── Body ── */
 	.FontDetail__body {
 		padding: 64px var(--padding) 40px;
-		max-width: 720px;
-		margin-inline: auto;
-		text-align: center;
+		text-align: left;
+	}
+
+	/* Description left, spec table right — stacked on phones. */
+	.FontDetail__cols {
+		display: grid;
+		gap: 40px;
+		margin-top: 32px;
+	}
+
+	.FontDetail__text {
+		max-width: 62ch;
+	}
+
+	@media (min-width: 768px) {
+		.FontDetail__cols {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+			gap: 64px;
+			align-items: start;
+		}
+	}
+
+	.FontDetail__spec-title {
+		font-family: 'Steiner', sans-serif;
+		font-size: 14px;
+		line-height: 1.5;
+		letter-spacing: 0;
+		color: var(--color-text-mute);
+		margin: 0 0 20px;
+	}
+
+	/* Two columns of label/value pairs, filled row-wise:
+	   Design | Release / Collection | Formats / Glyphs | Languages */
+	.FontDetail__spec-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 24px 32px;
+		margin: 0;
+	}
+
+	.FontDetail__spec-item dt {
+		font-family: 'Steiner', sans-serif;
+		font-size: 14px;
+		line-height: 1.5;
+		letter-spacing: 0;
+		color: var(--color-text-mute);
+	}
+
+	.FontDetail__spec-item dd {
+		font-family: 'Steiner', sans-serif;
+		font-size: 14px;
+		line-height: 1.5;
+		letter-spacing: 0;
+		margin: 0;
 	}
 
 	.FontDetail__info {
@@ -327,13 +415,20 @@
 		opacity: 0.7;
 	}
 
+	/* The name is the specimen here: 120px on phones, 320px from tablet up. */
 	.FontDetail__name {
 		font-family: 'Steiner', sans-serif;
-		font-size: 48px;
+		font-size: 120px;
 		font-weight: var(--fw-base);
-		line-height: 1.05;
+		line-height: 1;
 		letter-spacing: 0;
-		margin: 0 0 16px;
+		margin: 0;
+	}
+
+	@media (min-width: 768px) {
+		.FontDetail__name {
+			font-size: 320px;
+		}
 	}
 
 	.FontDetail__tagline {
@@ -341,11 +436,7 @@
 		font-size: 18px;
 		line-height: 1.4;
 		letter-spacing: 0;
-		/* max-width narrower than .FontDetail__body makes this its own box —
-		   text-align:center on the parent only centers text INSIDE that box,
-		   not the box itself, so without margin-inline:auto it sits flush left
-		   (visibly off-centre under the h1 above it). */
-		margin: 0 auto 16px;
+		margin: 0 0 16px;
 		max-width: 56ch;
 	}
 
@@ -359,11 +450,9 @@
 		/* size/line-height from base p (12px) */
 		letter-spacing: 0;
 		color: var(--color-text);
-		text-align: center;
+		text-align: left;
 		max-width: 64ch;
-		/* Same fix as .FontDetail__tagline — margin-inline:auto centres the box
-		   itself, not just the text inside it. */
-		margin: 0 auto;
+		margin: 0;
 	}
 
 	/* Japanese running translation — Tazugane Light, ~1.75px smaller than the
@@ -380,10 +469,9 @@
 		opacity: 0.75;
 		letter-spacing: 0;
 		color: var(--color-text);
-		text-align: center;
+		text-align: left;
 		max-width: 64ch;
-		/* Same centred-box fix as .FontDetail__description above it. */
-		margin: 12px auto 0;
+		margin: 12px 0 0;
 	}
 
 	/* ── On-page buy block ── */

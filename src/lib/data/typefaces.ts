@@ -24,6 +24,17 @@ export interface Typeface {
 	descriptionDa?: string;
 	/** e.g. 'Humanist Sans · 12 weights' */
 	classification: string;
+	/** Spec table shown beside the description on the typeface page. */
+	info?: {
+		design: string;
+		release: string;
+		collection: string;
+		formats: string;
+		/** Encoded glyph count */
+		glyphs: string;
+		/** Number of supported languages */
+		languages: string;
+	};
 	weights: WeightDef[];
 	/** Per-weight default words for the Type Tester — row i uses defaultTexts[i % length] */
 	defaultTexts: string[];
@@ -82,6 +93,17 @@ export const TYPEFACES: Typeface[] = [
 			+ 'Humanistisk-geometrisk — det mekaniske og det organiske findes side om side i hvert tegn, holdt sammen af formende kraft. '
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
+		// Measured, not estimated: glyph count is the encoded cmap of the shipped
+		// Steiner-VF69.woff2; the language count is Hyperglot 0.7.3 "base support"
+		// on the same source. Formats follow docs/FULFILLMENT.md (still a draft).
+		info: {
+			design: 'Takumi Isobe',
+			release: 'July 2026',
+			collection: '20 weights, variable',
+			formats: 'TTF, WOFF2',
+			glyphs: '341',
+			languages: '246'
+		},
 		weights: WEIGHTS,
 		// One term per weight row (20, alphabetical A→T) — typography's own
 		// vocabulary. Single words only: the tester sets them large, so a
