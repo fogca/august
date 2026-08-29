@@ -175,7 +175,7 @@
 			grid-template-columns: 2fr 1fr 1fr 2fr;
 			grid-template-areas: 'brand nav email contact';
 			gap: 32px;
-			padding-inline: 32px;
+			padding-inline: var(--padding);
 		}
 	}
 
@@ -263,7 +263,7 @@
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: center;
-			padding-inline: 32px;
+			padding-inline: var(--padding);
 		}
 	}
 

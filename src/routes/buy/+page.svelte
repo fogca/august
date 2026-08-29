@@ -1,17 +1,24 @@
 <script lang="ts">
 	// /buy — August Type Foundry license purchase page.
-	// Four-step flow: About you (intake) → Typeface → Weights, with a running
-	// order summary. The intake step comes first and on purpose: rather than
-	// a free-browse tier picker showing every tier's price side by side, it
-	// asks who the licence is for and resolves the one tier whose per-style
-	// rate applies (see LicenseIntake) — no other tier's price is ever shown.
-	// The actual total is tier × selected style count (see $lib/data/pricing's
-	// computeEur), so it isn't known until Step 3 has a selection either —
-	// this page is what joins the two.
-	// Only one product is on sale today (Asger), but Step 2 already
-	// reads from getFlatPackages() rather than hardcoding it, so a second
-	// typeface going on sale just adds a second card — no page changes.
+	// Entry point is a font's own detail page: /buy?font=<TypefaceSlug>
+	// (see fonts/[slug]/+page.svelte's Buy CTA), so the typeface itself is
+	// never chosen here -- it arrives pre-decided from wherever the buyer
+	// was actually convinced (specimens, glyph set, weights). Three-step
+	// flow -- About you → Select styles -- with a running order summary.
+	// The intake step comes first on purpose: rather than a free-browse
+	// tier picker showing every tier's price side by side, it asks who the
+	// licence is for and resolves the one tier whose per-style rate
+	// applies (see LicenseIntake) -- no other tier's price is ever shown.
+	// The actual total is tier × selected style count (see
+	// $lib/data/pricing's computeEur), so it isn't known until Select
+	// styles has a selection either -- this page is what joins the two.
+	// No fallback picker yet for a cold /buy visit (no ?font) -- see the
+	// August/Marketing session's 2026-08-29 note for the planned Phase 2
+	// (multi-typeface picker once Alfred/Asta go on sale); today there's
+	// only one real product, so falling back to it is enough.
 
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import { getFlatPackages, getPrice, getGrossPrice, formatPrice, type FlatPackage } from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
 	import { computeTotal, EDUCATIONAL_ACTIVE } from '$lib/data/discounts';
@@ -28,8 +35,8 @@
 	// ── Step 1: About you (intake) ───────────────────────────────
 	// LicenseIntake owns its own field state internally and reports the
 	// resolved tier (or null, while unresolved) + receipt metadata up via
-	// this callback. Pricing the actual cart item happens below, once Step
-	// 3's style count is also known.
+	// this callback. Pricing the actual cart item happens below, once
+	// Select styles' style count is also known.
 
 	let resolvedTierIndex = $state<number | null>(null);
 	let intakeMeta = $state<IntakeMeta>({ licenseeName: '', usageBand: null });
@@ -39,28 +46,18 @@
 		intakeMeta = meta;
 	}
 
-	// ── Step 2: Typeface ──────────────────────────────────────
+	// ── Typeface (from the URL, not chosen on this page) ──────────
 
 	const TYPEFACES: FlatPackage[] = getFlatPackages();
-	// Announced but not yet for sale — shown for completeness, greyed out and
-	// inert (same idea as the Header menu's UPCOMING list). Not real
-	// FlatPackages: no pricing exists for either yet.
-	const UPCOMING_TYPEFACES: { name: string; detail: string }[] = [
-		{ name: 'Alfred', detail: 'Neo Classic · in development' },
-		{ name: 'Asta', detail: 'Sibling to Asger · in development' }
-	];
-	// Pre-selected: today there is exactly one purchasable typeface, so
-	// requiring a click before Steps 2/3 unlock would be pure friction. The
-	// card is still a real, clickable step — the moment a second typeface
-	// goes on sale this stops being a foregone conclusion.
-	let selectedPackageId = $state<string | null>((TYPEFACES[0]?.id ?? null));
-	const selectedPackage = $derived(TYPEFACES.find((p) => p.id === selectedPackageId) ?? null);
+	// ?font=<TypefaceSlug> from the referring font page; falls back to the
+	// first (today, only) purchasable typeface for a cold /buy visit or an
+	// unrecognised slug.
+	const fontSlug = $derived(page.url.searchParams.get('font'));
+	const selectedPackage = $derived(
+		TYPEFACES.find((p) => p.typefaceSlug === fontSlug) ?? TYPEFACES[0] ?? null
+	);
 
-	function selectTypeface(id: string) {
-		selectedPackageId = id;
-	}
-
-	// ── Step 3: Select styles ────────────────────────────────────
+	// ── Select styles ────────────────────────────────────
 	// Pricing is per-style (see $lib/data/pricing's computeEur): the tier
 	// resolved in Step 1 sets a rate per style, and how many are selected
 	// here sets the count that rate applies to. Selecting every style
@@ -125,6 +122,28 @@
 
 	let isStudent = $state(false);
 
+	// PC: cart moves into a sticky 35% right-hand column (CartSummary's own
+	// non-inline mode already builds this — position:sticky, top:80px — it
+	// was just never driven by a real breakpoint check before). Mobile keeps
+	// today's always-open inline block. Same matchMedia + resize-listener
+	// pattern as GlyphSpecimen.svelte's isSmall, for the same belt-and-braces
+	// reason (some embedded/emulated viewports resize without firing the
+	// media-query change event). Defaults to true (mobile-safe) until mount
+	// resolves the real value, so SSR/first paint never assumes desktop.
+	let isSmall = $state(true);
+
+	onMount(() => {
+		const mq = window.matchMedia('(max-width: 767px)');
+		isSmall = mq.matches;
+		const onChange = () => (isSmall = mq.matches);
+		mq.addEventListener('change', onChange);
+		window.addEventListener('resize', onChange);
+		return () => {
+			mq.removeEventListener('change', onChange);
+			window.removeEventListener('resize', onChange);
+		};
+	});
+
 	// ── Computed ────────────────────────────────────────────
 
 	// Joins Step 1's resolved tier with Step 3's selected style count — the
@@ -156,138 +175,124 @@
 	});
 
 	const { subtotal, discounts, total } = $derived(computeTotal(cartState));
+
+	// Headline names the typeface the buyer arrived to buy, rather than the
+	// generic tagline this page used before a typeface was ever pre-decided.
+	const heroHeading = $derived(selectedPackage ? `Make ${selectedPackage.label} yours.` : 'Make it yours.');
+	const pageTitle = $derived(selectedPackage ? `Buy ${selectedPackage.label}` : 'Buy');
 </script>
 
 <svelte:head>
-	<title>Buy — August Type Foundry</title>
+	<title>{pageTitle} — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Purchase Asger — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
+		content="Purchase {selectedPackage?.label ?? 'Asger'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
 	/>
 </svelte:head>
 
 <div class="BuyPage">
-	<!-- Page header -->
-	<div class="BuyPage__top">
-		<div class="BuyPage__title-block">
-			<h1 class="BuyPage__heading">Make it yours.</h1>
-			<p class="BuyPage__sub">Tell us who it's for, then pick your typeface and weights. Pay once, yours to keep.</p>
-		</div>
-	</div>
-
-	<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
-	     the script header comment. -->
-	<div class="BuyStep" id="step-1">
-		<p class="BuyStep__eyebrow">1 — About you</p>
-		<LicenseIntake packages={selectedPackage ? [selectedPackage] : []} onresolve={handleIntakeResolve} />
-	</div>
-
-	<!-- Step 2 — Typeface -->
-	<div class="BuyStep">
-		<p class="BuyStep__eyebrow">2 — Typeface</p>
-		<div class="TypefaceList">
-			{#each TYPEFACES as tf (tf.id)}
-				{@const active = tf.id === selectedPackageId}
-				<button
-					type="button"
-					class="TypefaceCard"
-					class:is-active={active}
-					onclick={() => selectTypeface(tf.id)}
-					aria-pressed={active}
-				>
-					<span class="TypefaceCard__radio" aria-hidden="true">
-						{#if active}<span class="TypefaceCard__dot"></span>{/if}
-					</span>
-					<span class="TypefaceCard__body">
-						<span class="TypefaceCard__name">{tf.label}</span>
-						<span class="TypefaceCard__intro">
-							A humanist sans-serif for text and editorial — Johnston through Rotis.
-						</span>
-						<span class="TypefaceCard__detail">{tf.detail}</span>
-					</span>
-				</button>
-			{/each}
-			<!-- Deliberately a div, not a button: nothing to sell yet, so nothing
-			     to click — same treatment as the Header menu's UPCOMING list. -->
-			{#each UPCOMING_TYPEFACES as tf (tf.name)}
-				<div class="TypefaceCard is-disabled" aria-disabled="true">
-					<span class="TypefaceCard__radio" aria-hidden="true"></span>
-					<span class="TypefaceCard__body">
-						<span class="TypefaceCard__name">{tf.name}</span>
-						<span class="TypefaceCard__detail">{tf.detail}</span>
-					</span>
+	<div class="BuyPage__grid">
+		<!-- Left column (PC: 65%) — everything that isn't the running order. -->
+		<div class="BuyPage__main">
+			<!-- Page header -->
+			<div class="BuyPage__top">
+				<div class="BuyPage__title-block">
+					<h1 class="BuyPage__heading">{heroHeading}</h1>
+					<p class="BuyPage__sub">Tell us who it's for, then pick your weights. Pay once, yours to keep.</p>
 				</div>
-			{/each}
-		</div>
-	</div>
-
-	<!-- Step 3 — Select styles (informational: Complete always ships every
-	     weight shown here at one price — this just lets a buyer mark the
-	     ones they'll reach for first). -->
-	{#if selectedPackage?.styles?.length}
-		<div class="BuyStep">
-			<p class="BuyStep__eyebrow">3 — Select styles</p>
-			<div class="WeightPanel">
-				<!-- Complete Collection — same round-radio card as Typeface
-				     selection, formatted identically to it: name, "N weights"
-				     detail, price at the right (struck-through gross → the
-				     discounted final, once Step 1 has resolved a rate). -->
-				<button
-					type="button"
-					class="WeightPanel__collection"
-					class:is-active={isCompleteActive}
-					onclick={toggleComplete}
-					aria-pressed={isCompleteActive}
-				>
-					<span class="TypefaceCard__radio" aria-hidden="true">
-						{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
-					</span>
-					<span class="TypefaceCard__body">
-						<span class="TypefaceCard__name">Complete Collection</span>
-						<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span>
-					</span>
-					{#if completePrice !== null}
-						<span class="TypefaceCard__price">
-							{#if completeGross !== null && completeGross > completePrice}
-								<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
-							{/if}
-							<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
-						</span>
-					{/if}
-				</button>
-
-				<StyleList
-					pkg={selectedPackage}
-					selectable
-					selected={selectedWeights}
-					onToggle={toggleWeight}
-				/>
 			</div>
-		</div>
-	{/if}
 
-	<!-- Educational discount — left out for now (2026-08-29, at the user's
-	     request); see EDUCATIONAL_ACTIVE in $lib/data/discounts. -->
-	{#if EDUCATIONAL_ACTIVE}
-		<div class="BuyPage__options">
-			<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
-		</div>
-	{/if}
+			<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
+			     the script header comment. Required fields are marked (*) inside
+			     LicenseIntake itself — Steps 2/3 stay hidden until it resolves. -->
+			<div class="BuyStep" id="step-1">
+				<p class="BuyStep__eyebrow">1 — About you</p>
+				<LicenseIntake packages={selectedPackage ? [selectedPackage] : []} onresolve={handleIntakeResolve} />
+			</div>
 
-	<!-- Order details — empty state until a license is chosen -->
-	<div class="BuyPage__cart">
-		<CartSummary
-			inline
-			{isStudent}
-			items={cartItems}
-			{intakeMeta}
-			{subtotal}
-			{discounts}
-			{total}
-			packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
-			selectedStyles={hasLicense ? [...selectedWeights] : []}
-			errorMessage={form?.message ?? null}
-		/>
+			<!-- Select styles only appears once Step 1 has actually resolved a
+			     tier — picking weights before that has nothing to price
+			     against, so there was nothing stopping a buyer from filling it
+			     in "out of order" and only discovering Step 1 was required at
+			     checkout. Gating here makes the required-ness visible, not just
+			     enforced. (No Typeface step: the typeface arrives fixed from
+			     the referring font page's ?font= — see the script header
+			     comment.) -->
+			{#if resolvedTierIndex !== null}
+				<!-- Select styles (informational: Complete always ships every
+				     weight shown here at one price — this just lets a buyer mark the
+				     ones they'll reach for first). -->
+				{#if selectedPackage?.styles?.length}
+					<div class="BuyStep">
+						<p class="BuyStep__eyebrow">2 — Select styles</p>
+						<div class="WeightPanel">
+							<!-- Complete Collection — same round-radio card as Typeface
+							     selection, formatted identically to it: name, "N weights"
+							     detail, price at the right (struck-through gross → the
+							     discounted final, once Step 1 has resolved a rate). -->
+							<button
+								type="button"
+								class="WeightPanel__collection"
+								class:is-active={isCompleteActive}
+								onclick={toggleComplete}
+								aria-pressed={isCompleteActive}
+							>
+								<span class="TypefaceCard__radio" aria-hidden="true">
+									{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
+								</span>
+								<span class="TypefaceCard__body">
+									<span class="TypefaceCard__name">Complete Collection</span>
+									<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span>
+								</span>
+								{#if completePrice !== null}
+									<span class="TypefaceCard__price">
+										{#if completeGross !== null && completeGross > completePrice}
+											<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
+										{/if}
+										<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
+									</span>
+								{/if}
+							</button>
+
+							<StyleList
+								pkg={selectedPackage}
+								selectable
+								selected={selectedWeights}
+								onToggle={toggleWeight}
+							/>
+						</div>
+					</div>
+				{/if}
+
+				<!-- Educational discount — left out for now (2026-08-29, at the
+				     user's request); see EDUCATIONAL_ACTIVE in $lib/data/discounts. -->
+				{#if EDUCATIONAL_ACTIVE}
+					<div class="BuyPage__options">
+						<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
+					</div>
+				{/if}
+			{/if}
+		</div>
+
+		<!-- Right column (PC: 35%, sticky) — order details. Empty state until a
+		     license is chosen. inline={isSmall}: mobile keeps the always-open
+		     block CartSummary has always rendered here; PC switches to its
+		     built-in sticky-sidebar mode (position:sticky, top:80px) — see
+		     isSmall above. -->
+		<div class="BuyPage__cart">
+			<CartSummary
+				inline={isSmall}
+				{isStudent}
+				items={cartItems}
+				{intakeMeta}
+				{subtotal}
+				{discounts}
+				{total}
+				packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
+				selectedStyles={hasLicense ? [...selectedWeights] : []}
+				errorMessage={form?.message ?? null}
+			/>
+		</div>
 	</div>
 </div>
 
@@ -306,6 +311,37 @@
 			padding-inline: var(--padding);
 			padding-bottom: 80px;
 		}
+	}
+
+	/* ── Two-column split (PC only) ── referenced from Klim Type Foundry's
+	   /buy: a 65/35 split, cart in the narrower right column. Nfr columns
+	   (not calc(65% - gap/2)) for an exact split regardless of the gap — see
+	   the Fonts/Custom grids elsewhere on the site for the same pattern.
+	   Deliberately NOT align-items:start: position:sticky needs its own
+	   parent (.BuyPage__cart, the grid item) to be as tall as the row so
+	   there's room to travel in — align-items:start would shrink that item
+	   to its own content height instead, leaving sticky nowhere to stick
+	   (verified live: with start, cartDetailsTop went to -526px on scroll
+	   instead of holding at 80px). Default align-items (stretch) is what
+	   makes the sidebar pattern work: .BuyPage__cart stretches to match
+	   .BuyPage__main's height, .CartSummary just sits at its top, and
+	   .CartSummary__details' position:sticky tracks within that tall box.
+	   Mobile stays a single block — both children just stack in source
+	   order, same as before this split existed. */
+	.BuyPage__grid {
+		display: block;
+	}
+
+	@media (min-width: 768px) {
+		.BuyPage__grid {
+			display: grid;
+			grid-template-columns: 65fr 35fr;
+			gap: var(--gutter, 40px);
+		}
+	}
+
+	.BuyPage__main {
+		min-width: 0;
 	}
 
 	/* ── Title row ── */
@@ -342,54 +378,10 @@
 		margin: 0 0 8px;
 	}
 
-	/* ── Step 1: Typeface ── */
-	.TypefaceList {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	.TypefaceCard {
-		display: flex;
-		align-items: flex-start;
-		gap: 14px;
-		width: 100%;
-		max-width: 480px;
-		padding: 20px 18px 16px;
-		background: var(--color-bg-gray);
-		color: var(--color-text);
-		border: 0;
-		cursor: pointer;
-		text-align: left;
-		font: inherit;
-		transition:
-			background 0.15s ease,
-			color 0.15s ease;
-	}
-
-	/* base.css sets color directly on every div/span/etc, which breaks the
-	   inherit chain below (__body wraps __name/__intro/__detail, and __body
-	   is itself a span the global rule repaints) — force every descendant to
-	   actually inherit, same pattern as .Hero/.Alfred/.Asta on the home page. */
-	.TypefaceCard :global(*) {
-		color: inherit;
-	}
-
-	/* Selected: same colour inversion as an active LicenseIntake path card */
-	.TypefaceCard.is-active {
-		background: #222222;
-		color: #ffffff;
-	}
-
-	/* Announced, not yet for sale: same grey card, dimmed and inert — never a
-	   hover state, never a click. */
-	.TypefaceCard.is-disabled {
-		opacity: 0.4;
-		cursor: default;
-		pointer-events: none;
-		user-select: none;
-	}
-
+	/* ── Shared card elements ── originally Step 2's Typeface picker; that
+	   picker is gone (the typeface arrives fixed from ?font=), but Select
+	   styles' Complete Collection card below still reuses these inner
+	   pieces (radio/body/name/detail/price) for their type styles. */
 	.TypefaceCard__radio {
 		width: 11px;
 		height: 11px;
@@ -424,21 +416,6 @@
 		line-height: 1.1;
 		letter-spacing: 0;
 		color: inherit;
-	}
-
-	.TypefaceCard__intro {
-		font-family: 'Steiner', sans-serif;
-		font-size: 12px;
-		font-variation-settings: 'wght' 350;
-		line-height: 1.5;
-		max-width: 380px;
-		opacity: 0.7;
-		color: inherit;
-	}
-
-	.TypefaceCard.is-active .TypefaceCard__intro,
-	.TypefaceCard.is-active .TypefaceCard__detail {
-		opacity: 1;
 	}
 
 	.TypefaceCard__detail {
@@ -546,9 +523,24 @@
 	}
 
 	/* ── Order details box ── */
+	/* Mobile: this wrapper supplies the grey box — CartSummary's own
+	   is-inline mode deliberately clears its own background/padding to
+	   defer to it (see CartSummary.svelte). PC: the reverse — CartSummary
+	   is no longer inline there, so it supplies its own box (and its own
+	   position:sticky) instead; this wrapper gets out of the way rather
+	   than nesting a second box around it. */
 	.BuyPage__cart {
 		background: var(--color-bg-gray);
 		padding: 24px 20px;
 		max-width: 520px;
+	}
+
+	@media (min-width: 768px) {
+		.BuyPage__cart {
+			background: transparent;
+			padding: 0;
+			max-width: none;
+			min-width: 0;
+		}
 	}
 </style>

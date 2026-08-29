@@ -68,12 +68,28 @@
 <div class="LicenseIntake">
 	<div class="LicenseIntake__fields">
 		<label class="LicenseIntake__field">
-			<span class="LicenseIntake__label">Company / Your name</span>
-			<input class="LicenseIntake__input" type="text" bind:value={companyName} placeholder="August Inc." />
+			<span class="LicenseIntake__label"
+				>Company / Your name<span class="LicenseIntake__required" aria-hidden="true">*</span></span
+			>
+			<input
+				class="LicenseIntake__input"
+				type="text"
+				bind:value={companyName}
+				placeholder="August Inc."
+				required
+				aria-required="true"
+			/>
 		</label>
 		<label class="LicenseIntake__field">
-			<span class="LicenseIntake__label">People / Employee</span>
-			<select class="LicenseIntake__input LicenseIntake__select" bind:value={peopleTierIndexStr}>
+			<span class="LicenseIntake__label"
+				>People / Employee<span class="LicenseIntake__required" aria-hidden="true">*</span></span
+			>
+			<select
+				class="LicenseIntake__input LicenseIntake__select"
+				bind:value={peopleTierIndexStr}
+				required
+				aria-required="true"
+			>
 				{#each PEOPLE_OPTIONS as t (t.index)}
 					<option value={String(t.index)}>{t.index === 1 ? t.label : `${t.label} people`}</option>
 				{/each}
@@ -85,11 +101,21 @@
 		<p class="LicenseIntake__resolved LicenseIntake__resolved--enterprise" role="status">
 			This scale requires a custom quote — <a href="/contact">contact us</a>.
 		</p>
-	{:else if resolvedTier && pkg}
+	{:else if ready && resolvedTier}
+		<!-- ready, not just "resolvedTier && pkg": People/Employee always has a
+		     default value, so resolvedTier is non-null from first paint —
+		     gating on ready as well is what makes this wait for Company / Your
+		     name to actually be filled in, matching the hint below and what
+		     actually unlocks Steps 2/3 on the parent page (both read the same
+		     ready-driven resolve). -->
 		<p class="LicenseIntake__resolved" role="status">
 			→ {resolvedTier.name} license ({resolvedTier.label}) · {formatPrice(getPerStylePrice(resolvedTier.index))}/style
 		</p>
 		<p class="LicenseIntake__scope">{SCOPE_BLURB[getTierScope(resolvedTier.index)]}</p>
+	{:else}
+		<p class="LicenseIntake__hint" role="status">
+			* Required — fill in your company name to see your license and styles.
+		</p>
 	{/if}
 
 	<p class="LicenseIntake__alt">
@@ -124,6 +150,11 @@
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		color: var(--color-text-mute);
+	}
+
+	.LicenseIntake__required {
+		color: var(--color-signal, #e0231c);
+		margin-left: 2px;
 	}
 
 	.LicenseIntake__input {
@@ -174,6 +205,17 @@
 	.LicenseIntake__resolved--enterprise {
 		font-weight: var(--fw-light);
 		font-size: 11px;
+	}
+
+	/* Neutral prompt while the form is still incomplete — not styled as an
+	   error (no red, no border): a pristine, untouched form isn't "invalid"
+	   yet, just unfinished. The red asterisks above already carry the
+	   required-ness signal; this just explains what unlocks next. */
+	.LicenseIntake__hint {
+		font-family: 'Steiner', sans-serif;
+		font-size: 12px;
+		color: var(--color-text-mute);
+		margin: 4px 0 0;
 	}
 
 	.LicenseIntake__resolved--enterprise a {

@@ -299,6 +299,21 @@
 			display: none;
 		}
 
+		/* .CartSummary__details' position:sticky needs its own parent (this
+		   <aside>) to be taller than its own content, or there's no room to
+		   stick in — .CartSummary has no other visible child at this width
+		   (the mobile bar above is display:none), so without this it just
+		   shrink-wraps to match .CartSummary__details exactly and the sticky
+		   child immediately runs out of room the instant the page scrolls.
+		   100% fills whatever height the parent grid/flex container gives
+		   .CartSummary (e.g. buy/+page.svelte's .BuyPage__cart, itself
+		   stretched to match the left column) — verified live: without this,
+		   .CartSummary__details' top went to -161px on scroll instead of
+		   holding at 80px. */
+		.CartSummary {
+			height: 100%;
+		}
+
 		.CartSummary__details {
 			display: block;
 			position: sticky;
