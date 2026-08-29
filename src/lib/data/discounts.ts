@@ -18,6 +18,11 @@ export type DiscountId = 'early-bird' | 'educational';
 // Toggle Early Bird globally — set to false after launch period
 export const EARLY_BIRD_ACTIVE = false;
 
+// Educational discount — left out for now (2026-08-29, at the user's
+// request): the toggle and its copy stay in the codebase, just inert,
+// same pattern as EARLY_BIRD_ACTIVE above. Flip back to true to re-enable.
+export const EDUCATIONAL_ACTIVE = false;
+
 export const EARLY_BIRD_RATE = 0.3;
 export const EDUCATIONAL_RATE = 0.3;
 
@@ -106,7 +111,7 @@ export function computeTotal(cart: CartState): {
 	}
 
 	// Educational: −30% on post-package subtotal
-	if (isStudent) {
+	if (EDUCATIONAL_ACTIVE && isStudent) {
 		const amount = Math.round(base * EDUCATIONAL_RATE);
 		discounts.push({
 			id: 'educational',
