@@ -174,7 +174,7 @@
 		/* Solid white header bar with a hairline rule (replaces the blend-mode overlay).
 		   viewport-fit=cover lets this bar reach the true screen edge, so the
 		   notch/Dynamic Island safe area is added on top of the 16px. */
-		padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 12px;
+		padding: calc(16px + env(safe-area-inset-top, 0px)) var(--padding) 12px;
 		/* Kept high (not 1) so the fixed bar stays above z-indexed content sections. */
 		z-index: 100;
 		font-family: 'Steiner', sans-serif;

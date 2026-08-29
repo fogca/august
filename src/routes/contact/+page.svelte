@@ -30,7 +30,7 @@
 
 	@media (min-width: 768px) {
 		.Contact {
-			padding-inline: 48px;
+			padding-inline: var(--padding);
 		}
 	}
 

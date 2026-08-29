@@ -14,7 +14,7 @@
 
 	import { getFlatPackages, getPrice, getGrossPrice, formatPrice, type FlatPackage } from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
-	import { computeTotal } from '$lib/data/discounts';
+	import { computeTotal, EDUCATIONAL_ACTIVE } from '$lib/data/discounts';
 
 	import LicenseIntake, { type IntakeMeta } from '$lib/components/Buy/LicenseIntake.svelte';
 	import EducationalToggle from '$lib/components/Buy/EducationalToggle.svelte';
@@ -266,10 +266,13 @@
 		</div>
 	{/if}
 
-	<!-- Educational discount -->
-	<div class="BuyPage__options">
-		<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
-	</div>
+	<!-- Educational discount — left out for now (2026-08-29, at the user's
+	     request); see EDUCATIONAL_ACTIVE in $lib/data/discounts. -->
+	{#if EDUCATIONAL_ACTIVE}
+		<div class="BuyPage__options">
+			<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
+		</div>
+	{/if}
 
 	<!-- Order details — empty state until a license is chosen -->
 	<div class="BuyPage__cart">
@@ -300,7 +303,7 @@
 
 	@media (min-width: 768px) {
 		.BuyPage {
-			padding-inline: 48px;
+			padding-inline: var(--padding);
 			padding-bottom: 80px;
 		}
 	}
