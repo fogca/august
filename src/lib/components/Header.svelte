@@ -31,10 +31,13 @@
 
 	type NavItem = { label: string; href: string };
 
-	// Desktop inline nav.
+	// Desktop inline nav. License -> /licensing, not /license — that shorter
+	// URL is a stable redirect to /legal/eula baked into the shipped fonts'
+	// own OpenType nameID 13/14 metadata (see Footer.svelte's LEGAL array).
 	const NAV: NavItem[] = [
 		{ label: 'Fonts', href: '/fonts' },
 		{ label: 'Custom', href: '/custom' },
+		{ label: 'License', href: '/licensing' },
 		{ label: 'Buy', href: '/buy' }
 	];
 
