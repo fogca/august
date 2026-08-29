@@ -65,12 +65,16 @@
 	// hand-picked subset (Individual) pays it straight — same total price
 	// either way buys either the full 20 or half that count, on purpose.
 
-	let selectedWeights = $state<Set<string>>(new Set(selectedPackage?.styles ?? []));
+	// Starts empty, not "all" — Select styles is the buyer's own choice, not
+	// a pre-made one they have to notice and undo. Complete Collection is
+	// one click away for anyone who does want everything.
+	let selectedWeights = $state<Set<string>>(new Set());
 
-	// Switching typeface (once there is more than one) resets to "all" for
+	// Switching typeface (once there is more than one) resets to empty for
 	// the newly selected package rather than carrying over a stale Set.
 	$effect(() => {
-		selectedWeights = new Set(selectedPackage?.styles ?? []);
+		selectedPackage;
+		selectedWeights = new Set();
 	});
 
 	function toggleWeight(name: string) {

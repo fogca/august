@@ -111,7 +111,12 @@
 	<div class="CartSummary__details" id="cart-details" aria-live="polite" role="status">
 		{#if !hasItems}
 			<h3 class="CartSummary__heading">Your order</h3>
-			<p class="CartSummary__empty">Answer Step 1 and choose a font package to begin.</p>
+			<!-- Covers both empty-cart causes at once (Step 1 unresolved, or
+			     resolved but no styles picked yet — the latter is now the more
+			     common one, since Select styles no longer starts pre-filled)
+			     rather than naming just one, since this component has no way
+			     to tell which is currently true. -->
+			<p class="CartSummary__empty">Answer Step 1, then choose your styles, to see your order.</p>
 		{:else}
 			<!-- License section -->
 			{#if activeItem}
@@ -216,7 +221,6 @@
 
 <style>
 	.CartSummary {
-		background: var(--color-bg);
 		font-family: 'Steiner', sans-serif;
 	}
 
@@ -312,14 +316,25 @@
 		   holding at 80px. */
 		.CartSummary {
 			height: 100%;
+			/* Single source for the sticky offset below — reused (doubled) to
+			   size the panel itself, so top and bottom read as a matching
+			   pair rather than one hardcoded number and one derived from it
+			   by hand. */
+			--cart-top-offset: 80px;
 		}
 
+		/* Fixed height, not content-hugging: 100% of the viewport minus the
+		   sticky offset on both ends, so the panel reads as one set piece —
+		   Checkout always sits at a consistent height rather than drifting
+		   with however much (or little) is in the order — with room to
+		   scroll internally (overflow-y) if content ever does exceed it. */
 		.CartSummary__details {
 			display: block;
 			position: sticky;
-			top: 80px;
-			max-height: none;
-			overflow-y: visible;
+			top: var(--cart-top-offset);
+			height: calc(100vh - (var(--cart-top-offset) * 2));
+			height: calc(100dvh - (var(--cart-top-offset) * 2));
+			overflow-y: auto;
 		}
 	}
 
@@ -352,7 +367,6 @@
 	}
 
 	.CartSummary__licence {
-		background: var(--color-bg);
 		font-size: 13px;
 	}
 
@@ -429,7 +443,6 @@
 		align-items: center;
 		gap: 8px;
 		padding: 10px 14px;
-		background: var(--color-bg);
 		font-size: 13px;
 	}
 
