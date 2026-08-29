@@ -92,16 +92,20 @@
 	// Complete Collection — the same round-radio card as Typeface selection.
 	// Reads "active" only while the current selection exactly matches the
 	// full set, so a hand edit in the grid below honestly drops the
-	// highlight instead of keeping a stale claim.
+	// highlight instead of keeping a stale claim (see toggleComplete for why
+	// that's a derived read, never a stored flag that could force a clear).
 	const completeSet = $derived(new Set(selectedPackage?.styles ?? []));
 	const isCompleteActive = $derived(completeSet.size > 0 && setsEqual(selectedWeights, completeSet));
 
-	function selectComplete() {
-		selectedWeights = new Set(completeSet);
-	}
-
-	function clearAllWeights() {
-		selectedWeights = new Set();
+	// A master toggle, not a one-way "select all": clicking while every
+	// style is already selected clears to zero; clicking from any other
+	// state (empty, a hand-picked subset, or a set that only used to be
+	// complete before an individual deselect dropped it) selects every
+	// style. isCompleteActive is purely derived from selectedWeights, so a
+	// single deselect elsewhere never has to separately "remember" to also
+	// zero this out -- it already isn't the source of truth for the count.
+	function toggleComplete() {
+		selectedWeights = isCompleteActive ? new Set() : new Set(completeSet);
 	}
 
 	// Complete Collection's price — null until Step 1 has resolved a tier
@@ -228,36 +232,30 @@
 				     selection, formatted identically to it: name, "N weights"
 				     detail, price at the right (struck-through gross → the
 				     discounted final, once Step 1 has resolved a rate). -->
-				<div class="WeightPanel__collections">
-					<button
-						type="button"
-						class="TypefaceCard WeightPanel__collection"
-						class:is-active={isCompleteActive}
-						onclick={selectComplete}
-						aria-pressed={isCompleteActive}
-					>
-						<span class="TypefaceCard__radio" aria-hidden="true">
-							{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
+				<button
+					type="button"
+					class="WeightPanel__collection"
+					class:is-active={isCompleteActive}
+					onclick={toggleComplete}
+					aria-pressed={isCompleteActive}
+				>
+					<span class="TypefaceCard__radio" aria-hidden="true">
+						{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
+					</span>
+					<span class="TypefaceCard__body">
+						<span class="TypefaceCard__name">Complete Collection</span>
+						<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span>
+					</span>
+					{#if completePrice !== null}
+						<span class="TypefaceCard__price">
+							{#if completeGross !== null && completeGross > completePrice}
+								<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
+							{/if}
+							<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
 						</span>
-						<span class="TypefaceCard__body">
-							<span class="TypefaceCard__name">Complete Collection</span>
-							<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span>
-						</span>
-						{#if completePrice !== null}
-							<span class="TypefaceCard__price">
-								{#if completeGross !== null && completeGross > completePrice}
-									<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
-								{/if}
-								<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
-							</span>
-						{/if}
-					</button>
-				</div>
+					{/if}
+				</button>
 
-				<div class="WeightPanel__head">
-					<span class="WeightPanel__label">Individual styles</span>
-					<button type="button" class="WeightPanel__all" onclick={clearAllWeights}>Clear all</button>
-				</div>
 				<StyleList
 					pkg={selectedPackage}
 					selectable
@@ -490,55 +488,49 @@
 		border: 1px solid var(--color-line);
 	}
 
-	/* Complete Collection card — reuses .TypefaceCard wholesale (same
-	   round-radio card as Step 2), just wrapped with its own padding and a
-	   width override since it's nested one level deeper than Step 2's own
-	   list. */
-	.WeightPanel__collections {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		padding: 18px 18px 0;
-	}
-
+	/* Complete Collection — full-bleed against the panel's own border (no
+	   side padding, no wrapping card of its own): a master toggle for the
+	   style grid below, not a separate box floating inside the panel.
+	   Reuses .TypefaceCard's inner elements (radio/body/name/detail/price)
+	   for their type styles, but NOT .TypefaceCard itself or its .is-active
+	   dark-invert -- unselected/selected here reads through opacity + a
+	   light grey fill, same language as the style grid below it, not a
+	   black card. */
 	.WeightPanel__collection {
-		max-width: none;
-	}
-
-	.WeightPanel__head {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		padding: 20px var(--padding) 14px;
-	}
-
-	.WeightPanel__label {
-		font-family: 'Steiner', sans-serif;
-		font-size: 11px;
-		font-weight: var(--fw-strong);
-		letter-spacing: 0;
-		color: var(--color-text-mute);
-	}
-
-	/* The "from the top" select-all control */
-	.WeightPanel__all {
-		font-family: 'Steiner', sans-serif;
-		font-size: 11px;
-		font-weight: var(--fw-ui);
-		letter-spacing: 0;
-		color: var(--color-text);
+		width: 100%;
+		gap: 14px;
+		padding: 20px var(--padding);
 		background: transparent;
+		color: var(--color-text);
 		border: 0;
-		padding: 0;
 		cursor: pointer;
-		text-decoration: underline;
-		text-underline-offset: 2px;
-		transition: opacity 0.15s ease;
+		text-align: left;
+		font: inherit;
+		opacity: 0.5;
+		transition:
+			opacity 150ms ease,
+			background-color 150ms ease;
 	}
 
-	.WeightPanel__all:hover {
-		opacity: 0.7;
+	.WeightPanel__collection:hover {
+		opacity: 0.75;
+	}
+
+	.WeightPanel__collection.is-active {
+		background: var(--color-bg-gray);
+		opacity: 1;
+	}
+
+	.WeightPanel__collection :global(*) {
+		color: inherit;
+	}
+
+	/* The whole card fades as one unit via its own opacity above -- don't
+	   also stack .TypefaceCard__detail's own opacity on top of that. */
+	.WeightPanel__collection .TypefaceCard__detail {
+		opacity: 1;
 	}
 
 	/* ── Educational option ── */

@@ -92,7 +92,7 @@ a {
      (license blurbs, cart hints, buy notes). Was 0.3 (~2.1:1, unreadable). */
   --color-text-mute: rgba(0, 0, 0, 0.55);
   --color-bg-dark:   #121212;
-  --color-bg-gray:   #f1f1f1;
+  --color-bg-gray:   #f6f6f6;
   --color-accent:    #b33030;
   --color-line:      rgba(0, 0, 0, 0.15);
   /* Sharper signal red — top-page redesign (2026-08) + Header logo. Distinct

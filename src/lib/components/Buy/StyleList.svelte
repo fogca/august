@@ -129,13 +129,18 @@
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	/* Selection reads through opacity alone — no background/colour invert. */
+	/* Selection reads through opacity + a light grey fill — no dark
+	   background/colour invert anywhere in this list. */
 	.StyleList__row.is-selectable:not(.is-on) {
 		opacity: 0.35;
 	}
 
 	.StyleList__row.is-selectable:not(.is-on):hover {
 		opacity: 0.6;
+	}
+
+	.StyleList__row.is-on {
+		background: var(--color-bg-gray);
 	}
 
 	/* Outer edges align with the panel's own padding; a little breathing

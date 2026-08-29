@@ -12,7 +12,15 @@
 	// Studio (up to 10). Individual sits at the top of the list — it's the
 	// one entry scoped to desktop-only use rather than full commercial use
 	// (see getTierScope), but is presented here as just the smallest range.
-	import { TIER_DEFS, getTierDef, getPerStylePrice, isEnterpriseTier, formatPrice } from '$lib/data/pricing';
+	import {
+		TIER_DEFS,
+		getTierDef,
+		getTierScope,
+		getPerStylePrice,
+		isEnterpriseTier,
+		formatPrice,
+		SCOPE_BLURB
+	} from '$lib/data/pricing';
 	import type { PackageDef } from '$lib/data/pricing';
 
 	export interface IntakeMeta {
@@ -60,11 +68,11 @@
 <div class="LicenseIntake">
 	<div class="LicenseIntake__fields">
 		<label class="LicenseIntake__field">
-			<span class="LicenseIntake__label">Company / organisation name</span>
+			<span class="LicenseIntake__label">Company / Your name</span>
 			<input class="LicenseIntake__input" type="text" bind:value={companyName} placeholder="August Inc." />
 		</label>
 		<label class="LicenseIntake__field">
-			<span class="LicenseIntake__label">People</span>
+			<span class="LicenseIntake__label">People / Employee</span>
 			<select class="LicenseIntake__input LicenseIntake__select" bind:value={peopleTierIndexStr}>
 				{#each PEOPLE_OPTIONS as t (t.index)}
 					<option value={String(t.index)}>{t.index === 1 ? t.label : `${t.label} people`}</option>
@@ -81,6 +89,7 @@
 		<p class="LicenseIntake__resolved" role="status">
 			→ {resolvedTier.name} license ({resolvedTier.label}) · {formatPrice(getPerStylePrice(resolvedTier.index))}/style
 		</p>
+		<p class="LicenseIntake__scope">{SCOPE_BLURB[getTierScope(resolvedTier.index)]}</p>
 	{/if}
 
 	<p class="LicenseIntake__alt">
@@ -150,6 +159,16 @@
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
 		margin: 4px 0 0;
+	}
+
+	/* Same size + opacity as .LicenseIntake__resolved above it (full colour,
+	   not muted) — only the weight differs. */
+	.LicenseIntake__scope {
+		font-family: 'Steiner', sans-serif;
+		font-size: 13px;
+		font-weight: var(--fw-strong);
+		letter-spacing: 0;
+		margin: 2px 0 0;
 	}
 
 	.LicenseIntake__resolved--enterprise {

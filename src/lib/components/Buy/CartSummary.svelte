@@ -5,7 +5,7 @@
 	// not a free choice, so no tier dropdown — only an "Edit" link back to
 	// Step 1 for changing the answers themselves.
 	import { enhance } from '$app/forms';
-	import { formatPrice, getTierName, PROJECT_LICENSE_LABEL } from '$lib/data/pricing';
+	import { formatPrice, getTierName, getTierScope, SCOPE_BLURB, PROJECT_LICENSE_LABEL } from '$lib/data/pricing';
 	import type { PackageDef } from '$lib/data/pricing';
 	import type { CartItem, AppliedDiscount } from '$lib/data/discounts';
 	import type { IntakeMeta } from '$lib/components/Buy/LicenseIntake.svelte';
@@ -58,6 +58,13 @@
 
 	function licenseName(item: CartItem): string {
 		return item.kind === 'project' ? PROJECT_LICENSE_LABEL : getTierName(item.tierIndex ?? 1);
+	}
+
+	// What the licence bundles — shown for a tier item only (Project
+	// License's own blurb already covers its scope elsewhere).
+	function licenseScope(item: CartItem): string | null {
+		if (item.kind !== 'tier' || item.tierIndex === null) return null;
+		return SCOPE_BLURB[getTierScope(item.tierIndex)];
 	}
 
 	/** Sum of charged (post-package) prices across selected packages. */
@@ -122,6 +129,9 @@
 									{intakeMeta.licenseeName}
 									{#if intakeMeta.usageBand}· {intakeMeta.usageBand} people{/if}
 								</p>
+							{/if}
+							{#if licenseScope(activeItem)}
+								<p class="CartSummary__scope">{licenseScope(activeItem)}</p>
 							{/if}
 						</li>
 					</ul>
@@ -354,6 +364,16 @@
 	/* Who the licence names — company/purchaser (+ client for Project License),
 	   and the declared headcount for context. */
 	.CartSummary__licensee {
+		margin: 0;
+		padding: 0 14px 2px;
+		font-size: 11px;
+		line-height: 1.5;
+		color: var(--color-text-mute);
+	}
+
+	/* What the licence bundles (Desktop/Web/App/Book License) — closes off
+	   the card, same treatment as .CartSummary__licensee above it. */
+	.CartSummary__scope {
 		margin: 0;
 		padding: 0 14px 10px;
 		font-size: 11px;

@@ -38,11 +38,11 @@ export interface TierDef {
 // against; revisit once purchases accumulate.
 export const TIER_DEFS: TierDef[] = [
 	{ index: 1, name: 'Individual', label: '1 person', maxHeadcount: 1, perStyleEur: 30 },
-	{ index: 2, name: 'Team', label: 'up to 5', maxHeadcount: 5, perStyleEur: 50 },
-	{ index: 3, name: 'Studio', label: 'up to 10', maxHeadcount: 10, perStyleEur: 80 },
-	{ index: 4, name: 'Agency', label: 'up to 50', maxHeadcount: 50, perStyleEur: 130 },
-	{ index: 5, name: 'Brand', label: 'up to 100', maxHeadcount: 100, perStyleEur: 210 },
-	{ index: 6, name: 'Firm', label: 'up to 500', maxHeadcount: 500, perStyleEur: 340 },
+	{ index: 2, name: 'Team', label: 'Up to 5', maxHeadcount: 5, perStyleEur: 50 },
+	{ index: 3, name: 'Studio', label: 'Up to 10', maxHeadcount: 10, perStyleEur: 80 },
+	{ index: 4, name: 'Agency', label: 'Up to 50', maxHeadcount: 50, perStyleEur: 130 },
+	{ index: 5, name: 'Brand', label: 'Up to 100', maxHeadcount: 100, perStyleEur: 210 },
+	{ index: 6, name: 'Firm', label: 'Up to 500', maxHeadcount: 500, perStyleEur: 340 },
 	{ index: 7, name: 'Global', label: '500+', maxHeadcount: null, perStyleEur: null }
 ];
 
@@ -59,7 +59,7 @@ export function getTierScope(tierIndex: number): TierScope {
 
 export const SCOPE_BLURB: Record<TierScope, string> = {
 	desktop: 'Desktop use only — print, PDF, and locally installed applications.',
-	full: 'Full commercial use — desktop, web, app/game, and broadcast/streaming.'
+	full: 'Includes Desktop, Web, App, and Book License.'
 };
 
 export function getTierDef(tierIndex: number): TierDef | undefined {
