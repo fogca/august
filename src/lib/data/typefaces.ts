@@ -183,12 +183,14 @@ export const TYPEFACES: Typeface[] = [
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
-		// Catalogue specimen, museum-label style: Asger's own description
-		// already states its dedication ("takes its name — and its temperament
-		// — from Rudolf Steiner"), so citing him here is the same move
-		// increments.cc's Vorkurs card makes for Josef Albers, not an invented
-		// biography.
-		specimen: ['1861 – 1925', 'RUDOLF STEINER', 'Formative Forces'],
+		// Catalogue specimen, museum-label style. Reassigned 2026-08-29 (at
+		// the user's request) from a Rudolf Steiner citation to this real
+		// institution — "Matter and Form" still lands on Asger specifically:
+		// its own description is built on the same Goethean pairing (form
+		// never fixed, always in metamorphosis). Previously used on Atom's
+		// card below; Atom now cites a different institution so the two
+		// don't repeat.
+		specimen: ['MUNICH, 2026', 'DEUTSCHES MUSEUM', 'Matter and Form'],
 		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		catalogBg: '#DCE7EF',
@@ -312,10 +314,10 @@ export const TYPEFACES: Typeface[] = [
 		],
 		thumbnail: '/images/fonts/atom.png',
 		// No dedicatee either — cites a real institution whose subject
-		// matches the typeface's own vocabulary above (Materie,
-		// Quantensprung, Urstoff): the Deutsches Museum in Munich, the
-		// world's largest museum of science and technology.
-		specimen: ['MUNICH, 2026', 'DEUTSCHES MUSEUM', 'Matter and Form'],
+		// matches the typeface's own vocabulary above (Elementarteilchen,
+		// Quantensprung, Antimaterie): CERN, in Geneva — the Deutsches
+		// Museum citation this card used before moved to Asger 2026-08-29.
+		specimen: ['GENEVA, 2026', 'CERN', 'Particle Studies'],
 		theme: { bg: '#15181C', fg: '#ffffff' },
 		catalogBg: '#E7EDD9',
 		hero: {
