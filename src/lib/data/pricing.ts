@@ -145,32 +145,45 @@ export function getPackage(slug: TypefaceSlug, packageId: string): PackageDef | 
 
 // ── Price calculation ────────────────────────────────────────────────────────
 //
-// Buying every style in the package (Complete Collection) earns a 50%
-// discount off the tier's per-style rate; buying fewer (a hand-picked
-// subset) pays that rate straight, uncounted. Same total price either way
-// buys you either all 20 styles or 10 of them — a deliberate nudge toward
-// Complete, not a coincidence.
+// Two-step volume discount off the tier's per-style rate: buying every
+// style (Complete Collection) earns 50% off; buying at least half the set
+// (a hand-picked subset of 10+) earns 25% off; anything less pays the rate
+// straight. 25% is deliberately the midpoint of 0% and 50%, not a separate
+// number pulled from nowhere — a plain, common discount step buyers already
+// read as "a real bulk discount" without a new number to explain. Same
+// total price either way buys you either all 20 styles or 10 of them at
+// the full-set tier — a deliberate nudge toward Complete, not a coincidence.
 
 const FULL_SET_DISCOUNT = 0.5;
+const HALF_SET_DISCOUNT = 0.25;
 
-function isFullSet(pkg: PackageDef, styleCount: number): boolean {
-	return styleCount > 0 && styleCount >= (pkg.styles?.length ?? 0);
+// The discount rate for a given package × selected style count — 0 below
+// half the set, HALF_SET_DISCOUNT from half up to (not including) the full
+// set, FULL_SET_DISCOUNT at the full set.
+function discountRateFor(pkg: PackageDef, styleCount: number): number {
+	const total = pkg.styles?.length ?? 0;
+	if (total === 0 || styleCount <= 0) return 0;
+	if (styleCount >= total) return FULL_SET_DISCOUNT;
+	if (styleCount >= total / 2) return HALF_SET_DISCOUNT;
+	return 0;
 }
 
-// Gross EUR for a given package × tier × selected style count, before the
-// full-set discount — the "was" price shown struck through when the
-// discount applies. Returns null for the Global tier (no self-serve rate).
+// Gross EUR for a given package × tier × selected style count, before any
+// volume discount — the "was" price shown struck through when a discount
+// applies. Returns null for the Global tier (no self-serve rate).
 export function computeGrossEur(pkg: PackageDef, tierIndex: number, styleCount: number): Price {
 	const tier = getTierDef(tierIndex);
 	if (!tier || tier.perStyleEur === null || styleCount <= 0) return null;
 	return Math.round(tier.perStyleEur * styleCount);
 }
 
-// Final EUR — the gross price, halved if styleCount covers the full set.
+// Final EUR — the gross price, reduced by whichever volume discount the
+// selected style count qualifies for (see discountRateFor).
 export function computeEur(pkg: PackageDef, tierIndex: number, styleCount: number): Price {
 	const gross = computeGrossEur(pkg, tierIndex, styleCount);
 	if (gross === null) return null;
-	return isFullSet(pkg, styleCount) ? Math.round(gross * FULL_SET_DISCOUNT) : gross;
+	const rate = discountRateFor(pkg, styleCount);
+	return rate > 0 ? Math.round(gross * (1 - rate)) : gross;
 }
 
 export function getPrice(pkg: PackageDef, tierIndex: number, styleCount: number): Price {

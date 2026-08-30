@@ -7,7 +7,9 @@
 		WEIGHT_ROW_SIZE_DEFAULT_DESKTOP,
 		WEIGHT_ROW_SIZE_DEFAULT_MOBILE,
 		WEIGHT_ROW_NOTE_DEFAULT_DESKTOP,
-		WEIGHT_ROW_NOTE_DEFAULT_MOBILE
+		WEIGHT_ROW_NOTE_DEFAULT_MOBILE,
+		WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP,
+		WEIGHT_ROW_ALIGN_DEFAULT_MOBILE
 	} from './presets.js';
 
 	interface Props {
@@ -30,6 +32,7 @@
 	const initialNoteSize = isPhone
 		? WEIGHT_ROW_NOTE_DEFAULT_MOBILE
 		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
+	const initialAlign = isPhone ? WEIGHT_ROW_ALIGN_DEFAULT_MOBILE : WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP;
 </script>
 
 <section class="TypeTester" aria-label="Type Tester — {fontFamily}">
@@ -52,6 +55,7 @@
 				{fontFamily}
 				{initialSize}
 				{initialNoteSize}
+				{initialAlign}
 			/>
 		{/each}
 	</div>

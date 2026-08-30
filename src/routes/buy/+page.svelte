@@ -180,9 +180,9 @@
 
 	const { subtotal, discounts, total } = $derived(computeTotal(cartState));
 
-	// Headline names the typeface the buyer arrived to buy, rather than the
-	// generic tagline this page used before a typeface was ever pre-decided.
-	const heroHeading = $derived(selectedPackage ? `Make ${selectedPackage.label} yours.` : 'Make it yours.');
+	// Headline is just the typeface name — the buyer already arrived to buy
+	// this one specifically, so no tagline framing it needs restating here.
+	const heroHeading = $derived(selectedPackage ? selectedPackage.label : 'Buy');
 	const pageTitle = $derived(selectedPackage ? `Buy ${selectedPackage.label}` : 'Buy');
 </script>
 

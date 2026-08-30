@@ -48,6 +48,15 @@
 	let companyName = $state('');
 	let peopleTierIndexStr = $state(String(DEFAULT_TIER_INDEX));
 
+	// Gates the reveal behind an explicit action instead of firing on the
+	// first keystroke: without this, the price/Select-styles section would
+	// pop in (and shove everything below it down) the moment a single
+	// character landed in Company / Your name, before there was anything
+	// resembling a real answer to react to. Once confirmed, later edits to
+	// either field update the resolved tier live as before — this only
+	// guards the initial reveal, not ongoing reactivity.
+	let confirmed = $state(false);
+
 	const resolvedTier = $derived(peopleTierIndexStr ? (getTierDef(Number(peopleTierIndexStr)) ?? null) : null);
 	const pkg = $derived(packages[0] ?? null);
 	const isEnterpriseScale = $derived(resolvedTier ? isEnterpriseTier(resolvedTier.index) : false);
@@ -57,7 +66,7 @@
 	// relevant inputs change — the parent prices the actual cart item from
 	// this tier × however many styles Step 3 has selected.
 	$effect(() => {
-		if (ready && resolvedTier && pkg) {
+		if (confirmed && ready && resolvedTier && pkg) {
 			onresolve(resolvedTier.index, { licenseeName: companyName.trim(), usageBand: resolvedTier.label });
 		} else {
 			onresolve(null, { licenseeName: '', usageBand: null });
@@ -101,17 +110,27 @@
 		<p class="LicenseIntake__resolved LicenseIntake__resolved--enterprise" role="status">
 			This scale requires a custom quote — <a href="/contact">contact us</a>.
 		</p>
-	{:else if ready && resolvedTier}
-		<!-- ready, not just "resolvedTier && pkg": People/Employee always has a
-		     default value, so resolvedTier is non-null from first paint —
-		     gating on ready as well is what makes this wait for Company / Your
-		     name to actually be filled in, matching the hint below and what
-		     actually unlocks Steps 2/3 on the parent page (both read the same
-		     ready-driven resolve). -->
+	{:else if confirmed && ready && resolvedTier}
+		<!-- confirmed && ready, not just "resolvedTier && pkg": People/Employee
+		     always has a default value, so resolvedTier is non-null from first
+		     paint — gating on ready waits for Company / Your name to actually
+		     be filled in, and gating on confirmed additionally waits for the
+		     Continue click below rather than revealing on the first keystroke.
+		     Matches what actually unlocks Select styles on the parent page
+		     (it reads the same confirmed-and-ready-driven resolve). -->
 		<p class="LicenseIntake__resolved" role="status">
 			→ {resolvedTier.name} license ({resolvedTier.label}) · {formatPrice(getPerStylePrice(resolvedTier.index))}/style
 		</p>
 		<p class="LicenseIntake__scope">{SCOPE_BLURB[getTierScope(resolvedTier.index)]}</p>
+	{:else if !confirmed}
+		<button
+			type="button"
+			class="LicenseIntake__continue"
+			disabled={!ready}
+			onclick={() => (confirmed = true)}
+		>
+			Continue
+		</button>
 	{:else}
 		<p class="LicenseIntake__hint" role="status">
 			* Required — fill in your company name to see your license and styles.
@@ -218,6 +237,33 @@
 		margin: 4px 0 0;
 	}
 
+	/* The explicit gate before the price/Select-styles reveal — same solid
+	   button language as the final Checkout action, just smaller/contained
+	   rather than full-width, since this is a mid-flow step not the last one. */
+	.LicenseIntake__continue {
+		align-self: flex-start;
+		margin: 4px 0 0;
+		padding: 10px 24px;
+		background: var(--color-text);
+		color: var(--color-bg);
+		font-family: 'Steiner', sans-serif;
+		font-size: 12px;
+		font-weight: var(--fw-ui);
+		letter-spacing: 0;
+		border: 0;
+		cursor: pointer;
+		transition: opacity 150ms ease;
+	}
+
+	.LicenseIntake__continue:hover:not(:disabled) {
+		opacity: 0.86;
+	}
+
+	.LicenseIntake__continue:disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+
 	.LicenseIntake__resolved--enterprise a {
 		text-decoration: underline;
 		text-underline-offset: 2px;
@@ -234,6 +280,17 @@
 	.LicenseIntake__alt a {
 		text-decoration: underline;
 		text-underline-offset: 2px;
+	}
+
+	/* iOS Safari auto-zooms the viewport on focus for any input/select whose
+	   computed font-size is under 16px, and doesn't zoom back out on blur —
+	   the field stays enlarged for the rest of the visit. 16px here is the
+	   fix, not a stopgap; scoped to mobile so the desktop form keeps its
+	   13px. */
+	@media (max-width: 767px) {
+		.LicenseIntake__input {
+			font-size: 16px;
+		}
 	}
 
 	@media (max-width: 480px) {

@@ -8,7 +8,6 @@
 	const SITE_NAV: LinkItem[] = [
 		{ label: 'Fonts', href: '/fonts' },
 		{ label: 'About', href: '/about' },
-		{ label: 'Buy', href: '/buy' },
 		{ label: 'Contact', href: '/contact' }
 	];
 

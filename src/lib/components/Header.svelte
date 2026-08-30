@@ -2,7 +2,7 @@
 	// August Type Foundry site header.
 	// Mobile (<768px): "Menu" toggle. Open state is a light top panel (Figma
 	//   188:10): Close + August Type Foundry wordmark, a "Fonts" group of typeface links,
-	//   and Buy / About / Contact.
+	//   and page links.
 	// Desktop (≥768px): inline nav links on the left, no toggle.
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -37,8 +37,7 @@
 	const NAV: NavItem[] = [
 		{ label: 'Fonts', href: '/fonts' },
 		{ label: 'Custom', href: '/custom' },
-		{ label: 'License', href: '/licensing' },
-		{ label: 'Buy', href: '/buy' }
+		{ label: 'License', href: '/licensing' }
 	];
 
 	// Mobile panel: typeface shortcuts + page links
@@ -55,7 +54,7 @@
 	// link, and the language switch is appended after these).
 	const PAGES: NavItem[] = [
 		{ label: 'Custom', href: '/custom' },
-		{ label: 'Buy', href: '/buy' }
+		{ label: 'License', href: '/licensing' }
 	];
 
 	function toggle() {
@@ -100,11 +99,9 @@
 		</span>
 	</nav>
 
-	<!-- Mobile-only: Buy stays one tap away even with the menu closed, Menu/Close
-	     toggles the panel. Grouped together on the right; the logo (above)
-	     takes the left. -->
+	<!-- Mobile-only: Menu/Close toggles the panel. Sits on the right; the logo
+	     (above) takes the left. -->
 	<div class="Header__actions">
-		<a class="Header__buy" href="/buy" onclick={close}>Buy</a>
 		<button
 			class="Header__toggle"
 			type="button"
@@ -204,22 +201,13 @@
 	}
 
 
-	/* Mobile-only group: Buy + Menu/Close, together on the right. Desktop
-	   hides the whole group in favour of .Header__nav. */
+	/* Mobile-only: Menu/Close toggle, on the right. Desktop hides this in
+	   favour of .Header__nav. */
 	.Header__actions {
 		order: 2;
 		display: flex;
 		align-items: center;
 		gap: 4px;
-	}
-
-	.Header__buy {
-		font-size: 14px;
-		font-weight: var(--fw-ui);
-		color: inherit;
-		text-decoration: none;
-		letter-spacing: 0;
-		padding: 4px 8px;
 	}
 
 	.Header__toggle {
@@ -339,14 +327,14 @@
 
 	.MenuPanel__nav {
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-end;
-		gap: 16px;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 20px;
 	}
 
 	.MenuPanel__label {
 		display: block;
-		font-size: 11px;
+		font-size: 12px;
 		line-height: 1.5;
 		letter-spacing: 0;
 		color: #000;
@@ -360,13 +348,14 @@
 		margin: 0;
 		padding: 0;
 		display: flex;
+		flex-wrap: wrap;
 		gap: 14px;
 	}
 
 	.MenuPanel__list a,
 	.MenuPanel__pages a,
 	.MenuPanel__lang {
-		font-size: 11px;
+		font-size: 16px;
 		line-height: 1.5;
 		letter-spacing: 0;
 		color: #000;
@@ -392,7 +381,7 @@
 
 	/* Unreleased faces: same slot, half-strength, and never interactive. */
 	.MenuPanel__soon {
-		font-size: 11px;
+		font-size: 16px;
 		line-height: 1.5;
 		letter-spacing: 0;
 		color: #000;

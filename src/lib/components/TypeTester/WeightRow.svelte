@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { SHOW_ROW_TITLE } from './presets.js';
+	import { SHOW_ROW_TITLE, SHOW_ROW_NOTE } from './presets.js';
 	import type { WeightDef } from './presets.js';
 	import type { AlignValue } from './presets.js';
 
@@ -117,7 +117,7 @@
 			</label>
 		{/if}
 
-		{#if defaultNote}
+		{#if SHOW_ROW_NOTE && defaultNote}
 			<label class="WeightRow__size">
 				<span class="size-icon size-icon--sm">a</span>
 				<input
@@ -193,7 +193,7 @@
 		></div>
 	{/if}
 
-	{#if defaultNote}
+	{#if SHOW_ROW_NOTE && defaultNote}
 		<!-- Body copy under the word. Deliberately a fixed size and not editable:
 		     the row reads as a title with a paragraph, and the slider stays a
 		     control for the specimen above it. -->
