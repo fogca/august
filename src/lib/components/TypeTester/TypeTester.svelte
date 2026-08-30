@@ -41,7 +41,7 @@
 		<p class="TypeTester__hint">Click any line to edit · drag A—A to resize</p>
 		{#if !available}
 			<p class="TypeTester__notice">
-				{fontFamily} is in development. Preview shown in Steiner.
+				{fontFamily} is in development. Preview shown in Atom.
 			</p>
 		{/if}
 	</div>

@@ -221,7 +221,7 @@
 
 <style>
 	.CartSummary {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 	}
 
 	/* Inline mode: always-open in-flow block, no collapsing sticky bar */
@@ -263,7 +263,7 @@
 		color: var(--color-bg);
 		border: 0;
 		cursor: pointer;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 	}
 
 	.CartSummary__mobile-label {
@@ -504,7 +504,7 @@
 		padding: 16px 16px;
 		background: var(--color-text);
 		color: var(--color-bg);
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 15px;
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;

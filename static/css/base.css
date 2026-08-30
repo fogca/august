@@ -24,7 +24,7 @@
 /* ------------------------------------------------------------
    1. Font faces
    ------------------------------------------------------------
-   Steiner / Mokuseki Sans @font-face live in app.html (versioned
+   Atom / Mokuseki Sans @font-face live in app.html (versioned
    filenames). No other webfonts ship. */
 
 /* ------------------------------------------------------------
@@ -106,10 +106,10 @@ a {
   --key:        var(--color-text);
 
   /* --- Typography stacks ---
-     app.html re-declares --font-en/--font-ja as Steiner (site-wide directive);
+     app.html re-declares --font-en/--font-ja as Atom (site-wide directive);
      this is the no-JS/base fallback. Keep the versioned name here in sync
      with app.html's @font-face block. */
-  --font-en:     'Steiner VF75', 'Steiner', 'Helvetica Neue', Arial, sans-serif;
+  --font-en:     'Atom VF75', 'Atom', 'Helvetica Neue', Arial, sans-serif;
   --font-ja:     'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
                  'Yu Gothic', 'Meiryo', sans-serif;
   --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI',
@@ -119,11 +119,11 @@ a {
   --heading-font: var(--font-en);
   --text-font:    var(--font-en);
 
-  /* --- Font weight tokens (Steiner VF, wght 1–950) ---
+  /* --- Font weight tokens (Atom VF, wght 1–950) ---
      Change --fw-base to reweight the entire site. Components must NOT
      hardcode weights; use these tokens (or inherit). */
   --fw-base:   320;  /* default text weight (body inherits everywhere) */
-  --fw-light:  260;  /* lighter body copy — sits between the Steiner "SemiLight" (250) and "Light" (300) stops */
+  --fw-light:  260;  /* lighter body copy — sits between the Atom "SemiLight" (250) and "Light" (300) stops */
   --fw-ui:     380;  /* UI accents: nav, buttons, labels */
   --fw-strong: 500;  /* emphasis / sub-headings */
 

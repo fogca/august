@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	// OpenType feature reference — a working cheat-sheet of the features a
 	// professional Latin font is expected to ship. Each row is a LIVE off → on
-	// demo. Steiner does not yet ship every feature, so demos render in fonts that
+	// demo. Atom does not yet ship every feature, so demos render in fonts that
 	// verifiably do — Inter (sans) and EB Garamond (serif).
 	//
 	// CROSS-BROWSER: every toggle is applied through ALL the mechanisms that exist
@@ -16,7 +16,7 @@
 	//
 	// NOTE: font-family is set INLINE on each sample span — base.css has a direct
 	// `…, span, … { font-family: var(--heading-font) }` rule that otherwise forces
-	// Steiner onto these spans (inheritance loses to a direct rule).
+	// Atom onto these spans (inheritance loses to a direct rule).
 	type Need = 'must' | 'nice';
 	type FontKey = 'inter' | 'garamond';
 
@@ -356,7 +356,7 @@
 	}
 
 	.OTRef__fontwarn {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h6);
 		line-height: 1.5;
 		color: var(--color-accent, #b33030);
@@ -378,7 +378,7 @@
 	}
 
 	.OTRef__grouptitle {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h4);
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;
@@ -388,7 +388,7 @@
 
 	/* Hidden with its markup — restore when the Danish text lands.
 	.OTRef__groupnote {
-			font-family: 'Steiner', sans-serif;
+			font-family: 'Atom', sans-serif;
 			font-size: var(--fs-h6);
 			line-height: 1.5;
 			color: rgba(0, 0, 0, 0.45);
@@ -425,7 +425,7 @@
 	}
 
 	.OTRef__name {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 13px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
@@ -441,7 +441,7 @@
 	}
 
 	.OTRef__chip {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 9px;
 		line-height: 1;
 		letter-spacing: 0.02em;
@@ -459,7 +459,7 @@
 
 	/* Hidden with its markup — restore when the Danish text lands.
 	.OTRef__ja {
-			font-family: 'Steiner', sans-serif;
+			font-family: 'Atom', sans-serif;
 			font-size: var(--fs-p);
 			line-height: 1.55;
 			color: rgba(0, 0, 0, 0.6);
@@ -538,7 +538,7 @@
 	}
 
 	.OTRef__arrow {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 16px;
 		color: rgba(0, 0, 0, 0.3);
 		align-self: center;

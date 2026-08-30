@@ -1,4 +1,4 @@
-// Steiner weight axis definitions (Variable Font wght axis values)
+// Atom weight axis definitions (Variable Font wght axis values)
 // Numeric naming scheme (2026-06-11): name = wght / 10, except "1" = wght 1.
 // 20 weights: 1, 5, 10, ... 95 (40 = Book, 95 = Ultra).
 export interface WeightDef {
@@ -102,8 +102,8 @@ export const WEIGHT_ROW_ALIGN_DEFAULT_MOBILE: AlignValue = 'center';
 // Preset texts (bilingual intentional — .notdef shows for unsupported chars)
 export const PRESETS: Record<string, string> = {
 	pangram: 'The quick brown fox jumps over the lazy dog 1234567890',
-	word: 'Asger',
+	word: 'Atom',
 	numbers: '0123456789',
 	symbols: '. , - ; : ! ? & @ # $ %',
-	bilingual: 'Asger — 意味を運ぶ媒質\nThe aether carries meaning before sight.'
+	bilingual: 'Atom — 意味を運ぶ媒質\nThe aether carries meaning before sight.'
 };

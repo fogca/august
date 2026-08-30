@@ -36,7 +36,7 @@
 	}
 
 	// Row pairs — left column is the first half in source order, right
-	// column the second half (e.g. 1–45 left, 50–95 right for Steiner's 20
+	// column the second half (e.g. 1–45 left, 50–95 right for Atom's 20
 	// weights), not an interleaved split.
 	const rows = $derived.by<{ left: Cell; right: Cell | null }[]>(() => {
 		if (hasItalic) {
@@ -183,7 +183,7 @@
 
 	/* "Aa" preview glyph */
 	.StyleList__preview {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 18px;
 		line-height: 1;
 		flex-shrink: 0;
@@ -193,7 +193,7 @@
 	}
 
 	.StyleList__name {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 12px;
 		font-variation-settings: 'wght' 400;
 		line-height: 1.25;

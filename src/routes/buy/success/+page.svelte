@@ -48,7 +48,7 @@
 		{/if}
 
 		<p class="Success__body">
-			Thank you for purchasing Asger.
+			Thank you for purchasing Atom.
 			{#if order?.email}
 				Your fonts, EULA, and license certificate will be delivered to
 				<strong>{order.email}</strong> within 24 hours.
@@ -82,7 +82,7 @@
 	}
 
 	.Success__heading {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: clamp(28px, 5vw, 48px);
 		letter-spacing: 0;
 		line-height: 1.1;
@@ -102,7 +102,7 @@
 		display: grid;
 		grid-template-columns: 130px 1fr;
 		gap: 12px;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 13px;
 		line-height: 1.5;
 	}
@@ -116,7 +116,7 @@
 	}
 
 	.Success__body {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 14px;
 		font-variation-settings: 'wght' 350;
 		line-height: 1.65;
@@ -124,7 +124,7 @@
 	}
 
 	.Success__support {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 12px;
 		line-height: 1.6;
 		color: var(--color-text-mute);
@@ -138,7 +138,7 @@
 	}
 
 	.Success__home {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 13px;
 		font-weight: var(--fw-ui);
 		text-decoration: underline;

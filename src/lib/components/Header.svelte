@@ -174,7 +174,7 @@
 		padding: calc(16px + env(safe-area-inset-top, 0px)) var(--padding) 12px;
 		/* Kept high (not 1) so the fixed bar stays above z-indexed content sections. */
 		z-index: 100;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		background-color: #fff;
 		mix-blend-mode: normal;
 		color: #000;
@@ -319,7 +319,7 @@
 		z-index: 95;
 		background: #ffffff;
 		color: #000;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		/* top padding clears the (now solid, taller) header row so the nav sits below it;
 		   add the same safe-area-inset-top the header itself carries */
 		padding: calc(74px + env(safe-area-inset-top, 0px)) var(--gutter, 20px) 16px;

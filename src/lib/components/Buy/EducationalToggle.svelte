@@ -92,13 +92,13 @@
 	}
 
 	.EducationalToggle__title {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 13px;
 		font-weight: var(--fw-ui);
 	}
 
 	.EducationalToggle__desc {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 11px;
 		color: var(--color-text-mute);
 		line-height: 1.55;
@@ -109,7 +109,7 @@
 		padding: 8px 12px;
 		background: #e8f5e9;
 		color: #2e7d32;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;

@@ -25,26 +25,25 @@
 			</p>
 		</section>
 
-		<!-- 2 — Steiner (aligned with the Steiner page) -->
+		<!-- 2 — Atom (aligned with the Atom page) -->
+		<!-- TODO: the naming rationale used to explain the old name ("Asger",
+		     built on Rudolf Steiner's Goethean/anthroposophy reading of nature)
+		     has been removed rather than rewritten — draft the "why Atom" story
+		     together before shipping this copy. Same edit as typefaces.ts. -->
 		<section class="block">
-			<h2>Asger — the formative forces of the word, made visible</h2>
+			<h2>Atom — the formative forces of the word, made visible</h2>
 			<p class="en" lang="en">
-				Our first release, Asger, is a twenty-weight neo-humanist sans-serif variable font. It
-				takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature,
-				where form is never fixed but always in metamorphosis, and an anthroposophy that holds the
-				human being as the measure of things. The letters are made to feel grown rather than
-				constructed — organic in their curves, human in their proportion. Its humanist lineage runs
-				quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's
-				Rotis — never the surface, only the soil.
+				Our first release, Atom, is a twenty-weight neo-humanist sans-serif variable font. The
+				letters are made to feel grown rather than constructed — organic in their curves, human in
+				their proportion. Its humanist lineage runs quietly beneath — Johnston's 1916 Underground
+				alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.
 			</p>
 			<p class="da" lang="da">
-				Vores første udgivelse, Asger, er en neo-humanistisk grotesk i tyve vægte, tegnet som
-				variabel skrift. Den har sit navn — og sit temperament — fra Rudolf Steiner: en goethesk
-				læsning af naturen, hvor formen aldrig ligger fast, men altid er under forvandling, og en
-				antroposofi, der holder mennesket som målestok. Bogstaverne skal føles groede snarere end
-				konstruerede — organiske i kurverne, menneskelige i proportionen. Den humanistiske slægt
-				løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl
-				Aichers Rotis — aldrig overfladen, kun jorden.
+				Vores første udgivelse, Atom, er en neo-humanistisk grotesk i tyve vægte, tegnet som
+				variabel skrift. Bogstaverne skal føles groede snarere end konstruerede — organiske i
+				kurverne, menneskelige i proportionen. Den humanistiske slægt løber stille nedenunder —
+				Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig
+				overfladen, kun jorden.
 			</p>
 			<p class="en" lang="en">
 				A typeface is never the meaning itself. It is the medium meaning passes through — doing the
@@ -82,7 +81,7 @@
 	}
 
 	/* Wider column and bigger type throughout — with only the foundry and
-	   Asger statements left on the page, the previous 640px/12px text setting
+	   Atom statements left on the page, the previous 640px/12px text setting
 	   (tuned for five stacked sections) reads sparse. */
 	.About__inner {
 		max-width: 760px;
@@ -122,7 +121,7 @@
 		display: none;
 	}
 
-	/* Danish — the second language runs in Steiner like the English, one step
+	/* Danish — the second language runs in Atom like the English, one step
 	   lighter and a touch smaller so the pair reads as primary + secondary
 	   rather than as two competing texts. (The Japanese it replaced needed a
 	   CJK stack; Danish does not.) */

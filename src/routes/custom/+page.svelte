@@ -151,7 +151,7 @@
 	}
 
 	.Custom__hero-placeholder-label {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: clamp(60px, 15vw, 220px);
 		letter-spacing: 0;
 		color: #fff;

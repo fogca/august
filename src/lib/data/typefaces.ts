@@ -11,7 +11,7 @@ export type TypefaceStatus = 'available' | 'in-development';
 export interface Typeface {
 	slug: string;
 	name: string;
-	/** Display order (ascending): 1 = Steiner, 2 = MK Sans, 3 = Atom */
+	/** Display order (ascending): 1 = Atom, 2 = gQ (Mokuseki Sans), 3 = Asta, 4 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
@@ -52,8 +52,8 @@ export interface Typeface {
 	specimen?: [string, string, string];
 	/** Renders the specimen at this wght instead of the family's own default —
 	 *  for typefaces with no drawings of their own yet (Alfred, Asta), so their
-	 *  placeholder card at least reads as a different cut of Steiner rather
-	 *  than an identical copy of Asger's. */
+	 *  placeholder card at least reads as a different cut of the borrowed font
+	 *  rather than an identical copy of Atom's own card. */
 	specimenWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
@@ -99,25 +99,28 @@ export interface Typeface {
 
 export const TYPEFACES: Typeface[] = [
 	{
-		slug: 'steiner',
-		name: 'Asger',
+		slug: 'atom',
+		name: 'Atom',
 		order: 1,
 		status: 'available',
-		fontFamily: 'Steiner',
+		fontFamily: 'Atom',
 		tagline: 'The formative forces of the word, made visible.',
+		// TODO: the naming rationale below used to explain the old name
+		// ("Asger", built on Rudolf Steiner's Goethean/anthroposophy reading of
+		// nature) — that sentence has been removed rather than rewritten, since
+		// it no longer applies and a new one shouldn't be invented unilaterally.
+		// Draft the "why Atom" story together before shipping this copy.
 		description:
-			"Asger is a 20-weight neo-humanist sans-serif variable font. " +
-			"It takes its name — and its temperament — from Rudolf Steiner: a Goethean reading of nature, where form is never fixed but always in metamorphosis, and an anthroposophy that holds the human being as the measure of things. " +
+			"Atom is a 20-weight neo-humanist sans-serif variable font. " +
 			"Humanist-geometric — the mechanical and the organic coexist in every glyph, held together by formative force. " +
 			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
 		descriptionDa:
-			'Asger er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
-			+ 'Den har sit navn — og sit temperament — fra Rudolf Steiner: en goethesk læsning af naturen, hvor formen aldrig ligger fast, men altid er under forvandling, og en antroposofi, der holder mennesket som målestok. '
+			'Atom er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
 			+ 'Humanistisk-geometrisk — det mekaniske og det organiske findes side om side i hvert tegn, holdt sammen af formende kraft. '
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		// Measured, not estimated: glyph count is the encoded cmap of the shipped
-		// Steiner-VF75.woff2. The language count is Hyperglot 0.7.3, base support
+		// Atom-VF75.woff2. The language count is Hyperglot 0.7.3, base support
 		// restricted to --validity verified — i.e. only languages whose charset
 		// data Hyperglot has checked. Its default (draft data included) reports
 		// 246, which counts a long tail of unverified minority orthographies and
@@ -183,14 +186,11 @@ export const TYPEFACES: Typeface[] = [
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
-		// Catalogue specimen, museum-label style. Reassigned 2026-08-29 (at
-		// the user's request) from a Rudolf Steiner citation to this real
-		// institution — "Matter and Form" still lands on Asger specifically:
-		// its own description is built on the same Goethean pairing (form
-		// never fixed, always in metamorphosis). Previously used on Atom's
-		// card below; Atom now cites a different institution so the two
-		// don't repeat.
+		// Catalogue specimen, museum-label style.
 		specimen: ['MUNICH, 2026', 'DEUTSCHES MUSEUM', 'Matter and Form'],
+		// Filename predates the 2026-08-30 rename (was "Asger") — left as-is,
+		// asset paths are internal and not user-facing. Same for the other
+		// image/video paths below.
 		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
 		catalogBg: '#DCE7EF',
@@ -222,7 +222,7 @@ export const TYPEFACES: Typeface[] = [
 			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos August Type Foundry. '
 			+ 'Detaljer om vægte og akser offentliggøres, efterhånden som designet modnes. Debut i 2026.',
 		classification: 'Neo Humanist Sans · 12 weights',
-		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
+		// Provisional weights — same 12-stop axis as Atom until spec is finalised
 		weights: WEIGHTS,
 		// One long German word per weight row (20) — aesthetic / philosophical vocabulary
 		defaultTexts: [
@@ -269,105 +269,43 @@ export const TYPEFACES: Typeface[] = [
 		}
 	},
 	{
-		slug: 'atom',
-		name: 'Atom',
-		order: 3,
-		status: 'in-development',
-		// Re-shown 2026-08-29 at the user's request (temporary) — no
-		// drawings exist yet, the card renders in Steiner as a placeholder.
-		hidden: false,
-		// No font files yet — render as Steiner for preview purposes
-		fontFamily: 'Steiner',
-		tagline: 'A display typeface in development.',
-		description:
-			'Atom is a display typeface currently in development at August Type Foundry. ' +
-			'Further details on its design direction and release schedule will follow. ' +
-			'Coming 2026.',
-		descriptionDa:
-			'Atom er en display-skrift under udvikling hos August Type Foundry. '
-			+ 'Nærmere om retning og udgivelsestidspunkt følger. Planlagt til 2026.',
-		classification: 'Neo Grotesque · in development',
-		// Provisional weights — same 12-stop axis as Steiner until spec is finalised
-		weights: WEIGHTS,
-		// One long German word per weight row (20) — physics / natural-philosophy vocabulary
-		defaultTexts: [
-			'Weltanschauung',
-			'Quintessenz',
-			'Elementarteilchen',
-			'Wirklichkeit',
-			'Naturphilosophie',
-			'Kontinuum',
-			'Raumzeit',
-			'Unendlichkeit',
-			'Materie',
-			'Antimaterie',
-			'Quantensprung',
-			'Gleichgewicht',
-			'Schwerkraft',
-			'Lichtgeschwindigkeit',
-			'Urknall',
-			'Kristallgitter',
-			'Wellenfunktion',
-			'Singularität',
-			'Übergang',
-			'Urstoff'
-		],
-		thumbnail: '/images/fonts/atom.png',
-		// No dedicatee either — cites a real institution whose subject
-		// matches the typeface's own vocabulary above (Elementarteilchen,
-		// Quantensprung, Antimaterie): CERN, in Geneva — the Deutsches
-		// Museum citation this card used before moved to Asger 2026-08-29.
-		specimen: ['GENEVA, 2026', 'CERN', 'Particle Studies'],
-		theme: { bg: '#15181C', fg: '#ffffff' },
-		catalogBg: '#E7EDD9',
-		hero: {
-			label: 'Neo Grotesque',
-			vol: 'vol.03',
-			subtitle: '(Coming Soon)',
-			debut: 'Coming Soon',
-			comingSoon: true,
-			intro: 'The very first Neo Grotesque from our foundry.',
-			statement: 'Geometry, breathing.'
-		}
-	},
-	{
-		// Sibling face to Asger — registered so the slug and data shape exist.
+		// Sibling face to Atom — registered so the slug and data shape exist.
 		// Everything below the name is provisional: no drawings, no font files,
 		// no agreed classification. Re-shown 2026-08-29 at the user's request
 		// (temporary) even though there's nothing but a placeholder specimen.
 		slug: 'asta',
 		name: 'Asta',
-		order: 4,
+		order: 3,
 		status: 'in-development',
 		hidden: false,
-		// No font files yet — render as Steiner for preview purposes
-		fontFamily: 'Steiner',
-		tagline: 'Sibling to Asger.',
+		// No font files yet — render as Atom for preview purposes
+		fontFamily: 'Atom',
+		tagline: 'Sibling to Atom.',
 		description:
-			'Asta is a sibling to Asger, in development at August Type Foundry. ' +
+			'Asta is a sibling to Atom, in development at August Type Foundry. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionDa:
-			'Asta er en søsterskrift til Asger, under udvikling hos August Type Foundry. '
+			'Asta er en søsterskrift til Atom, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development',
-		// Provisional weights — same axis as Asger until the spec is finalised
+		// Provisional weights — same axis as Atom until the spec is finalised
 		weights: WEIGHTS,
 		defaultTexts: ['Asta'],
 		// Placeholder catalogue specimen — no drawings exist yet, so this is set
-		// in Steiner at a heavier cut than Asger's card (wght 700, vs. the
-		// default ~400) purely so the two placeholder cards don't look like the
-		// same font twice. Replace both once Asta has its own metal.
-		specimen: ['VOL. III', 'ASTA', 'Sibling to Asger'],
+		// at a heavier cut than Atom's own card (wght 700, vs. the default
+		// ~400) purely so the two placeholder cards don't look like the same
+		// font twice. Replace both once Asta has its own metal.
+		specimen: ['VOL. III', 'ASTA', 'Sibling to Atom'],
 		specimenWeight: 700,
 		theme: { bg: '#d59514', fg: '#000000' },
 		catalogBg: '#F3E2C0',
 		hero: {
 			label: 'In development',
-			vol: 'vol.04',
+			vol: 'vol.03',
 			subtitle: '(Coming Soon)',
 			debut: 'Coming Soon',
 			comingSoon: true,
-			intro: 'A sibling to Asger.',
+			intro: 'A sibling to Atom.',
 			statement: 'Coming soon.'
 		}
 	},
@@ -378,11 +316,11 @@ export const TYPEFACES: Typeface[] = [
 		// 2026-08-29 at the user's request (temporary).
 		slug: 'alfred',
 		name: 'Alfred',
-		order: 5,
+		order: 4,
 		status: 'in-development',
 		hidden: false,
-		// No font files yet — render as Steiner for preview purposes
-		fontFamily: 'Steiner',
+		// No font files yet — render as Atom for preview purposes
+		fontFamily: 'Atom',
 		tagline: 'A Neo Classic in development.',
 		description:
 			'Alfred is a Neo Classic typeface in development at August Type Foundry. ' +
@@ -391,13 +329,13 @@ export const TYPEFACES: Typeface[] = [
 			'Alfred er en Neo Classic-skrift under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development',
-		// Provisional weights — same axis as Asger until the spec is finalised
+		// Provisional weights — same axis as Atom until the spec is finalised
 		weights: WEIGHTS,
 		defaultTexts: ['Alfred'],
-		// Placeholder catalogue specimen — set in Steiner at a lighter cut
-		// (wght 250) than Asger's card or Asta's placeholder (700), so the
-		// three don't read as the same font tripled. Replace once Alfred has
-		// its own metal.
+		// Placeholder catalogue specimen — set at a lighter cut (wght 250)
+		// than Atom's own card or Asta's placeholder (700), so the three
+		// don't read as the same font tripled. Replace once Alfred has its
+		// own metal.
 		specimen: ['VOL. II', 'ALFRED', 'Neo Classic'],
 		specimenWeight: 250,
 		// Matches the home page's ochre Alfred section exactly (#d59514 / black).
@@ -408,7 +346,7 @@ export const TYPEFACES: Typeface[] = [
 		catalogBg: '#F6E9C9',
 		hero: {
 			label: 'In development',
-			vol: 'vol.05',
+			vol: 'vol.04',
 			subtitle: '(Coming Soon)',
 			debut: 'Coming Soon',
 			comingSoon: true,

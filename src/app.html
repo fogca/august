@@ -24,26 +24,27 @@
 		</script>
 		<!-- Per-page <meta name="description"> comes from each route's svelte:head -->
 		<!-- Global design tokens and reset (bump ?v= whenever base.css changes) -->
-		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20260828d" />
-		<!-- Steiner VF — latest export (version in the filename).
-		     Declared under two family names from the SAME file: 'Steiner'
-		     (kept stable — most components still hardcode this) and
-		     'Steiner VF75' (versioned; --font-en/--font-ja below use this one,
+		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20260830a" />
+		<!-- Atom VF — latest export (version in the filename). Renamed from
+		     "Steiner" 2026-08-30 (product rename); filename/version scheme
+		     unchanged. Declared under two family names from the SAME file:
+		     'Atom' (kept stable — most components still hardcode this) and
+		     'Atom VF75' (versioned; --font-en/--font-ja below use this one,
 		     so anything reading var(--font-en)'s computed value sees the
 		     build number). Bump both the URL and the second name's suffix
 		     together on every export. -->
 		<style>
 			@font-face {
-				font-family: 'Steiner';
-				src: url('%sveltekit.assets%/fonts/Steiner-VF75.woff2?v=20260828f') format('woff2-variations');
+				font-family: 'Atom';
+				src: url('%sveltekit.assets%/fonts/Atom-VF75.woff2?v=20260828f') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
 			@font-face {
-				font-family: 'Steiner VF75';
-				src: url('%sveltekit.assets%/fonts/Steiner-VF75.woff2?v=20260828f') format('woff2-variations');
+				font-family: 'Atom VF75';
+				src: url('%sveltekit.assets%/fonts/Atom-VF75.woff2?v=20260828f') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -67,16 +68,16 @@
 				font-display: swap;
 			}
 
-			/* Site-wide font: Steiner for all elements (chairman directive).
+			/* Site-wide font: Atom for all elements (chairman directive).
 			   The versioned name goes first — see the @font-face comment above. */
 			:root {
-				--font-en: 'Steiner VF75', 'Steiner', 'Helvetica Neue', Arial, sans-serif;
-				--font-ja: 'Steiner VF75', 'Steiner', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-en: 'Atom VF75', 'Atom', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Atom VF75', 'Atom', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 			}
 
 			html,
 			body {
-				font-family: 'Steiner', 'Helvetica Neue', Arial, sans-serif;
+				font-family: 'Atom', 'Helvetica Neue', Arial, sans-serif;
 			}
 		</style>
 
@@ -89,17 +90,19 @@
 		     No og:url here — crawlers fall back to each page's own URL. -->
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="August Type Foundry" />
-		<meta property="og:title" content="August Type Foundry — Asger" />
+		<meta property="og:title" content="August Type Foundry — Atom" />
 		<meta
 			property="og:description"
-			content="An independent type foundry from Tokyo. Asger — a 20-weight neo-humanist variable typeface."
+			content="An independent type foundry from Tokyo. Atom — a 20-weight neo-humanist variable typeface."
 		/>
+		<!-- og.png itself likely has "Asger" baked into the image — regenerating
+		     it is outside this rename's scope, flag separately. -->
 		<meta property="og:image" content="https://august.tf/og.png" />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="August Type Foundry — Asger" />
+		<meta name="twitter:title" content="August Type Foundry — Atom" />
 		<meta
 			name="twitter:description"
-			content="An independent type foundry from Tokyo. Asger — a 20-weight neo-humanist variable typeface."
+			content="An independent type foundry from Tokyo. Atom — a 20-weight neo-humanist variable typeface."
 		/>
 		<meta name="twitter:image" content="https://august.tf/og.png" />
 

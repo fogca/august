@@ -81,7 +81,7 @@ export function isEnterpriseTier(tierIndex: number): boolean {
 
 // ── Package definitions ──────────────────────────────────────────────────────
 
-export type TypefaceSlug = 'steiner' | 'gq' | 'atom';
+export type TypefaceSlug = 'atom' | 'gq';
 
 export interface PackageDef {
 	id: string;
@@ -108,7 +108,7 @@ export interface TypefacePricing {
 	packages: PackageDef[];
 }
 
-// Steiner ships 20 numeric weights (name × 10 = wght; 40 = Book, 95 = Ultra),
+// Atom ships 20 numeric weights (name × 10 = wght; 40 = Book, 95 = Ultra),
 // upright only — a single weight axis from Hairline to Ultra.
 // (No italic masters yet; do not advertise italics until they actually ship.)
 export const STEINER_WEIGHTS: string[] = [
@@ -118,11 +118,11 @@ export const STEINER_WEIGHTS: string[] = [
 
 export const TYPEFACE_PRICING: TypefacePricing[] = [
 	{
-		slug: 'steiner',
+		slug: 'atom',
 		packages: [
 			{
-				id: 'steiner-complete',
-				label: 'Asger',
+				id: 'atom-complete',
+				label: 'Atom',
 				detail: '20 weights — Hairline to Ultra',
 				styles: STEINER_WEIGHTS,
 				italic: false,
@@ -132,7 +132,7 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 			}
 		]
 	}
-	// gq, atom: in development — not for sale yet
+	// gq: in development — not for sale yet
 ];
 
 export function getTypefacePricing(slug: TypefaceSlug): TypefacePricing | undefined {

@@ -22,7 +22,7 @@
 		src,
 		scrollDistance = 2400,
 		poster,
-		label = 'Asger scroll specimen',
+		label = 'Atom scroll specimen',
 		fit = 'cover',
 		background = '#000'
 	}: Props = $props();

@@ -11,7 +11,7 @@
 		GLYPH_CATEGORY_ORDER,
 		GLYPH_CATEGORY_LABELS,
 		type GlyphEntry
-	} from '$lib/data/steinerGlyphs.js';
+	} from '$lib/data/atomGlyphs.js';
 
 	interface Props {
 		fontFamily: string;
@@ -23,7 +23,7 @@
 	let { fontFamily, name, title = 'Glyph set' }: Props = $props();
 
 	// Font-wide vertical metrics (hhea/OS2 — one fixed set for the whole VF).
-	// Per Steiner's Glyphs master data: ascender 800, cap height 700,
+	// Per Atom's Glyphs master data: ascender 800, cap height 700,
 	// descender -200 across all masters; x-height is the one value that
 	// genuinely drifts by weight (510 at Hair/Book, 518 at Ultra) — interpolated
 	// below rather than hardcoded, same as the font itself.
@@ -216,7 +216,7 @@
 	}
 
 	.GlyphSet__label {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h5);
 		color: var(--color-text-mute);
 		letter-spacing: 0;
@@ -247,7 +247,7 @@
 	}
 
 	.GlyphSet__type-name {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h4);
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;
@@ -263,7 +263,7 @@
 		-webkit-appearance: none;
 		background: transparent;
 		border: none;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h6);
 		color: var(--color-text-mute);
 		letter-spacing: 0;
@@ -277,7 +277,7 @@
 	}
 
 	.GlyphSet__glyph-name {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h6);
 		letter-spacing: 0.02em;
 		text-transform: uppercase;
@@ -323,7 +323,7 @@
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 12px;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h6);
 		font-variation-settings: normal;
 		letter-spacing: 0;
@@ -369,7 +369,7 @@
 	}
 
 	.GlyphSet__group-label {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h6);
 		letter-spacing: 0.02em;
 		text-transform: uppercase;

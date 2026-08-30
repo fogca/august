@@ -49,7 +49,7 @@
 	}
 
 	.Gallery__label {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h5);
 		color: var(--color-text-mute);
 		letter-spacing: 0;
@@ -89,7 +89,7 @@
 	}
 
 	.Gallery__placeholder span {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 12px;
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
@@ -97,7 +97,7 @@
 	}
 
 	.Gallery__caption {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 12px;
 		letter-spacing: 0;
 		color: var(--color-text-mute);

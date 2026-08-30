@@ -20,7 +20,7 @@
 	<title>Fonts — August Type Foundry</title>
 	<meta
 		name="description"
-		content="August Type Foundry typeface catalogue — Asger and upcoming releases."
+		content="August Type Foundry typeface catalogue — Atom and upcoming releases."
 	/>
 </svelte:head>
 
@@ -51,8 +51,8 @@
 				     only appears on hover, via --spec-bg below. Where specimenWeight
 				     is set (Alfred/Asta — no drawings yet) it overrides the family's
 				     default weight uniformly across all three lines, so the
-				     placeholder reads as "one weight of Steiner", not an attempt at
-				     Asger's real specimen. -->
+				     placeholder reads as "one weight of Atom", not an attempt at
+				     Atom's own real specimen. -->
 				<div
 					class="FontCard__specimen"
 					style="--spec-bg: {tf.catalogBg}; font-family: '{tf.fontFamily}', sans-serif;"
@@ -100,7 +100,7 @@
 	}
 
 	.Fonts__heading {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: clamp(36px, 6vw, 64px);
 		letter-spacing: 0;
 		line-height: 1.05;
@@ -151,7 +151,7 @@
 	}
 
 	.FontCard__name {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 15px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
@@ -163,7 +163,7 @@
 	}
 
 	.FontCard__classification {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 13px;
 		font-variation-settings: 'wght' 350;
 		color: var(--color-text-mute);
@@ -229,14 +229,14 @@
 	}
 
 	.FontCard__price {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 13px;
 		color: var(--color-text-mute);
 		letter-spacing: 0;
 	}
 
 	.FontCard__view {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 13px;
 		letter-spacing: 0;
 		border: 1px solid var(--color-line);

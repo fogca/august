@@ -35,7 +35,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: baseline;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 12px;
 	}
 

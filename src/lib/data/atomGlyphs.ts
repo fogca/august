@@ -1,9 +1,10 @@
-// Auto-generated from the shipped Steiner-VF70.ttf's actual cmap (fontTools getBestCmap()).
+// Auto-generated from the shipped Atom-VF70.ttf's actual cmap (fontTools getBestCmap()).
+// (Filename predates the 2026-08-30 rename — was Steiner-VF70.ttf.)
 // Deliberately NOT the aspirational spec roster — only codepoints truly encoded in the
 // live font are listed, so nothing here can render as a .notdef/tofu box.
 // Excludes: combining marks (Mn — meaningless standalone), space/nbsp (Zs — nothing to
 // show), and anything outside the shipped font's cmap.
-// Regenerate whenever Steiner's VF export changes:
+// Regenerate whenever Atom's VF export changes:
 //   fontTools.ttLib.TTFont(path).getBestCmap() + unicodedata name/category, bucketed by
 //   Lu -> uppercase, Ll -> lowercase, Nd/No -> number, P* -> punctuation, else -> symbol.
 

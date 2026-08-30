@@ -144,7 +144,7 @@
 	}
 
 	.Eula__nav-link {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: 12px;
 		letter-spacing: 0;
 		color: var(--color-text-mute);

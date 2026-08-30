@@ -51,7 +51,7 @@
 	}
 
 	.GlyphShowcase__label {
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h5);
 		color: rgba(255, 255, 255, 0.7);
 		letter-spacing: 0;
@@ -80,7 +80,7 @@
 		position: absolute;
 		top: 16px;
 		left: 20px;
-		font-family: 'Steiner', sans-serif;
+		font-family: 'Atom', sans-serif;
 		font-size: var(--fs-h6);
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
