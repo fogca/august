@@ -2,7 +2,7 @@
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
-import { WEIGHTS } from '$lib/components/TypeTester/presets.js';
+import { WEIGHTS, ELIO_WEIGHTS } from '$lib/components/TypeTester/presets.js';
 
 export type { WeightDef as TypefaceWeight };
 
@@ -11,7 +11,7 @@ export type TypefaceStatus = 'available' | 'in-development';
 export interface Typeface {
 	slug: string;
 	name: string;
-	/** Display order (ascending): 1 = Norma, 2 = gQ (Mokuseki Sans), 3 = Asta, 4 = Alfred */
+	/** Display order (ascending): 1 = Norma, 2 = gQ (Mokuseki Sans), 3 = Elio, 4 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
@@ -51,9 +51,10 @@ export interface Typeface {
 	 *  size hierarchy is deliberately not reproduced here. */
 	specimen?: [string, string, string];
 	/** Renders the specimen at this wght instead of the family's own default —
-	 *  for typefaces with no drawings of their own yet (Alfred, Asta), so their
+	 *  for typefaces with no drawings of their own yet (Alfred), so their
 	 *  placeholder card at least reads as a different cut of the borrowed font
-	 *  rather than an identical copy of Norma's own card. */
+	 *  rather than an identical copy of Norma's own card. Elio doesn't need
+	 *  this any more — its own font renders the specimen directly. */
 	specimenWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
@@ -269,34 +270,32 @@ export const TYPEFACES: Typeface[] = [
 		}
 	},
 	{
-		// Sibling face to Norma — registered so the slug and data shape exist.
-		// Everything below the name is provisional: no drawings, no font files,
-		// no agreed classification. Re-shown 2026-08-29 at the user's request
-		// (temporary) even though there's nothing but a placeholder specimen.
-		slug: 'asta',
-		name: 'Asta',
+		// Sibling face to Norma. Renamed from "Asta" 2026-08-31. Its own real
+		// font exists now — Hair (150), exported and shipped 2026-08-31 — but
+		// only that one of the planned 8 weights is drawn; Ultra (850) exists
+		// as a Glyphs master but wasn't exported, and the remaining 6 are
+		// unstarted instance slots (see presets.ts's ELIO_WEIGHTS). Re-shown
+		// 2026-08-29 at the user's request (temporary).
+		slug: 'elio',
+		name: 'Elio',
 		order: 3,
 		status: 'in-development',
 		hidden: false,
-		// No font files yet — render as Norma for preview purposes
-		fontFamily: 'Norma',
+		fontFamily: 'Elio',
 		tagline: 'Sibling to Norma.',
 		description:
-			'Asta is a sibling to Norma, in development at August Type Foundry. ' +
+			'Elio is a sibling to Norma, in development at August Type Foundry. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionDa:
-			'Asta er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
+			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
-		classification: 'In development',
-		// Provisional weights — same axis as Norma until the spec is finalised
-		weights: WEIGHTS,
-		defaultTexts: ['Asta'],
-		// Placeholder catalogue specimen — no drawings exist yet, so this is set
-		// at a heavier cut than Norma's own card (wght 700, vs. the default
-		// ~400) purely so the two placeholder cards don't look like the same
-		// font twice. Replace both once Asta has its own metal.
-		specimen: ['VOL. III', 'ASTA', 'Sibling to Norma'],
-		specimenWeight: 700,
+		classification: 'In development · 8 weights',
+		weights: ELIO_WEIGHTS,
+		defaultTexts: ['Elio'],
+		// Catalogue specimen. Elio's own font (Hair) now renders this directly —
+		// no borrowed fontFamily or specimenWeight override needed, unlike
+		// Alfred below (still no drawings at all).
+		specimen: ['VOL. III', 'ELIO', 'Sibling to Norma'],
 		theme: { bg: '#d59514', fg: '#000000' },
 		catalogBg: '#F3E2C0',
 		hero: {
@@ -312,8 +311,9 @@ export const TYPEFACES: Typeface[] = [
 	{
 		// Announced on the home page (ochre section, own logotype) and in the
 		// mobile menu's UPCOMING list. Registered here with a catalogue
-		// specimen; everything below is provisional, same as Asta. Re-shown
-		// 2026-08-29 at the user's request (temporary).
+		// specimen; everything below is still fully provisional (unlike Elio,
+		// no drawings at all yet). Re-shown 2026-08-29 at the user's request
+		// (temporary).
 		slug: 'alfred',
 		name: 'Alfred',
 		order: 4,
@@ -333,16 +333,16 @@ export const TYPEFACES: Typeface[] = [
 		weights: WEIGHTS,
 		defaultTexts: ['Alfred'],
 		// Placeholder catalogue specimen — set at a lighter cut (wght 250)
-		// than Norma's own card or Asta's placeholder (700), so the three
-		// don't read as the same font tripled. Replace once Alfred has its
-		// own metal.
+		// than Norma's own card, so the two don't read as the same font
+		// twice (Elio no longer needs this distinction — its own font
+		// renders its card now). Replace once Alfred has its own metal.
 		specimen: ['VOL. II', 'ALFRED', 'Neo Classic'],
 		specimenWeight: 250,
 		// Matches the home page's ochre Alfred section exactly (#d59514 / black).
 		theme: { bg: '#d59514', fg: '#000000' },
-		// A paler tint of the same ochre — distinct from Asta's catalogBg
+		// A paler tint of the same ochre — distinct from Elio's catalogBg
 		// (#F3E2C0), which currently also derives from this colour; see the
-		// note where Asta is defined above.
+		// note where Elio is defined above.
 		catalogBg: '#F6E9C9',
 		hero: {
 			label: 'In development',

@@ -6,7 +6,7 @@
 	// Top page v2 — red / black / white, type-first.
 	// Scheme:
 	//   Hero (black, video specimen) — Norma wght-axis sweep + Discover — normal scroll
-	//   Alfred (ochre) / Asta (blue) — announced, unreleased siblings
+	//   Alfred (ochre) / Elio (blue) — announced, unreleased siblings
 	//   Buy (red) / Custom (black) / Office (white) : v1 cover reveals (unchanged)
 
 	// CSS animation-play-state has no effect on native <video> — pause it by
@@ -118,17 +118,17 @@
 		</div>
 	</section>
 
-	<!-- Asta (white) — same composition as Alfred, one section down. -->
+	<!-- Elio (white) — same composition as Alfred, one section down. -->
 	<section class="Asta">
 		<p class="Asta__name">
-			<span class="Title__face">Asta</span> <span class="Title__foundry">August</span>
+			<span class="Title__face">Elio</span> <span class="Title__foundry">August</span>
 		</p>
 		<div class="Asta__specimen">
 			<svg
 				class="Asta__mark"
 				viewBox="0 0 266.08 113.28"
 				role="img"
-				aria-label="Asta"
+				aria-label="Elio"
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<path
@@ -152,12 +152,12 @@
 		<div class="Asta__bottom">
 			<div class="Asta__meta">
 				<div class="Asta__meta-left">
-					<p class="Asta__meta-name">Asta August</p>
+					<p class="Asta__meta-name">Elio August</p>
 					<p class="Asta__meta-class">Sibling to Norma</p>
 				</div>
 				<span class="Asta__meta-version">In development</span>
 			</div>
-			<!-- Deliberately a span, not an <a>: there is no Asta page yet, so the
+			<!-- Deliberately a span, not an <a>: there is no Elio page yet, so the
 			     control must not be clickable, focusable, or announced as a link. -->
 			<span class="Asta__cta" aria-disabled="true"><span class="CtaLabel">Coming Soon</span></span>
 		</div>
@@ -379,7 +379,7 @@
 		transform: translateY(1.5px);
 		/* base.css sets color directly on every span, including this one —
 		   without this it hardcodes black regardless of context. Hero's CTA is
-		   black-on-white already, so that bug was invisible there; Alfred/Asta's
+		   black-on-white already, so that bug was invisible there; Alfred/Elio's
 		   Coming Soon is white-on-black, so it disappeared. Inherit for real. */
 		color: inherit;
 	}
@@ -518,7 +518,7 @@
 		user-select: none;
 	}
 
-	/* --- Asta (white) — mirrors .Alfred exactly, one section down --- */
+	/* --- Elio (white) — mirrors .Alfred exactly, one section down --- */
 	.Asta {
 		display: flex;
 		flex-direction: column;
@@ -531,7 +531,8 @@
 	}
 
 	/* base.css sets color directly on div/p/span/etc, which breaks inheritance
-	   from .Asta's own `color` — force every descendant white, same pattern as
+	   from .Asta's own `color` (CSS class kept as-is; the typeface is Elio) —
+	   force every descendant white, same pattern as
 	   .Hero above. .Asta__cta is already white-on-black and unaffected. */
 	.Asta :global(*) {
 		color: #ffffff;

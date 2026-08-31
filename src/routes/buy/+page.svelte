@@ -14,7 +14,7 @@
 	// styles has a selection either -- this page is what joins the two.
 	// No fallback picker yet for a cold /buy visit (no ?font) -- see the
 	// August/Marketing session's 2026-08-29 note for the planned Phase 2
-	// (multi-typeface picker once Alfred/Asta go on sale); today there's
+	// (multi-typeface picker once Alfred/Elio go on sale); today there's
 	// only one real product, so falling back to it is enough.
 
 	import { onMount } from 'svelte';

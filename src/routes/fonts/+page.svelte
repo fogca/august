@@ -49,7 +49,7 @@
 				     so the label reads as a single set piece of type, not a mini-
 				     poster. Text is always black; the card's own colour (catalogBg)
 				     only appears on hover, via --spec-bg below. Where specimenWeight
-				     is set (Alfred/Asta — no drawings yet) it overrides the family's
+				     is set (Alfred — no drawings yet) it overrides the family's
 				     default weight uniformly across all three lines, so the
 				     placeholder reads as "one weight of Norma", not an attempt at
 				     Norma's own real specimen. -->

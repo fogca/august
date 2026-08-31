@@ -44,6 +44,23 @@ export const WEIGHTS: WeightDef[] = [
 	axisValue: n === 1 ? 1 : n * 10
 }));
 
+// Elio's own 8-stop axis (150/250/.../850 — matches its Glyphs instance
+// names directly, unlike Norma's compressed 1-95 naming). Only Hair (150)
+// has a real drawn weight so far — Ultra (850) exists as a master in the
+// source but wasn't exported; the other 6 are provisional instance slots
+// with no drawings yet. Labels borrow Norma's own vocabulary for
+// consistency, picking the stop closest to each axis value.
+export const ELIO_WEIGHTS: WeightDef[] = [
+	{ id: 150, name: '150', label: 'Hair', axisValue: 150 },
+	{ id: 250, name: '250', label: 'Thin', axisValue: 250 },
+	{ id: 350, name: '350', label: 'Light', axisValue: 350 },
+	{ id: 450, name: '450', label: 'Book', axisValue: 450 },
+	{ id: 550, name: '550', label: 'Medium', axisValue: 550 },
+	{ id: 650, name: '650', label: 'Semibold', axisValue: 650 },
+	{ id: 750, name: '750', label: 'Bold', axisValue: 750 },
+	{ id: 850, name: '850', label: 'Ultra', axisValue: 850 }
+];
+
 // Maximum characters allowed in the textarea
 export const MAX_CHARS = 500;
 

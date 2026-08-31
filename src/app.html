@@ -69,6 +69,17 @@
 				font-display: swap;
 			}
 
+			/* Elio — Hair weight only so far (static, not a variable font;
+			   7 of 8 planned weights have no drawings yet — see presets.ts's
+			   ELIO_WEIGHTS). Used on the Elio typeface page's Type Tester. */
+			@font-face {
+				font-family: 'Elio';
+				src: url('%sveltekit.assets%/fonts/Elio-Hair.woff2?v=20260831a') format('woff2');
+				font-weight: 150;
+				font-style: normal;
+				font-display: swap;
+			}
+
 			/* Site-wide font: Norma for all elements (chairman directive).
 			   The versioned name goes first — see the @font-face comment above. */
 			:root {
