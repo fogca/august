@@ -55,7 +55,7 @@
 		<div class="Hero__bottom">
 			<div class="Hero__meta">
 				<div class="Hero__meta-left">
-					<p class="Hero__meta-name">Norma August</p>
+					<p class="Hero__meta-name">Norma</p>
 					<p class="Hero__meta-class">Neo Humanist Sans</p>
 				</div>
 				<span class="Hero__meta-version">v1.00000</span>
