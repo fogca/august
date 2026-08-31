@@ -544,7 +544,7 @@
 	   logotype — see the template comment). Sized off the viewport, same
 	   spirit as the old .Elio__mark. */
 	.Elio__abc {
-		width: min(700px, 82vw);
+		width: auto;
 		text-align: center;
 	}
 
