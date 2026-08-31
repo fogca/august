@@ -128,7 +128,16 @@
 		gsap.set('.page-wrapper', {
 			transformOrigin: `50% ${vhCenter}px`
 		});
-		gsap.set('.transition-panel', { backgroundColor: panelColor });
+		// Arm the panel transparent, NOT panelColor — see the CSS note: a
+		// same-class bug to .darken-overlay's. transform: translateY(-100%)
+		// hides the panel visually, but iOS Safari's toolbar/safe-area
+		// sampler reads a fixed element's background-color independent of
+		// where transform has moved it to, so an opaque panel sitting
+		// off-screen still painted the safe area panelColor (white, by
+		// default) for the ~0.45s between arming and the slide-in actually
+		// starting. The real colour is snapped on in the slide-in tween's
+		// onStart below, once the panel is genuinely about to be visible.
+		gsap.set('.transition-panel', { backgroundColor: 'transparent' });
 		// Arm the darken layer at zero alpha (kept transparent while idle — see
 		// the CSS note on why alpha, not opacity, carries the darkness).
 		gsap.set('.darken-overlay', { backgroundColor: 'rgba(0,0,0,0)' });
@@ -173,7 +182,14 @@
 
 			tl.to(
 				'.transition-panel',
-				{ y: '0%', duration: panelDuration, ease: 'panelSilk' },
+				{
+					y: '0%',
+					duration: panelDuration,
+					ease: 'panelSilk',
+					// Snap to the real colour right as the slide-in starts, not a
+					// moment before — see the arming comment above.
+					onStart: () => gsap.set('.transition-panel', { backgroundColor: panelColor })
+				},
 				outDuration * panelDelayRatio
 			);
 		});
@@ -181,16 +197,21 @@
 
 	afterNavigate(() => {
 		// Unconditional safety net, ahead of the needsEntryAnim gate below:
-		// .darken-overlay only stays safe for Safari's toolbar-tinting sampler
-		// (see the CSS note) while its background-color is 'transparent', and
-		// that only gets restored ~1.2s after a navigation settles (the fade-in
-		// tween's onComplete, further down). Navigate again inside that window
-		// — a second link tapped before the first page has finished fading in —
-		// and needsEntryAnim gets consumed by the FIRST afterNavigate while the
-		// SECOND onNavigate has already re-armed the overlay to black; nothing
-		// then guarantees its own reset ever runs. Force it back to transparent
-		// on every settled navigation, independent of which one armed it.
-		if (browser) gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
+		// .darken-overlay and .transition-panel only stay safe for Safari's
+		// toolbar/safe-area sampler (see the CSS notes) while their
+		// background-color is 'transparent', and that only gets restored
+		// ~1.2s after a navigation settles (the fade-in tween's onComplete,
+		// further down). Navigate again inside that window — a second link
+		// tapped before the first page has finished fading in — and
+		// needsEntryAnim gets consumed by the FIRST afterNavigate while the
+		// SECOND onNavigate has already re-armed both layers to an opaque
+		// colour; nothing else then guarantees their own reset ever runs.
+		// Force both back to transparent on every settled navigation,
+		// independent of which one armed them.
+		if (browser) {
+			gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
+			gsap.set('.transition-panel', { backgroundColor: 'transparent' });
+		}
 
 		if (!needsEntryAnim) return;
 		needsEntryAnim = false;
@@ -288,7 +309,15 @@
 	   LARGE viewport height (100lvh) so the panel always clears the collapsed
 	   mobile toolbar height — otherwise a white band pins to the top when the
 	   URL bar retracts. The transition also clearProps:'transform' on reset
-	   so no stale px translate is left behind. */
+	   so no stale px translate is left behind.
+
+	   Transparent while idle, same reasoning as .darken-overlay above: this
+	   is ALSO a viewport-edge `position: fixed` element, and Safari's
+	   toolbar/safe-area sampler reads its background-color independently of
+	   `transform` — an opaque panel sitting off-screen (translateY(-100%))
+	   still painted the safe area panelColor. The real colour is set by the
+	   script only once the slide-in is actually starting (see onStart
+	   above), and cleared back to transparent on every reset. */
 	.transition-panel {
 		position: fixed;
 		top: 0;
@@ -296,7 +325,7 @@
 		right: 0;
 		height: 100vh;
 		height: 100lvh;
-		background: white;
+		background: transparent;
 		transform: translateY(-100%);
 		z-index: 1000;
 		pointer-events: none;
