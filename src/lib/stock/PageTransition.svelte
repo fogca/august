@@ -2,7 +2,7 @@
   PageTransition.svelte
   ─────────────────────────────────────────────────────────────
   SvelteKit 用の汎用ページ遷移ラッパー。
-  - 旧ページ: scale down + darken overlay + 白パネル slide up
+  - 旧ページ: scale down + darken overlay + 白パネル slide down (from top)
   - 新ページ: 白パネル上にフェードイン
   - Awwwards 系の silky ease を採用 (CustomEase 'panelSilk')
 
@@ -129,8 +129,9 @@
 			transformOrigin: `50% ${vhCenter}px`
 		});
 		gsap.set('.transition-panel', { backgroundColor: panelColor });
-		// Arm the darken layer (kept transparent while idle — see the CSS note)
-		gsap.set('.darken-overlay', { backgroundColor: 'black' });
+		// Arm the darken layer at zero alpha (kept transparent while idle — see
+		// the CSS note on why alpha, not opacity, carries the darkness).
+		gsap.set('.darken-overlay', { backgroundColor: 'rgba(0,0,0,0)' });
 
 		return new Promise<void>((resolve) => {
 			const tl = gsap.timeline({
@@ -163,7 +164,7 @@
 			tl.to(
 				'.darken-overlay',
 				{
-					opacity: darkenOpacity,
+					backgroundColor: `rgba(0,0,0,${darkenOpacity})`,
 					duration: outDuration * darkenDurationRatio,
 					ease: 'power2.inOut'
 				},
@@ -198,11 +199,11 @@
 		if (activeSkipFadeIn) {
 			// Hand off to a custom intro/loader on the new page.
 			gsap.set('.page-wrapper', { clearProps: 'all' });
-			// Hand the hidden state back to CSS (translateY(100%)) instead of baking
+			// Hand the hidden state back to CSS (translateY(-100%)) instead of baking
 			// a px transform — otherwise the fixed white panel leaves a strip pinned
-			// at the bottom on mobile when the URL bar retracts and the viewport grows.
+			// at the top on mobile when the URL bar retracts and the viewport grows.
 			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
-			gsap.set('.darken-overlay', { opacity: 0, backgroundColor: 'transparent' });
+			gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
 			activeSkipFadeIn = false;
 			onComplete?.();
 			return;
@@ -218,11 +219,11 @@
 			},
 			onComplete: () => {
 				gsap.set('.page-wrapper', { clearProps: 'all' });
-				// Hand the hidden state back to CSS (translateY(100%)) instead of baking
+				// Hand the hidden state back to CSS (translateY(-100%)) instead of baking
 			// a px transform — otherwise the fixed white panel leaves a strip pinned
-			// at the bottom on mobile when the URL bar retracts and the viewport grows.
+			// at the top on mobile when the URL bar retracts and the viewport grows.
 			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
-				gsap.set('.darken-overlay', { opacity: 0, backgroundColor: 'transparent' });
+				gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
 				onComplete?.();
 			}
 		});
@@ -266,22 +267,28 @@
 
 	/* Transparent while idle on purpose: iOS Safari samples the background-color
 	   of viewport-edge `position: fixed` elements to tint its toolbar, and it
-	   does so even when the element is fully transparent via opacity. The black
-	   is switched on by the timeline (gsap.set below) and cleared on reset. */
+	   does so even when the element is fully transparent via opacity — so the
+	   darkening is driven entirely through background-color's own alpha
+	   (rgba, animated by GSAP below), never through the `opacity` property.
+	   An earlier version armed this to a flat `background-color: black` and
+	   animated `opacity` on top of it; the color itself stayed opaque black
+	   for the whole transition, which Safari read straight through the
+	   opacity, tinting the toolbar/safe-areas solid black. Keeping the alpha
+	   IN the color sidesteps that. */
 	.darken-overlay {
 		position: fixed;
 		inset: 0;
 		background: transparent;
-		opacity: 0;
 		z-index: 998;
 		pointer-events: none;
-		will-change: opacity;
+		will-change: background-color;
 	}
 
-	/* Hidden via translateY(100%). Use the LARGE viewport height (100lvh) so the
-	   panel always clears the collapsed mobile toolbar height — otherwise a white
-	   band pins to the bottom when the URL bar retracts. The transition also
-	   clearProps:'transform' on reset so no stale px translate is left behind. */
+	/* Hidden via translateY(-100%) — slides down from above on entry. Use the
+	   LARGE viewport height (100lvh) so the panel always clears the collapsed
+	   mobile toolbar height — otherwise a white band pins to the top when the
+	   URL bar retracts. The transition also clearProps:'transform' on reset
+	   so no stale px translate is left behind. */
 	.transition-panel {
 		position: fixed;
 		top: 0;
@@ -290,7 +297,7 @@
 		height: 100vh;
 		height: 100lvh;
 		background: white;
-		transform: translateY(100%);
+		transform: translateY(-100%);
 		z-index: 1000;
 		pointer-events: none;
 		will-change: transform;
