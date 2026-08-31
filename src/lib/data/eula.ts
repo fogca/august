@@ -55,7 +55,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 				clauses: [
 					'"Licensor", "we", "us", or "August" means Mirai Service Co., Ltd., a company registered in Japan and trading as August Type Foundry.',
 					'"Licensee" or "you" means the individual named on the Sales Receipt.',
-					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt, supplied as OpenType (.otf) or TrueType (.ttf) files for installation on desktop devices — currently Atom, across its full range of weights.',
+					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt, supplied as OpenType (.otf) or TrueType (.ttf) files for installation on desktop devices — currently Norma, across its full range of weights.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording the licence tier, price paid, and date — it is the master record of what you are licensed for.'
 				]
 			},
@@ -146,7 +146,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 				clauses: [
 					'"Licensor", "we", "us", or "August" means Mirai Service Co., Ltd., a company registered in Japan and trading as August Type Foundry.',
 					'"Licensee" or "you" means the organisation named on the Sales Receipt.',
-					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt — OpenType, TrueType, and WOFF2 files as applicable to desktop, web, and app use — currently Atom, across its full range of weights.',
+					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt — OpenType, TrueType, and WOFF2 files as applicable to desktop, web, and app use — currently Norma, across its full range of weights.',
 					'"Organisation Size" means the total number of people at Licensee — full-time and part-time — authorised to use the Fonts under this licence, including staff, contractors, and freelancers working on Licensee\'s behalf.',
 					'"Licensed Tier" means the tier named on your Sales Receipt (Team, Studio, Agency, Brand, or Firm) and its associated Organisation Size ceiling.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording your Licensed Tier, price paid, and date — it is the master record of what you are licensed for.'
@@ -247,7 +247,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 					'"Licensor", "we", "us", or "August" means Mirai Service Co., Ltd., a company registered in Japan and trading as August Type Foundry.',
 					'"Purchaser" means the person or company named on the Sales Receipt as having bought this licence — often a design studio or agency buying on behalf of a client.',
 					'"Brand" means the single named business, brand identity, or client project stated on the Sales Receipt, which this licence is scoped to.',
-					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt — currently Atom, across its full range of weights.',
+					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt — currently Norma, across its full range of weights.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording the named Brand, price paid, and date — it is the master record of what this licence covers.'
 				]
 			},

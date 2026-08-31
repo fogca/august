@@ -5,7 +5,7 @@
 
 	// Top page v2 — red / black / white, type-first.
 	// Scheme:
-	//   Hero (black, video specimen) — Atom wght-axis sweep + Discover — normal scroll
+	//   Hero (black, video specimen) — Norma wght-axis sweep + Discover — normal scroll
 	//   Alfred (ochre) / Asta (blue) — announced, unreleased siblings
 	//   Buy (red) / Custom (black) / Office (white) : v1 cover reveals (unchanged)
 
@@ -21,22 +21,22 @@
 </script>
 
 <svelte:head>
-	<title>August Type Foundry — Atom</title>
+	<title>August Type Foundry — Norma</title>
 	<meta
 		name="description"
-		content="August Type Foundry — an independent type foundry from Tokyo. Atom, a 20-weight neo-humanist variable typeface."
+		content="August Type Foundry — an independent type foundry from Tokyo. Norma, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
 <main class="Home">
-	<!-- Hero (black) — Atom variable-weight video specimen -->
+	<!-- Hero (black) — Norma variable-weight video specimen -->
 	<section class="Hero">
 		<p class="Hero__headline">Debut typeface</p>
 		<p class="Hero__name">
-			<span class="Title__face">Atom</span> <span class="Title__foundry">August</span>
+			<span class="Title__face">Norma</span> <span class="Title__foundry">August</span>
 		</p>
 		<div class="Hero__specimen">
-			<!-- Atom's wght axis, 1 (Hair) -> 950 (Ultra), swept across a row of
+			<!-- Norma's wght axis, 1 (Hair) -> 950 (Ultra), swept across a row of
 			     "a"s (STN services_type_VF_animation source, re-encoded with its
 			     90deg display-matrix rotation baked into the pixels — browsers are
 			     inconsistent about honouring rotation side-data on <video>). Shown
@@ -49,22 +49,22 @@
 				loop
 				muted
 				playsinline
-				aria-label="Atom variable weight axis, sweeping from Hair to Ultra"
+				aria-label="Norma variable weight axis, sweeping from Hair to Ultra"
 			></video>
 		</div>
 		<div class="Hero__bottom">
 			<div class="Hero__meta">
 				<div class="Hero__meta-left">
-					<p class="Hero__meta-name">Atom August</p>
+					<p class="Hero__meta-name">Norma August</p>
 					<p class="Hero__meta-class">Neo Humanist Sans</p>
 				</div>
 				<span class="Hero__meta-version">v1.00000</span>
 			</div>
-			<a class="Hero__cta" href="/fonts/atom"><span class="CtaLabel">Discover</span></a>
+			<a class="Hero__cta" href="/fonts/norma"><span class="CtaLabel">Discover</span></a>
 		</div>
 	</section>
 
-	<!-- Alfred (ochre) — title in Atom at the Hero's name position, logotype
+	<!-- Alfred (ochre) — title in Norma at the Hero's name position, logotype
 	     large and centred in the specimen slot below it. -->
 	<section class="Alfred">
 		<p class="Alfred__name">
@@ -153,7 +153,7 @@
 			<div class="Asta__meta">
 				<div class="Asta__meta-left">
 					<p class="Asta__meta-name">Asta August</p>
-					<p class="Asta__meta-class">Sibling to Atom</p>
+					<p class="Asta__meta-class">Sibling to Norma</p>
 				</div>
 				<span class="Asta__meta-version">In development</span>
 			</div>
@@ -234,7 +234,7 @@
 		   rather than hardcoding a weight per component. */
 		--display-fw: 350;
 		/* Section titles read as two words at two weights: the typeface name
-		   carries, the foundry name recedes. Atom is variable (wght 1–950),
+		   carries, the foundry name recedes. Norma is variable (wght 1–950),
 		   so these are real interpolated weights, not synthetic. */
 		--title-fw-face: 400;
 		--title-fw-foundry: 200;
@@ -257,7 +257,7 @@
 		}
 	}
 
-	/* --- Hero (black) — Atom variable-weight video specimen --- */
+	/* --- Hero (black) — Norma variable-weight video specimen --- */
 	.Hero {
 		display: flex;
 		flex-direction: column;
@@ -280,7 +280,7 @@
 
 	/* Typeface name leads, set at h2 scale in sentence case. */
 	.Hero__name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--title-fs);
 		line-height: var(--lh-h2);
 		font-weight: var(--display-fw);
@@ -297,7 +297,7 @@
 	}
 
 	.Hero__headline {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(15px, 1.6vw, 21px);
 		line-height: 1.4;
 		font-weight: 400;
@@ -344,7 +344,7 @@
 		align-items: flex-end;
 		justify-content: space-between;
 		gap: 20px;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 	}
 
 	.Hero__meta-left {
@@ -391,7 +391,7 @@
 		height: 50px;
 		background: #ffffff;
 		color: #000000;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-transform: uppercase;
@@ -434,9 +434,9 @@
 		padding-inline: var(--gutter);
 	}
 
-	/* Same slot and scale as .Hero__name, set in Atom. */
+	/* Same slot and scale as .Hero__name, set in Norma. */
 	.Alfred__name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--title-fs);
 		line-height: var(--lh-h2);
 		font-weight: var(--display-fw);
@@ -471,7 +471,7 @@
 		align-items: flex-end;
 		justify-content: space-between;
 		gap: 20px;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 	}
 
 	.Alfred__meta-left {
@@ -507,7 +507,7 @@
 		height: 50px;
 		background: #000000;
 		color: #ffffff;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-transform: uppercase;
@@ -537,9 +537,9 @@
 		color: #ffffff;
 	}
 
-	/* Same slot and scale as .Hero__name / .Alfred__name, set in Atom. */
+	/* Same slot and scale as .Hero__name / .Alfred__name, set in Norma. */
 	.Asta__name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--title-fs);
 		line-height: var(--lh-h2);
 		font-weight: var(--display-fw);
@@ -574,7 +574,7 @@
 		align-items: flex-end;
 		justify-content: space-between;
 		gap: 20px;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 	}
 
 	.Asta__meta-left {
@@ -610,7 +610,7 @@
 		height: 50px;
 		background: #ffffff;
 		color: #cdd6e6;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-transform: uppercase;
@@ -645,7 +645,7 @@
 	}
 
 	.Buy__eyebrow {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -655,7 +655,7 @@
 	}
 
 	.Buy__heading {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--display-fs);
 		line-height: 1.02;
 		text-transform: uppercase;
@@ -664,7 +664,7 @@
 	}
 
 	.Buy__body {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 14px;
 		font-variation-settings: 'wght' 360;
 		line-height: 1.7;
@@ -691,7 +691,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
@@ -738,7 +738,7 @@
 	}
 
 	.Custom__eyebrow {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -749,7 +749,7 @@
 
 	/* Matches .Buy__heading — the section titles share one display size. */
 	.Custom__heading {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--display-fs);
 		line-height: 1.02;
 		text-transform: uppercase;
@@ -765,7 +765,7 @@
 	}
 
 	.Custom__body {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 14px;
 		font-variation-settings: 'wght' 360;
 		line-height: 1.7;
@@ -784,7 +784,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
@@ -840,7 +840,7 @@
 	}
 
 	.Office__label {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -852,7 +852,7 @@
 	/* Matches .Buy__heading — this statement is the section's title, so it gets
 	   the full column (the 80% cap is for body copy) and wraps in fewer lines. */
 	.Office__text {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--display-fs);
 		font-variation-settings: 'wght' 360;
 		line-height: 1.02;
@@ -872,7 +872,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 6px;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 13px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;

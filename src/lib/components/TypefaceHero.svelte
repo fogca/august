@@ -61,7 +61,7 @@
 			<span
 				class="TypefaceHero__name"
 				class:is-large={tf.hero.large}
-				style="font-family: '{tf.fontFamily}', 'Atom', sans-serif;"
+				style="font-family: '{tf.fontFamily}', 'Norma', sans-serif;"
 			>{tf.name}</span>
 		{/if}
 	</div>
@@ -112,7 +112,7 @@
 	}
 
 	.TypefaceHero__placeholder-name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(80px, 22vw, 360px);
 		line-height: 1;
 		letter-spacing: 0;
@@ -132,7 +132,7 @@
 	}
 
 	.TypefaceHero__name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(40px, 9vw, 120px);
 		line-height: 1.2;
 		letter-spacing: 0;
@@ -144,7 +144,7 @@
 		font-size: clamp(80px, 22vw, 200px);
 	}
 
-	/* Coming-soon variant (e.g. Atom): intro + name + statement, no meta/Discover */
+	/* Coming-soon variant (e.g. Norma): intro + name + statement, no meta/Discover */
 	.TypefaceHero__soon {
 		display: flex;
 		flex-direction: column;
@@ -156,7 +156,7 @@
 	}
 
 	.TypefaceHero__soon-intro {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -165,14 +165,14 @@
 	}
 
 	.TypefaceHero__soon-name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(22px, 6vw, 36px);
 		line-height: 1.2;
 		letter-spacing: 0;
 	}
 
 	.TypefaceHero__soon-statement {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 13px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -206,7 +206,7 @@
 		height: 50px;
 		background: #000;
 		color: #fff;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		line-height: 1;

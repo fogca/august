@@ -225,7 +225,7 @@
 	}
 
 	.FontDetail__hero-placeholder-name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(80px, 22vw, 360px);
 		line-height: 1;
 		letter-spacing: 0;
@@ -243,7 +243,7 @@
 		padding: 56px var(--gutter) 0;
 		max-width: 168px;
 		text-align: right;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 9px;
 		line-height: 1.45;
 		letter-spacing: 0;
@@ -274,7 +274,7 @@
 	}
 
 	.FontDetail__hero-name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(40px, 9vw, 120px);
 		line-height: 1.2;
 		letter-spacing: 0;
@@ -315,7 +315,7 @@
 	}
 
 	.FontDetail__spec-title {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 14px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -333,7 +333,7 @@
 	}
 
 	.FontDetail__spec-item dt {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 14px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -341,7 +341,7 @@
 	}
 
 	.FontDetail__spec-item dd {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 14px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -357,7 +357,7 @@
 	}
 
 	.FontDetail__badge {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 10px;
 		letter-spacing: 0;
 		color: var(--color-text-mute);
@@ -368,7 +368,7 @@
 
 	/* The name is the specimen here: 120px on phones, 320px from tablet up. */
 	.FontDetail__name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 120px;
 		font-weight: var(--fw-base);
 		line-height: 1;
@@ -383,7 +383,7 @@
 	}
 
 	.FontDetail__tagline {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 18px;
 		line-height: 1.4;
 		letter-spacing: 0;
@@ -423,7 +423,7 @@
 	}
 
 	.FontDetail .FontDetail__description-da {
-		font-family: var(--type-font, 'Atom'), sans-serif !important;
+		font-family: var(--type-font, 'Norma'), sans-serif !important;
 		font-weight: 300;
 		font-size: calc(var(--fs-p) - 1px);
 		line-height: 1.7;
@@ -443,7 +443,7 @@
 	}
 
 	.FontBuy__eyebrow {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -453,7 +453,7 @@
 	}
 
 	.FontBuy__heading {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(32px, 6vw, 56px);
 		line-height: 1.05;
 		letter-spacing: 0;
@@ -461,7 +461,7 @@
 	}
 
 	.FontBuy__price {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		letter-spacing: 0;
 		margin: 0 0 24px;
@@ -477,7 +477,7 @@
 	}
 
 	.FontBuy__licenses li {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 12px;
 		letter-spacing: 0;
 		padding: 6px 14px;
@@ -488,7 +488,7 @@
 
 	.FontBuy__cta {
 		display: inline-block;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
@@ -504,7 +504,7 @@
 	}
 
 	.FontBuy__note {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 12px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -518,8 +518,8 @@
 
 	/* All page content (not header/footer) uses the typeface's own font.
 	   `--type-font` is set on .FontDetail; !important overrides the components'
-	   hardcoded 'Atom'. */
+	   hardcoded 'Norma'. */
 	.FontDetail :global(*) {
-		font-family: var(--type-font, 'Atom'), 'Atom', sans-serif !important;
+		font-family: var(--type-font, 'Norma'), 'Norma', sans-serif !important;
 	}
 </style>

@@ -25,21 +25,25 @@
 			</p>
 		</section>
 
-		<!-- 2 — Atom (aligned with the Atom page) -->
+		<!-- 2 — Norma (aligned with the Norma page) -->
 		<!-- TODO: the naming rationale used to explain the old name ("Asger",
 		     built on Rudolf Steiner's Goethean/anthroposophy reading of nature)
-		     has been removed rather than rewritten — draft the "why Atom" story
-		     together before shipping this copy. Same edit as typefaces.ts. -->
+		     has been removed rather than rewritten — draft the "why Norma" story
+		     together before shipping this copy. Same edit as typefaces.ts.
+		     Possible angle worth discussing: Norma is a real constellation (a
+		     carpenter's square/level, added by Lacaille) — a drafting/
+		     measuring tool, which has an obvious resonance with typography
+		     and precision. Not written up yet — just a thread to pull on. -->
 		<section class="block">
-			<h2>Atom — the formative forces of the word, made visible</h2>
+			<h2>Norma — the formative forces of the word, made visible</h2>
 			<p class="en" lang="en">
-				Our first release, Atom, is a twenty-weight neo-humanist sans-serif variable font. The
+				Our first release, Norma, is a twenty-weight neo-humanist sans-serif variable font. The
 				letters are made to feel grown rather than constructed — organic in their curves, human in
 				their proportion. Its humanist lineage runs quietly beneath — Johnston's 1916 Underground
 				alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.
 			</p>
 			<p class="da" lang="da">
-				Vores første udgivelse, Atom, er en neo-humanistisk grotesk i tyve vægte, tegnet som
+				Vores første udgivelse, Norma, er en neo-humanistisk grotesk i tyve vægte, tegnet som
 				variabel skrift. Bogstaverne skal føles groede snarere end konstruerede — organiske i
 				kurverne, menneskelige i proportionen. Den humanistiske slægt løber stille nedenunder —
 				Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig
@@ -81,7 +85,7 @@
 	}
 
 	/* Wider column and bigger type throughout — with only the foundry and
-	   Atom statements left on the page, the previous 640px/12px text setting
+	   Norma statements left on the page, the previous 640px/12px text setting
 	   (tuned for five stacked sections) reads sparse. */
 	.About__inner {
 		max-width: 760px;
@@ -121,7 +125,7 @@
 		display: none;
 	}
 
-	/* Danish — the second language runs in Atom like the English, one step
+	/* Danish — the second language runs in Norma like the English, one step
 	   lighter and a touch smaller so the pair reads as primary + secondary
 	   rather than as two competing texts. (The Japanese it replaced needed a
 	   CJK stack; Danish does not.) */

@@ -11,7 +11,7 @@ export type TypefaceStatus = 'available' | 'in-development';
 export interface Typeface {
 	slug: string;
 	name: string;
-	/** Display order (ascending): 1 = Atom, 2 = gQ (Mokuseki Sans), 3 = Asta, 4 = Alfred */
+	/** Display order (ascending): 1 = Norma, 2 = gQ (Mokuseki Sans), 3 = Asta, 4 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
@@ -53,7 +53,7 @@ export interface Typeface {
 	/** Renders the specimen at this wght instead of the family's own default —
 	 *  for typefaces with no drawings of their own yet (Alfred, Asta), so their
 	 *  placeholder card at least reads as a different cut of the borrowed font
-	 *  rather than an identical copy of Atom's own card. */
+	 *  rather than an identical copy of Norma's own card. */
 	specimenWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
@@ -99,28 +99,28 @@ export interface Typeface {
 
 export const TYPEFACES: Typeface[] = [
 	{
-		slug: 'atom',
-		name: 'Atom',
+		slug: 'norma',
+		name: 'Norma',
 		order: 1,
 		status: 'available',
-		fontFamily: 'Atom',
+		fontFamily: 'Norma',
 		tagline: 'The formative forces of the word, made visible.',
 		// TODO: the naming rationale below used to explain the old name
 		// ("Asger", built on Rudolf Steiner's Goethean/anthroposophy reading of
 		// nature) — that sentence has been removed rather than rewritten, since
 		// it no longer applies and a new one shouldn't be invented unilaterally.
-		// Draft the "why Atom" story together before shipping this copy.
+		// Draft the "why Norma" story together before shipping this copy.
 		description:
-			"Atom is a 20-weight neo-humanist sans-serif variable font. " +
+			"Norma is a 20-weight neo-humanist sans-serif variable font. " +
 			"Humanist-geometric — the mechanical and the organic coexist in every glyph, held together by formative force. " +
 			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
 		descriptionDa:
-			'Atom er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
+			'Norma er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
 			+ 'Humanistisk-geometrisk — det mekaniske og det organiske findes side om side i hvert tegn, holdt sammen af formende kraft. '
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		// Measured, not estimated: glyph count is the encoded cmap of the shipped
-		// Atom-VF75.woff2. The language count is Hyperglot 0.7.3, base support
+		// Norma-VF75.woff2. The language count is Hyperglot 0.7.3, base support
 		// restricted to --validity verified — i.e. only languages whose charset
 		// data Hyperglot has checked. Its default (draft data included) reports
 		// 246, which counts a long tail of unverified minority orthographies and
@@ -222,7 +222,7 @@ export const TYPEFACES: Typeface[] = [
 			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos August Type Foundry. '
 			+ 'Detaljer om vægte og akser offentliggøres, efterhånden som designet modnes. Debut i 2026.',
 		classification: 'Neo Humanist Sans · 12 weights',
-		// Provisional weights — same 12-stop axis as Atom until spec is finalised
+		// Provisional weights — same 12-stop axis as Norma until spec is finalised
 		weights: WEIGHTS,
 		// One long German word per weight row (20) — aesthetic / philosophical vocabulary
 		defaultTexts: [
@@ -269,7 +269,7 @@ export const TYPEFACES: Typeface[] = [
 		}
 	},
 	{
-		// Sibling face to Atom — registered so the slug and data shape exist.
+		// Sibling face to Norma — registered so the slug and data shape exist.
 		// Everything below the name is provisional: no drawings, no font files,
 		// no agreed classification. Re-shown 2026-08-29 at the user's request
 		// (temporary) even though there's nothing but a placeholder specimen.
@@ -278,24 +278,24 @@ export const TYPEFACES: Typeface[] = [
 		order: 3,
 		status: 'in-development',
 		hidden: false,
-		// No font files yet — render as Atom for preview purposes
-		fontFamily: 'Atom',
-		tagline: 'Sibling to Atom.',
+		// No font files yet — render as Norma for preview purposes
+		fontFamily: 'Norma',
+		tagline: 'Sibling to Norma.',
 		description:
-			'Asta is a sibling to Atom, in development at August Type Foundry. ' +
+			'Asta is a sibling to Norma, in development at August Type Foundry. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionDa:
-			'Asta er en søsterskrift til Atom, under udvikling hos August Type Foundry. '
+			'Asta er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development',
-		// Provisional weights — same axis as Atom until the spec is finalised
+		// Provisional weights — same axis as Norma until the spec is finalised
 		weights: WEIGHTS,
 		defaultTexts: ['Asta'],
 		// Placeholder catalogue specimen — no drawings exist yet, so this is set
-		// at a heavier cut than Atom's own card (wght 700, vs. the default
+		// at a heavier cut than Norma's own card (wght 700, vs. the default
 		// ~400) purely so the two placeholder cards don't look like the same
 		// font twice. Replace both once Asta has its own metal.
-		specimen: ['VOL. III', 'ASTA', 'Sibling to Atom'],
+		specimen: ['VOL. III', 'ASTA', 'Sibling to Norma'],
 		specimenWeight: 700,
 		theme: { bg: '#d59514', fg: '#000000' },
 		catalogBg: '#F3E2C0',
@@ -305,7 +305,7 @@ export const TYPEFACES: Typeface[] = [
 			subtitle: '(Coming Soon)',
 			debut: 'Coming Soon',
 			comingSoon: true,
-			intro: 'A sibling to Atom.',
+			intro: 'A sibling to Norma.',
 			statement: 'Coming soon.'
 		}
 	},
@@ -319,8 +319,8 @@ export const TYPEFACES: Typeface[] = [
 		order: 4,
 		status: 'in-development',
 		hidden: false,
-		// No font files yet — render as Atom for preview purposes
-		fontFamily: 'Atom',
+		// No font files yet — render as Norma for preview purposes
+		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
 			'Alfred is a Neo Classic typeface in development at August Type Foundry. ' +
@@ -329,11 +329,11 @@ export const TYPEFACES: Typeface[] = [
 			'Alfred er en Neo Classic-skrift under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development',
-		// Provisional weights — same axis as Atom until the spec is finalised
+		// Provisional weights — same axis as Norma until the spec is finalised
 		weights: WEIGHTS,
 		defaultTexts: ['Alfred'],
 		// Placeholder catalogue specimen — set at a lighter cut (wght 250)
-		// than Atom's own card or Asta's placeholder (700), so the three
+		// than Norma's own card or Asta's placeholder (700), so the three
 		// don't read as the same font tripled. Replace once Alfred has its
 		// own metal.
 		specimen: ['VOL. II', 'ALFRED', 'Neo Classic'],

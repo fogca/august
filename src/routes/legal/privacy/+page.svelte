@@ -15,7 +15,7 @@
 			This Privacy Policy describes how Mirai Service Co., Ltd., trading as August Type Foundry
 			("August Type Foundry," "we," "us," or "our"), handles personal information collected through
 			august.tf and through the purchase, delivery, and support of our font licences — currently
-			Atom, in 20 weights, and any other typefaces we release under the August Type Foundry name.
+			Norma, in 20 weights, and any other typefaces we release under the August Type Foundry name.
 			It applies whenever you browse the site, buy a Desktop, Web, App, or Books licence, or write to
 			us about an existing licence. It does not apply to the websites, apps, or publications you build
 			using our fonts — those are covered by your own privacy practices, not ours.

@@ -5,13 +5,13 @@ outside the repo (Projects/brands/August/Steiner/00_master/Export/).
 
 | File | Used by | Loaded from |
 |------|---------|-------------|
-| `Atom-VF75.woff2` | Site-wide primary typeface (variable, wght 1–950) — renamed from `Steiner-VF75.woff2` 2026-08-30 | `src/app.html` @font-face |
+| `Norma-VF75.woff2` | Site-wide primary typeface (variable, wght 1–950) — renamed from `Steiner-VF75.woff2` (2026-08-30), then `Atom-VF75.woff2` (2026-08-31) | `src/app.html` @font-face |
 | `MokusekiSans08-Regular.woff2` | Home-page wordmark, general use (v08) | `src/app.html` @font-face |
 | `MokusekiSans01-Regular.woff2` | ANDERSEN logotype on the top-page KV (v01, first cut) | `src/app.html` @font-face |
 | `otref-inter.woff2` | /opentype feature-reference demos | `OpenTypeReference.svelte` |
 | `otref-garamond.woff2` | /opentype feature-reference demos | `OpenTypeReference.svelte` |
 
-When shipping a new Atom build: add the new `Atom-VF##.woff2` (woff2
+When shipping a new Norma build: add the new `Norma-VF##.woff2` (woff2
 only — never ship the .ttf, it's a full desktop-installable font), update the
 `@font-face` src (and `?v=` cache-buster) in `src/app.html`, and DELETE the old
 file — superseded builds must not remain publicly downloadable.

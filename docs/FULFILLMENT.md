@@ -29,13 +29,13 @@ Educational = yes の場合: 購入者に .edu / .ac.jp メールまたは学生
 
 宛先: Customer のメールアドレス。添付/リンク: フォントパッケージ zip。
 
-> Subject: Your Atom licence — August Type Foundry
+> Subject: Your Norma licence — August Type Foundry
 >
 > Hello,
 >
-> Thank you for licensing Atom. Your files are attached / linked below:
+> Thank you for licensing Norma. Your files are attached / linked below:
 >
-> - Atom Complete (20 weights, variable) — download: [LINK]
+> - Norma Complete (20 weights, variable) — download: [LINK]
 > - Licence summary (below) — your Stripe receipt is your proof of purchase
 >
 > **Licence certificate**
@@ -56,9 +56,9 @@ Educational = yes の場合: 購入者に .edu / .ac.jp メールまたは学生
 納品 zip の中身（案・確定したら更新）:
 
 ```
-Atom-Complete/
-  fonts/desktop/  Atom-VF.ttf（+ static instances があれば）
-  fonts/web/      Atom-VF.woff2
+Norma-Complete/
+  fonts/desktop/  Norma-VF.ttf（+ static instances があれば）
+  fonts/web/      Norma-VF.woff2
   EULA.pdf        （/legal/eula の PDF 書き出し）
   README.txt      （インストール手順・ライセンス要約）
 ```

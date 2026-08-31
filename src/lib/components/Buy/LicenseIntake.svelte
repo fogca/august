@@ -164,7 +164,7 @@
 	}
 
 	.LicenseIntake__label {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
@@ -181,7 +181,7 @@
 		background: var(--color-bg);
 		border: 1px solid var(--color-line);
 		border-radius: 0;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 13px;
 		color: var(--color-text);
 		transition: border-color 120ms;
@@ -204,7 +204,7 @@
 	}
 
 	.LicenseIntake__resolved {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 13px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
@@ -214,7 +214,7 @@
 	/* Same size + opacity as .LicenseIntake__resolved above it (full colour,
 	   not muted) — only the weight differs. */
 	.LicenseIntake__scope {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 13px;
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;
@@ -231,7 +231,7 @@
 	   yet, just unfinished. The red asterisks above already carry the
 	   required-ness signal; this just explains what unlocks next. */
 	.LicenseIntake__hint {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 12px;
 		color: var(--color-text-mute);
 		margin: 4px 0 0;
@@ -246,7 +246,7 @@
 		padding: 10px 24px;
 		background: var(--color-text);
 		color: var(--color-bg);
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 12px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
@@ -270,7 +270,7 @@
 	}
 
 	.LicenseIntake__alt {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		line-height: 1.5;
 		color: var(--color-text-mute);

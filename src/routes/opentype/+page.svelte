@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Internal OpenType reference page — an at-a-glance map of essential vs
-	// recommended OpenType features, with live demos. Kept out of the Atom
+	// recommended OpenType features, with live demos. Kept out of the Norma
 	// product page on purpose (the demos use Inter / EB Garamond). noindex.
 	import OpenTypeReference from '$lib/components/fonts/OpenTypeReference.svelte';
 </script>
@@ -27,7 +27,7 @@
 	<OpenTypeReference />
 
 	<nav class="OTPage__foot">
-		<a href="/fonts/atom">← Atom</a>
+		<a href="/fonts/norma">← Norma</a>
 	</nav>
 </main>
 
@@ -49,7 +49,7 @@
 	}
 
 	.OTPage__eyebrow {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -59,7 +59,7 @@
 	}
 
 	.OTPage__title {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(32px, 6vw, 48px);
 		font-weight: var(--fw-base);
 		line-height: 1.05;
@@ -68,7 +68,7 @@
 	}
 
 	.OTPage__lead {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 15px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -79,7 +79,7 @@
 
 	/* Hidden with its markup — restore when the Danish text lands.
 	.OTPage__lead-ja {
-			font-family: 'Atom', sans-serif;
+			font-family: 'Norma', sans-serif;
 			font-size: var(--fs-p);
 			line-height: 1.75;
 			letter-spacing: 0;
@@ -94,7 +94,7 @@
 	}
 
 	.OTPage__foot a {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 13px;
 		letter-spacing: 0;
 		color: var(--color-text);

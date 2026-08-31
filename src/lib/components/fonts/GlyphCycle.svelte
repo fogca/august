@@ -44,7 +44,7 @@
 	}
 
 	.GlyphCycle__glyph {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(160px, 34vw, 460px);
 		line-height: 1;
 		letter-spacing: 0;

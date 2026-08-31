@@ -39,7 +39,7 @@
 	}
 
 	.Contact__heading {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(28px, 5vw, 48px);
 		letter-spacing: 0;
 		line-height: 1.1;
@@ -47,14 +47,14 @@
 	}
 
 	.Contact__sub {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 12px;
 		color: var(--color-text-mute);
 		margin-bottom: 24px;
 	}
 
 	.Contact__body {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 14px;
 		font-variation-settings: 'wght' 350;
 		line-height: 1.65;
@@ -62,7 +62,7 @@
 	}
 
 	.Contact__link {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-decoration: underline;

@@ -13,11 +13,11 @@
 	interface Props {
 		fontFamily: string;
 		title?: string;
-		/** Per-font feature list. Defaults to Atom's current + in-progress set. */
+		/** Per-font feature list. Defaults to Norma's current + in-progress set. */
 		features?: Feature[];
 	}
 
-	// Atom — shipping roster (was "Steiner 07" pre-rename).
+	// Norma — shipping roster (was "Steiner 07", then "Atom", pre-rename).
 	// Live OFF → ON demos render against the actual webfont, so what's here
 	// reflects what's actually compiled into the OTF/woff2 right now.
 	// Coming next: onum / tnum / frac / sups / subs / numr / dnom / case,
@@ -129,7 +129,7 @@
 	}
 
 	.OpenType__label {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--fs-h5);
 		color: rgba(255, 255, 255, 0.7);
 		letter-spacing: 0;
@@ -137,7 +137,7 @@
 	}
 
 	.OpenType__hint {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--fs-h6);
 		color: rgba(255, 255, 255, 0.5);
 		margin: 6px 0 0;
@@ -146,7 +146,7 @@
 
 	.OpenType__ref {
 		display: inline-block;
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--fs-h6);
 		color: rgba(255, 255, 255, 0.7);
 		letter-spacing: 0;
@@ -188,7 +188,7 @@
 	}
 
 	.OpenType__name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 12px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0;
@@ -204,7 +204,7 @@
 	}
 
 	.OpenType__description {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: var(--fs-p);
 		line-height: 1.5;
 		color: rgba(255, 255, 255, 0.55);

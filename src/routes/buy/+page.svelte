@@ -190,7 +190,7 @@
 	<title>{pageTitle} — August Type Foundry</title>
 	<meta
 		name="description"
-		content="Purchase {selectedPackage?.label ?? 'Atom'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
+		content="Purchase {selectedPackage?.label ?? 'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
 	/>
 </svelte:head>
 
@@ -354,7 +354,7 @@
 	}
 
 	.BuyPage__heading {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: clamp(32px, 6vw, 64px);
 		letter-spacing: 0;
 		line-height: 1;
@@ -362,7 +362,7 @@
 	}
 
 	.BuyPage__sub {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 12px;
 		color: var(--color-text-mute);
 		letter-spacing: 0;
@@ -374,7 +374,7 @@
 	}
 
 	.BuyStep__eyebrow {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;
@@ -414,7 +414,7 @@
 	}
 
 	.TypefaceCard__name {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 26px;
 		font-weight: var(--fw-strong);
 		line-height: 1.1;
@@ -423,7 +423,7 @@
 	}
 
 	.TypefaceCard__detail {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		opacity: 0.55;
 		color: inherit;
@@ -442,7 +442,7 @@
 	}
 
 	.TypefaceCard__price-gross {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 11px;
 		text-decoration: line-through;
 		opacity: 0.5;
@@ -450,7 +450,7 @@
 	}
 
 	.TypefaceCard__price-final {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-size: 15px;
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;

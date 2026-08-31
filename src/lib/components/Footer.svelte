@@ -46,7 +46,7 @@
 			</a>
 			<p class="Footer__tagline">
 				A type foundry.<br />
-				Atom — released 2026.
+				Norma — released 2026.
 			</p>
 		</section>
 
@@ -99,7 +99,7 @@
 
 <style>
 	.Footer {
-		font-family: 'Atom', sans-serif;
+		font-family: 'Norma', sans-serif;
 		font-weight: var(--fw-ui);
 		/* Same red as the Buy/licence section (base.css :root token) */
 		background: var(--color-signal);
