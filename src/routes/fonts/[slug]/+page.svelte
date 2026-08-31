@@ -252,10 +252,10 @@
 		overflow: hidden;
 	}
 
-	/* SP: square (1:1), not full viewport height — height driven by width. */
+	/* SP: not full viewport height — height driven by width. */
 	@media (max-width: 767.98px) {
 		.FontDetail__hero {
-			height: 100vw;
+			height: 80vw;
 		}
 	}
 
@@ -362,7 +362,7 @@
 
 	/* ── Body ── */
 	.FontDetail__body {
-		padding: 64px var(--padding) 40px;
+		padding: 40px var(--padding) 40px;
 		text-align: left;
 	}
 
