@@ -197,21 +197,29 @@
 
 	afterNavigate(() => {
 		// Unconditional safety net, ahead of the needsEntryAnim gate below:
-		// .darken-overlay and .transition-panel only stay safe for Safari's
-		// toolbar/safe-area sampler (see the CSS notes) while their
-		// background-color is 'transparent', and that only gets restored
-		// ~1.2s after a navigation settles (the fade-in tween's onComplete,
-		// further down). Navigate again inside that window — a second link
-		// tapped before the first page has finished fading in — and
-		// needsEntryAnim gets consumed by the FIRST afterNavigate while the
-		// SECOND onNavigate has already re-armed both layers to an opaque
-		// colour; nothing else then guarantees their own reset ever runs.
-		// Force both back to transparent on every settled navigation,
-		// independent of which one armed them.
-		if (browser) {
-			gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
-			gsap.set('.transition-panel', { backgroundColor: 'transparent' });
-		}
+		// .darken-overlay only stays safe for Safari's toolbar/safe-area
+		// sampler (see the CSS note) while its background-color is
+		// 'transparent', and that only gets restored ~1.2s after a
+		// navigation settles (the fade-in tween's onComplete, further down).
+		// Navigate again inside that window — a second link tapped before
+		// the first page has finished fading in — and needsEntryAnim gets
+		// consumed by the FIRST afterNavigate while the SECOND onNavigate
+		// has already re-armed the overlay to an opaque colour; nothing else
+		// then guarantees its own reset ever runs. Force it back to
+		// transparent on every settled navigation, independent of which one
+		// armed it.
+		//
+		// .transition-panel does NOT belong in this same unconditional
+		// block, unlike .darken-overlay: at the moment afterNavigate fires,
+		// the panel is still sitting at y:0% (opaque, fully covering the
+		// viewport) — the new page fades IN OVER it, only reaching
+		// clearProps'd-transparent once that fade-in's onComplete runs,
+		// below. Resetting it to transparent here would strip its colour
+		// while it's still meant to be visually covering the screen, for a
+		// bare flash of whatever's behind it. The next navigation's own
+		// onNavigate re-arms it to transparent anyway, so there is nothing
+		// for a safety net to do for this element specifically.
+		if (browser) gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
 
 		if (!needsEntryAnim) return;
 		needsEntryAnim = false;
