@@ -222,6 +222,9 @@
 	}
 
 	.OpenType__sample {
+		/* base.css's tag-selector reset targets span directly, which beats
+		   inheriting font-family from .OpenType__samples's inline style. */
+		font-family: inherit;
 		color: rgba(255, 255, 255, 0.4);
 	}
 

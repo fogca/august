@@ -44,26 +44,29 @@
 
 				<!-- Specimen: a museum-exhibition label set in the face itself,
 				     rather than the typeface's own name (see typefaces.ts —
-				     referenced from increments.cc's Vorkurs card). All three lines
-				     share one size and one weight — no headline/caption hierarchy —
-				     so the label reads as a single set piece of type, not a mini-
-				     poster. Text is always black; the card's own colour (catalogBg)
-				     only appears on hover, via --spec-bg below. Where specimenWeight
-				     is set (Alfred — no drawings yet) it overrides the family's
-				     default weight uniformly across all three lines, so the
+				     referenced from increments.cc's Vorkurs card). All lines share
+				     one size and one weight — no headline/caption hierarchy — so the
+				     label reads as a single set piece of type, not a mini-poster.
+				     Text is always black; the card's own colour (catalogBg) only
+				     appears on hover, via --spec-bg below — omitted entirely
+				     (Norma) for a card with no hover swatch at all. Where
+				     specimenWeight is set (Alfred — no drawings yet) it overrides
+				     the family's default weight uniformly across every line, so the
 				     placeholder reads as "one weight of Norma", not an attempt at
 				     Norma's own real specimen. -->
 				<div
 					class="FontCard__specimen"
-					style="--spec-bg: {tf.catalogBg}; font-family: '{tf.fontFamily}', sans-serif;"
+					style="{tf.catalogBg
+						? `--spec-bg: ${tf.catalogBg};`
+						: ''} font-family: '{tf.fontFamily}', sans-serif;"
 				>
 					{#if tf.specimen}
 						{@const wght = tf.specimenWeight ? `font-variation-settings: 'wght' ${tf.specimenWeight};` : ''}
-						<span class="FontCard__spec-tag" style={wght}>{tf.specimen[0]}</span>
-						<span class="FontCard__spec-lead" style={wght}>{tf.specimen[1]}</span>
-						<span class="FontCard__spec-desc" style={wght}>{tf.specimen[2]}</span>
+						{#each tf.specimen as line (line)}
+							<span class="FontCard__spec-line" style={wght}>{line}</span>
+						{/each}
 					{:else}
-						<span class="FontCard__spec-lead">{tf.name}</span>
+						<span class="FontCard__spec-line">{tf.name}</span>
 					{/if}
 				</div>
 
@@ -195,27 +198,27 @@
 		background: var(--spec-bg);
 	}
 
-	/* Uniform museum-label type: all three lines share one size and one
-	   weight (2026-08-29 — an earlier pass gave the dedicatee line its own
-	   larger, bolder treatment; this reads instead as one continuous set
-	   line, closer to a gallery wall label than a poster headline). The
-	   three lines still carry distinct roles — a date/edition tag, the
-	   dedicatee or institution, a short descriptor — the typography just no
-	   longer distinguishes them. */
-	.FontCard__spec-tag,
-	.FontCard__spec-lead,
-	.FontCard__spec-desc {
+	/* Uniform museum-label type: every line shares one size and one weight
+	   (2026-08-29 — an earlier pass gave the dedicatee line its own larger,
+	   bolder treatment; this reads instead as one continuous set line,
+	   closer to a gallery wall label than a poster headline). Line count
+	   varies per typeface (3 for the museum-label cards, 4 for Norma's A–Z /
+	   a–z) — the typography doesn't distinguish roles either way, so a
+	   single rule with even spacing between every line covers both. */
+	.FontCard__spec-line {
 		display: block;
 		text-align: center;
 		font-size: clamp(20px, 3.2vw, 36px);
 		line-height: 1.15;
+		/* base.css applies its own font-family to every span/div/etc as a
+		   plain tag-selector rule — that beats inheritance regardless of the
+		   parent's own font-family, so without this the specimen silently
+		   fell back to Norma instead of the typeface's own font (its inline
+		   style is on .FontCard__specimen, the parent, not this span). */
+		font-family: inherit;
 	}
 
-	.FontCard__spec-tag {
-		margin-bottom: clamp(4px, 1vw, 10px);
-	}
-
-	.FontCard__spec-desc {
+	.FontCard__spec-line + .FontCard__spec-line {
 		margin-top: clamp(4px, 1vw, 10px);
 	}
 

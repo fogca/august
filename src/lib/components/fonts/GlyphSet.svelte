@@ -327,6 +327,9 @@
 	}
 
 	.GlyphSet__preview-glyph {
+		/* base.css's tag-selector reset targets span directly, which beats
+		   inheriting font-family from .GlyphSet__diagram's inline style. */
+		font-family: inherit;
 		position: absolute;
 		left: 0;
 		right: 0;
@@ -406,6 +409,8 @@
 	}
 
 	.GlyphSet__cell {
+		/* Same base.css tag-selector issue — button is in its reset list too. */
+		font-family: inherit;
 		display: flex;
 		align-items: center;
 		justify-content: center;

@@ -161,6 +161,9 @@
 	}
 
 	.GlyphSpecimen__line {
+		/* base.css's tag-selector reset targets span directly, which beats
+		   inheriting font-family from .GlyphSpecimen__text's inline style. */
+		font-family: inherit;
 		display: block;
 	}
 </style>

@@ -45,14 +45,12 @@ export interface Typeface {
 	defaultNotes?: string[];
 	/** Catalogue specimen: a museum-exhibition label set in the face itself,
 	 *  rather than the typeface's own name (referenced from increments.cc's
-	 *  Vorkurs card: "1964–1969 / JOSEF ALBERS / New Works"). Exactly three
-	 *  lines, each with a fixed role: [0] a small date or edition tag, [1] a
-	 *  dedicatee, or a real museum/exhibition when there is no dedicatee, set
-	 *  large, [2] a short descriptor. Rendered at one uniform size and weight
-	 *  across all three lines (see .FontCard__spec-tag/-lead/-desc in
-	 *  /fonts/+page.svelte) — the reference card's own tag/headline/caption
-	 *  size hierarchy is deliberately not reproduced here. */
-	specimen?: [string, string, string];
+	 *  Vorkurs card: "1964–1969 / JOSEF ALBERS / New Works"). Usually three
+	 *  lines — [0] a small date or edition tag, [1] a dedicatee or museum, [2]
+	 *  a short descriptor — but any line count works (Norma runs four: A–Z /
+	 *  a–z split in half). Rendered at one uniform size and weight across all
+	 *  lines (see .FontCard__spec-line in /fonts/+page.svelte). */
+	specimen?: string[];
 	/** Renders the specimen at this wght instead of the family's own default —
 	 *  for typefaces with no drawings of their own yet (Alfred), so their
 	 *  placeholder card at least reads as a different cut of the borrowed font
@@ -83,7 +81,8 @@ export interface Typeface {
 	 *  field rather than reusing `theme`: the hero tone is tuned for a
 	 *  full-bleed dark section and several of them (#000, #15181C) would not
 	 *  hold black text. */
-	catalogBg: string;
+	/** Optional — omit for no hover swatch (plain type on the page background). */
+	catalogBg?: string;
 	/** Hero metadata (per Figma SP design 280:104 / 274:18) */
 	hero: {
 		label: string; // e.g. 'Neo Humanist Sans'
@@ -169,14 +168,17 @@ export const TYPEFACES: Typeface[] = [
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
-		// Catalogue specimen, museum-label style.
-		specimen: ['MUNICH, 2026', 'DEUTSCHES MUSEUM', 'Matter and Form'],
+		// Catalogue specimen — full alphabet proof, A–Z then a–z, each split
+		// in half across two lines (four total). Replaced the earlier
+		// museum-label text (2026-08-31, at the user's request) — no hover
+		// swatch either (see catalogBg below), so the card reads as plain type.
+		specimen: ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ', 'abcdefghijklm', 'nopqrstuvwxyz'],
 		// Filename predates the 2026-08-30 rename (was "Asger") — left as-is,
 		// asset paths are internal and not user-facing. Same for the other
 		// image/video paths below.
 		heroVideo: '/videos/asger_vf_aa.mp4',
 		theme: { bg: '#000000', fg: '#ffffff' },
-		catalogBg: '#DCE7EF',
+		// No catalogBg — the A–Z/a–z card has no hover swatch (2026-08-31).
 		hero: {
 			label: 'Neo Humanist Sans',
 			vol: 'vol.01',

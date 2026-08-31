@@ -81,7 +81,10 @@
 
 	<!-- Body: oversized name, then description (left) and the spec table (right) -->
 	<div class="FontDetail__body">
-		{#if !isAvailable}
+		{#if !isAvailable && !isElio}
+			<!-- Elio's own page drops this badge (2026-08-31, at the user's
+			     request) — Information already reads "In development" via its
+			     own spec grid, so the badge was redundant there. -->
 			<div class="FontDetail__info">
 				<span class="FontDetail__badge">Coming Soon</span>
 			</div>
@@ -131,14 +134,6 @@
 				<aside class="FontDetail__spec" aria-label="Information">
 					<p class="FontDetail__spec-title">Information</p>
 					<dl class="FontDetail__spec-grid">
-						<div class="FontDetail__spec-item">
-							<dt>Design</dt>
-							<dd>{tf.info.design}</dd>
-						</div>
-						<div class="FontDetail__spec-item">
-							<dt>Release</dt>
-							<dd>{tf.info.release}</dd>
-						</div>
 						<div class="FontDetail__spec-item">
 							<dt>Collection</dt>
 							<dd>{tf.info.collection}</dd>
@@ -228,9 +223,7 @@
 					<li>Books</li>
 				</ul>
 				<a class="FontBuy__cta" href="/buy?font={tf.slug}">Purchase License →</a>
-				<p class="FontBuy__note">
-					20 weights — Hairline to Ultra. Educational licences −30%.
-				</p>
+				<p class="FontBuy__note">20 weights — Hairline to Ultra.</p>
 			{:else}
 				<p class="FontBuy__eyebrow">Coming Soon</p>
 				<h2 class="FontBuy__heading">{tf.name}</h2>
@@ -402,7 +395,8 @@
 	}
 
 	/* Two columns of label/value pairs, filled row-wise:
-	   Design | Release / Collection | Formats / Glyphs | Languages */
+	   Collection | Formats / Glyphs | Languages. Design/Release dropped
+	   2026-08-31 (PC and SP both) — same 4-item spec on both breakpoints now. */
 	.FontDetail__spec-grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -511,7 +505,7 @@
 
 	@media (min-width: 768px) {
 		.FontDetail__name {
-			font-size: 320px;
+			font-size: 240px;
 		}
 	}
 
