@@ -208,7 +208,7 @@
 	.FontCard__spec-line {
 		display: block;
 		text-align: center;
-		font-size: clamp(20px, 3.2vw, 36px);
+		font-size: clamp(32px, 3.2vw, 36px);
 		line-height: 1.15;
 		/* base.css applies its own font-family to every span/div/etc as a
 		   plain tag-selector rule — that beats inheritance regardless of the

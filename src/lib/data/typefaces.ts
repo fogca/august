@@ -173,7 +173,7 @@ export const TYPEFACES: Typeface[] = [
 		// three lines. Replaced the earlier museum-label text (2026-08-31, at
 		// the user's request) — no hover swatch either (see catalogBg below),
 		// so the card reads as plain type.
-		specimen: ['ABCDEFGHIJKLMNOPQR', 'STUVWXYZabcdefghi', 'jklmnopqrstuvwxyz'],
+		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		// Filename predates the 2026-08-30 rename (was "Asger") — left as-is,
 		// asset paths are internal and not user-facing. Same for the other
 		// image/video paths below.
@@ -295,7 +295,7 @@ export const TYPEFACES: Typeface[] = [
 		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
 		// now that Elio's own font (Hair) actually renders here. No hover
 		// swatch either (catalogBg omitted), matching Norma.
-		specimen: ['ABCDEFGHIJKLMNOPQR', 'STUVWXYZabcdefghi', 'jklmnopqrstuvwxyz'],
+		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		// Borrowed from gQ (2026-08-31, at the user's request) — Elio has no
 		// hero image of its own yet, so its page top reuses gQ's for now.
 		thumbnail: '/images/fonts/gq.png',
