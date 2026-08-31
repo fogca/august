@@ -246,7 +246,7 @@
 	.Hero {
 		display: flex;
 		flex-direction: column;
-		min-height: 100svh;
+		height: 100vh;
 		/* Pure black, matching the video's own ground exactly — the frame edge
 		   should disappear, not read as a lighter rectangle on black. */
 		background: #000000;
@@ -263,7 +263,11 @@
 		color: #ffffff;
 	}
 
-	/* Typeface name leads, set at h2 scale in sentence case. */
+	/* Typeface name leads, set at h2 scale in sentence case. z-index above
+	   .Hero__specimen (2026-08-31) — .Hero is now a fixed height:100vh, not
+	   min-height, so the video (sized independently via max-height:65vh, see
+	   .Hero__video's own comment) can overflow its flex item and paint over
+	   the name if content doesn't fit; this keeps the name legible either way. */
 	.Hero__name {
 		font-family: 'Norma', sans-serif;
 		font-size: var(--title-fs);
@@ -271,6 +275,8 @@
 		font-weight: var(--display-fw);
 		text-align: center;
 		margin: 0;
+		position: relative;
+		z-index: 2;
 	}
 
 	.Title__face {
@@ -294,6 +300,8 @@
 		align-items: center;
 		justify-content: center;
 		min-height: 0;
+		position: relative;
+		z-index: 1;
 	}
 
 	/* Shown as encoded (landscape, 1350:1080) on every breakpoint — scaled to
@@ -318,6 +326,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
+		position: relative;
+		z-index: 2;
 	}
 
 	.Hero__meta {
@@ -397,10 +407,8 @@
 			padding-bottom: clamp(32px, 5vh, 56px);
 		}
 
-		.Hero__cta {
-			align-self: center;
-			min-width: 280px;
-		}
+		/* Was centred with a 280px min-width on PC — now full-width like
+		   .Elio__cta on every breakpoint (2026-08-31, at the user's request). */
 	}
 
 	/* --- Alfred (ochre) — mirrors the Hero's composition exactly --- */

@@ -141,7 +141,9 @@ export const TYPEFACES: Typeface[] = [
 		// replacing both the earlier single statement and the astronomy
 		// word-per-row idea. One entry, so defaultTexts[i % length] applies
 		// it to all twenty weights.
-		defaultTexts: ['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'],
+		// Explicit line break between upper/lowercase — WeightRow's own text
+		// element is white-space:pre-wrap, so \n renders as a real break.
+		defaultTexts: ['ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz1234567890'],
 		// Body copy under each word: what that weight is actually for. Long
 		// enough to show the face setting real paragraphs, not just a caption.
 		defaultNotes: [

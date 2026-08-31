@@ -505,7 +505,7 @@
 
 	@media (min-width: 768px) {
 		.FontDetail__name {
-			font-size: 240px;
+			font-size: 160px;
 		}
 	}
 
