@@ -3,14 +3,16 @@
 	// independently-scrolling, category-grouped glyph grid (right). Pattern
 	// referenced from Increments Type's /fonts/[slug] Glyphs page — click any
 	// tile to inspect it; only the grid scrolls, the panel stays put.
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { onScroll } from '$lib/scroll';
 	import { WEIGHTS } from '$lib/components/TypeTester/presets.js';
+	import type { WeightDef } from '$lib/components/TypeTester/presets.js';
 	import {
 		STEINER_GLYPHS,
-		GLYPH_CATEGORY_ORDER,
-		GLYPH_CATEGORY_LABELS,
-		type GlyphEntry
+		GLYPH_CATEGORY_ORDER as NORMA_CATEGORY_ORDER,
+		GLYPH_CATEGORY_LABELS as NORMA_CATEGORY_LABELS,
+		type GlyphEntry,
+		type GlyphCategory
 	} from '$lib/data/normaGlyphs.js';
 
 	interface Props {
@@ -18,9 +20,26 @@
 		/** Display name for the panel header — falls back to fontFamily. */
 		name?: string;
 		title?: string;
+		// Defaults to Norma's own full roster (523 glyphs) — pass a narrower
+		// set for a typeface that doesn't ship that full a cmap yet (see
+		// elioGlyphs.ts), so nothing here can render as a .notdef/tofu box.
+		glyphs?: GlyphEntry[];
+		categoryOrder?: GlyphCategory[];
+		categoryLabels?: Record<GlyphCategory, string>;
+		// Defaults to Norma's 20-stop axis. Pass a narrower list (even a
+		// single entry) for a typeface with fewer real drawn weights.
+		weights?: WeightDef[];
 	}
 
-	let { fontFamily, name, title = 'Glyph set' }: Props = $props();
+	let {
+		fontFamily,
+		name,
+		title = 'Glyph set',
+		glyphs = STEINER_GLYPHS,
+		categoryOrder = NORMA_CATEGORY_ORDER,
+		categoryLabels = NORMA_CATEGORY_LABELS,
+		weights = WEIGHTS
+	}: Props = $props();
 
 	// Font-wide vertical metrics (hhea/OS2 — one fixed set for the whole VF).
 	// Per Norma's Glyphs master data: ascender 800, cap height 700,
@@ -49,8 +68,12 @@
 		return XHEIGHT_STOPS[XHEIGHT_STOPS.length - 1][1];
 	}
 
-	const DEFAULT_WEIGHT = WEIGHTS.find((w) => w.label === 'Regular') ?? WEIGHTS[8];
-	const DEFAULT_GLYPH = STEINER_GLYPHS.find((g) => g.char === 'A') ?? STEINER_GLYPHS[0];
+	// Only the initial weights/glyphs prop values seed the defaults — same
+	// intentional one-time-read pattern as WeightRow.svelte's initialSize.
+	const DEFAULT_WEIGHT = untrack(
+		() => weights.find((w) => w.label === 'Regular') ?? weights[Math.min(8, weights.length - 1)]
+	);
+	const DEFAULT_GLYPH = untrack(() => glyphs.find((g) => g.char === 'A') ?? glyphs[0]);
 
 	let selectedWeight = $state(DEFAULT_WEIGHT);
 	let selected = $state<GlyphEntry>(DEFAULT_GLYPH);
@@ -71,10 +94,10 @@
 	]);
 
 	const groups = $derived(
-		GLYPH_CATEGORY_ORDER.map((cat) => ({
+		categoryOrder.map((cat) => ({
 			cat,
-			label: GLYPH_CATEGORY_LABELS[cat],
-			items: STEINER_GLYPHS.filter((g) => g.category === cat)
+			label: categoryLabels[cat],
+			items: glyphs.filter((g) => g.category === cat)
 		}))
 	);
 
@@ -85,7 +108,7 @@
 	const AZ = $derived(
 		'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 			.split('')
-			.map((c) => STEINER_GLYPHS.find((g) => g.char === c))
+			.map((c) => glyphs.find((g) => g.char === c))
 			.filter((g): g is GlyphEntry => !!g)
 	);
 
@@ -132,7 +155,7 @@
 
 	function onWeightChange(e: Event) {
 		const id = Number((e.currentTarget as HTMLSelectElement).value);
-		const w = WEIGHTS.find((w) => w.id === id);
+		const w = weights.find((w) => w.id === id);
 		if (w) selectedWeight = w;
 	}
 </script>
@@ -152,7 +175,7 @@
 						onchange={onWeightChange}
 						aria-label="Weight"
 					>
-						{#each WEIGHTS as w (w.id)}
+						{#each weights as w (w.id)}
 							<option value={w.id}>{w.label}</option>
 						{/each}
 					</select>
@@ -379,7 +402,7 @@
 
 	.GlyphSet__grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
 	}
 
 	.GlyphSet__cell {

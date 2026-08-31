@@ -4,6 +4,11 @@
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
 	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
 	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
+	import {
+		ELIO_GLYPHS,
+		GLYPH_CATEGORY_ORDER as ELIO_CATEGORY_ORDER,
+		GLYPH_CATEGORY_LABELS as ELIO_CATEGORY_LABELS
+	} from '$lib/data/elioGlyphs.js';
 	import type { PageData } from './$types.js';
 
 	let { data }: { data: PageData } = $props();
@@ -11,6 +16,10 @@
 	// Use $derived so these stay reactive if data changes on navigation
 	const tf = $derived(data.typeface);
 	const isAvailable = $derived(tf.status === 'available');
+	// Elio only ships 52 letters so far (see elioGlyphs.ts) — GlyphSet
+	// defaults to Norma's full roster otherwise, so this only needs to
+	// override the props for Elio specifically.
+	const isElio = $derived(tf.slug === 'elio');
 
 
 </script>
@@ -127,7 +136,13 @@
 	/>
 
 	<!-- Full glyph set -->
-	<GlyphSet fontFamily={tf.fontFamily} name={tf.name} title="Glyph set" />
+	<GlyphSet
+		fontFamily={tf.fontFamily}
+		name={tf.name}
+		title="Glyph set"
+		weights={tf.weights}
+		{...isElio ? { glyphs: ELIO_GLYPHS, categoryOrder: ELIO_CATEGORY_ORDER, categoryLabels: ELIO_CATEGORY_LABELS } : {}}
+	/>
 
 	<!-- Editorial showcase — currency / punctuation / symbols / fractions,
 	     each set large on its own row. Flows directly into OpenType Features

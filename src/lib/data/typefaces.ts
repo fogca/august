@@ -290,7 +290,12 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
-		weights: ELIO_WEIGHTS,
+		// Type Tester shows only the one weight that's actually drawn — the
+		// full ELIO_WEIGHTS (8 stops) is reserved for once more are real;
+		// showing all 8 now would just repeat Hair's own shapes under 7
+		// different wght labels, since this is a static font with nothing to
+		// interpolate.
+		weights: [ELIO_WEIGHTS[0]],
 		defaultTexts: ['Elio'],
 		// Catalogue specimen. Elio's own font (Hair) now renders this directly —
 		// no borrowed fontFamily or specimenWeight override needed, unlike
