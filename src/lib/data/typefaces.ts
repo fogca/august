@@ -297,6 +297,9 @@ export const TYPEFACES: Typeface[] = [
 		// now that Elio's own font (Hair) actually renders here. No hover
 		// swatch either (catalogBg omitted), matching Norma.
 		specimen: ['ABCDEFGHIJKLMNOPQR', 'STUVWXYZabcdefghi', 'jklmnopqrstuvwxyz'],
+		// Borrowed from gQ (2026-08-31, at the user's request) — Elio has no
+		// hero image of its own yet, so its page top reuses gQ's for now.
+		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#d59514', fg: '#000000' },
 		// No catalogBg — no hover swatch (2026-08-31).
 		hero: {
