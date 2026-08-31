@@ -229,8 +229,7 @@
 
 <style>
 	.FontDetail {
-		/* was 72px to clear the fixed buy bar, which is hidden for now */
-		padding-bottom: 0;
+		padding: 40px var(--padding) 40px;
 	}
 
 	/* ── 100vh top hero ── */
@@ -419,7 +418,7 @@
 	@media (max-width: 767.98px) {
 		.FontDetail__spec-grid--sp {
 			display: grid;
-			margin-bottom: 32px;
+			margin-bottom: 0;
 		}
 
 		.FontDetail__spec {
@@ -464,7 +463,7 @@
 		.FontDetail__name {
 			display: flex;
 			align-items: flex-end;
-			min-height: calc(100dvh - 100vw - 64px);
+			min-height: calc(100dvh - 100vw - 64px - 100px);
 		}
 	}
 
