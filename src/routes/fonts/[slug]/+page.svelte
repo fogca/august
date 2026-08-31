@@ -494,7 +494,7 @@
 
 	/* ── On-page buy block ── */
 	.FontBuy {
-		padding: 96px var(--padding) 0;
+		padding: 96px var(--padding) 120px;
 		border-top: 1px solid var(--color-line);
 		max-width: 640px;
 	}
