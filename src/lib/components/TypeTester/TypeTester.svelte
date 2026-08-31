@@ -64,8 +64,6 @@
 <style>
 	/* padding-inline 0 so WeightRow border lines can span the full viewport */
 	.TypeTester {
-		min-height: 100vh;
-		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
 		padding-top: 60px;

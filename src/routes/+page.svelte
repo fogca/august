@@ -239,7 +239,7 @@
 		   .Title__face is still shared across three sections. Norma is
 		   variable (wght 1–950), so this is a real interpolated weight, not
 		   synthetic. */
-		--title-fw-face: 400;
+		--title-fw-face: 250;
 		/* Titles drop to a 36px floor on phones — one step under the
 		   shared --display-fs floor, which the other sections keep. */
 		--title-fs: clamp(36px, min(7vw, 9.5vh), 88px);
@@ -252,9 +252,9 @@
 			   phone range anyway (see the clamp above); pin it so every SP width
 			   reads at the same size instead of drifting toward the 767px edge. */
 			--title-fs: 36px;
-			/* A touch heavier than desktop at this size — 400 reads thin this
-			   small. */
-			--title-fw-face: 500;
+			/* A touch heavier than desktop at this size — keeps the same +100
+			   relationship to the base weight above. */
+			--title-fw-face: 350;
 		}
 	}
 

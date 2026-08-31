@@ -110,10 +110,9 @@ export type AlignValue = 'left' | 'center' | 'right' | 'justify';
 export const ALIGN_OPTIONS: AlignValue[] = ['left', 'center', 'right', 'justify'];
 export const ALIGN_DEFAULT: AlignValue = 'left';
 
-// Per-weight-row default alignment (independent tester rows). 2026-08-30 —
-// mobile centers the short 1-2 word specimen; desktop keeps the original
-// left alignment.
-export const WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP: AlignValue = 'left';
+// Per-weight-row default alignment (independent tester rows). Both centered
+// as of 2026-08-31 (desktop used to be left).
+export const WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP: AlignValue = 'center';
 export const WEIGHT_ROW_ALIGN_DEFAULT_MOBILE: AlignValue = 'center';
 
 // Preset texts (bilingual intentional — .notdef shows for unsupported chars)

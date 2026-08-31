@@ -79,6 +79,33 @@
 				<span class="FontDetail__badge">Coming Soon</span>
 			</div>
 		{/if}
+
+		{#if tf.info}
+			<!-- SP only: a shorter spec summary (Collection/Formats/Glyphs/
+			     Supported languages — Information/Design/Release dropped) shown
+			     above the name instead of down in .FontDetail__cols, where the
+			     full .FontDetail__spec aside still renders for PC (see its own
+			     SP display:none below). -->
+			<dl class="FontDetail__spec-grid FontDetail__spec-grid--sp">
+				<div class="FontDetail__spec-item">
+					<dt>Collection</dt>
+					<dd>{tf.info.collection}</dd>
+				</div>
+				<div class="FontDetail__spec-item">
+					<dt>Formats</dt>
+					<dd>{tf.info.formats}</dd>
+				</div>
+				<div class="FontDetail__spec-item">
+					<dt>Glyphs</dt>
+					<dd>{tf.info.glyphs}</dd>
+				</div>
+				<div class="FontDetail__spec-item">
+					<dt>Supported languages</dt>
+					<dd>{tf.info.languages}</dd>
+				</div>
+			</dl>
+		{/if}
+
 		<h1 class="FontDetail__name">{tf.name}</h1>
 
 		<div class="FontDetail__cols">
@@ -143,6 +170,12 @@
 			<p class="ElioSample__label">Sample text</p>
 			<p class="ElioSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
 				Elio is a sibling to Norma, drawn in Hair so far. More weights follow soon.
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+				incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+				nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+				fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+				culpa qui officia deserunt mollit anim id est laborum.
 			</p>
 		</section>
 	{:else}
@@ -150,12 +183,12 @@
 		<GlyphSet fontFamily={tf.fontFamily} name={tf.name} title="Glyph set" weights={tf.weights} />
 
 		<!-- Editorial showcase — currency / punctuation / symbols / fractions,
-		     each set large on its own row. Flows directly into OpenType Features
-		     below (same black ground, no seam). -->
+		     each set large on its own row. -->
 		<GlyphShowcase fontFamily={tf.fontFamily} />
 
-		<!-- OpenType features (live OFF → ON demos) -->
-		<OpenTypeFeatures fontFamily={tf.fontFamily} />
+		<!-- OpenType features (live OFF → ON demos) — hidden 2026-08-31 at the
+		     user's request (temporary, "一旦"). Re-add
+		     <OpenTypeFeatures fontFamily={tf.fontFamily} /> here when ready. -->
 	{/if}
 
 	<!-- On-page buy block (the fixed CTA scrolls here) -->
@@ -178,7 +211,7 @@
 			<p class="FontBuy__eyebrow">Coming Soon</p>
 			<h2 class="FontBuy__heading">{tf.name}</h2>
 			<p class="FontBuy__price">In development — released in due course.</p>
-			<a class="FontBuy__cta" href="/contact">Get notified →</a>
+			<a class="FontBuy__cta" href="/contact">Stay tuned →</a>
 		{/if}
 	</section>
 </main>
@@ -369,6 +402,24 @@
 		margin: 0;
 	}
 
+	/* SP-only spec summary shown above the name (see the template) — hidden
+	   on PC, where the full .FontDetail__spec aside (Information/Design/
+	   Release included) still renders in its usual place. */
+	.FontDetail__spec-grid--sp {
+		display: none;
+	}
+
+	@media (max-width: 767.98px) {
+		.FontDetail__spec-grid--sp {
+			display: grid;
+			margin-bottom: 32px;
+		}
+
+		.FontDetail__spec {
+			display: none;
+		}
+	}
+
 	.FontDetail__info {
 		display: flex;
 		align-items: center;
@@ -484,11 +535,11 @@
 	}
 
 	.ElioSample__text {
-		font-size: clamp(24px, 4vw, 40px);
-		line-height: 1.35;
+		font-size: clamp(20px, 3vw, 32px);
+		line-height: 1.4;
 		letter-spacing: 0;
 		color: var(--color-text);
-		max-width: 20ch;
+		max-width: 60ch;
 		margin: 0;
 	}
 

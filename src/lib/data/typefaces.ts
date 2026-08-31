@@ -296,7 +296,7 @@ export const TYPEFACES: Typeface[] = [
 		// different wght labels, since this is a static font with nothing to
 		// interpolate.
 		weights: [ELIO_WEIGHTS[0]],
-		defaultTexts: ['Elio'],
+		defaultTexts: ['Type your text here'],
 		// Catalogue specimen. Elio's own font (Hair) now renders this directly —
 		// no borrowed fontFamily or specimenWeight override needed, unlike
 		// Alfred below (still no drawings at all).
