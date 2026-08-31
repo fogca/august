@@ -4,11 +4,6 @@
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
 	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
 	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
-	import {
-		ELIO_GLYPHS,
-		GLYPH_CATEGORY_ORDER as ELIO_CATEGORY_ORDER,
-		GLYPH_CATEGORY_LABELS as ELIO_CATEGORY_LABELS
-	} from '$lib/data/elioGlyphs.js';
 	import type { PageData } from './$types.js';
 
 	let { data }: { data: PageData } = $props();
@@ -16,9 +11,11 @@
 	// Use $derived so these stay reactive if data changes on navigation
 	const tf = $derived(data.typeface);
 	const isAvailable = $derived(tf.status === 'available');
-	// Elio only ships 52 letters so far (see elioGlyphs.ts) — GlyphSet
-	// defaults to Norma's full roster otherwise, so this only needs to
-	// override the props for Elio specifically.
+	// Elio only has 52 letters and no OpenType features drawn yet — Glyph
+	// set / Beyond A-Z / OpenType below are swapped for a plain sample-text
+	// block on its page (see the {#if isElio} further down). GlyphSet itself
+	// still supports a narrower glyphs/weights prop set (see elioGlyphs.ts)
+	// for whenever Elio wants its own glyph inspector back.
 	const isElio = $derived(tf.slug === 'elio');
 
 
@@ -135,22 +132,31 @@
 		available={isAvailable}
 	/>
 
-	<!-- Full glyph set -->
-	<GlyphSet
-		fontFamily={tf.fontFamily}
-		name={tf.name}
-		title="Glyph set"
-		weights={tf.weights}
-		{...isElio ? { glyphs: ELIO_GLYPHS, categoryOrder: ELIO_CATEGORY_ORDER, categoryLabels: ELIO_CATEGORY_LABELS } : {}}
-	/>
+	{#if isElio}
+		<!-- Elio only has 52 letters and no OpenType features yet — the Glyph
+		     set / Beyond A-Z / OpenType sections below would mostly show
+		     .notdef/tofu or empty demos. A plain sample-text block instead,
+		     using only characters actually in Elio's cmap (letters, comma,
+		     period, hyphen, space — no digits/other punctuation drawn on
+		     purpose here, keep it simple). -->
+		<section class="ElioSample" aria-label="Sample text">
+			<p class="ElioSample__label">Sample text</p>
+			<p class="ElioSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
+				Elio is a sibling to Norma, drawn in Hair so far. More weights follow soon.
+			</p>
+		</section>
+	{:else}
+		<!-- Full glyph set -->
+		<GlyphSet fontFamily={tf.fontFamily} name={tf.name} title="Glyph set" weights={tf.weights} />
 
-	<!-- Editorial showcase — currency / punctuation / symbols / fractions,
-	     each set large on its own row. Flows directly into OpenType Features
-	     below (same black ground, no seam). -->
-	<GlyphShowcase fontFamily={tf.fontFamily} />
+		<!-- Editorial showcase — currency / punctuation / symbols / fractions,
+		     each set large on its own row. Flows directly into OpenType Features
+		     below (same black ground, no seam). -->
+		<GlyphShowcase fontFamily={tf.fontFamily} />
 
-	<!-- OpenType features (live OFF → ON demos) -->
-	<OpenTypeFeatures fontFamily={tf.fontFamily} />
+		<!-- OpenType features (live OFF → ON demos) -->
+		<OpenTypeFeatures fontFamily={tf.fontFamily} />
+	{/if}
 
 	<!-- On-page buy block (the fixed CTA scrolls here) -->
 	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">
@@ -384,11 +390,24 @@
 	/* The name is the specimen here: 120px on phones, 320px from tablet up. */
 	.FontDetail__name {
 		font-family: 'Norma', sans-serif;
-		font-size: 120px;
+		font-size: 72px;
 		font-weight: var(--fw-base);
 		line-height: 1;
 		letter-spacing: 0;
 		margin: 0;
+	}
+
+	/* SP: pinned to the bottom of the first view. The square hero above is
+	   100vw tall (see .FontDetail__hero's own SP rule) and .FontDetail__body
+	   adds 64px of padding-top before this element starts — this min-height
+	   makes up the rest of 100dvh, so hero + padding + this always sum to
+	   exactly one viewport and the name lands right at the fold. */
+	@media (max-width: 767.98px) {
+		.FontDetail__name {
+			display: flex;
+			align-items: flex-end;
+			min-height: calc(100dvh - 100vw - 64px);
+		}
 	}
 
 	@media (min-width: 768px) {
@@ -448,6 +467,29 @@
 		text-align: left;
 		max-width: 64ch;
 		margin: 12px 0 0;
+	}
+
+	/* ── Elio: sample text in place of Glyph set / Beyond A-Z / OpenType ── */
+	.ElioSample {
+		padding: 40px var(--padding) 48px;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.ElioSample__label {
+		font-family: 'Norma', sans-serif;
+		font-size: var(--fs-h5);
+		color: var(--color-text-mute);
+		letter-spacing: 0;
+		margin: 0 0 20px;
+	}
+
+	.ElioSample__text {
+		font-size: clamp(24px, 4vw, 40px);
+		line-height: 1.35;
+		letter-spacing: 0;
+		color: var(--color-text);
+		max-width: 20ch;
+		margin: 0;
 	}
 
 	/* ── On-page buy block ── */
