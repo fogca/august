@@ -73,13 +73,13 @@
 		<div class="Elio__specimen">
 			<!-- A-Z/a-z proof in Elio's own font — replaces the old SVG
 			     logotype (2026-08-31), which was leftover artwork from before
-			     the Asta->Elio rename and still literally spelled "Asta". Same
-			     3-line split as the /fonts catalogue card and Elio's own
-			     typeface page. -->
+			     the Asta->Elio rename and still literally spelled "Asta".
+			     Line break re-set to start at P (2026-08-31, at the user's
+			     request) -- own split from the /fonts catalogue card's. -->
 			<div class="Elio__abc" style="font-family: 'Elio', sans-serif;">
-				<span class="Elio__abc-line">ABCDEFGHIJKLMNOPQR</span>
-				<span class="Elio__abc-line">STUVWXYZabcdefghi</span>
-				<span class="Elio__abc-line">jklmnopqrstuvwxyz</span>
+				<span class="Elio__abc-line">ABCDEFGHIJKLMNO</span>
+				<span class="Elio__abc-line">PQRSTUVWXYZabcdefg</span>
+				<span class="Elio__abc-line">hijklmnopqrstuvwxyz</span>
 			</div>
 		</div>
 		<div class="Elio__bottom">
