@@ -71,30 +71,16 @@
 			<span class="Title__face">Elio</span>
 		</p>
 		<div class="Elio__specimen">
-			<svg
-				class="Elio__mark"
-				viewBox="0 0 266.08 113.28"
-				role="img"
-				aria-label="Elio"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					fill="currentColor"
-					d="M0,112L44.48,0h6.24l44.48,112h-7.36l-17.12-43.36H24.32L7.36,112H0ZM26.88,62.24h41.44L47.52,9.44l-20.64,52.8Z"
-				/>
-				<path
-					fill="currentColor"
-					d="M163.88,36.32l-7.52-4.67v-1.41h41.4v1.51l-1.32,4.57h-32.55ZM198.4,111.04c-3.2.96-6.4,1.38-9.6,1.28-3.2-.11-6.05-.93-8.56-2.48-2.51-1.54-4.51-3.89-6-7.04-1.49-3.14-2.24-7.17-2.24-12.08V13.8l5.89-5.64h.74v80.32c0,5.65,1.47,9.81,3.29,12.48,1.81,2.67,4.18,4.24,7.12,4.72,2.93.48,6.05.35,9.36-.4v5.76Z"
-				/>
-				<path
-					fill="currentColor"
-					d="M147.76,79.6c-1.97-2.96-4.77-5.26-8.05-7.23s-6.57-3.78-9.86-5.09c-3.61-1.48-6.9-3.12-10.02-4.6-2.96-1.64-5.59-3.61-7.56-5.92-1.81-2.14-2.79-4.93-2.79-8.38,0-5.75,4.6-13.64,18.07-13.64,10.02,0,14.95,4.44,18.07,7.89v-7.72c-4.11-3.45-9.2-6.41-18.24-6.41-15.61,0-25.3,10.02-25.3,20.54,0,4.11,1.15,7.56,3.29,10.35s4.77,5.26,8.22,7.07c3.29,1.81,6.57,3.61,10.19,5.26,3.29,1.31,6.57,2.79,9.69,4.44,2.96,1.48,5.59,3.45,7.56,5.75s2.79,5.42,2.79,9.69c0,10.68-9.69,15.12-20.54,15.12-8.54,0-16.6-4.93-21.52-9.53v9.69c4.77,2.79,13.47,6.41,21.52,6.41,16.43,0,27.6-8.05,27.6-22.18,0-4.6-.99-8.38-3.12-11.5Z"
-				/>
-				<path
-					fill="currentColor"
-					d="M266.08,58.42c0-16.77-9.77-28.49-27.84-28.49-13.68,0-19.38,4.4-22.8,7v8.47c4.07-4.56,10.58-9.61,22.8-9.61,13.51,0,20.52,9.28,20.84,22.8v7.49c-1.79.16-4.07.33-6.84.65-2.93.16-7.16.81-12.86,1.63-10.1,1.3-17.91,4.23-22.96,8.79-5.05,4.23-7.49,9.61-7.49,15.63,0,3.91.81,7.33,2.44,9.77,1.63,2.77,3.58,4.72,5.86,6.19,2.44,1.63,4.72,2.61,7.33,3.26,2.28.49,4.4.81,6.02.81,4.88,0,8.79-.65,12.37-2.12,3.58-1.63,6.51-3.58,9.28-6.19,2.61-2.61,4.72-5.37,6.84-8.63l.98,16.12h6.02v-53.57ZM259.07,72.26v7.82c0,3.58-.65,6.68-2.28,9.93-1.3,3.26-3.09,6.02-5.54,8.47-2.28,2.61-4.88,4.4-7.98,6.02-2.93,1.47-6.02,2.12-9.28,2.12-1.47,0-3.09-.16-5.21-.65-1.95-.33-3.75-.98-5.86-1.95-1.79-.98-3.42-2.44-4.56-4.23-1.47-1.95-2.12-4.23-2.12-7.16,0-3.09.98-5.86,2.93-8.47,1.95-2.44,4.72-4.72,8.3-6.35,3.75-1.79,7.98-3.09,12.7-3.75,3.26-.33,6.35-.65,8.96-.98s5.05-.49,6.68-.65,2.77-.16,3.26-.16Z"
-				/>
-			</svg>
+			<!-- A-Z/a-z proof in Elio's own font — replaces the old SVG
+			     logotype (2026-08-31), which was leftover artwork from before
+			     the Asta->Elio rename and still literally spelled "Asta". Same
+			     3-line split as the /fonts catalogue card and Elio's own
+			     typeface page. -->
+			<div class="Elio__abc" style="font-family: 'Elio', sans-serif;">
+				<span class="Elio__abc-line">ABCDEFGHIJKLMNOPQR</span>
+				<span class="Elio__abc-line">STUVWXYZabcdefghi</span>
+				<span class="Elio__abc-line">jklmnopqrstuvwxyz</span>
+			</div>
 		</div>
 		<div class="Elio__bottom">
 			<div class="Elio__meta">
@@ -521,19 +507,19 @@
 		/* Same image as Elio's own typeface page hero (borrowed from gQ,
 		   2026-08-31) — flat colour stays as the load-in fallback. */
 		background: #cdd6e6 url('/images/fonts/gq.png') center / cover no-repeat;
-		color: #000000;
+		color: #ffffff;
 		padding-top: clamp(48px, 8vh, 72px);
 		padding-bottom: var(--gutter);
 		padding-inline: var(--gutter);
 	}
 
 	/* base.css sets color directly on div/p/span/etc, which breaks inheritance
-	   from .Elio's own `color` — force every descendant black (the section's
-	   background is light, unlike .Hero's; was incorrectly white here, which
-	   read as invisible text on this light ground). .Elio__cta re-asserts
-	   white below, on its own dark ground. */
+	   from .Elio's own `color` — force every descendant white (2026-08-31:
+	   the section now has the gQ leaf photo behind it, dark enough for white
+	   text; was black from the earlier flat-colour ground). .Elio__cta
+	   re-asserts black below, on its own light (white) ground. */
 	.Elio :global(*) {
-		color: #000000;
+		color: #ffffff;
 	}
 
 	/* Same slot and scale as .Hero__name / .Alfred__name, set in Norma. */
@@ -554,12 +540,21 @@
 		min-height: 0;
 	}
 
-	/* The logotype is the specimen — sized off the viewport like .Alfred__mark. */
-	.Elio__mark {
+	/* A-Z/a-z proof is the specimen (2026-08-31, replacing the old SVG
+	   logotype — see the template comment). Sized off the viewport, same
+	   spirit as the old .Elio__mark. */
+	.Elio__abc {
+		width: min(700px, 82vw);
+		text-align: center;
+	}
+
+	.Elio__abc-line {
 		display: block;
-		width: min(600px, 82vw);
-		height: auto;
-		max-height: 100%;
+		/* base.css's tag-selector reset targets span directly, which beats
+		   inheriting font-family from .Elio__abc's inline style. */
+		font-family: inherit;
+		font-size: clamp(24px, 6.4vw, 72px);
+		line-height: 1.15;
 	}
 
 	.Elio__bottom {
@@ -601,15 +596,16 @@
 	}
 
 	/* Same box as .Hero__cta — a real link now that /fonts/elio exists,
-	   inverted (dark button, light text) against .Elio's light ground the
-	   same way .Hero__cta inverts against Hero's black one. */
+	   inverted (light button, dark text) against .Elio's dark photo ground
+	   (2026-08-31 — was the other way round before the section had a photo
+	   background). */
 	.Elio__cta {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		height: 50px;
-		background: #000000;
-		color: #ffffff;
+		background: #ffffff;
+		color: #000000;
 		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
@@ -619,10 +615,10 @@
 		transition: opacity 0.2s ease;
 	}
 
-	/* .Elio :global(*) painted every descendant black; re-assert white text on
-	   the button's own dark ground. */
+	/* .Elio :global(*) painted every descendant white; re-assert black text on
+	   the button's own light (white) ground. */
 	.Elio__cta :global(*) {
-		color: #ffffff;
+		color: #000000;
 	}
 
 	.Elio__cta:hover {
