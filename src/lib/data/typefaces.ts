@@ -283,8 +283,7 @@ export const TYPEFACES: Typeface[] = [
 			collection: '8 weights',
 			formats: 'OTF, TTF, WOFF2',
 			glyphs: 'TBD',
-			languages: 'TBD',
-			note: 'Glyph set and language support still in development — ask us for the current status.'
+			languages: 'TBD'
 		},
 		// Type Tester shows only the one weight that's actually drawn — the
 		// full ELIO_WEIGHTS (8 stops) is reserved for once more are real;

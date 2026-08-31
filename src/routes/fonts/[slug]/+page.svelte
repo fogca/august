@@ -255,7 +255,7 @@
 	/* SP: not full viewport height — height driven by width. */
 	@media (max-width: 767.98px) {
 		.FontDetail__hero {
-			height: 80vw;
+			height: 90vw;
 		}
 	}
 
