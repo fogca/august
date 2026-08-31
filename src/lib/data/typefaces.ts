@@ -135,32 +135,11 @@ export const TYPEFACES: Typeface[] = [
 			languages: '93'
 		},
 		weights: WEIGHTS,
-		// One statement, broken across the twenty rows: read top to bottom it
-		// runs as a single paragraph while the weight climbs under it, so the
-		// scroll demonstrates the argument the words are making. Kept factual
-		// rather than lyrical — the foundry describes itself as pragmatic.
-		defaultTexts: [
-			'A variable font',
-			'is drawn twice:',
-			'once at its lightest,',
-			'once at its heaviest.',
-			'Everything between',
-			'is interpolation —',
-			'arithmetic, not drawing.',
-			'Which is why',
-			'every step here',
-			'was corrected by hand.',
-			'Counters close,',
-			'junctions fill,',
-			'spacing tightens',
-			'as the weight climbs,',
-			'and none of it',
-			'happens on its own.',
-			'Twenty weights,',
-			'because the difference',
-			'between them',
-			'is where the work is.'
-		],
+		// Full alphanumeric proof string, same on every row — 2026-08-31,
+		// replacing both the earlier single statement and the astronomy
+		// word-per-row idea. One entry, so defaultTexts[i % length] applies
+		// it to all twenty weights.
+		defaultTexts: ['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'],
 		// Body copy under each word: what that weight is actually for. Long
 		// enough to show the face setting real paragraphs, not just a caption.
 		defaultNotes: [
