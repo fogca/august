@@ -168,11 +168,12 @@ export const TYPEFACES: Typeface[] = [
 		],
 		// Typeface-page hero: the same wght 1->950 sweep across a row of "a"s
 		// used on the home page (see Home__custom's video-specimen commit).
-		// Catalogue specimen — full alphabet proof, A–Z then a–z, each split
-		// in half across two lines (four total). Replaced the earlier
-		// museum-label text (2026-08-31, at the user's request) — no hover
-		// swatch either (see catalogBg below), so the card reads as plain type.
-		specimen: ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ', 'abcdefghijklm', 'nopqrstuvwxyz'],
+		// Catalogue specimen — full alphabet proof, A–Z joined straight into
+		// a–z (one continuous 52-character run) and wrapped evenly across
+		// three lines. Replaced the earlier museum-label text (2026-08-31, at
+		// the user's request) — no hover swatch either (see catalogBg below),
+		// so the card reads as plain type.
+		specimen: ['ABCDEFGHIJKLMNOPQR', 'STUVWXYZabcdefghi', 'jklmnopqrstuvwxyz'],
 		// Filename predates the 2026-08-30 rename (was "Asger") — left as-is,
 		// asset paths are internal and not user-facing. Same for the other
 		// image/video paths below.
@@ -292,12 +293,12 @@ export const TYPEFACES: Typeface[] = [
 		// interpolate.
 		weights: [ELIO_WEIGHTS[0]],
 		defaultTexts: ['Lorem Ipsum is simply dummy text of the printing and typesetting industry.'],
-		// Catalogue specimen. Elio's own font (Hair) now renders this directly —
-		// no borrowed fontFamily or specimenWeight override needed, unlike
-		// Alfred below (still no drawings at all).
-		specimen: ['VOL. III', 'ELIO', 'Sibling to Norma'],
+		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
+		// now that Elio's own font (Hair) actually renders here. No hover
+		// swatch either (catalogBg omitted), matching Norma.
+		specimen: ['ABCDEFGHIJKLMNOPQR', 'STUVWXYZabcdefghi', 'jklmnopqrstuvwxyz'],
 		theme: { bg: '#d59514', fg: '#000000' },
-		catalogBg: '#F3E2C0',
+		// No catalogBg — no hover swatch (2026-08-31).
 		hero: {
 			label: 'In development',
 			vol: 'vol.03',
@@ -340,9 +341,9 @@ export const TYPEFACES: Typeface[] = [
 		specimenWeight: 250,
 		// Matches the home page's ochre Alfred section exactly (#d59514 / black).
 		theme: { bg: '#d59514', fg: '#000000' },
-		// A paler tint of the same ochre — distinct from Elio's catalogBg
-		// (#F3E2C0), which currently also derives from this colour; see the
-		// note where Elio is defined above.
+		// A paler tint of the same ochre used for the hero theme above.
+		// Elio (also ochre) no longer has its own catalogBg — see the note
+		// where Elio is defined above.
 		catalogBg: '#F6E9C9',
 		hero: {
 			label: 'In development',
