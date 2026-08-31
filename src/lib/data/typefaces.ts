@@ -187,10 +187,9 @@ export const TYPEFACES: Typeface[] = [
 		order: 2,
 		status: 'in-development',
 		// Re-shown 2026-08-29 at the user's request (temporary — "一旦"),
-		// even though weight count / spec are not yet final. Originally
-		// withdrawn for the Steiner-only launch (2026-07); re-hide once
-		// that's a concern again.
-		hidden: false,
+		// even though weight count / spec are not yet final. Re-hidden
+		// 2026-08-31 at the user's request.
+		hidden: true,
 		// Latest Mokuseki Sans (v08) webfont
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
@@ -296,13 +295,13 @@ export const TYPEFACES: Typeface[] = [
 		// Announced on the home page (ochre section, own logotype) and in the
 		// mobile menu's UPCOMING list. Registered here with a catalogue
 		// specimen; everything below is still fully provisional (unlike Elio,
-		// no drawings at all yet). Re-shown 2026-08-29 at the user's request
-		// (temporary).
+		// no drawings at all yet). Re-shown 2026-08-29, re-hidden 2026-08-31,
+		// both at the user's request.
 		slug: 'alfred',
 		name: 'Alfred',
 		order: 4,
 		status: 'in-development',
-		hidden: false,
+		hidden: true,
 		// No font files yet — render as Norma for preview purposes
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
