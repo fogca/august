@@ -104,9 +104,7 @@
 				</div>
 				<span class="Elio__meta-version">In development</span>
 			</div>
-			<!-- Deliberately a span, not an <a>: there is no Elio page yet, so the
-			     control must not be clickable, focusable, or announced as a link. -->
-			<span class="Elio__cta" aria-disabled="true"><span class="CtaLabel">Coming Soon</span></span>
+			<a class="Elio__cta" href="/fonts/elio"><span class="CtaLabel">Discover</span></a>
 		</div>
 	</section>
 
@@ -521,17 +519,19 @@
 		flex-direction: column;
 		min-height: 100svh;
 		background: #cdd6e6;
-		color: #ffffff;
+		color: #000000;
 		padding-top: clamp(48px, 8vh, 72px);
 		padding-bottom: var(--gutter);
 		padding-inline: var(--gutter);
 	}
 
 	/* base.css sets color directly on div/p/span/etc, which breaks inheritance
-	   from .Elio's own `color` — force every descendant white, same pattern
-	   as .Hero above. .Elio__cta is already white-on-black and unaffected. */
+	   from .Elio's own `color` — force every descendant black (the section's
+	   background is light, unlike .Hero's; was incorrectly white here, which
+	   read as invisible text on this light ground). .Elio__cta re-asserts
+	   white below, on its own dark ground. */
 	.Elio :global(*) {
-		color: #ffffff;
+		color: #000000;
 	}
 
 	/* Same slot and scale as .Hero__name / .Alfred__name, set in Norma. */
@@ -598,24 +598,33 @@
 		font-variant-numeric: tabular-nums;
 	}
 
-	/* Same box as .Alfred__cta, held in a disabled state — no hover, no pointer,
-	   no focus, and it never receives events. */
+	/* Same box as .Hero__cta — a real link now that /fonts/elio exists,
+	   inverted (dark button, light text) against .Elio's light ground the
+	   same way .Hero__cta inverts against Hero's black one. */
 	.Elio__cta {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		height: 50px;
-		background: #ffffff;
-		color: #cdd6e6;
+		background: #000000;
+		color: #ffffff;
 		font-family: 'Norma', sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-transform: uppercase;
 		letter-spacing: 0.025em;
 		text-decoration: none;
-		cursor: default;
-		pointer-events: none;
-		user-select: none;
+		transition: opacity 0.2s ease;
+	}
+
+	/* .Elio :global(*) painted every descendant black; re-assert white text on
+	   the button's own dark ground. */
+	.Elio__cta :global(*) {
+		color: #ffffff;
+	}
+
+	.Elio__cta:hover {
+		opacity: 0.8;
 	}
 
 	/* --- Buy (red) --- */

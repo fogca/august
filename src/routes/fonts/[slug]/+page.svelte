@@ -229,7 +229,7 @@
 
 <style>
 	.FontDetail {
-		padding: 40px var(--padding) 40px;
+		padding: 40px 0 40px;
 	}
 
 	/* ── 100vh top hero ── */
