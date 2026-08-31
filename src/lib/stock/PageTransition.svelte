@@ -30,6 +30,19 @@
   - panelColor: 白パネルの色 (default '#ffffff'). 黒系遷移は '#121212' 等
   - skipFadeIn: ローダーや専用イントロが直後に走るルートでは
                 true にしてフェードインをスキップ
+
+  iOS 26 の floating tab bar 対策 (2026-08-31, Dev/OTIF の +layout.svelte
+  から移植)
+  -------------------------------------------------------------
+  .darken-overlay / .transition-panel は position:fixed ではなく、スク
+  ロール層内の position:absolute として実装している。iOS 26 Safari の
+  floating tab bar は position:fixed 要素をレイアウトビューポート（タブ
+  バーの上端）でクリップし、物理画面の本当の下端までは届かない一方、通
+  常のスクロール層のコンテンツは viewport-fit=cover により物理下端まで
+  描画される。100vh/100dvh/100lvh すら物理下端に届かない（実機計測:
+  物理812に対しlvh=704, dvh/innerHeight=610-704, safe-area env=0）ため、
+  screen.height を使った panelMetrics() で毎ナビゲーションごとに実測ボッ
+  クスを組み立てている。「白背景が一瞬出る」系のバグは大抵これが原因。
 -->
 
 <script lang="ts">
@@ -92,8 +105,41 @@
 	// Tracks the in-flight outgoing timeline so a navigation that interrupts
 	// another one can kill it outright, rather than leaving its callbacks to
 	// fire late against a route that's already moved on (see the kill call
-	// below for what that leaves stuck).
+	// below for what that leaves stuck). Killing the tweens doesn't reset
+	// their properties, but the very next thing onNavigate does is re-arm
+	// every property fresh (display/top/height/y/yPercent/colour) below, so
+	// whatever state a kill leaves behind is fully overwritten either way —
+	// no separate safety net needed on top of this.
 	let activeTimeline: gsap.core.Timeline | null = null;
+
+	// Transition-surface geometry, in raw px and DOCUMENT coordinates —
+	// ported from Dev/OTIF's +layout.svelte, which hit and fixed this same
+	// bug first. iOS 26 Safari's floating tab bar clips `position: fixed`
+	// content at the layout viewport (ends above the tab), while in-flow/
+	// scroll-layer content paints edge-to-edge to the true physical screen
+	// bottom (viewport-fit=cover) — so .darken-overlay/.transition-panel
+	// live as position:absolute inside the scroll layer (boxed around the
+	// current scrollY each navigation) instead of position:fixed. No CSS
+	// viewport unit reaches the physical bottom there (measured on device:
+	// physical 812 vs lvh 704, dvh/innerHeight 610-704, safe-area env 0) —
+	// screen.height is the only metric that spans it. Desktop (fine
+	// pointer) uses innerHeight instead: exact there, while screen.height
+	// (the whole monitor) would only add dead travel.
+	const SURFACE_PAD = 150; // coverage beyond the viewport on each side
+	function panelMetrics() {
+		const coarse = window.matchMedia('(pointer: coarse)').matches;
+		const physical = coarse
+			? Math.max(window.screen.height, window.innerHeight)
+			: window.innerHeight;
+		return {
+			top: window.scrollY - SURFACE_PAD, // document-coord box top
+			height: physical + SURFACE_PAD * 2, // pad above + screen + pad below
+			// translateY that parks the box's BOTTOM edge just above the
+			// physical screen top (this variant enters from above, unlike
+			// OTIF's bottom entry — negative of OTIF's own offY).
+			offY: -(physical + SURFACE_PAD + 20)
+		};
+	}
 
 	onNavigate((navigation) => {
 		if (!navigation.from) return;
@@ -104,13 +150,6 @@
 		).matches;
 		if (prefersReducedMotion) return;
 
-		// A second navigation starting before the first has finished its ~1.2s
-		// outgoing+fade-in cycle leaves that first cycle's callbacks (including
-		// the .darken-overlay backgroundColor reset, which only runs in the
-		// fade-in's onComplete) never firing — nothing else was going to clear
-		// its armed 'black' background-color. Kill anything still running
-		// before arming a new cycle, so only the latest navigation's callbacks
-		// ever get to run.
 		activeTimeline?.kill();
 		gsap.killTweensOf(['.page-wrapper', '.darken-overlay', '.transition-panel']);
 
@@ -128,19 +167,22 @@
 		gsap.set('.page-wrapper', {
 			transformOrigin: `50% ${vhCenter}px`
 		});
-		// Arm the panel transparent, NOT panelColor — see the CSS note: a
-		// same-class bug to .darken-overlay's. transform: translateY(-100%)
-		// hides the panel visually, but iOS Safari's toolbar/safe-area
-		// sampler reads a fixed element's background-color independent of
-		// where transform has moved it to, so an opaque panel sitting
-		// off-screen still painted the safe area panelColor (white, by
-		// default) for the ~0.45s between arming and the slide-in actually
-		// starting. The real colour is snapped on in the slide-in tween's
-		// onStart below, once the panel is genuinely about to be visible.
-		gsap.set('.transition-panel', { backgroundColor: 'transparent' });
-		// Arm the darken layer at zero alpha (kept transparent while idle — see
-		// the CSS note on why alpha, not opacity, carries the darkness).
-		gsap.set('.darken-overlay', { backgroundColor: 'rgba(0,0,0,0)' });
+
+		// yPercent is explicitly zeroed: the resets further down park the
+		// panel via yPercent, and GSAP tracks y and yPercent as SEPARATE
+		// channels that add together — without this, every navigation after
+		// the first started from yPercent:-100 + y:<px> combined and the
+		// panel never entered the screen at all.
+		const m = panelMetrics();
+		gsap.set('.transition-panel', {
+			display: 'block',
+			top: m.top,
+			height: m.height,
+			y: m.offY,
+			yPercent: 0,
+			backgroundColor: panelColor
+		});
+		gsap.set('.darken-overlay', { display: 'block', top: m.top, height: m.height, opacity: 0 });
 
 		return new Promise<void>((resolve) => {
 			const tl = gsap.timeline({
@@ -173,70 +215,56 @@
 			tl.to(
 				'.darken-overlay',
 				{
-					backgroundColor: `rgba(0,0,0,${darkenOpacity})`,
+					opacity: darkenOpacity,
 					duration: outDuration * darkenDurationRatio,
 					ease: 'power2.inOut'
 				},
 				outDuration * darkenDelayRatio
 			);
 
+			// y in px (from the physical-top start set above), not '0%' — see
+			// panelMetrics.
 			tl.to(
 				'.transition-panel',
-				{
-					y: '0%',
-					duration: panelDuration,
-					ease: 'panelSilk',
-					// Snap to the real colour right as the slide-in starts, not a
-					// moment before — see the arming comment above.
-					onStart: () => gsap.set('.transition-panel', { backgroundColor: panelColor })
-				},
+				{ y: 0, duration: panelDuration, ease: 'panelSilk' },
 				outDuration * panelDelayRatio
 			);
 		});
 	});
 
 	afterNavigate(() => {
-		// Unconditional safety net, ahead of the needsEntryAnim gate below:
-		// .darken-overlay only stays safe for Safari's toolbar/safe-area
-		// sampler (see the CSS note) while its background-color is
-		// 'transparent', and that only gets restored ~1.2s after a
-		// navigation settles (the fade-in tween's onComplete, further down).
-		// Navigate again inside that window — a second link tapped before
-		// the first page has finished fading in — and needsEntryAnim gets
-		// consumed by the FIRST afterNavigate while the SECOND onNavigate
-		// has already re-armed the overlay to an opaque colour; nothing else
-		// then guarantees its own reset ever runs. Force it back to
-		// transparent on every settled navigation, independent of which one
-		// armed it.
-		//
-		// .transition-panel does NOT belong in this same unconditional
-		// block, unlike .darken-overlay: at the moment afterNavigate fires,
-		// the panel is still sitting at y:0% (opaque, fully covering the
-		// viewport) — the new page fades IN OVER it, only reaching
-		// clearProps'd-transparent once that fade-in's onComplete runs,
-		// below. Resetting it to transparent here would strip its colour
-		// while it's still meant to be visually covering the screen, for a
-		// bare flash of whatever's behind it. The next navigation's own
-		// onNavigate re-arms it to transparent anyway, so there is nothing
-		// for a safety net to do for this element specifically.
-		if (browser) gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
-
 		if (!needsEntryAnim) return;
 		needsEntryAnim = false;
 		if (!browser) return;
 
 		if (activeSkipFadeIn) {
-			// Hand off to a custom intro/loader on the new page.
+			// Hand off to a custom intro/loader on the new page. display:none
+			// while idle keeps both layers out of the paint tree (and out of
+			// Safari's background sampling on top of that).
 			gsap.set('.page-wrapper', { clearProps: 'all' });
-			// Hand the hidden state back to CSS (translateY(-100%)) instead of baking
-			// a px transform — otherwise the fixed white panel leaves a strip pinned
-			// at the top on mobile when the URL bar retracts and the viewport grows.
-			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
-			gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
+			gsap.set('.transition-panel', {
+				display: 'none',
+				y: panelMetrics().offY,
+				yPercent: 0,
+				clearProps: 'backgroundColor'
+			});
+			gsap.set('.darken-overlay', { display: 'none', opacity: 0 });
 			activeSkipFadeIn = false;
 			onComplete?.();
 			return;
 		}
+
+		// The outgoing box (top/height) was computed from scrollY at the OLD
+		// page — SvelteKit resets scroll to 0 for a normal navigation, so by
+		// now that box sits low, document-coordinate-wise, relative to the
+		// NEW page's (reset) scroll position. If the user had scrolled down
+		// any real amount before navigating, that leaves a gap at the BOTTOM
+		// of the new viewport where neither surface reaches (this variant
+		// enters from above). Re-box both to the current scroll position —
+		// still fully opaque/covering at this instant, this only moves where
+		// that coverage actually sits.
+		const m2 = panelMetrics();
+		gsap.set(['.transition-panel', '.darken-overlay'], { top: m2.top, height: m2.height });
 
 		gsap.to('.page-wrapper', {
 			opacity: 1,
@@ -248,11 +276,13 @@
 			},
 			onComplete: () => {
 				gsap.set('.page-wrapper', { clearProps: 'all' });
-				// Hand the hidden state back to CSS (translateY(-100%)) instead of baking
-			// a px transform — otherwise the fixed white panel leaves a strip pinned
-			// at the top on mobile when the URL bar retracts and the viewport grows.
-			gsap.set('.transition-panel', { clearProps: 'transform,backgroundColor' });
-				gsap.set('.darken-overlay', { backgroundColor: 'transparent' });
+				gsap.set('.transition-panel', {
+					display: 'none',
+					y: panelMetrics().offY,
+					yPercent: 0,
+					clearProps: 'backgroundColor'
+				});
+				gsap.set('.darken-overlay', { display: 'none', opacity: 0 });
 				onComplete?.();
 			}
 		});
@@ -263,25 +293,40 @@
 	<div class="page-wrapper">
 		{@render children()}
 	</div>
+	<!-- Transition surfaces live INSIDE the scroll layer (absolute, document
+	     coordinates set per-navigation from scrollY), NOT position:fixed —
+	     see the panelMetrics comment above for why. Nested inside
+	     .transition-bg (position:relative) so their top/left/right resolve
+	     against it, not the initial containing block. -->
+	<div class="darken-overlay" aria-hidden="true"></div>
+	<div class="transition-panel" aria-hidden="true"></div>
 </div>
-
-<div class="darken-overlay" aria-hidden="true"></div>
-<div class="transition-panel" aria-hidden="true"></div>
 
 <style>
 	/* iOS Safari tints its floating toolbar (and the safe areas behind it) with
-	   the BODY's background-color. A black body therefore paints a black band
-	   under a white page — the bug this used to cause. The transition's black
-	   backdrop lives on .transition-bg (a real element, never sampled by
-	   Safari), so body must stay the page colour. Do not set body black again. */
+	   the BODY's background-color. Kept black deliberately (2026-08-31,
+	   matching Dev/OTIF): .page-wrapper's own min-height:100dvh doesn't reach
+	   the true physical screen bottom on iOS 26's floating tab bar either
+	   (same gap panelMetrics works around above) — body shows through that
+	   sliver during ordinary scrolling, not just transitions, and a black
+	   sliver there reads as an intentional edge rather than a stray white
+	   gap. (An EARLIER version of this comment said the opposite — "do not
+	   set body black" — written back when the black was a blanket, untimed
+	   body colour with no real fix for the underlying gap. This is a
+	   different, narrower situation: the gap itself is now unavoidable
+	   given iOS 26's clipping, so black is the better fallback for it.) */
 	:global(body) {
-		background: var(--color-bg, #ffffff);
+		background: black;
 	}
 
 	.transition-bg {
 		background: black;
 		min-height: 100vh;
 		min-height: 100dvh;
+		/* Anchor for the absolutely-positioned transition surfaces inside
+		   (.darken-overlay / .transition-panel) — its top is the document
+		   top, so their JS-set `top` values are plain scrollY offsets. */
+		position: relative;
 	}
 
 	/* No `will-change` here: it would make this wrapper the containing block
@@ -294,49 +339,48 @@
 		position: relative;
 	}
 
-	/* Transparent while idle on purpose: iOS Safari samples the background-color
-	   of viewport-edge `position: fixed` elements to tint its toolbar, and it
-	   does so even when the element is fully transparent via opacity — so the
-	   darkening is driven entirely through background-color's own alpha
-	   (rgba, animated by GSAP below), never through the `opacity` property.
-	   An earlier version armed this to a flat `background-color: black` and
-	   animated `opacity` on top of it; the color itself stayed opaque black
-	   for the whole transition, which Safari read straight through the
-	   opacity, tinting the toolbar/safe-areas solid black. Keeping the alpha
-	   IN the color sidesteps that. */
 	.darken-overlay {
-		position: fixed;
-		inset: 0;
-		background: transparent;
+		/* Absolute in the scroll layer, NOT fixed — see panelMetrics above:
+		   iOS 26 clips the fixed layer at the layout viewport (ends above
+		   the floating tab), while scroll-layer content paints to the
+		   physical screen bottom, the only way this veil actually covers
+		   the whole screen there. top/height are set per-navigation from
+		   scrollY + physical screen height (padded both ways); left/right
+		   span the document. */
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		height: 100px; /* placeholder — JS sets the real box every navigation */
+		background: black;
+		opacity: 0;
 		z-index: 998;
 		pointer-events: none;
-		will-change: background-color;
+		will-change: opacity;
+		/* display:none while idle — keeps it out of Safari's background
+		   sampling and out of the paint tree entirely. The script flips
+		   display on/off around the animation. */
+		display: none;
 	}
 
-	/* Hidden via translateY(-100%) — slides down from above on entry. Use the
-	   LARGE viewport height (100lvh) so the panel always clears the collapsed
-	   mobile toolbar height — otherwise a white band pins to the top when the
-	   URL bar retracts. The transition also clearProps:'transform' on reset
-	   so no stale px translate is left behind.
-
-	   Transparent while idle, same reasoning as .darken-overlay above: this
-	   is ALSO a viewport-edge `position: fixed` element, and Safari's
-	   toolbar/safe-area sampler reads its background-color independently of
-	   `transform` — an opaque panel sitting off-screen (translateY(-100%))
-	   still painted the safe area panelColor. The real colour is set by the
-	   script only once the slide-in is actually starting (see onStart
-	   above), and cleared back to transparent on every reset. */
 	.transition-panel {
-		position: fixed;
+		/* Absolute in the scroll layer for the same iOS 26 fixed-layer-clip
+		   reason as .darken-overlay above — the sheet can only reach the
+		   physical screen edges from inside the scroll layer. Its box
+		   (top/height) is set per-navigation from scrollY + physical screen
+		   height; the slide is a px translateY within that box, entering
+		   from above (negative offY — see panelMetrics). */
+		position: absolute;
 		top: 0;
 		left: 0;
 		right: 0;
-		height: 100vh;
-		height: 100lvh;
-		background: transparent;
+		height: 100px; /* placeholder — JS sets the real box every navigation */
+		background: white;
 		transform: translateY(-100%);
 		z-index: 1000;
 		pointer-events: none;
 		will-change: transform;
+		/* display:none while idle — same reasoning as .darken-overlay. */
+		display: none;
 	}
 </style>
