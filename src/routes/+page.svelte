@@ -518,7 +518,9 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100svh;
-		background: #cdd6e6;
+		/* Same image as Elio's own typeface page hero (borrowed from gQ,
+		   2026-08-31) — flat colour stays as the load-in fallback. */
+		background: #cdd6e6 url('/images/fonts/gq.png') center / cover no-repeat;
 		color: #000000;
 		padding-top: clamp(48px, 8vh, 72px);
 		padding-bottom: var(--gutter);
