@@ -30,22 +30,24 @@
 		     filename/version scheme unchanged. Declared under two family names
 		     from the SAME file:
 		     'Norma' (kept stable — most components still hardcode this) and
-		     'Norma VF75' (versioned; --font-en/--font-ja below use this one,
+		     'Norma VF01' (versioned; --font-en/--font-ja below use this one,
 		     so anything reading var(--font-en)'s computed value sees the
 		     build number). Bump both the URL and the second name's suffix
-		     together on every export. -->
+		     together on every export. VF01 re-export (2026-08-31) fixed a
+		     master-compatibility break in 'two' and stray duplicate paths in
+		     Hair's 'six' — see static/fonts/README.md. -->
 		<style>
 			@font-face {
 				font-family: 'Norma';
-				src: url('%sveltekit.assets%/fonts/Norma-VF75.woff2?v=20260828f') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Norma-VF01.woff2?v=20260901a') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
 			@font-face {
-				font-family: 'Norma VF75';
-				src: url('%sveltekit.assets%/fonts/Norma-VF75.woff2?v=20260828f') format('woff2-variations');
+				font-family: 'Norma VF01';
+				src: url('%sveltekit.assets%/fonts/Norma-VF01.woff2?v=20260901a') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -74,7 +76,7 @@
 			   ELIO_WEIGHTS). Used on the Elio typeface page's Type Tester. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-Hair.woff2?v=20260831b') format('woff2');
+				src: url('%sveltekit.assets%/fonts/Elio-Hair.woff2?v=20260901a') format('woff2');
 				font-weight: 150;
 				font-style: normal;
 				font-display: swap;
@@ -83,8 +85,8 @@
 			/* Site-wide font: Norma for all elements (chairman directive).
 			   The versioned name goes first — see the @font-face comment above. */
 			:root {
-				--font-en: 'Norma VF75', 'Norma', 'Helvetica Neue', Arial, sans-serif;
-				--font-ja: 'Norma VF75', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-en: 'Norma VF01', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Norma VF01', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 			}
 
 			html,
