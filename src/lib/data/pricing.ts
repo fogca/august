@@ -97,9 +97,10 @@ export interface PackageDef {
 	// Buyer selects individual styles. The StyleList renders as toggleable chips.
 	selectable?: boolean;
 	// Reference-only "from" price for marketing teasers (fonts list / detail
-	// pages) — the cheapest real price point: Individual tier, full set,
-	// discounted. Not used in the actual checkout computation (see
-	// computeEur), which always derives from tier × selected style count.
+	// pages) — the cheapest real entry point: Individual tier's own
+	// per-style rate, for a single style (no collection discount applied).
+	// Not used in the actual checkout computation (see computeEur), which
+	// always derives from tier × selected style count.
 	baseEur: number;
 }
 
@@ -127,8 +128,9 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 				styles: STEINER_WEIGHTS,
 				italic: false,
 				selectable: true,
-				// Individual tier (€30/style) × 20 styles × 50% off (full set) = €300.
-				baseEur: 300
+				// Individual tier's own per-style rate — the cheapest single entry
+				// point, before any collection discount.
+				baseEur: 30
 			}
 		]
 	}
