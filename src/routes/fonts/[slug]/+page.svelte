@@ -4,6 +4,8 @@
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
 	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
 	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
+	import { getPackage } from '$lib/data/pricing.js';
+	import type { TypefaceSlug } from '$lib/data/pricing.js';
 	import type { PageData } from './$types.js';
 
 	let { data }: { data: PageData } = $props();
@@ -11,6 +13,11 @@
 	// Use $derived so these stay reactive if data changes on navigation
 	const tf = $derived(data.typeface);
 	const isAvailable = $derived(tf.status === 'available');
+	// Same "from" price as the /fonts catalogue's own fromPrice() — the
+	// Individual tier's per-style rate, not the full-collection price. Was
+	// hardcoded as "From €300" (the old full-set price) here specifically;
+	// derive it instead so the two never drift apart again.
+	const fromPriceEur = $derived(getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`)?.baseEur ?? null);
 	// Elio only has 52 letters and no OpenType features drawn yet — Glyph
 	// set / Beyond A-Z / OpenType below are swapped for a plain sample-text
 	// block on its page (see the {#if isElio} further down). GlyphSet itself
@@ -104,6 +111,9 @@
 					<dd>{tf.info.languages}</dd>
 				</div>
 			</dl>
+			{#if tf.info.note}
+				<p class="FontDetail__spec-note FontDetail__spec-note--sp">{tf.info.note}</p>
+			{/if}
 		{/if}
 
 		<h1 class="FontDetail__name">{tf.name}</h1>
@@ -146,6 +156,9 @@
 							<dd>{tf.info.languages}</dd>
 						</div>
 					</dl>
+					{#if tf.info.note}
+						<p class="FontDetail__spec-note">{tf.info.note}</p>
+					{/if}
 				</aside>
 			{/if}
 		</div>
@@ -200,26 +213,31 @@
 
 	<!-- On-page buy block (the fixed CTA scrolls here) -->
 	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">
-		{#if isAvailable}
-			<p class="FontBuy__eyebrow">License</p>
-			<h2 class="FontBuy__heading">{tf.name}</h2>
-			<p class="FontBuy__price">From €300 · perpetual license, pay once</p>
-			<ul class="FontBuy__licenses">
-				<li>Desktop</li>
-				<li>Web</li>
-				<li>App</li>
-				<li>Books</li>
-			</ul>
-			<a class="FontBuy__cta" href="/buy?font={tf.slug}">Configure licenses &amp; buy →</a>
-			<p class="FontBuy__note">
-				20 weights — Hairline to Ultra. Educational licences −30%.
-			</p>
-		{:else}
-			<p class="FontBuy__eyebrow">Coming Soon</p>
-			<h2 class="FontBuy__heading">{tf.name}</h2>
-			<p class="FontBuy__price">In development — released in due course.</p>
-			<a class="FontBuy__cta" href="/contact">Stay tuned →</a>
-		{/if}
+		<div class="FontBuy__inner">
+			{#if isAvailable}
+				<p class="FontBuy__eyebrow">License</p>
+				<h2 class="FontBuy__heading">{tf.name}</h2>
+				<p class="FontBuy__price">
+					{fromPriceEur !== null ? `From €${fromPriceEur}` : 'Price on request'} · pay once,
+					every license included
+				</p>
+				<ul class="FontBuy__licenses">
+					<li>Desktop</li>
+					<li>Web</li>
+					<li>App</li>
+					<li>Books</li>
+				</ul>
+				<a class="FontBuy__cta" href="/buy?font={tf.slug}">Purchase License →</a>
+				<p class="FontBuy__note">
+					20 weights — Hairline to Ultra. Educational licences −30%.
+				</p>
+			{:else}
+				<p class="FontBuy__eyebrow">Coming Soon</p>
+				<h2 class="FontBuy__heading">{tf.name}</h2>
+				<p class="FontBuy__price">In development — released in due course.</p>
+				<a class="FontBuy__cta" href="/contact">Stay tuned →</a>
+			{/if}
+		</div>
 	</section>
 </main>
 
@@ -408,6 +426,26 @@
 		margin: 0;
 	}
 
+	/* Small disclaimer under the spec grid — e.g. Elio's "still in
+	   development" note on Glyphs/Supported languages. Deliberately smaller
+	   and muted vs. the dt/dd pairs above it, so it reads as a caveat, not
+	   another spec line. */
+	.FontDetail__spec-note {
+		font-family: 'Norma', sans-serif;
+		font-size: 11px;
+		line-height: 1.5;
+		letter-spacing: 0;
+		color: var(--color-text-mute);
+		margin: 16px 0 0;
+	}
+
+	/* Hidden on PC by default — same visibility split as .FontDetail__spec-
+	   grid--sp right below, since this note is that block's own caption. */
+	.FontDetail__spec-note--sp {
+		display: none;
+		margin-top: 12px;
+	}
+
 	/* SP-only spec summary shown above the name (see the template) — hidden
 	   on PC, where the full .FontDetail__spec aside (Information/Design/
 	   Release included) still renders in its usual place. */
@@ -419,6 +457,10 @@
 		.FontDetail__spec-grid--sp {
 			display: grid;
 			margin-bottom: 0;
+		}
+
+		.FontDetail__spec-note--sp {
+			display: block;
 		}
 
 		.FontDetail__spec {
@@ -551,8 +593,14 @@
 
 	/* ── On-page buy block ── */
 	.FontBuy {
+		/* Border spans the full content width; only the text column inside
+		   (.FontBuy__inner) is capped to 640px for readability. Was max-width
+		   on this element directly, which shortened the border-top to match. */
 		padding: 96px var(--padding) 120px;
 		border-top: 1px solid var(--color-line);
+	}
+
+	.FontBuy__inner {
 		max-width: 640px;
 	}
 

@@ -18,8 +18,7 @@
 	const DEFAULT_CATEGORIES: Category[] = [
 		{ label: 'Currency', glyphs: '¤ $ € £ ¥ ¢ ₩ ₽ ₺ ₱' },
 		{ label: 'Punctuation', glyphs: '. , : ; … ! ? — – ( ) [ ] / \\ |' },
-		{ label: 'Symbols', glyphs: '& @ # * % § ¶ © ® ™' },
-		{ label: 'Fractions', glyphs: '½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞' }
+		{ label: 'Symbols', glyphs: '& @ # * % § ¶ © ® ™' }
 	];
 
 	let { fontFamily, title = 'Beyond A–Z', categories = DEFAULT_CATEGORIES }: Props = $props();
@@ -73,7 +72,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 16px 48px;
+		padding: 16px 10px;
 	}
 
 	.GlyphShowcase__cat {
@@ -88,7 +87,7 @@
 	}
 
 	.GlyphShowcase__glyphs {
-		font-size: clamp(32px, 7vw, 80px);
+		font-size: clamp(24px, 6.5vw, 80px);
 		line-height: 1.2;
 		letter-spacing: 0.04em;
 		text-align: center;

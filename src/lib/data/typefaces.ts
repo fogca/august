@@ -34,6 +34,9 @@ export interface Typeface {
 		glyphs: string;
 		/** Number of supported languages */
 		languages: string;
+		/** Small disclaimer shown under the spec grid — e.g. for a typeface
+		 *  still in development, where glyphs/languages aren't final yet. */
+		note?: string;
 	};
 	weights: WeightDef[];
 	/** Per-weight default words for the Type Tester — row i uses defaultTexts[i % length] */
@@ -268,13 +271,25 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
+		// Planned spec, not measured — unlike Norma's info (which counts the
+		// actual shipped file), only Hair exists yet. Glyphs/languages aren't
+		// final until more weights are drawn, hence the note.
+		info: {
+			design: 'Takumi Isobe',
+			release: 'TBD',
+			collection: '8 weights',
+			formats: 'OTF, TTF, WOFF2',
+			glyphs: 'TBD',
+			languages: 'TBD',
+			note: 'Glyph set and language support still in development — ask us for the current status.'
+		},
 		// Type Tester shows only the one weight that's actually drawn — the
 		// full ELIO_WEIGHTS (8 stops) is reserved for once more are real;
 		// showing all 8 now would just repeat Hair's own shapes under 7
 		// different wght labels, since this is a static font with nothing to
 		// interpolate.
 		weights: [ELIO_WEIGHTS[0]],
-		defaultTexts: ['Type your text here'],
+		defaultTexts: ['Lorem Ipsum is simply dummy text of the printing and typesetting industry.'],
 		// Catalogue specimen. Elio's own font (Hair) now renders this directly —
 		// no borrowed fontFamily or specimenWeight override needed, unlike
 		// Alfred below (still no drawings at all).
