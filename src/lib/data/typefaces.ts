@@ -276,15 +276,15 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
-		// Planned spec, not measured — unlike Norma's info (which counts the
-		// actual shipped file), only Hair exists yet. Glyphs/languages aren't
-		// final until more weights are drawn, hence the note.
+		// Glyph count is measured (encoded cmap of the shipped Elio-Hair.woff2,
+		// 2026-09-01 MVP-tier glyph set) — same convention as Norma's own info.
+		// Language coverage isn't verified against Hyperglot yet, hence TBD.
 		info: {
 			design: 'Takumi Isobe',
 			release: 'TBD',
 			collection: '8 weights',
 			formats: 'OTF, TTF, WOFF2',
-			glyphs: 'TBD',
+			glyphs: '166',
 			languages: 'TBD'
 		},
 		// Type Tester shows only the one weight that's actually drawn — the
