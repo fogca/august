@@ -284,7 +284,7 @@ export const TYPEFACES: Typeface[] = [
 			release: 'TBD',
 			collection: '8 weights',
 			formats: 'OTF, TTF, WOFF2',
-			glyphs: '166',
+			glyphs: '174',
 			languages: 'TBD'
 		},
 		// Type Tester shows only the one weight that's actually drawn — the
