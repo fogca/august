@@ -73,8 +73,8 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
-	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Foundry — home">
-		August Type Foundry
+	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Family — home">
+		August Type Family
 	</a>
 
 	<!-- Desktop-only inline nav -->
@@ -167,14 +167,13 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		/* Solid white header bar with a hairline rule (replaces the blend-mode overlay).
+		/* No background — sits transparently over whatever's beneath it.
 		   viewport-fit=cover lets this bar reach the true screen edge, so the
 		   notch/Dynamic Island safe area is added on top of the 16px. */
 		padding: calc(16px + env(safe-area-inset-top, 0px)) var(--padding) 12px;
 		/* Kept high (not 1) so the fixed bar stays above z-indexed content sections. */
 		z-index: 100;
 		font-family: 'Norma', sans-serif;
-		background-color: #fff;
 		mix-blend-mode: normal;
 		color: #000;
 		pointer-events: auto;
