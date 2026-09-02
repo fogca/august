@@ -256,12 +256,11 @@ export const TYPEFACES: Typeface[] = [
 		}
 	},
 	{
-		// Sibling face to Norma. Renamed from "Asta" 2026-08-31. Its own real
-		// font exists now — Hair (150), exported and shipped 2026-08-31 — but
-		// only that one of the planned 8 weights is drawn; Ultra (850) exists
-		// as a Glyphs master but wasn't exported, and the remaining 6 are
-		// unstarted instance slots (see presets.ts's ELIO_WEIGHTS). Re-shown
-		// 2026-08-29 at the user's request (temporary).
+		// Sibling face to Norma. Renamed from "Asta" 2026-08-31. Now a real
+		// variable font (2026-09-02) — both masters (Hair 150 / Ultra 850)
+		// are drawn and exported; the other 6 of the 8 named stops are
+		// interpolated between them, same as Norma. Re-shown 2026-08-29 at
+		// the user's request (temporary).
 		slug: 'elio',
 		name: 'Elio',
 		order: 3,
@@ -276,7 +275,7 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
-		// Glyph count is measured (encoded cmap of the shipped Elio-Hair.woff2,
+		// Glyph count is measured (encoded cmap of the shipped Elio-VF01.woff2,
 		// 2026-09-01 MVP-tier glyph set) — same convention as Norma's own info.
 		// Language coverage isn't verified against Hyperglot yet, hence TBD.
 		info: {
@@ -287,12 +286,9 @@ export const TYPEFACES: Typeface[] = [
 			glyphs: '174',
 			languages: 'TBD'
 		},
-		// Type Tester shows only the one weight that's actually drawn — the
-		// full ELIO_WEIGHTS (8 stops) is reserved for once more are real;
-		// showing all 8 now would just repeat Hair's own shapes under 7
-		// different wght labels, since this is a static font with nothing to
-		// interpolate.
-		weights: [ELIO_WEIGHTS[0]],
+		// Now a real variable font — all 8 named stops are genuine
+		// interpolation between the drawn Hair/Ultra masters.
+		weights: ELIO_WEIGHTS,
 		defaultTexts: ['Lorem Ipsum is simply dummy text of the printing and typesetting industry.'],
 		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
 		// now that Elio's own font (Hair) actually renders here. No hover

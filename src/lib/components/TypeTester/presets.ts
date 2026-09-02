@@ -45,11 +45,11 @@ export const WEIGHTS: WeightDef[] = [
 }));
 
 // Elio's own 8-stop axis (150/250/.../850 — matches its Glyphs instance
-// names directly, unlike Norma's compressed 1-95 naming). Only Hair (150)
-// has a real drawn weight so far — Ultra (850) exists as a master in the
-// source but wasn't exported; the other 6 are provisional instance slots
-// with no drawings yet. Labels borrow Norma's own vocabulary for
-// consistency, picking the stop closest to each axis value.
+// names directly, unlike Norma's compressed 1-95 naming). Both masters
+// (Hair 150 / Ultra 850) are drawn and exported as a real variable font;
+// the other 6 stops are genuine interpolation between them. Labels borrow
+// Norma's own vocabulary for consistency, picking the stop closest to each
+// axis value.
 export const ELIO_WEIGHTS: WeightDef[] = [
 	{ id: 150, name: '150', label: 'Hair', axisValue: 150 },
 	{ id: 250, name: '250', label: 'Thin', axisValue: 250 },

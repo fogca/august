@@ -1,8 +1,8 @@
-// Auto-generated from static/fonts/Elio-Hair.woff2's actual cmap (fontTools
+// Auto-generated from static/fonts/Elio-VF01.woff2's actual cmap (fontTools
 // getBestCmap()), same method as normaGlyphs.ts. Letters only (uppercase +
-// lowercase) — Elio's Hair master also covers digits and a handful of
-// punctuation marks, but the Type Tester shows just these 52 for now, since
-// that's the whole "normal" alphabet a reader would expect to browse.
+// lowercase) — Elio also covers digits and a handful of punctuation marks,
+// but the Type Tester shows just these 52 for now, since that's the whole
+// "normal" alphabet a reader would expect to browse.
 // Regenerate whenever Elio's export changes:
 //   fontTools.ttLib.TTFont(path).getBestCmap() + unicodedata category, kept
 //   to Lu -> uppercase / Ll -> lowercase only.
