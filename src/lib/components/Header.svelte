@@ -6,7 +6,6 @@
 	// Desktop (≥768px): inline nav links on the left, no toggle.
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import Logo from './Logo.svelte';
 	import { onScroll } from '$lib/scroll';
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { lang } from '$lib/state/lang.svelte';
@@ -75,7 +74,7 @@
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
 	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Foundry — home">
-		<Logo height={25} />
+		August Type Foundry
 	</a>
 
 	<!-- Desktop-only inline nav -->
@@ -178,7 +177,6 @@
 		background-color: #fff;
 		mix-blend-mode: normal;
 		color: #000;
-		border-bottom: 0.5px solid rgba(0, 0, 0, 0.25);
 		pointer-events: auto;
 		transform: translateY(0);
 		transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
@@ -242,7 +240,7 @@
 	}
 
 	.Header__nav-link {
-		font-size: 16px;
+		font-size: 12px;
 		font-weight: var(--fw-ui);
 		color: inherit;
 		text-decoration: none;
@@ -257,31 +255,34 @@
 		padding: 4px 0;
 	}
 
+	/* Plain typed text now, same treatment as .Header__nav-link — not the
+	   Logo.svelte wordmark (still used as-is elsewhere: Footer, home hero),
+	   and no longer signal red — just inherits the header's own black. */
 	.Header__logo {
 		/* Mobile: logo leads on the left; .Header__actions (order: 2) takes the
 		   right. Desktop below flips this — nav leads, logo trails. */
 		order: 1;
-		font-size: 20px;
+		font-size: 12px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
-		/* Signal red, not the header's black/inverted text — wins over .is-open too. */
-		color: var(--color-signal, #e0231c);
+		color: inherit;
 		letter-spacing: 0;
 		padding: 4px 8px;
 	}
 
-	/* SP: logo 25px (overrides the SVG's inline height); tighter header padding */
+	/* SP: tighter header padding (PC's own padding lives below, in the
+	   >=768px block) */
 	@media (max-width: 767px) {
 		.Header {
 			padding: calc(12px + env(safe-area-inset-top, 0px)) 10px 8px;
 		}
-
-		.Header__logo :global(.Logo) {
-			height: 22px !important;
-		}
 	}
 
 	@media (min-width: 768px) {
+		.Header {
+			padding: 8px 20px;
+		}
+
 		.Header__actions {
 			display: none;
 		}
@@ -293,7 +294,6 @@
 
 		.Header__logo {
 			order: 2;
-			font-size: 22px;
 			padding: 4px 0;
 		}
 	}
