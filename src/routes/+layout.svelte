@@ -31,7 +31,37 @@
 
 	// New page content means new layout heights — recompute trigger positions.
 	afterNavigate(() => refreshTriggers());
+
+	// PWA wiring -- injectRegister:'auto' (vite.config.ts) only patches a
+	// static index.html, which doesn't exist here (this app is SSR'd fresh
+	// per request, not prerendered), so neither the manifest <link> nor the
+	// service worker registration ever reaches a real page without doing
+	// both by hand, client-side only: virtual:pwa-info's `pwaInfo` is
+	// `undefined` during SSR by the plugin's own design, so this can't run
+	// at the top level or in a $derived -- it has to wait for onMount.
+	// (Same fix as the sibling OTIF/Mokuseki projects, where this was
+	// traced to two bugs: this missing wiring, and a navigateFallback that
+	// broke offline navigation outright -- avoided here from the start via
+	// workbox.navigateFallback: undefined above.)
+	let webManifestLink = $state('');
+	onMount(() => {
+		import('virtual:pwa-info').then(({ pwaInfo }) => {
+			if (pwaInfo) webManifestLink = pwaInfo.webManifest.linkTag;
+		});
+		// registerType:'autoUpdate' means updates apply silently on the next
+		// load -- no "new version available" prompt UI to wire up, so the
+		// plain vanilla register is enough (not the Svelte-store-returning
+		// virtual:pwa-register/svelte, which exists for building that prompt).
+		import('virtual:pwa-register').then(({ registerSW }) => {
+			registerSW({ immediate: true });
+		});
+	});
 </script>
+
+<svelte:head>
+	<!-- Empty until onMount resolves virtual:pwa-info (SSR-safe: see PWA wiring above). -->
+	{@html webManifestLink}
+</svelte:head>
 
 <Header />
 

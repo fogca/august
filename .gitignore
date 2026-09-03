@@ -7,6 +7,10 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+# vite-plugin-pwa's dev-mode service worker (devOptions.enabled in
+# vite.config.ts) -- regenerated on every `vite dev`, not build output
+# meant to ship.
+/dev-dist
 
 # OS
 .DS_Store
