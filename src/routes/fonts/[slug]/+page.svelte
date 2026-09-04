@@ -159,6 +159,73 @@
 		</div>
 	</div>
 
+	<!-- Page order per the user's 2026-09 request: thumbnail (hero, above) >
+	     overview (body, above) > in-use images > weights > inspiration >
+	     type tester > glyph set > specimen > buy (unchanged, stays last). -->
+
+	<!-- In Use — 4-5 real-world application photos in a row. Always renders,
+	     even with none yet: empty slots are an honest "photo pending" state,
+	     consistent with this page's other in-development placeholders
+	     (Alfred's hero, Elio's borrowed-thumbnail note, etc). -->
+	<section class="FontInUse" aria-label="In use">
+		<p class="FontDetail__spec-title">In Use</p>
+		<div class="FontInUse__row">
+			{#each tf.inUseImages ?? [null, null, null, null] as img, i (i)}
+				<div class="FontInUse__cell">
+					{#if img}
+						<img src={img.src} alt={img.alt} loading="lazy" />
+					{:else}
+						<span class="FontInUse__placeholder">Application photo</span>
+					{/if}
+				</div>
+			{/each}
+		</div>
+	</section>
+
+	<!-- Weights — the named axis stops, each set in its own weight. A quick
+	     visual index of the range; GlyphSet (further down) is the deep,
+	     interactive per-letter inspector across the same axis. -->
+	<section class="FontWeights" aria-label="Weights">
+		<p class="FontDetail__spec-title">Weights</p>
+		<ul class="FontWeights__list">
+			{#each tf.weights as w (w.id)}
+				<li
+					class="FontWeights__item"
+					style="font-variation-settings: 'wght' {w.axisValue}; font-family: '{tf.fontFamily}', sans-serif;"
+				>
+					<span class="FontWeights__label">{w.label}</span>
+					<span class="FontWeights__value">{w.name}</span>
+				</li>
+			{/each}
+		</ul>
+	</section>
+
+	{#if tf.inspiration}
+		<!-- Inspiration — reference imagery + a short passage on a specific
+		     design influence. Genuinely optional (see the field's own comment
+		     in typefaces.ts) — skipped entirely rather than shown empty, since
+		     an invented "why this design" passage isn't the same kind of
+		     honest placeholder an empty photo slot is. -->
+		<section class="FontInspiration" aria-label="Inspiration">
+			<p class="FontDetail__spec-title">Inspiration</p>
+			<div class="FontInspiration__row">
+				{#each tf.inspiration.images as img, i (i)}
+					<div class="FontInspiration__cell">
+						{#if img.src}
+							<img src={img.src} alt={img.alt} loading="lazy" />
+						{:else}
+							<span class="FontInUse__placeholder">Reference photo</span>
+						{/if}
+					</div>
+				{/each}
+			</div>
+			<p class="FontInspiration__text">{tf.inspiration.paragraph}</p>
+			{#if tf.inspiration.paragraphDa}
+				<p class="FontInspiration__text-da" lang="da">{tf.inspiration.paragraphDa}</p>
+			{/if}
+		</section>
+	{/if}
+
 	<TypeTester
 		weights={tf.weights}
 		fontFamily={tf.fontFamily}
@@ -169,7 +236,7 @@
 
 	{#if isElio}
 		<!-- Elio only has 52 letters and no OpenType features yet — the Glyph
-		     set / Beyond A-Z / OpenType sections below would mostly show
+		     set / specimen / OpenType sections below would mostly show
 		     .notdef/tofu or empty demos. A plain sample-text block instead,
 		     using only characters actually in Elio's cmap (letters, comma,
 		     period, hyphen, space — no digits/other punctuation drawn on
@@ -194,11 +261,11 @@
 			</p>
 		</section>
 	{:else}
-		<!-- Full glyph set -->
+		<!-- Glyph set: full A-Z inspector -->
 		<GlyphSet fontFamily={tf.fontFamily} name={tf.name} title="Glyph set" weights={tf.weights} />
 
-		<!-- Editorial showcase — currency / punctuation / symbols / fractions,
-		     each set large on its own row. -->
+		<!-- Specimen: currency / punctuation / symbols / fractions, each set
+		     large on its own row. -->
 		<GlyphShowcase fontFamily={tf.fontFamily} />
 
 		<!-- OpenType features (live OFF → ON demos) — hidden 2026-08-31 at the
@@ -558,6 +625,160 @@
 		letter-spacing: 0;
 		color: var(--color-text);
 		text-align: left;
+		max-width: 64ch;
+		margin: 12px 0 0;
+	}
+
+	/* ── In Use — 4-5 application photos in a row ── */
+	.FontInUse {
+		padding: 40px var(--padding) 48px;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.FontInUse__row {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(160px, 1fr);
+		gap: 12px;
+		overflow-x: auto;
+		/* A little breathing room so a scrolled-to-the-edge card isn't flush
+		   against the viewport edge, same padding as the section itself. */
+		scroll-padding-inline: var(--padding);
+	}
+
+	@media (min-width: 768px) {
+		.FontInUse__row {
+			/* Desktop: exactly 5 equal columns, no scroll — 4 real photos plus
+			   an empty slot reads fine, 5 fills the row exactly. */
+			grid-auto-flow: row;
+			grid-template-columns: repeat(5, 1fr);
+			gap: 16px;
+		}
+	}
+
+	.FontInUse__cell {
+		aspect-ratio: 3 / 4;
+		background: var(--color-bg-gray, #f3f3f3);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	.FontInUse__cell img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.FontInUse__placeholder {
+		font-family: 'Norma', sans-serif;
+		font-size: 11px;
+		letter-spacing: 0;
+		color: var(--color-text-mute);
+		opacity: 0.6;
+		text-align: center;
+		padding: 0 12px;
+	}
+
+	/* ── Weights — the named axis stops, each set in its own weight ── */
+	.FontWeights {
+		padding: 40px var(--padding) 48px;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.FontWeights__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.FontWeights__item {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 10px 0;
+		border-bottom: 1px solid var(--color-line);
+		font-size: clamp(22px, 4vw, 36px);
+		line-height: 1.2;
+		letter-spacing: 0;
+	}
+
+	.FontWeights__item:first-child {
+		border-top: 1px solid var(--color-line);
+	}
+
+	.FontWeights__value {
+		font-size: 13px;
+		color: var(--color-text-mute);
+		font-variation-settings: normal !important;
+	}
+
+	/* ── Inspiration — reference imagery + a short passage ── */
+	.FontInspiration {
+		padding: 40px var(--padding) 48px;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.FontInspiration__row {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+		margin-bottom: 32px;
+		max-width: 720px;
+	}
+
+	@media (min-width: 768px) {
+		.FontInspiration__row {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 16px;
+		}
+	}
+
+	.FontInspiration__cell {
+		aspect-ratio: 4 / 3;
+		background: var(--color-bg-gray, #f3f3f3);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	.FontInspiration__cell img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.FontInspiration__text {
+		font-size: 16px;
+		line-height: 1.6;
+		letter-spacing: 0;
+		color: var(--color-text);
+		max-width: 64ch;
+		margin: 0;
+	}
+
+	:global([data-lang='da']) .FontInspiration__text {
+		display: none;
+	}
+
+	:global([data-lang='en']) .FontInspiration__text-da {
+		display: none;
+	}
+
+	.FontInspiration .FontInspiration__text-da {
+		font-weight: 300;
+		font-size: 15px;
+		line-height: 1.6;
+		opacity: 0.75;
+		letter-spacing: 0;
+		color: var(--color-text);
 		max-width: 64ch;
 		margin: 12px 0 0;
 	}

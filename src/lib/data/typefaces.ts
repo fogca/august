@@ -74,6 +74,26 @@ export interface Typeface {
 		ratio?: string;
 		items: { src?: string; caption?: string; alt?: string }[];
 	}[];
+	/** "In Use" row on the typeface page — 4-5 real-world application photos
+	 *  shown side by side. Optional: when absent, the section still renders
+	 *  (same convention as the rest of this in-development-friendly page —
+	 *  see Alfred/Elio's placeholder hero etc.) as four empty labelled
+	 *  slots, so the page's structure doesn't change once photos exist. */
+	inUseImages?: { src: string; alt: string }[];
+	/** Inspiration section — reference imagery plus a short passage on a
+	 *  specific design influence, distinct from (and more specific than)
+	 *  `description`'s general lineage statement. Genuinely optional: unlike
+	 *  inUseImages, an empty/placeholder version of this section is not
+	 *  rendered — a placeholder image is honest, a placeholder paragraph
+	 *  about "inspiration" would just be invented copy, so the whole
+	 *  section is skipped for typefaces that don't have one yet. */
+	inspiration?: {
+		paragraph: string;
+		paragraphDa?: string;
+		/** Reference images; entries without `src` render as a placeholder
+		 *  slot (same treatment as inUseImages). */
+		images: { src?: string; alt: string }[];
+	};
 	/** Hero slide colour theme — gives each typeface a distinct light/dark tone. */
 	theme: { bg: string; fg: string };
 	/** Catalogue card background on /fonts. Always paired with black text (per
