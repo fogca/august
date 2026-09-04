@@ -143,7 +143,7 @@ export const TYPEFACES: Typeface[] = [
 			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		// Measured, not estimated: glyph count is the encoded cmap of the shipped
-		// Norma-VF01.woff2. The language count is Hyperglot 0.7.3, base support
+		// Norma-VF02.woff2. The language count is Hyperglot 0.7.3, base support
 		// restricted to --validity verified — i.e. only languages whose charset
 		// data Hyperglot has checked. Its default (draft data included) reports
 		// 246, which counts a long tail of unverified minority orthographies and
@@ -153,7 +153,7 @@ export const TYPEFACES: Typeface[] = [
 			release: 'July 2026',
 			collection: '20 weights, variable',
 			formats: 'TTF, WOFF2',
-			glyphs: '341',
+			glyphs: '340',
 			languages: '93'
 		},
 		weights: WEIGHTS,

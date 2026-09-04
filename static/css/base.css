@@ -109,7 +109,7 @@ a {
      app.html re-declares --font-en/--font-ja as Norma (site-wide directive);
      this is the no-JS/base fallback. Keep the versioned name here in sync
      with app.html's @font-face block. */
-  --font-en:     'Norma VF75', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+  --font-en:     'Norma VF02', 'Norma', 'Helvetica Neue', Arial, sans-serif;
   --font-ja:     'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
                  'Yu Gothic', 'Meiryo', sans-serif;
   --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI',
