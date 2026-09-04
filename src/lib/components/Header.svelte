@@ -73,8 +73,11 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
-	<a class="Header__logo" href="/" onclick={close} aria-label="August Type Family — home">
-		August Type Family
+	<!-- Rebrand trial (2026-09) — "Ōgast", macron variant, one of two the user
+	     is weighing (the other is "Ôgast", circumflex). Swap the word itself
+	     to compare; easy to revert to "August" or flip to the other mark. -->
+	<a class="Header__logo" href="/" onclick={close} aria-label="Ōgast Type Family — home">
+		Ōgast Type Family
 	</a>
 
 	<!-- Desktop-only inline nav -->
