@@ -228,9 +228,15 @@
 </section>
 
 <style>
+	/* Black background — referenced from Söhne Collection's own glyph
+	   inspector (the user's screenshot): the page goes dark, and the
+	   grid cells invert to light "keys" against it (see .GlyphSet__cell
+	   below) rather than just flipping to light text on a dark field. */
 	.GlyphSet {
 		padding: 40px var(--padding) 48px;
 		border-top: 1px solid var(--color-line);
+		background: #000;
+		color: #fff;
 	}
 
 	/* Mobile: no pinning — the section is its own height and scrolls normally. */
@@ -241,7 +247,7 @@
 	.GlyphSet__label {
 		font-family: 'Norma', sans-serif;
 		font-size: var(--fs-h5);
-		color: var(--color-text-mute);
+		color: rgba(255, 255, 255, 0.5);
 		letter-spacing: 0;
 		margin: 0 0 20px;
 	}
@@ -266,7 +272,7 @@
 		justify-content: space-between;
 		gap: 12px;
 		padding-bottom: 12px;
-		border-bottom: 1px solid var(--color-line);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 	}
 
 	.GlyphSet__type-name {
@@ -274,7 +280,7 @@
 		font-size: var(--fs-h4);
 		font-weight: var(--fw-strong);
 		letter-spacing: 0;
-		color: var(--color-text);
+		color: #fff;
 	}
 
 	.GlyphSet__select-wrap {
@@ -288,7 +294,7 @@
 		border: none;
 		font-family: 'Norma', sans-serif;
 		font-size: var(--fs-h6);
-		color: var(--color-text-mute);
+		color: rgba(255, 255, 255, 0.6);
 		letter-spacing: 0;
 		padding-right: 14px;
 		cursor: pointer;
@@ -304,7 +310,7 @@
 		font-size: var(--fs-h6);
 		letter-spacing: 0.02em;
 		text-transform: uppercase;
-		color: var(--color-text-mute);
+		color: rgba(255, 255, 255, 0.6);
 		margin: 0;
 	}
 
@@ -337,14 +343,14 @@
 		font-size: 220px;
 		line-height: 1;
 		text-align: center;
-		color: var(--color-text);
+		color: #fff;
 	}
 
 	.GlyphSet__mline {
 		position: absolute;
 		left: 0;
 		right: 0;
-		border-top: 1px solid var(--color-line);
+		border-top: 1px solid rgba(255, 255, 255, 0.2);
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
@@ -369,11 +375,11 @@
 	}
 
 	.GlyphSet__mlabel {
-		color: var(--color-text-mute);
+		color: rgba(255, 255, 255, 0.5);
 	}
 
 	.GlyphSet__mvalue {
-		color: var(--color-text);
+		color: #fff;
 	}
 
 	@media (min-width: 768px) {
@@ -386,7 +392,7 @@
 
 	.GlyphSet__group {
 		padding-block: 20px;
-		border-top: 1px solid var(--color-line);
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
 	}
 
 	.GlyphSet__group:first-child {
@@ -399,7 +405,7 @@
 		font-size: var(--fs-h6);
 		letter-spacing: 0.02em;
 		text-transform: uppercase;
-		color: var(--color-text-mute);
+		color: rgba(255, 255, 255, 0.5);
 		margin: 0 0 12px;
 	}
 
@@ -408,6 +414,10 @@
 		grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
 	}
 
+	/* Grid cells invert to light "keys" on the dark field, per the
+	   reference — not light text on transparent-dark like the rest of
+	   this panel, that read as a flat wall of type rather than a grid of
+	   distinct tiles. */
 	.GlyphSet__cell {
 		/* Same base.css tag-selector issue — button is in its reset list too. */
 		font-family: inherit;
@@ -417,21 +427,24 @@
 		height: 52px;
 		font-size: 20px;
 		line-height: 1;
-		color: var(--color-text);
-		background: transparent;
+		color: #111;
+		background: #dcdcdc;
 		border: 1px solid transparent;
 		cursor: pointer;
 		padding: 0;
-		transition: background-color 0.12s, color 0.12s;
+		transition: background-color 0.12s, color 0.12s, box-shadow 0.12s;
 	}
 
 	.GlyphSet__cell:hover {
-		background: var(--color-bg-gray);
+		background: #f2f2f2;
 	}
 
+	/* Distinct from a mere hover — a ring, not just a brighter fill —
+	   since both now land on roughly the same near-white tone. */
 	.GlyphSet__cell.is-active {
-		background: var(--color-text);
-		color: var(--color-bg);
+		background: #fff;
+		color: #000;
+		box-shadow: inset 0 0 0 1px #000;
 	}
 
 	/* Desktop: fixed-width metrics panel stays put; only the grid scrolls,
