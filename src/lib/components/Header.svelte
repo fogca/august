@@ -1,7 +1,7 @@
 <script lang="ts">
-	// August Type Foundry site header.
+	// Ôgast site header.
 	// Mobile (<768px): "Menu" toggle. Open state is a light top panel (Figma
-	//   188:10): Close + August Type Foundry wordmark, a "Fonts" group of typeface links,
+	//   188:10): Close + Ôgast wordmark, a "Fonts" group of typeface links,
 	//   and page links.
 	// Desktop (≥768px): inline nav links on the left, no toggle.
 	import { onMount } from 'svelte';
@@ -35,8 +35,10 @@
 	// own OpenType nameID 13/14 metadata (see Footer.svelte's LEGAL array).
 	const NAV: NavItem[] = [
 		{ label: 'Fonts', href: '/fonts' },
+		{ label: 'About', href: '/about' },
 		{ label: 'Custom', href: '/custom' },
-		{ label: 'License', href: '/licensing' }
+		{ label: 'License', href: '/licensing' },
+		{ label: 'Contact', href: '/contact' }
 	];
 
 	// Mobile panel: typeface shortcuts + page links
@@ -52,8 +54,10 @@
 	// Mirrors the desktop nav (the Fonts group above stands in for its "Fonts"
 	// link, and the language switch is appended after these).
 	const PAGES: NavItem[] = [
+		{ label: 'About', href: '/about' },
 		{ label: 'Custom', href: '/custom' },
-		{ label: 'License', href: '/licensing' }
+		{ label: 'License', href: '/licensing' },
+		{ label: 'Contact', href: '/contact' }
 	];
 
 	function toggle() {
