@@ -74,11 +74,12 @@
 			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 850,
 			   full wght range interpolated between them). Used on the Elio
 			   typeface page's Type Tester and the top-page A-Z specimen.
-			   VF04 (2026-09-05): quoteleft/quotesingle newly Ultra-compatible
-			   and now ship for the first time — see static/fonts/README.md. */
+			   VF05 (2026-09-05): re-export picking up circumflexcomb's tightened
+			   sidebearing (cascades to caroncomb/Icircumflex/icircumflex) — same
+			   106-glyph exclusion set as VF04, no compatibility changes. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF04.woff2?v=20260905a') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF05.woff2?v=20260905b') format('woff2-variations');
 				font-weight: 150 850;
 				font-style: normal;
 				font-display: swap;

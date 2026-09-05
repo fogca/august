@@ -295,7 +295,7 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
-		// Glyph count is measured (encoded cmap of the shipped Elio-VF04.woff2)
+		// Glyph count is measured (encoded cmap of the shipped Elio-VF05.woff2)
 		// — same convention as Norma's own info. This is deliberately lower
 		// than the source file's total: the build script excludes any
 		// glyph whose Ultra master isn't drawn yet (or that references one
