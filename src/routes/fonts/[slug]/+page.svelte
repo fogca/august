@@ -29,7 +29,7 @@
 </script>
 
 <svelte:head>
-	<title>{tf.name} — August Type Foundry</title>
+	<title>{tf.name} — Ôgast</title>
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 
@@ -568,15 +568,24 @@
 	}
 
 	/* SP: pinned to the bottom of the first view. The square hero above is
-	   100vw tall (see .FontDetail__hero's own SP rule) and .FontDetail__body
+	   90vw tall (see .FontDetail__hero's own SP rule — corrected here from an
+	   earlier "100vw" that didn't match the real value) and .FontDetail__body
 	   adds 64px of padding-top before this element starts — this min-height
-	   makes up the rest of 100dvh, so hero + padding + this always sum to
-	   exactly one viewport and the name lands right at the fold. */
+	   makes up the rest of one viewport, so hero + padding + this always sum
+	   to it and the name lands right at the fold.
+	   svh, not dvh: dvh is *live* — it keeps recomputing while Safari's
+	   toolbar collapses/expands, which is exactly what happens while the
+	   page is being scrolled. A calc() built on dvh kept changing mid-
+	   gesture, so the name visibly dragged up/down as the toolbar animated
+	   (reported 2026-09). svh is the small/toolbar-shown viewport — a static
+	   value that doesn't move once painted, trading "always exactly at the
+	   fold" for "never drifts": if the toolbar is already hidden, the name
+	   lands a little short of the true bottom edge instead of sliding. */
 	@media (max-width: 767.98px) {
 		.FontDetail__name {
 			display: flex;
 			align-items: flex-end;
-			min-height: calc(100dvh - 100vw - 64px - 100px);
+			min-height: calc(100svh - 90vw - 64px - 100px);
 		}
 	}
 
