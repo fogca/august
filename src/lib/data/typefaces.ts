@@ -295,9 +295,9 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
-		// Glyph count is measured (encoded cmap of the shipped Elio-VF03.woff2)
+		// Glyph count is measured (encoded cmap of the shipped Elio-VF04.woff2)
 		// — same convention as Norma's own info. This is deliberately lower
-		// than the source file's total: VF03's build script excludes any
+		// than the source file's total: the build script excludes any
 		// glyph whose Ultra master isn't drawn yet (or that references one
 		// that isn't) rather than shipping it broken — currently digits,
 		// most punctuation, and several accented-letter families. See
@@ -309,7 +309,7 @@ export const TYPEFACES: Typeface[] = [
 			release: 'TBD',
 			collection: '8 weights',
 			formats: 'OTF, TTF, WOFF2',
-			glyphs: '104',
+			glyphs: '106',
 			languages: 'TBD'
 		},
 		// Now a real variable font — all 8 named stops are genuine
