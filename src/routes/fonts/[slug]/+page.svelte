@@ -193,8 +193,16 @@
 					class="FontWeights__item"
 					style="font-variation-settings: 'wght' {w.axisValue}; font-family: '{tf.fontFamily}', sans-serif;"
 				>
-					<span class="FontWeights__label">{w.label}</span>
-					<span class="FontWeights__value">{w.name}</span>
+					<!-- Norma's own weights are named by number (1-95, name x 10 =
+					     wght) — that number is the name, not a word standing in for
+					     it, so it's the only thing shown. Elio's smaller, newer axis
+					     doesn't carry that convention, so it gets the more familiar
+					     "number word" pairing instead. -->
+					{#if isElio}
+						<span class="FontWeights__label">{w.name} {w.label}</span>
+					{:else}
+						<span class="FontWeights__label">{w.name}</span>
+					{/if}
 				</li>
 			{/each}
 		</ul>
@@ -632,7 +640,6 @@
 	/* ── In Use — 4-5 application photos in a row ── */
 	.FontInUse {
 		padding: 40px var(--padding) 48px;
-		border-top: 1px solid var(--color-line);
 	}
 
 	.FontInUse__row {
@@ -685,37 +692,31 @@
 	/* ── Weights — the named axis stops, each set in its own weight ── */
 	.FontWeights {
 		padding: 40px var(--padding) 48px;
-		border-top: 1px solid var(--color-line);
 	}
 
+	/* Single column on mobile; a long axis (Norma's own 20 stops) reads fine
+	   split into two on wider screens instead of one long scroll. */
 	.FontWeights__list {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-columns: 1fr;
+		column-gap: 48px;
+	}
+
+	@media (min-width: 600px) {
+		.FontWeights__list {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 
 	.FontWeights__item {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 16px;
+		display: block;
 		padding: 10px 0;
-		border-bottom: 1px solid var(--color-line);
 		font-size: clamp(22px, 4vw, 36px);
 		line-height: 1.2;
 		letter-spacing: 0;
-	}
-
-	.FontWeights__item:first-child {
-		border-top: 1px solid var(--color-line);
-	}
-
-	.FontWeights__value {
-		font-size: 13px;
-		color: var(--color-text-mute);
-		font-variation-settings: normal !important;
 	}
 
 	/* ── Inspiration — reference imagery + a short passage ── */
