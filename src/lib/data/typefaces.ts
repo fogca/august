@@ -157,13 +157,37 @@ export const TYPEFACES: Typeface[] = [
 			languages: '93'
 		},
 		weights: WEIGHTS,
-		// Full alphanumeric proof string, same on every row — 2026-08-31,
-		// replacing both the earlier single statement and the astronomy
-		// word-per-row idea. One entry, so defaultTexts[i % length] applies
-		// it to all twenty weights.
-		// Explicit line break between upper/lowercase — WeightRow's own text
-		// element is white-space:pre-wrap, so \n renders as a real break.
-		defaultTexts: ['ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz1234567890'],
+		// Continues Elio's A-H wine/terroir word list (2026-09, at the user's
+		// request) — Elio's own 8 rows are single words per letter; Norma's 20
+		// rows push further, one full French definition-style sentence per
+		// row, roughly alphabetical from I onward. 18 letters remain (I-Z);
+		// U/W/X/Y have no natural single-word French wine term, so those are
+		// skipped and M/R/S/T/V (each genuinely rich in real vocabulary)
+		// carry two entries instead, still reaching 20 without inventing a
+		// term that doesn't actually exist. Every sentence is a real,
+		// accurate definition, not invented trivia.
+		defaultTexts: [
+			"L'irrigation est l'apport artificiel d'eau à la vigne, une pratique strictement encadrée ou interdite dans de nombreuses appellations européennes.",
+			"Le jéroboam est un format de bouteille équivalant à quatre bouteilles standards, soit environ trois litres, utilisé notamment en Champagne.",
+			'Le kir est un apéritif composé de crème de cassis et de vin blanc, traditionnellement un bourgogne aligoté.',
+			'La lie désigne les dépôts de levures mortes qui se forment au fond de la cuve après la fermentation, parfois conservés au contact du vin pour enrichir sa texture.',
+			"Le millésime correspond à l'année de récolte du raisin ayant servi à l'élaboration du vin.",
+			'La fermentation malolactique transforme l’acide malique, plus âpre, en acide lactique, plus rond, adoucissant ainsi le vin.',
+			'Le négociant achète du raisin, du moût ou du vin à des vignerons pour l’élever et le commercialiser sous sa propre marque.',
+			"L'œnologie est la science qui étudie l'ensemble des techniques de vinification et d'élevage du vin.",
+			'Le phylloxéra est un insecte ravageur qui a détruit la majeure partie du vignoble européen à la fin du dix-neuvième siècle.',
+			'Une quinta est une propriété viticole portugaise, terme le plus souvent associé aux domaines de la vallée du Douro produisant du porto.',
+			"La robe désigne la couleur et l'aspect visuel d'un vin, premier élément observé lors d'une dégustation.",
+			'Le rendement mesure la quantité de raisin ou de vin produite par hectare, un critère souvent plafonné par les cahiers des charges des appellations.',
+			'Le sommelier est le professionnel chargé de la sélection, de la conservation et du service du vin, notamment dans la restauration.',
+			'Un vin sec ne contient qu’une quantité minime de sucre résiduel, par opposition aux vins moelleux ou liquoreux.',
+			'Le terroir désigne l’ensemble des facteurs naturels — sol, climat, exposition — qui confèrent au vin son caractère propre à un lieu donné.',
+			'Le tanin est un composé présent dans la peau, les pépins et parfois le bois, responsable de la sensation d’astringence en bouche.',
+			'La taille est l’opération qui consiste à couper une partie des sarments en hiver afin de limiter et d’orienter la production de la vigne.',
+			'La vendange désigne la récolte du raisin, réalisée à la main ou à la machine selon les domaines.',
+			'Le vigneron est celui qui cultive la vigne et élabore lui-même son vin, du travail de la terre jusqu’à la mise en bouteille.',
+			'Le zeste évoque, en dégustation, des arômes d’agrumes perçus au nez ou en bouche, fréquents dans les vins blancs vifs.'
+		],
 		// Body copy under each word: what that weight is actually for. Long
 		// enough to show the face setting real paragraphs, not just a caption.
 		defaultNotes: [
