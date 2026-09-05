@@ -6,68 +6,75 @@
      Style note: "Swiss typeface... Helmut Schmid typography" is read here as
      compositional — a numbered, grid-disciplined, functional layout — not a
      literal font swap. Norma (this site's own face, via --font-en) stays;
-     nothing here introduces a second typeface. Content is unchanged from the
-     page's prior version (no new claims invented) except the new
-     Information fact-sheet, which restates only what the foundry statement
-     already says (2026, Tokyo) plus the contact address already published
-     on /contact and in Footer.svelte. -->
+     nothing here introduces a second typeface.
+
+     Revision (same day): merged the former "01 Foundry" / "02 Information"
+     sections into one 100vh view — statement pinned to the top, fact-sheet
+     pinned to the bottom, via justify-content:space-between — and dropped
+     the numbered eyebrows + border-top rules between every section on the
+     page. Copy updated for the Ôgast rename: same statement, only the
+     studio's own name in it changed — no new "why Ôgast" story invented
+     (see the standing note in typefaces.ts on why that isn't done
+     unilaterally). -->
 <svelte:head>
-	<title>About — August Type Foundry</title>
+	<title>About — Ôgast</title>
 	<meta
 		name="description"
-		content="August Type Foundry — an independent type foundry from Tokyo. Studio statement and philosophy."
+		content="Ôgast — an independent type foundry from Tokyo. Studio statement and philosophy."
 	/>
 </svelte:head>
 
 <main class="About">
-	<!-- 01 — the foundry statement, set to fill the first screen. -->
+	<!-- Statement pinned to the top, fact-sheet pinned to the bottom — both
+	     inside one 100vh view. -->
 	<section class="About__hero">
-		<p class="About__hero-eyebrow">01 — Foundry</p>
-		<p class="About__hero-text en" lang="en">
-			August Type Foundry is an independent type foundry, founded in Tokyo in 2026. We cross
-			histories, cultures, and eras, reinterpret their context, and draw type through a
-			contemporary eye. Anchored in retail families and bespoke commissions, we keep searching for
-			forms not yet seen.
-		</p>
-		<p class="About__hero-text da" lang="da">
-			August Type Foundry er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser
-			historier, kulturer og epoker, gentolker deres sammenhæng og tegner skrift gennem et
-			nutidigt blik. Med udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at
-			lede efter former, der endnu ikke er set.
-		</p>
+		<div class="About__hero-copy">
+			<p class="About__hero-text en" lang="en">
+				Ôgast is an independent type foundry, founded in Tokyo in 2026. We cross histories,
+				cultures, and eras, reinterpret their context, and draw type through a contemporary eye.
+				Anchored in retail families and bespoke commissions, we keep searching for forms not yet
+				seen.
+			</p>
+			<p class="About__hero-text da" lang="da">
+				Ôgast er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser historier,
+				kulturer og epoker, gentolker deres sammenhæng og tegner skrift gennem et nutidigt blik.
+				Med udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at lede efter
+				former, der endnu ikke er set.
+			</p>
+		</div>
+
+		<!-- Every value here already appears elsewhere on the site (the
+		     statement above states 2026/Tokyo; hi@august.tf is the same
+		     address used on /contact and in Footer.svelte) — nothing new is
+		     asserted. -->
+		<div class="About__facts">
+			<p class="About__facts-eyebrow">Information</p>
+			<dl class="About__facts-grid">
+				<div class="About__facts-item">
+					<dt>Founded</dt>
+					<dd>2026</dd>
+				</div>
+				<div class="About__facts-item">
+					<dt>Location</dt>
+					<dd>Tokyo, Japan</dd>
+				</div>
+				<div class="About__facts-item">
+					<dt>Focus</dt>
+					<dd>Retail typefaces, custom type</dd>
+				</div>
+				<div class="About__facts-item">
+					<dt>Contact</dt>
+					<dd><a href="mailto:hi@august.tf">hi@august.tf</a></dd>
+				</div>
+			</dl>
+		</div>
 	</section>
 
-	<!-- 02 — a compact, numbered fact-sheet, below the first view. Every
-	     value here already appears elsewhere on the site (the statement
-	     above states 2026/Tokyo; hi@august.tf is the same address used on
-	     /contact and in Footer.svelte) — nothing new is asserted. -->
-	<section class="About__facts">
-		<p class="About__facts-eyebrow">02 — Information</p>
-		<dl class="About__facts-grid">
-			<div class="About__facts-item">
-				<dt>Founded</dt>
-				<dd>2026</dd>
-			</div>
-			<div class="About__facts-item">
-				<dt>Location</dt>
-				<dd>Tokyo, Japan</dd>
-			</div>
-			<div class="About__facts-item">
-				<dt>Focus</dt>
-				<dd>Retail typefaces, custom type</dd>
-			</div>
-			<div class="About__facts-item">
-				<dt>Contact</dt>
-				<dd><a href="mailto:hi@august.tf">hi@august.tf</a></dd>
-			</div>
-		</dl>
-	</section>
-
-	<!-- 03 — Norma, the foundry's first release. Same copy as before this
+	<!-- Norma, the foundry's first release. Same copy as before this
 	     redesign; still no "why Norma" naming story — see the standing note
 	     in typefaces.ts on why that isn't invented unilaterally. -->
 	<section class="About__block">
-		<p class="About__block-eyebrow">03 — Norma</p>
+		<p class="About__block-eyebrow">Norma</p>
 		<h2 class="About__block-heading">The formative forces of the word, made visible</h2>
 		<p class="en" lang="en">
 			Our first release, Norma, is a twenty-weight neo-humanist sans-serif variable font. The
@@ -119,15 +126,15 @@
 		display: none;
 	}
 
-	/* ── 01 — Hero: statement fills the first screen ── */
+	/* ── Statement (top) + Information (bottom), one 100vh view ── */
 	.About__hero {
 		min-height: 100vh;
 		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: space-between;
 		gap: 24px;
-		padding-inline: var(--padding);
+		padding-inline: 20px;
 		/* Room for the fixed global header, same convention as every other
 		   page's own top padding. */
 		padding-top: 96px;
@@ -139,26 +146,17 @@
 		}
 	}
 
-	.About__hero-eyebrow {
-		font-size: 12px;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-		opacity: 0.55;
-		margin: 0;
-	}
-
-	/* Narrower than the viewport even on wide desktops — a Swiss grid reads
-	   through a disciplined column, not edge-to-edge text, so this wraps
-	   into several lines rather than two very long ones. */
-	/* 281 characters / 44 words — at 18ch this needed ~16 lines and badly
-	   overflowed a real viewport (verified live, not just estimated). 34ch
-	   and a slightly lower max bring it to roughly 8-9 lines, which actually
-	   fills a screen instead of running off both ends of it. */
+	/* Full width, justified, no eyebrow above it (the reference's own giant
+	   paragraph carries no label either) — set at a fixed reading size
+	   rather than the earlier display-scale clamp, now that this behaves as
+	   a body paragraph rather than a headline. line-height opened up from
+	   the headline's 1.15 to 1.5: justify's uneven word-spacing reads easier
+	   with more room between lines at this size. */
 	.About__hero-text {
-		font-size: clamp(24px, 4vw, 52px);
-		line-height: 1.15;
+		font-size: 28px;
+		line-height: 1.5;
 		letter-spacing: 0;
-		max-width: 34ch;
+		text-align: justify;
 		margin: 0;
 	}
 
@@ -167,11 +165,9 @@
 		opacity: 0.8;
 	}
 
-	/* ── 02 — Information: a compact, numbered fact grid ── */
+	/* ── Information: a compact fact grid ── */
 	.About__facts {
-		padding-block: 64px;
-		padding-inline: var(--padding);
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
+		padding-bottom: 48px;
 	}
 
 	.About__facts-eyebrow {
@@ -216,11 +212,10 @@
 		text-underline-offset: 3px;
 	}
 
-	/* ── 03 — Norma statement ── */
+	/* ── Norma statement ── */
 	.About__block {
 		padding-block: 80px;
 		padding-inline: var(--padding);
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
 	}
 
 	.About__block-eyebrow {
