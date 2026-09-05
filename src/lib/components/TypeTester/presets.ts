@@ -50,15 +50,30 @@ export const WEIGHTS: WeightDef[] = [
 // the other 6 stops are genuine interpolation between them. Labels borrow
 // Norma's own vocabulary for consistency, picking the stop closest to each
 // axis value.
+// name follows the same convention as WEIGHTS above (name x 10 = wght) —
+// id/axisValue stay the real wght values (150-850); only the displayed
+// name is scaled down to match Norma's own numbering (2026-09, at the
+// user's request — it had been showing the raw wght as name, e.g. '150'
+// instead of '15').
 export const ELIO_WEIGHTS: WeightDef[] = [
-	{ id: 150, name: '150', label: 'Hair', axisValue: 150 },
-	{ id: 250, name: '250', label: 'Thin', axisValue: 250 },
-	{ id: 350, name: '350', label: 'Light', axisValue: 350 },
-	{ id: 450, name: '450', label: 'Book', axisValue: 450 },
-	{ id: 550, name: '550', label: 'Medium', axisValue: 550 },
-	{ id: 650, name: '650', label: 'Semibold', axisValue: 650 },
-	{ id: 750, name: '750', label: 'Bold', axisValue: 750 },
-	{ id: 850, name: '850', label: 'Ultra', axisValue: 850 }
+	{ id: 150, name: '15', label: 'Hair', axisValue: 150 },
+	{ id: 250, name: '25', label: 'Thin', axisValue: 250 },
+	{ id: 350, name: '35', label: 'Light', axisValue: 350 },
+	// Book -> Regular (2026-09, at the user's request) — also fixes a
+	// previously unnoticed side effect in GlyphSet.svelte: its default-weight
+	// lookup matches on label === 'Regular', so with no label saying exactly
+	// that, it fell through to weights[weights.length-1] (Heavy, the
+	// heaviest stop) as Elio's default inspected weight instead of this one.
+	{ id: 450, name: '45', label: 'Regular', axisValue: 450 },
+	{ id: 550, name: '55', label: 'Medium', axisValue: 550 },
+	// 650 kept as Semibold, not Bold — asked about explicitly rather than
+	// changed: standard convention puts SemiBold at 600 and Bold at 700, so
+	// 650 sits exactly at the midpoint; picked Semibold specifically so it
+	// doesn't collide with 750, which is already named Bold below.
+	{ id: 650, name: '65', label: 'Semibold', axisValue: 650 },
+	{ id: 750, name: '75', label: 'Bold', axisValue: 750 },
+	// Ultra -> Heavy (2026-09, at the user's request).
+	{ id: 850, name: '85', label: 'Heavy', axisValue: 850 }
 ];
 
 // Maximum characters allowed in the textarea
