@@ -343,7 +343,14 @@
 		font-size: 220px;
 		line-height: 1;
 		text-align: center;
+		/* Outline, not a solid fill — stroke only, hollow inside. -webkit-
+		   text-stroke is the only reliable way to do this in CSS (Chromium/
+		   Safari native, Firefox honours the -webkit- prefix too); color is
+		   the fallback for a browser that supports neither, so the glyph
+		   still renders solid rather than vanishing. */
 		color: #fff;
+		-webkit-text-stroke: 1.5px #fff;
+		-webkit-text-fill-color: transparent;
 	}
 
 	.GlyphSet__mline {
@@ -409,9 +416,15 @@
 		margin: 0 0 12px;
 	}
 
+	/* Gap between cells so the dark page shows through as a divider —
+	   without one, same-colour adjacent cells touch edge to edge and the
+	   whole grid reads as one solid grey slab instead of a grid of
+	   distinct tiles. */
 	.GlyphSet__grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
+		gap: 3px;
+		background: #000;
 	}
 
 	/* Grid cells invert to light "keys" on the dark field, per the
