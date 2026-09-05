@@ -295,15 +295,21 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
-		// Glyph count is measured (encoded cmap of the shipped Elio-VF01.woff2,
-		// 2026-09-01 MVP-tier glyph set) — same convention as Norma's own info.
-		// Language coverage isn't verified against Hyperglot yet, hence TBD.
+		// Glyph count is measured (encoded cmap of the shipped Elio-VF03.woff2)
+		// — same convention as Norma's own info. This is deliberately lower
+		// than the source file's total: VF03's build script excludes any
+		// glyph whose Ultra master isn't drawn yet (or that references one
+		// that isn't) rather than shipping it broken — currently digits,
+		// most punctuation, and several accented-letter families. See
+		// static/fonts/README.md for the exact list; bump this number as
+		// those get drawn and the build's exclusion set shrinks. Language
+		// coverage isn't verified against Hyperglot yet, hence TBD.
 		info: {
 			design: 'Takumi Isobe',
 			release: 'TBD',
 			collection: '8 weights',
 			formats: 'OTF, TTF, WOFF2',
-			glyphs: '174',
+			glyphs: '104',
 			languages: 'TBD'
 		},
 		// Now a real variable font — all 8 named stops are genuine
