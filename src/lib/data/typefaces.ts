@@ -295,22 +295,31 @@ export const TYPEFACES: Typeface[] = [
 			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
-		// Glyph count is measured (encoded cmap of the shipped Elio-VF05.woff2)
-		// — same convention as Norma's own info. This is deliberately lower
-		// than the source file's total: the build script excludes any
-		// glyph whose Ultra master isn't drawn yet (or that references one
-		// that isn't) rather than shipping it broken — currently digits,
-		// most punctuation, and several accented-letter families. See
-		// static/fonts/README.md for the exact list; bump this number as
-		// those get drawn and the build's exclusion set shrinks. Language
-		// coverage isn't verified against Hyperglot yet, hence TBD.
+		// Glyph/language counts here deliberately use the SOURCE repertoire
+		// (Asta.glyphs' own glyph box), not the shipped VF's cmap — unlike
+		// Norma's info, where those two numbers are nearly the same since
+		// Norma is finished across all masters. For Elio, mid-development,
+		// they diverge a lot: a variable font can only ship a glyph once
+		// BOTH masters are shape-compatible, so ~68 of the 174 encoded
+		// characters that already have real ink in Hair are still hard-
+		// excluded from Elio-VF05.woff2 while Ultra catches up (106 ship
+		// today — see static/fonts/README.md). Quoting that 106 as "the"
+		// glyph count would undersell finished design work that just
+		// hasn't cleared the interpolation-compatibility bar yet.
+		// Measured 2026-09-05 directly from the Glyphs glyph box:
+		//   176 total - "新規グリフ" (empty placeholder) - three.ss01
+		//   (unencoded alt slot) = 174 encoded; 172 of those have real
+		//   Hair ink (only asciitilde/asciicircum are still blank).
+		// Languages: Hyperglot 0.7.3, base support, validity=verified
+		// (same method/thresholds as Norma's "93") against those 172 chars.
 		info: {
 			design: 'Takumi Isobe',
 			release: 'TBD',
 			collection: '8 weights',
 			formats: 'OTF, TTF, WOFF2',
-			glyphs: '106',
-			languages: 'TBD'
+			glyphs: '172',
+			languages: '79',
+			note: 'Reflects the drawn design repertoire (Hair). The live variable font currently ships a smaller, interpolation-compatible subset while Ultra catches up — see the specimen below.'
 		},
 		// Now a real variable font — all 8 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
