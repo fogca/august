@@ -210,7 +210,7 @@
 	.Home {
 		--red: var(--color-signal);
 		/* One display size shared by every section title (Make it yours / Custom
-		   type… / August Type Foundry is…). Bounded by viewport HEIGHT as well as
+		   type… / Ôgast is…). Bounded by viewport HEIGHT as well as
 		   width, so a long statement still wraps inside its 100dvh section on a
 		   short laptop instead of pushing the section taller. */
 		--display-fs: clamp(40px, min(7vw, 9.5vh), 88px);

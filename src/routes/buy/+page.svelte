@@ -1,5 +1,5 @@
 <script lang="ts">
-	// /buy — August Type Foundry license purchase page.
+	// /buy — Ôgast license purchase page.
 	// Entry point is a font's own detail page: /buy?font=<TypefaceSlug>
 	// (see fonts/[slug]/+page.svelte's Buy CTA), so the typeface itself is
 	// never chosen here -- it arrives pre-decided from wherever the buyer
@@ -187,7 +187,7 @@
 </script>
 
 <svelte:head>
-	<title>{pageTitle} — August Type Foundry</title>
+	<title>{pageTitle} — Ôgast</title>
 	<meta
 		name="description"
 		content="Purchase {selectedPackage?.label ?? 'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."

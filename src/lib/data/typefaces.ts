@@ -1,4 +1,4 @@
-// Typeface data definitions for August Type Foundry
+// Typeface data definitions for Ôgast
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
