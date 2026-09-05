@@ -420,40 +420,43 @@
 	   without one, same-colour adjacent cells touch edge to edge and the
 	   whole grid reads as one solid grey slab instead of a grid of
 	   distinct tiles. */
+	/* No gap: adjacent cells' 1px borders share the same edge and read as
+	   one clean grid line, like a real table/spreadsheet, rather than each
+	   cell floating with its own border and a black sliver between them. */
 	.GlyphSet__grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
-		gap: 3px;
 		background: #000;
 	}
 
-	/* Grid cells invert to light "keys" on the dark field, per the
-	   reference — not light text on transparent-dark like the rest of
-	   this panel, that read as a flat wall of type rather than a grid of
-	   distinct tiles. */
+	/* Outline only, no fill (2026-09, at the user's request — replaces the
+	   earlier light-grey "key" tiles) — the dark page shows straight through
+	   each cell, bordered rather than boxed in colour. aspect-ratio:1 (not a
+	   fixed height) keeps cells true squares regardless of how wide
+	   auto-fill makes each column at a given viewport. */
 	.GlyphSet__cell {
 		/* Same base.css tag-selector issue — button is in its reset list too. */
 		font-family: inherit;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 52px;
+		aspect-ratio: 1;
 		font-size: 20px;
 		line-height: 1;
-		color: #111;
-		background: #dcdcdc;
-		border: 1px solid transparent;
+		color: #fff;
+		background: transparent;
+		border: 1px solid rgba(255, 255, 255, 0.25);
 		cursor: pointer;
 		padding: 0;
 		transition: background-color 0.12s, color 0.12s, box-shadow 0.12s;
 	}
 
 	.GlyphSet__cell:hover {
-		background: #f2f2f2;
+		background: rgba(255, 255, 255, 0.12);
 	}
 
-	/* Distinct from a mere hover — a ring, not just a brighter fill —
-	   since both now land on roughly the same near-white tone. */
+	/* Distinct from a mere hover — a solid fill, not just a faint tint —
+	   since hover now only ever tints, never fills solid. */
 	.GlyphSet__cell.is-active {
 		background: #fff;
 		color: #000;
