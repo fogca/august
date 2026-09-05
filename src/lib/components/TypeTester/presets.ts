@@ -66,14 +66,17 @@ export const ELIO_WEIGHTS: WeightDef[] = [
 	// heaviest stop) as Elio's default inspected weight instead of this one.
 	{ id: 450, name: '45', label: 'Regular', axisValue: 450 },
 	{ id: 550, name: '55', label: 'Medium', axisValue: 550 },
-	// 650 kept as Semibold, not Bold — asked about explicitly rather than
-	// changed: standard convention puts SemiBold at 600 and Bold at 700, so
-	// 650 sits exactly at the midpoint; picked Semibold specifically so it
-	// doesn't collide with 750, which is already named Bold below.
-	{ id: 650, name: '65', label: 'Semibold', axisValue: 650 },
-	{ id: 750, name: '75', label: 'Bold', axisValue: 750 },
-	// Ultra -> Heavy (2026-09, at the user's request).
-	{ id: 850, name: '85', label: 'Heavy', axisValue: 850 }
+	// Revised 2026-09 (at the user's request, after confirming Bold < Black <
+	// Ultra as the intended order for the top three — the same order Norma's
+	// own 20-stop scale already uses: Bold(70) -> UltraBold(75) ->
+	// ExtraBold(80) -> Black(90) -> Ultra(95)). Semibold and Heavy are
+	// dropped from Elio's 8-stop scale entirely rather than kept alongside
+	// these — not enough stops for the full traditional ladder, and
+	// Hair/Thin/Light/Regular/Medium/Bold/Black/Ultra reads as a complete,
+	// self-consistent set on its own.
+	{ id: 650, name: '65', label: 'Bold', axisValue: 650 },
+	{ id: 750, name: '75', label: 'Black', axisValue: 750 },
+	{ id: 850, name: '85', label: 'Ultra', axisValue: 850 }
 ];
 
 // Maximum characters allowed in the textarea
