@@ -73,11 +73,11 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
-	<!-- Rebrand trial (2026-09) — "Ōgast", macron variant, one of two the user
-	     is weighing (the other is "Ôgast", circumflex). Swap the word itself
-	     to compare; easy to revert to "August" or flip to the other mark. -->
-	<a class="Header__logo" href="/" onclick={close} aria-label="Ōgast Type Family — home">
-		Ōgast Type Family
+	<!-- Rebrand trial (2026-09) — settled on "Ôgast" (circumflex), mark alone,
+	     no "Type Family" suffix. Easy to revert to "August Type Family" or
+	     flip back to the macron "Ōgast" variant if needed. -->
+	<a class="Header__logo" href="/" onclick={close} aria-label="Ôgast — home">
+		Ôgast
 	</a>
 
 	<!-- Desktop-only inline nav -->
@@ -177,8 +177,13 @@
 		/* Kept high (not 1) so the fixed bar stays above z-indexed content sections. */
 		z-index: 100;
 		font-family: 'Norma', sans-serif;
-		mix-blend-mode: normal;
-		color: #000;
+		/* Auto-inverting text: no background (see the note above) plus
+		   mix-blend-mode:difference on a white foreground reads as black
+		   against a light backdrop (|255-255|=0) and white against a dark one
+		   (|255-0|=255) — the header adapts to whatever scrolls under it
+		   instead of needing a fixed color per section. */
+		mix-blend-mode: difference;
+		color: #fff;
 		pointer-events: auto;
 		transform: translateY(0);
 		transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
@@ -242,7 +247,7 @@
 	}
 
 	.Header__nav-link {
-		font-size: 12px;
+		font-size: 13px;
 		font-weight: var(--fw-ui);
 		color: inherit;
 		text-decoration: none;
@@ -297,6 +302,9 @@
 		.Header__logo {
 			order: 2;
 			padding: 4px 0;
+			/* Kept matching .Header__nav-link's size (PC only — mobile's logo
+			   has no nav-link beside it to stay paired with). */
+			font-size: 13px;
 		}
 	}
 
