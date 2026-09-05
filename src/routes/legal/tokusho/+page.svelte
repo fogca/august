@@ -2,22 +2,22 @@
      Transactions (特定商取引法). Facts must stay accurate; only the
      presentation language changed (2026-08, English for now). -->
 <svelte:head>
-	<title>Legal Notice — August Type Foundry</title>
-	<meta name="description" content="Specified Commercial Transactions Act disclosure for August Type Foundry." />
+	<title>Legal Notice — Ôgast</title>
+	<meta name="description" content="Specified Commercial Transactions Act disclosure for Ôgast." />
 </svelte:head>
 
 <main class="Legal">
 	<div class="Legal__inner">
 		<h1>Legal Notice</h1>
 		<p class="Legal__lead">
-			This notice discloses information about August Type Foundry's font sales as required under
+			This notice discloses information about Ôgast's font sales as required under
 			Japan's Act on Specified Commercial Transactions (特定商取引法).
 		</p>
 
 		<dl class="Legal__facts">
 			<div class="Legal__fact">
 				<dt>Seller</dt>
-				<dd>Mirai Service Co., Ltd. (trading as August Type Foundry)</dd>
+				<dd>Mirai Service Co., Ltd. (trading as Ôgast)</dd>
 			</div>
 			<div class="Legal__fact">
 				<dt>Person in charge of operations</dt>

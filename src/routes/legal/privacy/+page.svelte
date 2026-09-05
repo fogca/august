@@ -4,18 +4,18 @@
      Layout matches the EULA template (25vw left offset, no width caps,
      16px/14px body text) — unified 2026-08. -->
 <svelte:head>
-	<title>Privacy Policy — August Type Foundry</title>
-	<meta name="description" content="How August Type Foundry collects and uses personal data." />
+	<title>Privacy Policy — Ôgast</title>
+	<meta name="description" content="How Ôgast collects and uses personal data." />
 </svelte:head>
 
 <main class="Legal">
 	<div class="Legal__inner">
 		<h1>Privacy Policy</h1>
 		<p class="Legal__lead">
-			This Privacy Policy describes how Mirai Service Co., Ltd., trading as August Type Foundry
-			("August Type Foundry," "we," "us," or "our"), handles personal information collected through
+			This Privacy Policy describes how Mirai Service Co., Ltd., trading as Ôgast
+			("Ôgast," "we," "us," or "our"), handles personal information collected through
 			august.tf and through the purchase, delivery, and support of our font licences — currently
-			Norma, in 20 weights, and any other typefaces we release under the August Type Foundry name.
+			Norma, in 20 weights, and any other typefaces we release under the Ôgast name.
 			It applies whenever you browse the site, buy a Desktop, Web, App, or Books licence, or write to
 			us about an existing licence. It does not apply to the websites, apps, or publications you build
 			using our fonts — those are covered by your own privacy practices, not ours.
@@ -98,7 +98,7 @@
 			<p>
 				We keep the footprint small on purpose. Payment details never touch our own servers — they
 				go directly to Stripe. The site is served over HTTPS, and access to order and billing records
-				is limited to the people who need it to run August Type Foundry. No system is unbreakable,
+				is limited to the people who need it to run Ôgast. No system is unbreakable,
 				but we take reasonable technical and organisational precautions to protect what we hold.
 			</p>
 		</section>
@@ -117,7 +117,7 @@
 		<section class="Legal__block">
 			<h2>Children's Privacy</h2>
 			<p>
-				August Type Foundry isn't directed at children, and we don't knowingly collect personal
+				Ôgast isn't directed at children, and we don't knowingly collect personal
 				information from anyone under 16. If you believe a minor has given us personal information,
 				contact <a href="mailto:hi@august.tf">hi@august.tf</a> and we'll delete it.
 			</p>
@@ -137,7 +137,7 @@
 			<p>
 				Questions about this policy, or about your own information, go to
 				<a href="mailto:hi@august.tf">hi@august.tf</a>. You can also write to us at Mirai Service
-				Co., Ltd. (trading as August Type Foundry), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi
+				Co., Ltd. (trading as Ôgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi
 				451-0034, Japan. This policy is governed by the laws of Japan.
 			</p>
 		</section>

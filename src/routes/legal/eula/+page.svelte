@@ -39,10 +39,10 @@
 </script>
 
 <svelte:head>
-	<title>Licence (EULA) — August Type Foundry</title>
+	<title>Licence (EULA) — Ôgast</title>
 	<meta
 		name="description"
-		content="End User Licence Agreement for August Type Foundry fonts — Individual, Organisation, and Project licenses."
+		content="End User Licence Agreement for Ôgast fonts — Individual, Organisation, and Project licenses."
 	/>
 </svelte:head>
 
@@ -68,7 +68,7 @@
 
 		<div class="Eula__content">
 			<p class="Eula__lead">
-				August Type Foundry fonts are licensed, not sold. Each licence below — Individual,
+				Ôgast fonts are licensed, not sold. Each licence below — Individual,
 				Organisation, and Project License — is its own standalone agreement; your Sales Receipt
 				records which one you have bought and at what tier.
 			</p>

@@ -1,4 +1,4 @@
-// End User Licence Agreement content — August Type Foundry.
+// End User Licence Agreement content — Ôgast.
 // Structured as one Article-numbered mini-agreement per licence sold on
 // /buy: Individual, Organisation (Team through Global, bundling full
 // commercial use into one tier priced by company size), and Project
@@ -15,7 +15,7 @@
 // typeface" restriction, the Organisation-Size definition, the Project
 // License's Purchaser/Brand mechanic) were added by standard font-industry
 // convention or from the business logic discussed rather than confirmed
-// against August's actual policy — flagged inline below each section as
+// against Ôgast's actual policy — flagged inline below each section as
 // `flagsForReview`. Recommend a lawyer's pass before treating this as
 // final, especially the liability/warranty articles and anything touching
 // Japan's Consumer Contract Act / APPI.
@@ -41,7 +41,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 		navLabel: 'Individual',
 		heading: 'End User Licence Agreement (Individual License)',
 		intro:
-			"This section covers the Individual License for August Type Foundry's fonts — the " +
+			"This section covers the Individual License for Ôgast's fonts — the " +
 			'smallest tier, for one person using the OpenType and TrueType files on their own ' +
 			'computers to design and produce static work: posters, packaging, brand identities, ' +
 			'PDFs, presentations, print, and exported images. It does not cover self-hosting ' +
@@ -53,9 +53,9 @@ export const EULA_SECTIONS: EulaSection[] = [
 				number: 1,
 				title: 'Definitions',
 				clauses: [
-					'"Licensor", "we", "us", or "August" means Mirai Service Co., Ltd., a company registered in Japan and trading as August Type Foundry.',
+					'"Licensor", "we", "us", or "Ôgast" means Mirai Service Co., Ltd., a company registered in Japan and trading as Ôgast.',
 					'"Licensee" or "you" means the individual named on the Sales Receipt.',
-					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt, supplied as OpenType (.otf) or TrueType (.ttf) files for installation on desktop devices — currently Norma, across its full range of weights.',
+					'"Fonts" means the Ôgast font software covered by your Sales Receipt, supplied as OpenType (.otf) or TrueType (.ttf) files for installation on desktop devices — currently Norma, across its full range of weights.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording the licence tier, price paid, and date — it is the master record of what you are licensed for.'
 				]
 			},
@@ -115,7 +115,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 				title: 'Governing Law & Contact',
 				clauses: [
 					'This Agreement is governed by the laws of Japan.',
-					'Licensor is Mirai Service Co., Ltd. (trading as August Type Foundry), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
+					'Licensor is Mirai Service Co., Ltd. (trading as Ôgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
 					'For licensing questions, contact hi@august.tf.',
 					'We may update this Agreement from time to time; the version in effect on the date of your Sales Receipt governs your licence.'
 				]
@@ -144,9 +144,9 @@ export const EULA_SECTIONS: EulaSection[] = [
 				number: 1,
 				title: 'Definitions',
 				clauses: [
-					'"Licensor", "we", "us", or "August" means Mirai Service Co., Ltd., a company registered in Japan and trading as August Type Foundry.',
+					'"Licensor", "we", "us", or "Ôgast" means Mirai Service Co., Ltd., a company registered in Japan and trading as Ôgast.',
 					'"Licensee" or "you" means the organisation named on the Sales Receipt.',
-					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt — OpenType, TrueType, and WOFF2 files as applicable to desktop, web, and app use — currently Norma, across its full range of weights.',
+					'"Fonts" means the Ôgast font software covered by your Sales Receipt — OpenType, TrueType, and WOFF2 files as applicable to desktop, web, and app use — currently Norma, across its full range of weights.',
 					'"Organisation Size" means the total number of people at Licensee — full-time and part-time — authorised to use the Fonts under this licence, including staff, contractors, and freelancers working on Licensee\'s behalf.',
 					'"Licensed Tier" means the tier named on your Sales Receipt (Team, Studio, Agency, Brand, or Firm) and its associated Organisation Size ceiling.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording your Licensed Tier, price paid, and date — it is the master record of what you are licensed for.'
@@ -213,7 +213,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 				title: 'Governing Law & Contact',
 				clauses: [
 					'This Agreement is governed by the laws of Japan.',
-					'Licensor is Mirai Service Co., Ltd. (trading as August Type Foundry), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
+					'Licensor is Mirai Service Co., Ltd. (trading as Ôgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
 					'For licensing questions, including upgrades or a Global quote, contact hi@august.tf.',
 					'We may update this Agreement from time to time; the version in effect on the date of your Sales Receipt governs your licence.'
 				]
@@ -244,10 +244,10 @@ export const EULA_SECTIONS: EulaSection[] = [
 				number: 1,
 				title: 'Definitions',
 				clauses: [
-					'"Licensor", "we", "us", or "August" means Mirai Service Co., Ltd., a company registered in Japan and trading as August Type Foundry.',
+					'"Licensor", "we", "us", or "Ôgast" means Mirai Service Co., Ltd., a company registered in Japan and trading as Ôgast.',
 					'"Purchaser" means the person or company named on the Sales Receipt as having bought this licence — often a design studio or agency buying on behalf of a client.',
 					'"Brand" means the single named business, brand identity, or client project stated on the Sales Receipt, which this licence is scoped to.',
-					'"Fonts" means the August Type Foundry font software covered by your Sales Receipt — currently Norma, across its full range of weights.',
+					'"Fonts" means the Ôgast font software covered by your Sales Receipt — currently Norma, across its full range of weights.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording the named Brand, price paid, and date — it is the master record of what this licence covers.'
 				]
 			},
@@ -308,7 +308,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 				title: 'Governing Law & Contact',
 				clauses: [
 					'This Agreement is governed by the laws of Japan.',
-					'Licensor is Mirai Service Co., Ltd. (trading as August Type Foundry), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
+					'Licensor is Mirai Service Co., Ltd. (trading as Ôgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
 					'For licensing questions — including extending a Project License to a company-wide Organisation License — contact hi@august.tf.',
 					'We may update this Agreement from time to time; the version in effect on the date of your Sales Receipt governs your licence.'
 				]
