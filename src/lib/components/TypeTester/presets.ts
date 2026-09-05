@@ -46,7 +46,7 @@ export const WEIGHTS: WeightDef[] = [
 
 // Elio's own 8-stop axis (150/250/.../850 — matches its Glyphs instance
 // names directly, unlike Norma's compressed 1-95 naming). Both masters
-// (Hair 150 / Ultra 850) are drawn and exported as a real variable font;
+// (Hair 150 / Heavy 850) are drawn and exported as a real variable font;
 // the other 6 stops are genuine interpolation between them. Labels borrow
 // Norma's own vocabulary for consistency, picking the stop closest to each
 // axis value.
@@ -66,17 +66,16 @@ export const ELIO_WEIGHTS: WeightDef[] = [
 	// heaviest stop) as Elio's default inspected weight instead of this one.
 	{ id: 450, name: '45', label: 'Regular', axisValue: 450 },
 	{ id: 550, name: '55', label: 'Medium', axisValue: 550 },
-	// Revised 2026-09 (at the user's request, after confirming Bold < Black <
-	// Ultra as the intended order for the top three — the same order Norma's
-	// own 20-stop scale already uses: Bold(70) -> UltraBold(75) ->
-	// ExtraBold(80) -> Black(90) -> Ultra(95)). Semibold and Heavy are
-	// dropped from Elio's 8-stop scale entirely rather than kept alongside
-	// these — not enough stops for the full traditional ladder, and
-	// Hair/Thin/Light/Regular/Medium/Bold/Black/Ultra reads as a complete,
-	// self-consistent set on its own.
+	// Revised again 2026-09, at the user's request: "Ultra" is reserved for
+	// wght 950 specifically (Norma's own top stop) — Elio only reaches 850,
+	// so it doesn't earn that name. Bold/Black keep their positions from the
+	// prior revision; 850 takes "Heavy" instead of "Ultra", standing in as
+	// the terminal/heaviest name for a scale that stops short of 950 —
+	// Heavy > Black, the conventional order for the pair when a scale
+	// distinguishes both rather than treating them as synonyms.
 	{ id: 650, name: '65', label: 'Bold', axisValue: 650 },
 	{ id: 750, name: '75', label: 'Black', axisValue: 750 },
-	{ id: 850, name: '85', label: 'Ultra', axisValue: 850 }
+	{ id: 850, name: '85', label: 'Heavy', axisValue: 850 }
 ];
 
 // Maximum characters allowed in the textarea
