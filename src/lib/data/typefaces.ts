@@ -315,7 +315,18 @@ export const TYPEFACES: Typeface[] = [
 		// Now a real variable font — all 8 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
 		weights: ELIO_WEIGHTS,
-		defaultTexts: ['Lorem Ipsum is simply dummy text of the printing and typesetting industry.'],
+		// One word per weight row (150 -> 850, lightest to heaviest), A-H —
+		// wine/terroir vocabulary, per the user's own list.
+		defaultTexts: [
+			'Appellation',
+			'Blanc de Blancs',
+			'Cuvée Cépage',
+			'Dégustation',
+			'Effeuillage',
+			'Franc de pied',
+			'Goût de terroir',
+			'Héritage'
+		],
 		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
 		// now that Elio's own font (Hair) actually renders here. No hover
 		// swatch either (catalogBg omitted), matching Norma.

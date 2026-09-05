@@ -240,6 +240,7 @@
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
+		defaultSizeDesktop={isElio ? 120 : undefined}
 	/>
 
 	{#if isElio}

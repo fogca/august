@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { browser } from '$app/environment';
 	import WeightRow from './WeightRow.svelte';
 	import type { WeightDef } from './presets.js';
@@ -22,13 +23,30 @@
 		defaultNotes?: string[];
 		/** When false, show an "in development" notice */
 		available?: boolean;
+		/** Per-typeface override for the desktop default title size — falls
+		 *  back to WEIGHT_ROW_SIZE_DEFAULT_DESKTOP when omitted. Mobile's
+		 *  default isn't overridable here; nothing has asked for that yet. */
+		defaultSizeDesktop?: number;
 	}
 
-	let { weights, fontFamily, defaultTexts, defaultNotes, available = true }: Props = $props();
+	let {
+		weights,
+		fontFamily,
+		defaultTexts,
+		defaultNotes,
+		available = true,
+		defaultSizeDesktop
+	}: Props = $props();
 
-	// Viewport-dependent default size (evaluated once on mount)
+	// Viewport-dependent default size (evaluated once on mount). Only the
+	// initial defaultSizeDesktop prop value is read — same deliberate
+	// one-time-read pattern as GlyphSet.svelte's DEFAULT_WEIGHT/DEFAULT_GLYPH,
+	// wrapped in untrack() to say so explicitly rather than leave it as an
+	// unexplained lint warning.
 	const isPhone = browser && window.innerWidth < MOBILE_BREAKPOINT_PX;
-	const initialSize = isPhone ? WEIGHT_ROW_SIZE_DEFAULT_MOBILE : WEIGHT_ROW_SIZE_DEFAULT_DESKTOP;
+	const initialSize = isPhone
+		? WEIGHT_ROW_SIZE_DEFAULT_MOBILE
+		: (untrack(() => defaultSizeDesktop) ?? WEIGHT_ROW_SIZE_DEFAULT_DESKTOP);
 	const initialNoteSize = isPhone
 		? WEIGHT_ROW_NOTE_DEFAULT_MOBILE
 		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
