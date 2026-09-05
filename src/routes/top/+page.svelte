@@ -187,7 +187,7 @@
 </script>
 
 <svelte:head>
-	<title>Shape Study — August Type Foundry</title>
+	<title>Shape Study — Ôgast</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

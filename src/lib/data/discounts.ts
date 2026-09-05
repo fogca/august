@@ -1,4 +1,4 @@
-// Discount rules for August Type Foundry
+// Discount rules for Ôgast
 //
 // Discount stacking rules:
 //   - Package discount (built into base price, displayed as anchoring vs gross)

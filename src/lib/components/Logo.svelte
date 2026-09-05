@@ -1,4 +1,10 @@
 <script lang="ts">
+	// Stale brand artwork: these paths were drawn to spell "August", the
+	// foundry's old name (rebranded to Ôgast, 2026-09). No longer referenced
+	// anywhere in src (Footer switched to plain text, matching Header) — kept
+	// only in case the vector mark is wanted again under a future name. The
+	// `label` default below is the aria-label fallback, not what the SVG
+	// paths actually draw; don't take it as a sign the artwork was updated.
 	// August wordmark — supplied as artwork, imported verbatim. The only edit to
 	// the source SVG is fill: the export carried a hard-coded #fff class, so each
 	// path now takes fill="currentColor" and the mark follows the parent's CSS
@@ -15,7 +21,7 @@
 		label?: string;
 	}
 
-	let { height = 27, label = 'August Type Foundry' }: Props = $props();
+	let { height = 27, label = 'Ôgast' }: Props = $props();
 </script>
 
 <svg

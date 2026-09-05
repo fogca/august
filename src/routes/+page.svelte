@@ -21,10 +21,10 @@
 </script>
 
 <svelte:head>
-	<title>August Type Foundry — Norma</title>
+	<title>Ôgast — Norma</title>
 	<meta
 		name="description"
-		content="August Type Foundry — an independent type foundry from Tokyo. Norma, a 20-weight neo-humanist variable typeface."
+		content="Ôgast — an independent type foundry from Tokyo. Norma, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
@@ -173,7 +173,7 @@
 				<span>Custom type</span> <span>for corporate</span> <span>identity</span>
 			</h2>
 			<p class="Custom__body">
-				Beyond our retail library, August Type Foundry designs bespoke typefaces for brands and
+				Beyond our retail library, Ôgast designs bespoke typefaces for brands and
 				institutions — a proprietary voice, drawn from the first sketch to a fully realised family.
 				A custom typeface is the most enduring asset a brand can own: it travels across every
 				screen, surface, and language while remaining unmistakably yours.
@@ -189,7 +189,7 @@
 		<div class="Office__inner">
 			<p class="Office__label">Design Office</p>
 			<p class="Office__text">
-				August Type Foundry is the pragmatic type design practice led by a creative office in Tokyo.
+				Ôgast is the pragmatic type design practice led by a creative office in Tokyo.
 			</p>
 			<div class="Office__links">
 				<a class="Office__link" href="/about">About type foundry <Arrow size={9} /></a>

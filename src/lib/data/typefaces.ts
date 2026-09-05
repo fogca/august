@@ -246,11 +246,11 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
 		description:
-			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at August Type Foundry. ' +
+			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Ôgast. ' +
 			'Details on weights and axis range will be published as the design reaches maturity. ' +
 			'Debuting 2026.',
 		descriptionDa:
-			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos August Type Foundry. '
+			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos Ôgast. '
 			+ 'Detaljer om vægte og akser offentliggøres, efterhånden som designet modnes. Debut i 2026.',
 		classification: 'Neo Humanist Sans · 12 weights',
 		// Provisional weights — same 12-stop axis as Norma until spec is finalised
@@ -313,10 +313,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Elio',
 		tagline: 'Sibling to Norma.',
 		description:
-			'Elio is a sibling to Norma, in development at August Type Foundry. ' +
+			'Elio is a sibling to Norma, in development at Ôgast. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionDa:
-			'Elio er en søsterskrift til Norma, under udvikling hos August Type Foundry. '
+			'Elio er en søsterskrift til Norma, under udvikling hos Ôgast. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -394,10 +394,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'Alfred is a Neo Classic typeface in development at August Type Foundry. ' +
+			'Alfred is a Neo Classic typeface in development at Ôgast. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionDa:
-			'Alfred er en Neo Classic-skrift under udvikling hos August Type Foundry. '
+			'Alfred er en Neo Classic-skrift under udvikling hos Ôgast. '
 			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised

@@ -1,4 +1,4 @@
-<!-- Licensing — plain-language guide to what an August licence covers,
+<!-- Licensing — plain-language guide to what an Ôgast licence covers,
      meant to sit ahead of the binding EULA (/legal/eula): explains scope
      (Desktop / Web / App / broadcast / ebook publishing) and how the three
      licence families (Individual, Organisation, Project) differ. Prices are
@@ -21,10 +21,10 @@
 </script>
 
 <svelte:head>
-	<title>Licensing — August Type Foundry</title>
+	<title>Licensing — Ôgast</title>
 	<meta
 		name="description"
-		content="What an August Type Foundry licence covers — Desktop, Web, and App use, bundled into one licence from the Team tier upward."
+		content="What an Ôgast licence covers — Desktop, Web, and App use, bundled into one licence from the Team tier upward."
 	/>
 </svelte:head>
 
@@ -32,7 +32,7 @@
 	<div class="Legal__inner">
 		<h1>Licensing</h1>
 		<p class="Legal__lead">
-			August licences are sold per company size, not per platform. From the Team tier upward,
+			Ôgast licences are sold per company size, not per platform. From the Team tier upward,
 			one licence already includes Desktop, Web, and App use — there is no separate Desktop,
 			Web, App, or Books licence to buy. The Individual tier is the one exception — it's scoped
 			to desktop use alone. This page is a plain-language guide to that scope; the binding terms

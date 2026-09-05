@@ -17,10 +17,10 @@
 </script>
 
 <svelte:head>
-	<title>Fonts — August Type Foundry</title>
+	<title>Fonts — Ôgast</title>
 	<meta
 		name="description"
-		content="August Type Foundry typeface catalogue — Norma and upcoming releases."
+		content="Ôgast typeface catalogue — Norma and upcoming releases."
 	/>
 </svelte:head>
 

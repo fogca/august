@@ -2,10 +2,10 @@
      (37.5vw left offset on desktop, no width caps, 14px/16px body text,
      20px section headings) so the reading pages share one setting. -->
 <svelte:head>
-	<title>Custom type — August Type Foundry</title>
+	<title>Custom type — Ôgast</title>
 	<meta
 		name="description"
-		content="August Type Foundry draws bespoke typefaces for brands and institutions — a proprietary voice, from first sketch to a fully realised family."
+		content="Ôgast draws bespoke typefaces for brands and institutions — a proprietary voice, from first sketch to a fully realised family."
 	/>
 </svelte:head>
 
@@ -26,13 +26,13 @@
 
 		<div class="Custom__inner">
 			<p class="Custom__lead en" lang="en">
-			Beyond our retail library, August draws bespoke typefaces for brands and institutions — a
+			Beyond our retail library, Ôgast draws bespoke typefaces for brands and institutions — a
 			proprietary voice, from the first sketch to a fully realised family. A custom typeface is the
 			most enduring asset a brand can own: it travels across every screen, surface and language
 			while remaining unmistakably yours, and it does not expire when a licence does.
 		</p>
 		<p class="Custom__lead da" lang="da">
-			Ud over vores retail-bibliotek tegner August skrifter på bestilling til brands og
+			Ud over vores retail-bibliotek tegner Ôgast skrifter på bestilling til brands og
 			institutioner — en egen stemme, fra den første skitse til en færdig familie. En skrift lavet
 			til én identitet er det mest holdbare aktiv, et brand kan eje: den følger med over hver skærm,
 			hver flade og hvert sprog og bliver ved med at være genkendelig — og den udløber ikke, når en
