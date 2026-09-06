@@ -11,14 +11,17 @@
 		<script>
 			try {
 				var savedLang = sessionStorage.getItem('august-lang');
+				var browserLang = (navigator.language || '').toLowerCase();
 				var displayLang =
-					savedLang === 'en' || savedLang === 'da'
+					savedLang === 'en' || savedLang === 'fr' || savedLang === 'da'
 						? savedLang
-						: (navigator.language || '').toLowerCase().startsWith('da')
+						: browserLang.startsWith('da')
 							? 'da'
-							: 'en';
-				if (displayLang === 'da') {
-					document.documentElement.dataset.lang = 'da';
+							: browserLang.startsWith('fr')
+								? 'fr'
+								: 'en';
+				if (displayLang !== 'en') {
+					document.documentElement.dataset.lang = displayLang;
 				}
 			} catch (e) {}
 		</script>
