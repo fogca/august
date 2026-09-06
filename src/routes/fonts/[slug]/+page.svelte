@@ -17,15 +17,15 @@
 	// Individual tier's per-style rate, not the full-collection price. Was
 	// hardcoded as "From €300" (the old full-set price) here specifically;
 	// derive it instead so the two never drift apart again.
-	const fromPriceEur = $derived(getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`)?.baseEur ?? null);
+	const fromPriceEur = $derived(
+		getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`)?.baseEur ?? null
+	);
 	// Elio only has 52 letters and no OpenType features drawn yet — Glyph
 	// set / Beyond A-Z / OpenType below are swapped for a plain sample-text
 	// block on its page (see the {#if isElio} further down). GlyphSet itself
 	// still supports a narrower glyphs/weights prop set (see elioGlyphs.ts)
 	// for whenever Elio wants its own glyph inspector back.
 	const isElio = $derived(tf.slug === 'elio');
-
-
 </script>
 
 <svelte:head>
@@ -76,7 +76,6 @@
 				<span class="FontDetail__hero-name">{tf.name}</span>
 			</div>
 		{/if}
-
 	</section>
 
 	<!-- Body: oversized name, then description (left) and the spec table (right) -->
@@ -125,6 +124,9 @@
 			<div class="FontDetail__text">
 				<p class="FontDetail__tagline">{tf.tagline}</p>
 				<p class="FontDetail__description">{tf.description}</p>
+				{#if tf.descriptionFr}
+					<p class="FontDetail__description-fr" lang="fr">{tf.descriptionFr}</p>
+				{/if}
 				{#if tf.descriptionDa}
 					<p class="FontDetail__description-da" lang="da">{tf.descriptionDa}</p>
 				{/if}
@@ -228,6 +230,9 @@
 				{/each}
 			</div>
 			<p class="FontInspiration__text">{tf.inspiration.paragraph}</p>
+			{#if tf.inspiration.paragraphFr}
+				<p class="FontInspiration__text-fr" lang="fr">{tf.inspiration.paragraphFr}</p>
+			{/if}
 			{#if tf.inspiration.paragraphDa}
 				<p class="FontInspiration__text-da" lang="da">{tf.inspiration.paragraphDa}</p>
 			{/if}
@@ -254,20 +259,19 @@
 		<section class="ElioSample" aria-label="Sample text">
 			<p class="ElioSample__label">Sample text</p>
 			<p class="ElioSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
-				Elio is a sibling to Norma, drawn in Hair so far. More weights follow soon.
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-				incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-				nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-				fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-				culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde
-				omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam
-				rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto
-				beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-				aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui
-				ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum
-				quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi
-				tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+				Elio is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
+				dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+				ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis
+				unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
+				aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta
+				sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,
+				sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro
+				quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia
+				non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat
+				voluptatem.
 			</p>
 		</section>
 	{:else}
@@ -290,8 +294,8 @@
 				<p class="FontBuy__eyebrow">License</p>
 				<h2 class="FontBuy__heading">{tf.name}</h2>
 				<p class="FontBuy__price">
-					{fromPriceEur !== null ? `From €${fromPriceEur}` : 'Price on request'} · pay once,
-					every license included
+					{fromPriceEur !== null ? `From €${fromPriceEur}` : 'Price on request'} · pay once, every license
+					included
 				</p>
 				<ul class="FontBuy__licenses">
 					<li>Desktop</li>
@@ -428,12 +432,6 @@
 		letter-spacing: 0;
 		color: currentColor;
 	}
-
-
-
-
-
-
 
 	/* Hero text over media is plain white (via `.white` on the hero) — no inversion. */
 
@@ -599,7 +597,8 @@
 		font-family: 'Norma', sans-serif;
 		font-size: 18px;
 		line-height: 1.4;
-		letter-spacing: 0;
+		letter-spacing: 0.025em;
+		text-transform: uppercase;
 		margin: 0 0 16px;
 		max-width: 56ch;
 	}
@@ -611,10 +610,14 @@
 	}
 
 	.FontDetail__description {
-		/* size/line-height from base p (12px) */
+		/* Explicit now (was inheriting base p's 12px) — bumped for readability
+		   at justified-paragraph length. */
+		font-size: 14px;
+		line-height: 1.4;
 		letter-spacing: 0;
 		color: var(--color-text);
-		text-align: left;
+		text-align: justify;
+		hyphens: auto;
 		max-width: 64ch;
 		margin: 0;
 	}
@@ -627,14 +630,22 @@
 	   as a translation under the English, not as a second headline. */
 	/* One language at a time — [data-lang] lives on <html>, set by the header
 	   switch (see lib/state/lang.svelte.ts). */
+	:global([data-lang='fr']) .FontDetail__description,
 	:global([data-lang='da']) .FontDetail__description {
 		display: none;
 	}
 
-	:global([data-lang='en']) .FontDetail__description-da {
+	:global([data-lang='en']) .FontDetail__description-fr,
+	:global([data-lang='da']) .FontDetail__description-fr {
 		display: none;
 	}
 
+	:global([data-lang='en']) .FontDetail__description-da,
+	:global([data-lang='fr']) .FontDetail__description-da {
+		display: none;
+	}
+
+	.FontDetail .FontDetail__description-fr,
 	.FontDetail .FontDetail__description-da {
 		font-family: var(--type-font, 'Norma'), sans-serif !important;
 		font-weight: 300;
@@ -722,12 +733,22 @@
 		}
 	}
 
+	/* Mobile-first base; the >=768px block below restores the original
+	   clamp+padding for desktop — SP set to a fixed 40px/no padding
+	   2026-09 at the user's request. */
 	.FontWeights__item {
 		display: block;
-		padding: 10px 0;
-		font-size: clamp(22px, 4vw, 36px);
+		padding: 0;
+		font-size: 40px;
 		line-height: 1.2;
 		letter-spacing: 0;
+	}
+
+	@media (min-width: 768px) {
+		.FontWeights__item {
+			padding: 10px 0;
+			font-size: clamp(22px, 4vw, 36px);
+		}
 	}
 
 	/* ── Inspiration — reference imagery + a short passage ── */
@@ -776,14 +797,22 @@
 		margin: 0;
 	}
 
+	:global([data-lang='fr']) .FontInspiration__text,
 	:global([data-lang='da']) .FontInspiration__text {
 		display: none;
 	}
 
-	:global([data-lang='en']) .FontInspiration__text-da {
+	:global([data-lang='en']) .FontInspiration__text-fr,
+	:global([data-lang='da']) .FontInspiration__text-fr {
 		display: none;
 	}
 
+	:global([data-lang='en']) .FontInspiration__text-da,
+	:global([data-lang='fr']) .FontInspiration__text-da {
+		display: none;
+	}
+
+	.FontInspiration .FontInspiration__text-fr,
 	.FontInspiration .FontInspiration__text-da {
 		font-weight: 300;
 		font-size: 15px;
