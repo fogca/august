@@ -322,10 +322,14 @@ export const TYPEFACES: Typeface[] = [
 		status: 'in-development',
 		hidden: false,
 		fontFamily: 'Elio',
-		tagline: 'Sibling to Norma.',
+		tagline: 'Reticent and Ravenous.',
 		description:
 			'Elio is a sibling to Norma, in development at Ôgast. ' +
-			'Details on its design direction, weights and release schedule will follow.',
+			'Where Norma runs wide and even across twenty weights, Elio narrows its focus to eight — an axis built from two hand-drawn extremes, Hair and Ultra, with the six named stops between them genuinely interpolated rather than invented. ' +
+			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
+			'A little over half the design is there already, and the rest is following weight by weight. ' +
+			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Ultra — the same letterforms pulled toward opposite instincts. ' +
+			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
 			'Elio est une police sœur de Norma, en cours de développement chez Ôgast. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
