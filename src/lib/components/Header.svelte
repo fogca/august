@@ -35,9 +35,9 @@
 	// own OpenType nameID 13/14 metadata (see Footer.svelte's LEGAL array).
 	const NAV: NavItem[] = [
 		{ label: 'Fonts', href: '/fonts' },
-		{ label: 'About', href: '/about' },
 		{ label: 'Custom', href: '/custom' },
 		{ label: 'License', href: '/licensing' },
+		{ label: 'About', href: '/about' },
 		{ label: 'Contact', href: '/contact' }
 	];
 
@@ -54,9 +54,9 @@
 	// Mirrors the desktop nav (the Fonts group above stands in for its "Fonts"
 	// link, and the language switch is appended after these).
 	const PAGES: NavItem[] = [
-		{ label: 'About', href: '/about' },
 		{ label: 'Custom', href: '/custom' },
 		{ label: 'License', href: '/licensing' },
+		{ label: 'About', href: '/about' },
 		{ label: 'Contact', href: '/contact' }
 	];
 
@@ -89,6 +89,12 @@
 		{#each NAV as item (item.href)}
 			<a class="Header__nav-link" href={item.href}>{item.label}</a>
 		{/each}
+	</nav>
+
+	<!-- Desktop-only language switch — its own flex group so .Header's three-
+	     way split (logo / nav / langs) works via plain justify-content:
+	     space-between, rather than living inside .Header__nav. -->
+	<div class="Header__langs">
 		<!-- Language switch. Shows the language currently displayed; the choice
 		     is kept for the browsing session, so it survives navigation. -->
 		<button
@@ -103,7 +109,7 @@
 		<span class="Header__sr" aria-live="polite">
 			{lang.current === 'en' ? 'English' : 'Dansk'}
 		</span>
-	</nav>
+	</div>
 
 	<!-- Mobile-only: Menu/Close toggles the panel. Sits on the right; the logo
 	     (above) takes the left. -->
@@ -238,6 +244,15 @@
 		align-items: center;
 	}
 
+	/* Language switch group: hidden on mobile (the toggle only lives in the
+	   slide-down MenuPanel there), its own flex group on desktop — see
+	   .Header's three-way split (logo / nav / langs) below. */
+	.Header__langs {
+		display: none;
+		gap: 20px;
+		align-items: center;
+	}
+
 	.Header__sr {
 		position: absolute;
 		width: 1px;
@@ -298,17 +313,25 @@
 			display: none;
 		}
 
-		.Header__nav {
-			display: flex;
-			order: 1;
-		}
-
+		/* Three-way split — logo / nav / langs — via plain justify-content:
+		   space-between on .Header (set once, above) plus this explicit
+		   left-to-right order, rather than relying on DOM/source order. */
 		.Header__logo {
-			order: 2;
+			order: 1;
 			padding: 4px 0;
 			/* Kept matching .Header__nav-link's size (PC only — mobile's logo
 			   has no nav-link beside it to stay paired with). */
 			font-size: 13px;
+		}
+
+		.Header__nav {
+			display: flex;
+			order: 2;
+		}
+
+		.Header__langs {
+			display: flex;
+			order: 3;
 		}
 	}
 
