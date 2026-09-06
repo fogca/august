@@ -40,9 +40,7 @@
 	<div class="Footer__grid">
 		<!-- Column 1: brand + ethos -->
 		<section class="Footer__col Footer__col--brand">
-			<a href="/" class="Footer__logo" aria-label="Ôgast — home">
-				Ôgast
-			</a>
+			<a href="/" class="Footer__logo" aria-label="Ôgast — home"> Ôgast </a>
 			<p class="Footer__tagline">
 				A type foundry.<br />
 				Norma — released 2026.
@@ -100,24 +98,25 @@
 	.Footer {
 		font-family: 'Norma', sans-serif;
 		font-weight: var(--fw-ui);
-		/* Same red as the Buy/licence section (base.css :root token) */
-		background: var(--color-signal);
-		color: #fff;
+		/* No background (was the same red as the Buy/licence section) and
+		   black text, per the user's request — border-color follows (a white
+		   border-top would be invisible with no background behind it). */
+		color: #000;
 		padding: 64px 0 24px;
 		margin-top: 0;
 		/* sit above the cover-reveal sections (z-index:1) above it */
 		position: relative;
 		z-index: 2;
-		border-top: 1px solid #fff;
+		border-top: 1px solid var(--color-line);
 	}
 
-	/* Force all child elements to inherit white text color, overriding base.css tokens */
+	/* Force all child elements to inherit black text color, overriding base.css tokens */
 	.Footer :global(*) {
-		color: #fff;
+		color: #000;
 	}
 
 	.Footer :global(a) {
-		color: #fff;
+		color: #000;
 	}
 
 	.Footer__sr {
