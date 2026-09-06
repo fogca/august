@@ -20,6 +20,8 @@ export interface Typeface {
 	fontFamily: string;
 	tagline: string;
 	description: string;
+	/** French running translation of the description (shown under the English). */
+	descriptionFr?: string;
 	/** Danish running translation of the description (shown under the English). */
 	descriptionDa?: string;
 	/** e.g. 'Humanist Sans · 12 weights' */
@@ -89,6 +91,7 @@ export interface Typeface {
 	 *  section is skipped for typefaces that don't have one yet. */
 	inspiration?: {
 		paragraph: string;
+		paragraphFr?: string;
 		paragraphDa?: string;
 		/** Reference images; entries without `src` render as a placeholder
 		 *  slot (same treatment as inUseImages). */
@@ -134,13 +137,17 @@ export const TYPEFACES: Typeface[] = [
 		// it no longer applies and a new one shouldn't be invented unilaterally.
 		// Draft the "why Norma" story together before shipping this copy.
 		description:
-			"Norma is a 20-weight neo-humanist sans-serif variable font. " +
-			"Humanist-geometric — the mechanical and the organic coexist in every glyph, held together by formative force. " +
+			'Norma is a 20-weight neo-humanist sans-serif variable font. ' +
+			'Humanist-geometric — the mechanical and the organic coexist in every glyph, held together by formative force. ' +
 			"Its humanist lineage runs quietly beneath — Johnston's 1916 Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.",
+		descriptionFr:
+			'Norma est une police variable sans-serif néo-humaniste en 20 graisses. ' +
+			"Humaniste-géométrique — le mécanique et l'organique coexistent dans chaque glyphe, tenus ensemble par une force formatrice. " +
+			"Sa filiation humaniste affleure discrètement — l'alphabet du métro londonien de Johnston (1916), le Gill Sans, le Neuzeit, le Rotis d'Otl Aicher — jamais en surface, seulement dans le terreau.",
 		descriptionDa:
-			'Norma er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. '
-			+ 'Humanistisk-geometrisk — det mekaniske og det organiske findes side om side i hvert tegn, holdt sammen af formende kraft. '
-			+ 'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
+			'Norma er en neo-humanistisk grotesk i 20 vægte, tegnet som variabel skrift. ' +
+			'Humanistisk-geometrisk — det mekaniske og det organiske findes side om side i hvert tegn, holdt sammen af formende kraft. ' +
+			'Den humanistiske slægt løber stille nedenunder — Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun jorden.',
 		classification: 'Neo Humanist Sans · 20 weights',
 		// Measured, not estimated: glyph count is the encoded cmap of the shipped
 		// Norma-VF02.woff2. The language count is Hyperglot 0.7.3, base support
@@ -168,7 +175,7 @@ export const TYPEFACES: Typeface[] = [
 		// accurate definition, not invented trivia.
 		defaultTexts: [
 			"L'irrigation est l'apport artificiel d'eau à la vigne, une pratique strictement encadrée ou interdite dans de nombreuses appellations européennes.",
-			"Le jéroboam est un format de bouteille équivalant à quatre bouteilles standards, soit environ trois litres, utilisé notamment en Champagne.",
+			'Le jéroboam est un format de bouteille équivalant à quatre bouteilles standards, soit environ trois litres, utilisé notamment en Champagne.',
 			'Le kir est un apéritif composé de crème de cassis et de vin blanc, traditionnellement un bourgogne aligoté.',
 			'La lie désigne les dépôts de levures mortes qui se forment au fond de la cuve après la fermentation, parfois conservés au contact du vin pour enrichir sa texture.',
 			"Le millésime correspond à l'année de récolte du raisin ayant servi à l'élaboration du vin.",
@@ -249,9 +256,13 @@ export const TYPEFACES: Typeface[] = [
 			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Ôgast. ' +
 			'Details on weights and axis range will be published as the design reaches maturity. ' +
 			'Debuting 2026.',
+		descriptionFr:
+			'gQ est la dernière évolution de Mokuseki Sans — un sans-serif néo-humaniste dessiné chez Ôgast. ' +
+			"Les détails sur les graisses et l'étendue de l'axe seront publiés à mesure que le dessin arrive à maturité. " +
+			'Sortie prévue en 2026.',
 		descriptionDa:
-			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos Ôgast. '
-			+ 'Detaljer om vægte og akser offentliggøres, efterhånden som designet modnes. Debut i 2026.',
+			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos Ôgast. ' +
+			'Detaljer om vægte og akser offentliggøres, efterhånden som designet modnes. Debut i 2026.',
 		classification: 'Neo Humanist Sans · 12 weights',
 		// Provisional weights — same 12-stop axis as Norma until spec is finalised
 		weights: WEIGHTS,
@@ -315,9 +326,12 @@ export const TYPEFACES: Typeface[] = [
 		description:
 			'Elio is a sibling to Norma, in development at Ôgast. ' +
 			'Details on its design direction, weights and release schedule will follow.',
+		descriptionFr:
+			'Elio est une police sœur de Norma, en cours de développement chez Ôgast. ' +
+			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		descriptionDa:
-			'Elio er en søsterskrift til Norma, under udvikling hos Ôgast. '
-			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
+			'Elio er en søsterskrift til Norma, under udvikling hos Ôgast. ' +
+			'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
 		// (Asta.glyphs' own glyph box), not the shipped VF's cmap — unlike
@@ -396,9 +410,12 @@ export const TYPEFACES: Typeface[] = [
 		description:
 			'Alfred is a Neo Classic typeface in development at Ôgast. ' +
 			'Details on its design direction, weights and release schedule will follow.',
+		descriptionFr:
+			'Alfred est un caractère Neo Classic en cours de développement chez Ôgast. ' +
+			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		descriptionDa:
-			'Alfred er en Neo Classic-skrift under udvikling hos Ôgast. '
-			+ 'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
+			'Alfred er en Neo Classic-skrift under udvikling hos Ôgast. ' +
+			'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised
 		weights: WEIGHTS,
