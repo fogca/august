@@ -15,7 +15,11 @@
      page. Copy updated for the Ôgast rename: same statement, only the
      studio's own name in it changed — no new "why Ôgast" story invented
      (see the standing note in typefaces.ts on why that isn't done
-     unilaterally). -->
+     unilaterally).
+
+     Revision (2026-09): added French (site went EN/DA -> EN/FR/DA). Same
+     three-language pattern as before, just one more class per paragraph —
+     see lib/state/lang.svelte.ts and Header.svelte for the switcher itself. -->
 <svelte:head>
 	<title>About — Ôgast</title>
 	<meta
@@ -35,11 +39,17 @@
 				Anchored in retail families and bespoke commissions, we keep searching for forms not yet
 				seen.
 			</p>
+			<p class="About__hero-text fr" lang="fr">
+				Ôgast est une fonderie de caractères indépendante, fondée à Tokyo en 2026. Nous traversons
+				les histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
+				caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
+				commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
+			</p>
 			<p class="About__hero-text da" lang="da">
 				Ôgast er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser historier,
-				kulturer og epoker, gentolker deres sammenhæng og tegner skrift gennem et nutidigt blik.
-				Med udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at lede efter
-				former, der endnu ikke er set.
+				kulturer og epoker, gentolker deres sammenhæng og tegner skrift gennem et nutidigt blik. Med
+				udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at lede efter former,
+				der endnu ikke er set.
 			</p>
 		</div>
 
@@ -82,16 +92,27 @@
 			their proportion. Its humanist lineage runs quietly beneath — Johnston's 1916 Underground
 			alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.
 		</p>
+		<p class="fr" lang="fr">
+			Notre première sortie, Norma, est une police variable sans-serif néo-humaniste en vingt
+			graisses. Les lettres sont pensées pour paraître nées plutôt que construites — organiques dans
+			leurs courbes, humaines dans leurs proportions. Sa filiation humaniste affleure discrètement —
+			l'alphabet du métro londonien de Johnston (1916), le Gill Sans, le Neuzeit, le Rotis d'Otl
+			Aicher — jamais en surface, seulement dans le terreau.
+		</p>
 		<p class="da" lang="da">
-			Vores første udgivelse, Norma, er en neo-humanistisk grotesk i tyve vægte, tegnet som
-			variabel skrift. Bogstaverne skal føles groede snarere end konstruerede — organiske i
-			kurverne, menneskelige i proportionen. Den humanistiske slægt løber stille nedenunder —
-			Johnstons Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig
-			overfladen, kun jorden.
+			Vores første udgivelse, Norma, er en neo-humanistisk grotesk i tyve vægte, tegnet som variabel
+			skrift. Bogstaverne skal føles groede snarere end konstruerede — organiske i kurverne,
+			menneskelige i proportionen. Den humanistiske slægt løber stille nedenunder — Johnstons
+			Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun
+			jorden.
 		</p>
 		<p class="en" lang="en">
 			A typeface is never the meaning itself. It is the medium meaning passes through — doing the
 			quiet work of carrying a thought from one mind to another.
+		</p>
+		<p class="fr" lang="fr">
+			Un caractère typographique n'est jamais le sens lui-même. Il est le medium à travers lequel le
+			sens circule — accomplissant le travail discret de porter une pensée d'un esprit à un autre.
 		</p>
 		<p class="da" lang="da">
 			En skrift er aldrig betydningen selv. Den er det medium, betydningen passerer igennem — det
@@ -117,12 +138,23 @@
 	}
 
 	/* One language at a time — [data-lang] lives on <html>, set by the header
-	   switch (see lib/state/lang.svelte.ts). */
+	   switch (see lib/state/lang.svelte.ts). Each block below is a positive
+	   match ("hide .en when the page is showing fr or da") rather than a
+	   :not() — :not([data-lang='en']) would also match <body>/<main>/etc.,
+	   which never carry the attribute, and so would always be true
+	   regardless of <html>'s actual value. */
+	:global([data-lang='fr']) .About .en,
 	:global([data-lang='da']) .About .en {
 		display: none;
 	}
 
-	:global([data-lang='en']) .About .da {
+	:global([data-lang='en']) .About .fr,
+	:global([data-lang='da']) .About .fr {
+		display: none;
+	}
+
+	:global([data-lang='en']) .About .da,
+	:global([data-lang='fr']) .About .da {
 		display: none;
 	}
 
@@ -160,6 +192,7 @@
 		margin: 0;
 	}
 
+	.About__hero-text.fr,
 	.About__hero-text.da {
 		font-weight: 300;
 		opacity: 0.8;
@@ -234,6 +267,7 @@
 	}
 
 	.About__block .en,
+	.About__block .fr,
 	.About__block .da {
 		max-width: 62ch;
 	}
@@ -244,6 +278,7 @@
 		margin: 0 0 10px;
 	}
 
+	.About__block .fr,
 	.About__block .da {
 		font-weight: 300;
 		font-size: 14px;
@@ -252,6 +287,7 @@
 		margin: 0 0 28px;
 	}
 
+	.About__block .fr:last-child,
 	.About__block .da:last-child {
 		margin-bottom: 0;
 	}
