@@ -29,6 +29,17 @@
 	});
 
 	type NavItem = { label: string; href: string };
+	type LangOption = { code: 'en' | 'fr' | 'da'; label: string; name: string };
+
+	// Three explicit options rather than one cycling toggle — clearer once
+	// there are more than two, and each button is self-describing (its own
+	// aria-label + aria-pressed) without needing a separate sr-only
+	// announcement span.
+	const LANGS: LangOption[] = [
+		{ code: 'en', label: 'EN', name: 'English' },
+		{ code: 'fr', label: 'FR', name: 'Français' },
+		{ code: 'da', label: 'DA', name: 'Dansk' }
+	];
 
 	// Desktop inline nav. License -> /licensing, not /license — that shorter
 	// URL is a stable redirect to /legal/eula baked into the shipped fonts'
@@ -80,9 +91,7 @@
 	<!-- Rebrand trial (2026-09) — settled on "Ôgast" (circumflex), mark alone,
 	     no "Type Family" suffix. Easy to revert to "August Type Family" or
 	     flip back to the macron "Ōgast" variant if needed. -->
-	<a class="Header__logo" href="/" onclick={close} aria-label="Ôgast — home">
-		Ôgast
-	</a>
+	<a class="Header__logo" href="/" onclick={close} aria-label="Ôgast — home"> Ôgast </a>
 
 	<!-- Desktop-only inline nav -->
 	<nav class="Header__nav" aria-label="Primary navigation">
@@ -93,22 +102,21 @@
 
 	<!-- Desktop-only language switch — its own flex group so .Header's three-
 	     way split (logo / nav / langs) works via plain justify-content:
-	     space-between, rather than living inside .Header__nav. -->
-	<div class="Header__langs">
-		<!-- Language switch. Shows the language currently displayed; the choice
-		     is kept for the browsing session, so it survives navigation. -->
-		<button
-			type="button"
-			class="Header__nav-link Header__lang"
-			onclick={() => lang.toggle()}
-			aria-label={lang.current === 'en' ? 'Switch to Danish' : 'Switch to English'}
-		>
-			{lang.current === 'en' ? 'EN' : 'DA'}
-		</button>
-		<!-- The EN/DA label alone doesn't announce what changed. -->
-		<span class="Header__sr" aria-live="polite">
-			{lang.current === 'en' ? 'English' : 'Dansk'}
-		</span>
+	     space-between, rather than living inside .Header__nav. Three direct
+	     options rather than one cycling toggle — see the LANGS note above. -->
+	<div class="Header__langs" role="group" aria-label="Language">
+		{#each LANGS as l (l.code)}
+			<button
+				type="button"
+				class="Header__nav-link Header__lang"
+				class:is-active={lang.current === l.code}
+				onclick={() => lang.set(l.code)}
+				aria-pressed={lang.current === l.code}
+				aria-label={l.name}
+			>
+				{l.label}
+			</button>
+		{/each}
 	</div>
 
 	<!-- Mobile-only: Menu/Close toggles the panel. Sits on the right; the logo
@@ -156,16 +164,20 @@
 				{#each PAGES as item (item.href)}
 					<li><a href={item.href} onclick={close}>{item.label}</a></li>
 				{/each}
-				<li>
-					<button
-						type="button"
-						class="MenuPanel__lang"
-						onclick={() => lang.toggle()}
-						aria-label={lang.current === 'en' ? 'Switch to Danish' : 'Switch to English'}
-					>
-						{lang.current === 'en' ? 'EN' : 'DA'}
-					</button>
-				</li>
+				{#each LANGS as l (l.code)}
+					<li>
+						<button
+							type="button"
+							class="MenuPanel__lang"
+							class:is-active={lang.current === l.code}
+							onclick={() => lang.set(l.code)}
+							aria-pressed={lang.current === l.code}
+							aria-label={l.name}
+						>
+							{l.label}
+						</button>
+					</li>
+				{/each}
 			</ul>
 		</div>
 	</div>
@@ -215,7 +227,6 @@
 		color: #000;
 	}
 
-
 	/* Mobile-only: Menu/Close toggle, on the right. Desktop hides this in
 	   favour of .Header__nav. */
 	.Header__actions {
@@ -246,23 +257,30 @@
 
 	/* Language switch group: hidden on mobile (the toggle only lives in the
 	   slide-down MenuPanel there), its own flex group on desktop — see
-	   .Header's three-way split (logo / nav / langs) below. */
+	   .Header's three-way split (logo / nav / langs) below. Tighter gap than
+	   .Header__nav's 20px — three short codes read as one switcher, not as
+	   three more nav items. */
 	.Header__langs {
 		display: none;
-		gap: 20px;
+		gap: 10px;
 		align-items: center;
 	}
 
-	.Header__sr {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		white-space: nowrap;
-		border: 0;
+	/* Inactive options recede; the current language reads at full strength.
+	   Each button's own aria-label/aria-pressed already announces its state,
+	   so no separate sr-only span is needed here (unlike the old single
+	   cycling toggle, which had one). */
+	.Header__lang {
+		opacity: 0.4;
+		transition: opacity 0.15s ease;
+	}
+
+	.Header__lang:hover {
+		opacity: 0.7;
+	}
+
+	.Header__lang.is-active {
+		opacity: 1;
 	}
 
 	.Header__nav-link {
@@ -414,6 +432,13 @@
 		border: 0;
 		padding: 0;
 		cursor: pointer;
+		/* Inactive options recede; the current language reads at full
+		   strength — same convention as the desktop .Header__lang group. */
+		opacity: 0.4;
+	}
+
+	.MenuPanel__lang.is-active {
+		opacity: 1;
 	}
 
 	/* Unreleased faces: same slot, half-strength, and never interactive. */
