@@ -91,7 +91,6 @@
 	$effect(() => {
 		if (noteEl && defaultNote && noteEl.textContent === '') noteEl.textContent = defaultNote;
 	});
-
 </script>
 
 <div class="WeightRow" role="listitem">
@@ -109,7 +108,10 @@
 					bind:value={size}
 					bind:this={sliderEl}
 					onpointerdown={(e) =>
-						startDrag(e, sliderEl && { el: sliderEl, min: SIZE_MIN, max: SIZE_MAX, apply: (v) => (size = v) })}
+						startDrag(
+							e,
+							sliderEl && { el: sliderEl, min: SIZE_MIN, max: SIZE_MAX, apply: (v) => (size = v) }
+						)}
 					aria-label="{weight.name} size"
 				/>
 				<span class="size-icon size-icon--lg">A</span>
@@ -144,7 +146,7 @@
 			</label>
 		{/if}
 		<div class="WeightRow__align" role="group" aria-label="Text alignment">
-			{#each (['left', 'center', 'right'] as AlignValue[]) as opt}
+			{#each ['left', 'center', 'right'] as AlignValue[] as opt}
 				<button
 					class="align-btn"
 					class:is-active={align === opt}
@@ -153,7 +155,12 @@
 					aria-label="Align {opt}"
 					type="button"
 				>
-					<svg class="align-icon" viewBox="0 0 14 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+					<svg
+						class="align-icon"
+						viewBox="0 0 14 12"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-hidden="true"
+					>
 						{#if opt === 'left'}
 							<line x1="0" y1="1" x2="14" y2="1" />
 							<line x1="0" y1="5" x2="9" y2="5" />
@@ -218,13 +225,16 @@
 
 <style>
 	/* Border lines run the full viewport width; content is padded per-row. */
+	/* Mobile-first base; the >=768px block below restores the roomier
+	   desktop spacing (padding-block 15px/40px, meta margin-bottom 40px) —
+	   SP tightened 2026-09 at the user's request. */
 	.WeightRow {
 		display: flex;
 		flex-direction: column;
 		/* No gap: the meta row carries the space under itself, and the specimen
 		   sits directly on the body copy below it. */
 		gap: 0;
-		padding-block: 15px 40px;
+		padding-block: 5px 30px;
 		border-top: 1px solid var(--color-line);
 		width: 100%;
 	}
@@ -237,7 +247,7 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		margin-bottom: 40px;
+		margin-bottom: 15px;
 		color: var(--color-text-mute);
 		font-family: var(--font-en), sans-serif;
 		font-size: 10px;
@@ -272,8 +282,17 @@
 		flex: none;
 	}
 
-	/* Desktop: a little more slider travel */
+	/* Desktop: restore the roomier row spacing (SP was tightened above),
+	   plus a little more slider travel. */
 	@media (min-width: 768px) {
+		.WeightRow {
+			padding-block: 15px 40px;
+		}
+
+		.WeightRow__meta {
+			margin-bottom: 40px;
+		}
+
 		.WeightRow__size-range {
 			width: 120px;
 		}
@@ -367,7 +386,9 @@
 		color: var(--color-text-mute);
 		cursor: pointer;
 		padding: 0;
-		transition: color 0.12s, border-color 0.12s;
+		transition:
+			color 0.12s,
+			border-color 0.12s;
 		background: transparent;
 	}
 
