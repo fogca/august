@@ -19,17 +19,35 @@
 	let selectedSlug = $state(typefaceOptions[0]?.slug ?? 'norma');
 	const tf = $derived(getTypeface(selectedSlug) ?? typefaceOptions[0]);
 
-	// No weight control was asked for, but rendering at each font's own
-	// unset fvar default (Elio's happens to sit at Hair, its lightest
-	// master — not a deliberate choice, just what ufo2ft left unset) isn't
-	// representative for a coverage check. Resolve each typeface's own
-	// "Regular" stop instead, falling back to its middle stop if none is
-	// labelled that.
-	const weight = $derived(
-		tf.weights.find((w) => w.label === 'Regular')?.axisValue ??
-			tf.weights[Math.floor(tf.weights.length / 2)]?.axisValue ??
+	// Weight range comes from each typeface's own axis (Norma/gQ/Alfred
+	// 1-950, Elio 150-850) rather than a fixed slider range.
+	const weightMin = $derived(Math.min(...tf.weights.map((w) => w.axisValue)));
+	const weightMax = $derived(Math.max(...tf.weights.map((w) => w.axisValue)));
+
+	// Rendering at each font's own unset fvar default (Elio's happens to
+	// sit at Hair, its lightest master — not a deliberate choice, just what
+	// ufo2ft left unset) isn't representative for a coverage check. Resolve
+	// each typeface's own "Regular" stop instead, falling back to its
+	// middle stop if none is labelled that.
+	function regularWeight(typeface: typeof tf) {
+		return (
+			typeface.weights.find((w) => w.label === 'Regular')?.axisValue ??
+			typeface.weights[Math.floor(typeface.weights.length / 2)]?.axisValue ??
 			400
-	);
+		);
+	}
+
+	// Initial value only — the $effect below sets the real starting value
+	// (typefaceOptions[0]'s own Regular stop) on mount, and on every later
+	// typeface switch.
+	let weight = $state(400);
+
+	// Reset to the new typeface's own Regular stop on switch, rather than
+	// carrying over a raw wght value that might sit outside its axis (or at
+	// a very different relative position — Norma's 1-950 vs Elio's 150-850).
+	$effect(() => {
+		weight = regularWeight(tf);
+	});
 
 	const LOREM_IPSUM =
 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ' +
@@ -101,6 +119,19 @@
 						<option value={s.key}>{s.label}</option>
 					{/each}
 				</select>
+			</label>
+
+			<label class="GlyphCheck__field">
+				<span>Weight — {weight}</span>
+				<input
+					class="GlyphCheck__weight"
+					type="range"
+					min={weightMin}
+					max={weightMax}
+					step="1"
+					bind:value={weight}
+					aria-label="Weight"
+				/>
 			</label>
 
 			<div class="GlyphCheck__field">
@@ -184,6 +215,11 @@
 		padding: 8px 10px;
 		min-width: 180px;
 		border-radius: 0;
+	}
+
+	.GlyphCheck__weight {
+		width: 180px;
+		accent-color: var(--color-text);
 	}
 
 	.GlyphCheck__transform {
