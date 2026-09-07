@@ -612,7 +612,7 @@
 	.FontDetail__description {
 		/* Explicit now (was inheriting base p's 12px) — bumped for readability
 		   at justified-paragraph length. */
-		font-size: 14px;
+		font-size: 16px;
 		line-height: 1.4;
 		letter-spacing: 0;
 		color: var(--color-text);
