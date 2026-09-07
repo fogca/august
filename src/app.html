@@ -33,29 +33,26 @@
 		     filename/version scheme unchanged. Declared under two family names
 		     from the SAME file:
 		     'Norma' (kept stable — most components still hardcode this) and
-		     'Norma VF03' (versioned; --font-en/--font-ja below use this one,
+		     'Norma VF04' (versioned; --font-en/--font-ja below use this one,
 		     so anything reading var(--font-en)'s computed value sees the
 		     build number). Bump both the URL and the second name's suffix
-		     together on every export. VF03 (2026-09-07) fixes 't' being
-		     under-tightened relative to the rest of the lowercase (also
-		     moves tcaron/tcommaaccent, which build on it) — see
-		     static/fonts/README.md. ogonekcomb/baht remain excluded
-		     (still master-incompatible; ogonekcomb's own path node counts
-		     differ 14/11/17 across Book/Ultra/Hair, not just its shape
-		     count — a scan that only checks shape count can false-positive
-		     "fixed" on this one). -->
+		     together on every export. VF04 (2026-09-07): 't' redrawn (its
+		     own outline, not just spacing this time — 13+5 nodes across all
+		     3 masters now, was 10+4) — the only glyph that changed vs VF03,
+		     confirmed by a full byte-diff. ogonekcomb/baht remain excluded
+		     (still master-incompatible) — see static/fonts/README.md. -->
 		<style>
 			@font-face {
 				font-family: 'Norma';
-				src: url('%sveltekit.assets%/fonts/Norma-VF03.woff2?v=20260907a') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Norma-VF04.woff2?v=20260907d') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
 			@font-face {
-				font-family: 'Norma VF03';
-				src: url('%sveltekit.assets%/fonts/Norma-VF03.woff2?v=20260907a') format('woff2-variations');
+				font-family: 'Norma VF04';
+				src: url('%sveltekit.assets%/fonts/Norma-VF04.woff2?v=20260907d') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -99,8 +96,8 @@
 			/* Site-wide font: Norma for all elements (chairman directive).
 			   The versioned name goes first — see the @font-face comment above. */
 			:root {
-				--font-en: 'Norma VF03', 'Norma', 'Helvetica Neue', Arial, sans-serif;
-				--font-ja: 'Norma VF03', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-en: 'Norma VF04', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Norma VF04', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 			}
 
 			html,
