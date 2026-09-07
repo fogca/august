@@ -33,26 +33,26 @@
 		     filename/version scheme unchanged. Declared under two family names
 		     from the SAME file:
 		     'Norma' (kept stable — most components still hardcode this) and
-		     'Norma VF04' (versioned; --font-en/--font-ja below use this one,
+		     'Norma VF05' (versioned; --font-en/--font-ja below use this one,
 		     so anything reading var(--font-en)'s computed value sees the
 		     build number). Bump both the URL and the second name's suffix
-		     together on every export. VF04 (2026-09-07): 't' redrawn (its
-		     own outline, not just spacing this time — 13+5 nodes across all
-		     3 masters now, was 10+4) — the only glyph that changed vs VF03,
-		     confirmed by a full byte-diff. ogonekcomb/baht remain excluded
-		     (still master-incompatible) — see static/fonts/README.md. -->
+		     together on every export. VF05 (2026-09-07): 't' refined again
+		     (outline only — width and kerning unchanged) — the only glyph
+		     that changed vs VF04, confirmed by a full byte-diff. ogonekcomb/
+		     baht remain excluded (still master-incompatible) — see
+		     static/fonts/README.md. -->
 		<style>
 			@font-face {
 				font-family: 'Norma';
-				src: url('%sveltekit.assets%/fonts/Norma-VF04.woff2?v=20260907d') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Norma-VF05.woff2?v=20260907f') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
 			@font-face {
-				font-family: 'Norma VF04';
-				src: url('%sveltekit.assets%/fonts/Norma-VF04.woff2?v=20260907d') format('woff2-variations');
+				font-family: 'Norma VF05';
+				src: url('%sveltekit.assets%/fonts/Norma-VF05.woff2?v=20260907f') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -94,8 +94,8 @@
 			/* Site-wide font: Norma for all elements (chairman directive).
 			   The versioned name goes first — see the @font-face comment above. */
 			:root {
-				--font-en: 'Norma VF04', 'Norma', 'Helvetica Neue', Arial, sans-serif;
-				--font-ja: 'Norma VF04', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-en: 'Norma VF05', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Norma VF05', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 			}
 
 			html,
