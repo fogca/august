@@ -77,12 +77,15 @@
 			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 850,
 			   full wght range interpolated between them). Used on the Elio
 			   typeface page's Type Tester and the top-page A-Z specimen.
-			   VF05 (2026-09-05): re-export picking up circumflexcomb's tightened
-			   sidebearing (cascades to caroncomb/Icircumflex/icircumflex) — same
-			   106-glyph exclusion set as VF04, no compatibility changes. */
+			   VF06 (2026-09-07): re-scanned Hair/Ultra compatibility before this
+			   build (see compile_vf.py) — "three" is now drawn in both masters
+			   and ships for the first time; a new unencoded stylistic-alternate
+			   glyph "three.ss01" (created after VF05) is mismatched and newly
+			   excluded until its Ultra master is drawn. Net: same 176-glyph
+			   source, one glyph swapped in the exclusion set. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF05.woff2?v=20260905b') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF06.woff2?v=20260907a') format('woff2-variations');
 				font-weight: 150 850;
 				font-style: normal;
 				font-display: swap;
