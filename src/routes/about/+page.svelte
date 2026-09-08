@@ -185,10 +185,11 @@
 	   the headline's 1.15 to 1.5: justify's uneven word-spacing reads easier
 	   with more room between lines at this size. */
 	.About__hero-text {
+		font-family: var(--font-elio);
 		font-size: 28px;
 		line-height: 1.5;
 		letter-spacing: 0;
-		text-align: justify;
+		text-align: left;
 		margin: 0;
 	}
 
