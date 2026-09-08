@@ -159,23 +159,43 @@
 		display: none;
 	}
 
-	/* ── Statement (top) + Information (bottom), one 100vh view ── */
+	/* ── Statement + Information, one 100vh view ──
+	   PC (>=768px): the statement is centered dead-center of the viewport
+	   at a fixed 50vw, independent of the facts block (not "centered in
+	   the remaining space above facts") — both positioned absolutely, at
+	   the user's request.
+	   Mobile: kept as the original simple stack (copy, then facts, both in
+	   normal flow) — 50vw at phone widths wraps the statement into a very
+	   narrow column tall enough to collide with the absolutely-positioned
+	   facts block, so the PC treatment is intentionally not carried down;
+	   flag if a phone-specific centered layout is wanted too. */
 	.About__hero {
 		min-height: 100vh;
 		min-height: 100dvh;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: 24px;
 		padding-inline: 20px;
-		/* Room for the fixed global header, same convention as every other
-		   page's own top padding. */
 		padding-top: 96px;
 	}
 
 	@media (min-width: 768px) {
 		.About__hero {
-			padding-top: 50px;
+			position: relative;
+			padding: 0;
+		}
+	}
+
+	.About__hero-copy {
+		margin-bottom: 48px;
+	}
+
+	/* True dead-center of the first view, at a fixed 50vw. */
+	@media (min-width: 768px) {
+		.About__hero-copy {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 50vw;
+			margin-bottom: 0;
 		}
 	}
 
@@ -201,9 +221,23 @@
 		opacity: 0.8;
 	}
 
-	/* ── Information: a compact fact grid ── */
+	/* ── Information: a compact fact grid. PC: pinned to the bottom of the
+	   first view, independent of the statement's own centering above.
+	   Mobile: normal flow, right after the statement (see .About__hero's
+	   own note on why the PC layout isn't carried down). ── */
 	.About__facts {
 		padding-bottom: 48px;
+	}
+
+	@media (min-width: 768px) {
+		.About__facts {
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			padding-inline: 20px;
+			padding-bottom: 48px;
+		}
 	}
 
 	.About__facts-eyebrow {
