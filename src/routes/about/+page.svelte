@@ -186,8 +186,9 @@
 	   with more room between lines at this size. */
 	.About__hero-text {
 		font-family: var(--font-elio);
-		font-size: 28px;
-		line-height: 1.5;
+		font-size: 36px;
+		line-height: 1.2;
+		font-weight: 300;
 		letter-spacing: 0;
 		text-align: left;
 		margin: 0;
