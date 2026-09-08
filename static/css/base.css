@@ -98,6 +98,9 @@ a {
   /* Sharper signal red — top-page redesign (2026-08) + Header logo. Distinct
      from the older, muted --color-accent above; do not merge the two. */
   --color-signal:    #e0231c;
+  /* New brand color (2026-09) — first use: the About page background. Pairs
+     with black text (--color-text), not white. */
+  --color-amber:     #ffbb32;
 
   /* --- Color aliases (general-purpose) --- */
   --background: var(--color-bg);

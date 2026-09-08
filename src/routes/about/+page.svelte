@@ -122,19 +122,20 @@
 </main>
 
 <style>
-	/* Dark theme — scoped to About only. base.css applies color directly to
+	/* Amber theme — scoped to About only (2026-09, at the user's request;
+	   was a dark theme before). base.css applies color directly to
 	   div / p / span / a / h1-h6, so the parent color loses the cascade;
-	   override every descendant with :global(*). Uses base.css dark tokens. */
+	   override every descendant with :global(*). */
 	.About {
 		min-height: 100vh;
 		min-height: 100dvh;
-		background: var(--color-bg-dark);
-		color: var(--white);
+		background: var(--color-amber);
+		color: var(--color-text);
 		font-family: var(--font-en), sans-serif;
 	}
 
 	.About :global(*) {
-		color: var(--white);
+		color: var(--color-text);
 	}
 
 	/* One language at a time — [data-lang] lives on <html>, set by the header
