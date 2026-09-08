@@ -174,7 +174,7 @@
 
 	@media (min-width: 768px) {
 		.About__hero {
-			padding-top: 0;
+			padding-top: 50px;
 		}
 	}
 
