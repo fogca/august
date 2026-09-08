@@ -214,17 +214,25 @@
 	}
 
 	.About__facts-grid {
-		display: grid;
-		grid-template-columns: 1fr;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		max-width: 100%;
 		gap: 28px;
 		margin: 0;
-		max-width: 720px;
 	}
 
 	@media (min-width: 600px) {
 		.About__facts-grid {
-			grid-template-columns: repeat(2, 1fr);
+			flex-direction: row;
+			flex-wrap: wrap;
 			gap: 32px 48px;
+		}
+
+		/* Replaces the old grid-template-columns:repeat(2,1fr) — two per
+		   row, wrapping, same as before. */
+		.About__facts-item {
+			flex: 1 1 calc(50% - 24px);
 		}
 	}
 
