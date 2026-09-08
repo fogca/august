@@ -24,30 +24,25 @@
 	const weightMin = $derived(Math.min(...tf.weights.map((w) => w.axisValue)));
 	const weightMax = $derived(Math.max(...tf.weights.map((w) => w.axisValue)));
 
-	// Rendering at each font's own unset fvar default (Elio's happens to
-	// sit at Hair, its lightest master — not a deliberate choice, just what
-	// ufo2ft left unset) isn't representative for a coverage check. Resolve
-	// each typeface's own "Regular" stop instead, falling back to its
-	// middle stop if none is labelled that.
-	function regularWeight(typeface: typeof tf) {
-		return (
-			typeface.weights.find((w) => w.label === 'Regular')?.axisValue ??
-			typeface.weights[Math.floor(typeface.weights.length / 2)]?.axisValue ??
-			400
-		);
-	}
-
-	// Initial value only — the $effect below sets the real starting value
-	// (typefaceOptions[0]'s own Regular stop) on mount, and on every later
-	// typeface switch.
+	// Default 400 at the user's request (valid on every typeface's axis —
+	// it's Norma's own "Regular" stop exactly, and sits between two named
+	// stops on Elio's narrower 150-850 range, which is fine for a variable
+	// font). Only clamped, not reset, on typeface switch — once there's a
+	// slider the user is deliberately controlling, silently overwriting
+	// their choice on an unrelated control (typeface/sample/transform)
+	// would be more surprising than useful; clamping just keeps the value
+	// valid if the new typeface's axis doesn't reach that far.
 	let weight = $state(400);
-
-	// Reset to the new typeface's own Regular stop on switch, rather than
-	// carrying over a raw wght value that might sit outside its axis (or at
-	// a very different relative position — Norma's 1-950 vs Elio's 150-850).
 	$effect(() => {
-		weight = regularWeight(tf);
+		if (weight < weightMin) weight = weightMin;
+		else if (weight > weightMax) weight = weightMax;
 	});
+
+	// Font-size control — independent of typeface (no axis-range concern
+	// the way weight has), so no clamp/reset effect needed.
+	const FONT_SIZE_MIN = 12;
+	const FONT_SIZE_MAX = 120;
+	let fontSize = $state(18);
 
 	const LOREM_IPSUM =
 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ' +
@@ -134,6 +129,19 @@
 				/>
 			</label>
 
+			<label class="GlyphCheck__field">
+				<span>Font size — {fontSize}px</span>
+				<input
+					class="GlyphCheck__weight"
+					type="range"
+					min={FONT_SIZE_MIN}
+					max={FONT_SIZE_MAX}
+					step="1"
+					bind:value={fontSize}
+					aria-label="Font size"
+				/>
+			</label>
+
 			<div class="GlyphCheck__field">
 				<span>Transform</span>
 				<div class="GlyphCheck__transform" role="group" aria-label="Text transform">
@@ -154,7 +162,7 @@
 
 	<div
 		class="GlyphCheck__sample"
-		style="--sample-font: '{tf.fontFamily}'; --sample-wght: {weight}; --sample-transform: {transform};"
+		style="--sample-font: '{tf.fontFamily}'; --sample-wght: {weight}; --sample-transform: {transform}; --sample-size: {fontSize}px;"
 		lang={sample.key === 'wine' || sample.key === 'pangrams' ? 'fr' : 'en'}
 	>
 		{sample.text}
@@ -168,9 +176,33 @@
 		padding: 96px var(--padding) 64px;
 	}
 
+	/* PC: two columns — parameters stacked vertically on the left, the
+	   sample text at a fixed 75vw on the right — at the user's request.
+	   Mobile keeps the original single-column stack (controls row, then
+	   text below) untouched below this breakpoint. */
 	@media (min-width: 768px) {
 		.GlyphCheck {
 			padding-top: 120px;
+			display: flex;
+			align-items: flex-start;
+			gap: 40px;
+		}
+
+		.GlyphCheck__head {
+			flex: 1 1 auto;
+			min-width: 0;
+			margin-bottom: 0;
+		}
+
+		.GlyphCheck__controls {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.GlyphCheck__sample {
+			flex: 0 0 75vw;
+			width: 75vw;
+			max-width: 75vw;
 		}
 	}
 
@@ -253,12 +285,13 @@
 
 	/* The actual proof — no width cap (this is for scanning a lot of text
 	   at once, not for reading comfort), generous line-height so accents
-	   and descenders don't collide across lines. */
+	   and descenders don't collide across lines. font-size is the user's
+	   own slider now (was an auto clamp()) — see the Font size field. */
 	.GlyphCheck__sample {
 		font-family: var(--sample-font), sans-serif;
 		font-variation-settings: 'wght' var(--sample-wght);
 		text-transform: var(--sample-transform);
-		font-size: clamp(20px, 2.2vw, 32px);
+		font-size: var(--sample-size);
 		line-height: 1.5;
 		letter-spacing: 0;
 		max-width: 100%;
