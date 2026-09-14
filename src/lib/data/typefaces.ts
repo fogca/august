@@ -342,11 +342,12 @@ export const TYPEFACES: Typeface[] = [
 		// Norma's info, where those two numbers are nearly the same since
 		// Norma is finished across all masters. For Elio, mid-development,
 		// they diverge a lot: a variable font can only ship a glyph once
-		// BOTH masters are shape-compatible, so ~67 of the 174 encoded
+		// BOTH masters are shape-compatible, so ~28 of the 174 encoded
 		// characters that already have real ink in Hair are still hard-
-		// excluded from Elio-VF10.woff2 while Ultra catches up (107 ship
-		// today, as of "three" shipping since VF06 — see
-		// static/fonts/README.md). Quoting that 107 as "the" glyph count
+		// excluded from Elio-VF11.woff2 while Ultra catches up (144 ship
+		// today — a big jump from VF10's 107, since all 4 remaining
+		// Hair-only combining marks got drawn in Ultra — see
+		// static/fonts/README.md). Quoting that 144 as "the" glyph count
 		// would undersell finished design work that just hasn't cleared
 		// the interpolation-compatibility bar yet.
 		// Measured 2026-09-05 directly from the Glyphs glyph box:

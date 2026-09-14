@@ -79,18 +79,15 @@
 			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 850,
 			   full wght range interpolated between them). Used on the Elio
 			   typeface page's Type Tester and the top-page A-Z specimen.
-			   VF10 (2026-09-08): default letter-spacing loosened — Hair
-			   +0.04em (40 units), Ultra +0.02em (20 units), split evenly
-			   across LSB/RSB on every non-mark glyph. ellipsis/quotedblleft/
-			   quotedblright (built from repeated identical components) needed
-			   a manual fix on top — their auto-flow layout was compounding
-			   the base glyph's own growth per repetition; now fixed at a
-			   flat per-glyph +40, matching everything else, with automatic
-			   alignment switched off on those repeats so it can't drift
-			   again. Full history: static/fonts/README.md. */
+			   VF11 (2026-09-14): big compatibility jump — 144 glyphs ship
+			   now (was 107 in VF10). All 4 remaining Hair-only combining
+			   marks are drawn in Ultra, so every Adieresis/Atilde/Aring/
+			   Ccedilla-type composite ships for the first time (22 letters),
+			   plus all 10 digits, colon, and emdash. Full history:
+			   static/fonts/README.md. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF10.woff2?v=20260908a') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF11.woff2?v=20260914a') format('woff2-variations');
 				font-weight: 150 850;
 				font-style: normal;
 				font-display: swap;
