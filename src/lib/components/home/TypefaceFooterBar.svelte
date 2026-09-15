@@ -19,7 +19,7 @@
 		class="TypefaceFooterBar"
 		class:is-visible={activeTypeface.visible}
 		href="/fonts/{tf.slug}"
-		style="--panel-bg: {hs.panelBg}; --panel-fg: {hs.panelFg};"
+		style="--type-font: '{tf.fontFamily}'; --panel-bg: {hs.panelBg}; --panel-fg: {hs.panelFg};"
 	>
 		<div class="TypefaceFooterBar__text">
 			<p class="TypefaceFooterBar__name">{tf.name} Ôgast</p>
@@ -67,7 +67,7 @@
 		}
 
 		.TypefaceFooterBar__name {
-			font-family: 'Norma', sans-serif;
+			font-family: var(--type-font), sans-serif;
 			font-size: 16px;
 			line-height: 1.25;
 			color: #000000;
@@ -78,7 +78,7 @@
 		}
 
 		.TypefaceFooterBar__tagline {
-			font-family: 'Norma', sans-serif;
+			font-family: var(--font-en), sans-serif;
 			font-size: 10px;
 			line-height: 1.25;
 			font-weight: var(--fw-light);

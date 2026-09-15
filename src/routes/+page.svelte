@@ -133,7 +133,7 @@
 	}
 
 	.Buy__eyebrow {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -143,7 +143,7 @@
 	}
 
 	.Buy__heading {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: var(--display-fs);
 		line-height: 1.02;
 		text-transform: uppercase;
@@ -152,7 +152,7 @@
 	}
 
 	.Buy__body {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 14px;
 		font-variation-settings: 'wght' 360;
 		line-height: 1.7;
@@ -179,7 +179,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
@@ -226,7 +226,7 @@
 	}
 
 	.Custom__eyebrow {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -237,7 +237,7 @@
 
 	/* Matches .Buy__heading — the section titles share one display size. */
 	.Custom__heading {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: var(--display-fs);
 		line-height: 1.02;
 		text-transform: uppercase;
@@ -253,7 +253,7 @@
 	}
 
 	.Custom__body {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 14px;
 		font-variation-settings: 'wght' 360;
 		line-height: 1.7;
@@ -272,7 +272,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 16px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
@@ -328,7 +328,7 @@
 	}
 
 	.Office__label {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 11px;
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
@@ -340,7 +340,7 @@
 	/* Matches .Buy__heading — this statement is the section's title, so it gets
 	   the full column (the 80% cap is for body copy) and wraps in fewer lines. */
 	.Office__text {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: var(--display-fs);
 		font-variation-settings: 'wght' 360;
 		line-height: 1.02;
@@ -360,7 +360,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 6px;
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-size: 13px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;

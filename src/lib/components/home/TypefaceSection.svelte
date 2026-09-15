@@ -143,7 +143,7 @@
 <section
 	class="TypefaceSection"
 	bind:this={sectionEl}
-	style="--panel-bg: {hs.panelBg}; --panel-fg: {hs.panelFg}; --block-bg: {hs.blockBg}; --block-fg: {hs.blockFg};"
+	style="--type-font: '{typeface.fontFamily}'; --panel-bg: {hs.panelBg}; --panel-fg: {hs.panelFg}; --block-bg: {hs.blockBg}; --block-fg: {hs.blockFg};"
 >
 	<!-- PC only — name/tagline/spec/Discover, always on a white ground -->
 	<div class="TypefaceSection__sidebar" bind:this={sidebarEl}>
@@ -232,7 +232,7 @@
 	}
 
 	.TypefaceSection__name {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--type-font), sans-serif;
 		font-size: clamp(22px, 2.2vw, 32px);
 		line-height: 1.25;
 		font-weight: 400;
@@ -241,7 +241,7 @@
 	}
 
 	.TypefaceSection__tagline {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--type-font), sans-serif;
 		font-size: clamp(13px, 1.1vw, 16px);
 		line-height: 1.25;
 		font-weight: var(--fw-light);
@@ -250,7 +250,7 @@
 	}
 
 	.TypefaceSection__meta {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--type-font), sans-serif;
 		font-size: clamp(11px, 0.85vw, 12px);
 		line-height: 1.25;
 		font-weight: var(--fw-light);
@@ -269,7 +269,7 @@
 		align-items: center;
 		gap: 8px;
 		margin-top: 28px;
-		font-family: 'Norma', sans-serif;
+		font-family: var(--type-font), sans-serif;
 		font-size: 14px;
 		font-weight: var(--fw-ui);
 		color: #000000;

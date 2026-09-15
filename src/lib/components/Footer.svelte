@@ -114,7 +114,7 @@
 
 <style>
 	.Footer {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-en), sans-serif;
 		font-weight: var(--fw-ui);
 		/* No background (was the same red as the Buy/licence section) and
 		   black text, per the user's request — border-color follows (a white

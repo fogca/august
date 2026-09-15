@@ -91,19 +91,28 @@
 				font-display: swap;
 			}
 
-			/* Site-wide font: Norma for all elements (chairman directive).
-			   The versioned name goes first — see the @font-face comment above. */
+			/* Site-wide brand font: Elio (2026-09, at the user's request —
+			   "基本はElioがブランド書体"), falling back per glyph to Norma for
+			   anything Elio hasn't drawn yet (its shipped VF is a subset while
+			   Ultra catches up — see static/fonts/README.md). Norma is a sibling
+			   face with near-identical proportions, so the per-glyph fallback
+			   reads as one voice. Typeface pages still set themselves in their
+			   own face, and the Header's small nav chrome stays in Norma, both
+			   per the Figma frames. The versioned Norma name goes first in the
+			   fallback chain — see the @font-face comment above. */
 			:root {
-				--font-en: 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
-				--font-ja: 'Norma VF06', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
-				/* Opt-in only — falls back through the same Norma stack as
-				   --font-en, not a site-wide default. */
+				--font-en: 'Elio', 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Elio', 'Norma VF06', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 				--font-elio: 'Elio', 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				/* Norma on its own, for the places that deliberately keep it
+				   (Header chrome, the buy flow — Elio's currency glyphs aren't
+				   finished, and prices are the one place that would show). */
+				--font-norma: 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 			}
 
 			html,
 			body {
-				font-family: 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				font-family: 'Elio', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 			}
 		</style>
 
