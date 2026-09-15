@@ -6,6 +6,16 @@ export default defineConfig({
 	plugins: [
 		sveltekit(),
 		SvelteKitPWA({
+			// SvelteKit hands Vite an empty `base`, and vite-plugin-pwa builds
+			// both the <link rel="manifest"> href and the service-worker
+			// registration URL from it — so they came out RELATIVE
+			// ("manifest.webmanifest", "sw.js") and resolved against whatever
+			// route was open: /fonts/manifest.webmanifest, /fonts/sw.js → 404
+			// on every nested page (reported 2026-09). Pinning base/scope to
+			// "/" makes both absolute; the files themselves were always at the
+			// root.
+			base: '/',
+			scope: '/',
 			registerType: 'autoUpdate',
 			injectRegister: 'auto',
 			devOptions: {
