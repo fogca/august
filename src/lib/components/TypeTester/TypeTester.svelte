@@ -27,10 +27,6 @@
 		 *  back to WEIGHT_ROW_SIZE_DEFAULT_DESKTOP when omitted. Mobile's
 		 *  default isn't overridable here; nothing has asked for that yet. */
 		defaultSizeDesktop?: number;
-		/** PC only: lay the rows out as a 2-column grid instead of one column
-		 *  per row. Mobile is untouched either way — single column, same as
-		 *  before this existed. */
-		twoColumnDesktop?: boolean;
 	}
 
 	let {
@@ -39,8 +35,7 @@
 		defaultTexts,
 		defaultNotes,
 		available = true,
-		defaultSizeDesktop,
-		twoColumnDesktop = false
+		defaultSizeDesktop
 	}: Props = $props();
 
 	// Viewport-dependent default size (evaluated once on mount). Only the
@@ -69,12 +64,7 @@
 		{/if}
 	</div>
 
-	<div
-		class="TypeTester__rows"
-		class:is-2col={twoColumnDesktop}
-		role="list"
-		aria-label="Weight specimens"
-	>
+	<div class="TypeTester__rows" role="list" aria-label="Weight specimens">
 		{#each weights as weight, i (weight.id)}
 			<WeightRow
 				{weight}
@@ -133,24 +123,5 @@
 	   border lines can run the full viewport width. */
 	.TypeTester__rows {
 		flex: 1;
-	}
-
-	/* PC-only 2-column layout (2026-09, Norma specifically — see the
-	   twoColumnDesktop prop). Plain 1fr/1fr grid: rows fill left-to-right
-	   then wrap, so weight N and N+1 sit side by side rather than the left
-	   column holding the first half and the right column the second.
-	   :global(.WeightRow) reaches into the child component's own root
-	   element — its border-right only makes sense paired with this 2-column
-	   mode, so it's scoped under .is-2col rather than added to WeightRow's
-	   own unconditional styles. */
-	@media (min-width: 768px) {
-		.TypeTester__rows.is-2col {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-		}
-
-		.TypeTester__rows.is-2col :global(.WeightRow) {
-			border-right: 1px solid var(--color-line);
-		}
 	}
 </style>

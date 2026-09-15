@@ -245,8 +245,7 @@
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
-		defaultSizeDesktop={isElio ? 120 : tf.slug === 'norma' ? 48 : undefined}
-		twoColumnDesktop={tf.slug === 'norma'}
+		defaultSizeDesktop={isElio ? 120 : tf.slug === 'norma' ? 36 : undefined}
 	/>
 
 	{#if isElio}
