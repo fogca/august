@@ -121,6 +121,33 @@ export interface Typeface {
 		/** Centered statement line (e.g. 'Geometry, breathing.') */
 		statement?: string;
 	};
+	/** Home page "typeface section" (100vh full-bleed intro, one per typeface —
+	 *  Figma nodes 3:699/3:733 PC, 7:887/7:906 SP). Distinct from `theme`
+	 *  (used by this typeface's own /fonts/[slug] hero) since this redesign
+	 *  introduces its own per-section brand colours. Omit to skip a typeface
+	 *  in this section entirely (same convention as `hidden`). */
+	homeSection?: {
+		/** The accent panel behind the giant self-referential headline. */
+		panelBg: string;
+		panelFg: string;
+		/** The two blocks that stand in for real specimen photography — none
+		 *  exists yet for any typeface (see `heroVideo` below for the one
+		 *  exception), so these render as solid colour + real typographic
+		 *  content instead of a placeholder photo. */
+		blockBg: string;
+		blockFg: string;
+		/** Large single diagnostic glyph shown in the first block when there's
+		 *  no `heroVideo` to show there instead. */
+		glyph: string;
+		/** Giant self-referential classification headline, set in the
+		 *  typeface's own font inside the accent panel. */
+		headline: string;
+		/** wght axis value for the headline (a real instance of this
+		 *  typeface's own axis, not a generic CSS keyword — e.g. Elio's own
+		 *  Hair master at 150, per Figma, deliberately delicate despite the
+		 *  headline's large size). */
+		headlineWeight: number;
+	};
 }
 
 export const TYPEFACES: Typeface[] = [
@@ -238,6 +265,21 @@ export const TYPEFACES: Typeface[] = [
 			vol: 'vol.01',
 			subtitle: '(Formative forces)',
 			debut: '26.07.01 Debut'
+		},
+		// Home page typeface section (Figma 3:699/7:887, 2026-09). Reuses the
+		// site's own established red (--color-signal) rather than Figma's raw
+		// #D40000 swatch — close enough to be the same brand red, so introducing
+		// a second near-identical one would just be inconsistency. First block
+		// is the existing wght-sweep video (real asset, no CSS-block needed);
+		// second is the A-Z/a-z specimen proof, set in the panel's own red.
+		homeSection: {
+			panelBg: 'var(--color-signal)',
+			panelFg: '#F1F0EF',
+			blockBg: '#000000',
+			blockFg: '#F1F0EF',
+			glyph: 'a',
+			headline: 'Natural Humanist Sans',
+			headlineWeight: 500
 		}
 	},
 	{
@@ -397,6 +439,22 @@ export const TYPEFACES: Typeface[] = [
 			comingSoon: true,
 			intro: 'A sibling to Norma.',
 			statement: 'Coming soon.'
+		},
+		// Home page typeface section (Figma 3:733/7:906, 2026-09). New
+		// lime/blue pairing, distinct from the ochre used by Elio's own
+		// /fonts page hero (theme, above) and catalogue swatch — contained to
+		// this one section rather than changing Elio's colour everywhere.
+		homeSection: {
+			panelBg: '#DAE06B',
+			panelFg: '#0059FF',
+			blockBg: '#0059FF',
+			blockFg: '#DAE06B',
+			glyph: 'a',
+			headline: 'Geometric Humanist',
+			// Elio's own Hair master (150) — deliberately its most delicate
+			// weight at the page's single largest moment, per Figma (and a
+			// nice match for its "Reticent and Ravenous" tagline).
+			headlineWeight: 150
 		}
 	},
 	{

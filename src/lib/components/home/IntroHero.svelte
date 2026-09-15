@@ -242,6 +242,16 @@
 			height: 82cqw;
 			transform: rotate(90deg);
 			margin-left: 6vw;
+			/* .IntroHero is a flex container — without this, the default
+			   flex-shrink:1 squeezes the wordmark down to fit the (narrow,
+			   pre-rotation) container width, since 82cqh is deliberately
+			   wider than the viewport (it becomes the post-rotation HEIGHT).
+			   That shrinking silently broke the cross-axis-borrowing trick
+			   and clipped the wordmark's tail (the "T") off the bottom of
+			   the screen. flex-shrink:0 lets it size correctly before the
+			   rotation is applied; .IntroHero's own overflow:hidden still
+			   hides the (intended, harmless) pre-rotation horizontal bleed. */
+			flex-shrink: 0;
 		}
 	}
 </style>
