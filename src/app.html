@@ -33,26 +33,27 @@
 		     filename/version scheme unchanged. Declared under two family names
 		     from the SAME file:
 		     'Norma' (kept stable — most components still hardcode this) and
-		     'Norma VF05' (versioned; --font-en/--font-ja below use this one,
+		     'Norma VF06' (versioned; --font-en/--font-ja below use this one,
 		     so anything reading var(--font-en)'s computed value sees the
 		     build number). Bump both the URL and the second name's suffix
-		     together on every export. VF05 (2026-09-07): 't' refined again
-		     (outline only — width and kerning unchanged) — the only glyph
-		     that changed vs VF04, confirmed by a full byte-diff. ogonekcomb/
-		     baht remain excluded (still master-incompatible) — see
-		     static/fonts/README.md. -->
+		     together on every export. VF06 (2026-09-15): 's' sidebearing
+		     tightened (RSB -14, cascades to sacute/scaron/scedilla/
+		     scircumflex/scommaaccent) and 't' refined again (outline only,
+		     no metric change) — the only 2 glyphs that changed vs VF05,
+		     confirmed by a full byte-diff. ogonekcomb/baht remain excluded
+		     (still master-incompatible) — see static/fonts/README.md. -->
 		<style>
 			@font-face {
 				font-family: 'Norma';
-				src: url('%sveltekit.assets%/fonts/Norma-VF05.woff2?v=20260907f') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Norma-VF06.woff2?v=20260915a') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
 			@font-face {
-				font-family: 'Norma VF05';
-				src: url('%sveltekit.assets%/fonts/Norma-VF05.woff2?v=20260907f') format('woff2-variations');
+				font-family: 'Norma VF06';
+				src: url('%sveltekit.assets%/fonts/Norma-VF06.woff2?v=20260915a') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -96,11 +97,11 @@
 			/* Site-wide font: Norma for all elements (chairman directive).
 			   The versioned name goes first — see the @font-face comment above. */
 			:root {
-				--font-en: 'Norma VF05', 'Norma', 'Helvetica Neue', Arial, sans-serif;
-				--font-ja: 'Norma VF05', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-en: 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-ja: 'Norma VF06', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
 				/* Opt-in only — falls back through the same Norma stack as
 				   --font-en, not a site-wide default. */
-				--font-elio: 'Elio', 'Norma VF05', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-elio: 'Elio', 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 			}
 
 			html,
