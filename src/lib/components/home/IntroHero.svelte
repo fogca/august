@@ -97,6 +97,7 @@
 	];
 
 	let smallLetterEls: SVGPathElement[] = [];
+	let smallSvgEl: SVGSVGElement | undefined = $state();
 	let smallGroupEl: SVGGElement | undefined = $state();
 	let largeLetterEls: SVGPathElement[] = [];
 	let largeGroupEl: SVGGElement | undefined = $state();
@@ -126,6 +127,15 @@
 		let cancelled = false;
 		import('gsap').then(({ gsap }) => {
 			if (cancelled || !stageEl || !smallGroupEl || !largeGroupEl) return;
+
+			// .IntroHero__wordmark--small is opacity:0 in CSS by default (it has
+			// no pre-hydration/no-JS role, unlike the large wordmark's own
+			// fill:#f1f0ef fallback) — without this, the whole small-state
+			// stagger plays invisibly underneath that 0 opacity and the intro
+			// silently skips straight to the crossfade, reading as "the
+			// animation doesn't run at all" even though every tween below is
+			// actually firing correctly.
+			if (smallSvgEl) smallSvgEl.style.opacity = '1';
 
 			gsap.set(smallLetterEls, { opacity: 0, y: 24 });
 			gsap.set(largeLetterEls, { opacity: 0, fill: '#F1F0EF' });
@@ -167,7 +177,11 @@
 				{ scale: 1, duration: 0.9, ease: 'power2.out' },
 				'<'
 			);
-			tl.to(largeLetterEls, { opacity: 1, fill: '#000000', duration: 0.9, ease: 'power2.out' }, '<');
+			tl.to(
+				largeLetterEls,
+				{ opacity: 1, fill: '#000000', duration: 0.9, ease: 'power2.out' },
+				'<'
+			);
 			tl.to(stageEl, { backgroundColor: '#F1F0EF', duration: 0.9, ease: 'power2.inOut' }, '<');
 
 			// 3 — Header slides in from above, timed into the tail of the
@@ -190,6 +204,7 @@
 
 <section class="IntroHero" bind:this={stageEl} aria-label="Ôgast">
 	<svg
+		bind:this={smallSvgEl}
 		class="IntroHero__wordmark IntroHero__wordmark--small"
 		viewBox="0 0 1401 148"
 		preserveAspectRatio="xMidYMax meet"

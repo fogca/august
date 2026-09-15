@@ -8,7 +8,7 @@
 	import { page } from '$app/state';
 	import { onScroll } from '$lib/scroll';
 	import { TYPEFACES } from '$lib/data/typefaces';
-	import { lang } from '$lib/state/lang.svelte';
+	import { lang, LANG_OPTIONS, HEADER_LANG_CODES } from '$lib/state/lang.svelte';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
@@ -33,17 +33,13 @@
 	});
 
 	type NavItem = { label: string; href: string };
-	type LangOption = { code: 'en' | 'fr' | 'da'; label: string; name: string };
 
-	// Three explicit options rather than one cycling toggle — clearer once
-	// there are more than two, and each button is self-describing (its own
-	// aria-label + aria-pressed) without needing a separate sr-only
-	// announcement span.
-	const LANGS: LangOption[] = [
-		{ code: 'en', label: 'EN', name: 'English' },
-		{ code: 'fr', label: 'FR', name: 'Français' },
-		{ code: 'da', label: 'DA', name: 'Dansk' }
-	];
+	// Explicit buttons rather than one cycling toggle — clearer with more
+	// than two, and each is self-describing (its own aria-label +
+	// aria-pressed) without a separate sr-only announcement span. The header
+	// shows only a subset (EN/FR/ES, at the user's choice) — Footer.svelte
+	// shows the full LANG_OPTIONS list.
+	const LANGS = LANG_OPTIONS.filter((l) => HEADER_LANG_CODES.includes(l.code));
 
 	// Desktop inline nav. License -> /licensing, not /license — that shorter
 	// URL is a stable redirect to /legal/eula baked into the shipped fonts'
@@ -105,9 +101,9 @@
 	</nav>
 
 	<!-- Desktop-only right-hand group — language switch + the Figma end-state
-	     header's "Account / Cart (0)" pairing (node 1:654) — one flex group
-	     so .Header's three-way split (logo / nav / right) still works via
-	     plain justify-content:space-between on .Header. -->
+	     header's Cart pairing (node 1:654) — one flex group so .Header's
+	     three-way split (logo / nav / right) still works via plain
+	     justify-content:space-between on .Header. -->
 	<div class="Header__right">
 		<!-- Three direct options rather than one cycling toggle — see the
 		     LANGS note above. -->
@@ -126,13 +122,14 @@
 			{/each}
 		</div>
 
-		<!-- Inert (aria-disabled spans, not links) — there is no account
-		     system or persistent cart anywhere in this codebase (/buy is a
-		     direct Stripe checkout), so this is the same "visually present,
-		     not wired up" treatment already used elsewhere for not-yet-real
-		     features (e.g. Alfred's "Coming Soon" on the home page). -->
+		<!-- Inert (aria-disabled span, not a link) — there is no persistent
+		     cart anywhere in this codebase (/buy is a direct Stripe
+		     checkout), so this is the same "visually present, not wired up"
+		     treatment already used elsewhere for not-yet-real features (e.g.
+		     Alfred's "Coming Soon" on the home page). "Account" is hidden for
+		     now, at the user's request (2026-09) — no account system exists
+		     yet either. -->
 		<div class="Header__cart" aria-hidden="true">
-			<span class="Header__nav-link" aria-disabled="true">Account</span>
 			<span class="Header__nav-link" aria-disabled="true">Cart (0)</span>
 		</div>
 	</div>
@@ -207,8 +204,15 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		display: flex;
-		justify-content: space-between;
+		/* Grid, not flex — the outer two columns are equal-width (1fr each),
+		   so the centre nav sits at the true horizontal centre of the header
+		   regardless of how wide the logo or the right-hand group are. A
+		   flex row with justify-content:space-between only guarantees even
+		   GAPS between items, not a centred middle one — logo/right widths
+		   differ (especially now Cart-only vs Account+Cart), which was
+		   visibly shifting the centre nav off-centre. */
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
 		/* No background — sits transparently over whatever's beneath it.
 		   viewport-fit=cover lets this bar reach the true screen edge, so the
@@ -261,9 +265,12 @@
 	}
 
 	/* Mobile-only: Menu/Close toggle, on the right. Desktop hides this in
-	   favour of .Header__nav. */
+	   favour of .Header__nav. Same grid column as .Header__right (the
+	   desktop right-hand group) — only one of the two is ever visible at a
+	   given breakpoint, so sharing column 3 is safe. */
 	.Header__actions {
-		order: 2;
+		grid-column: 3;
+		justify-self: end;
 		display: flex;
 		align-items: center;
 		gap: 4px;
@@ -358,11 +365,11 @@
 
 	/* Plain typed text now, same treatment as .Header__nav-link — not the
 	   Logo.svelte wordmark (still used as-is elsewhere: Footer, home hero),
-	   and no longer signal red — just inherits the header's own black. */
+	   and no longer signal red — just inherits the header's own black.
+	   Always column 1 (left), on every breakpoint. */
 	.Header__logo {
-		/* Mobile: logo leads on the left; .Header__actions (order: 2) takes the
-		   right. Desktop below flips this — nav leads, logo trails. */
-		order: 1;
+		grid-column: 1;
+		justify-self: start;
 		font-size: 12px;
 		font-weight: var(--fw-ui);
 		text-decoration: none;
@@ -388,12 +395,10 @@
 			display: none;
 		}
 
-		/* Three-way split — logo / nav / right (langs + cart) — via plain
-		   justify-content:space-between on .Header (set once, above) plus
-		   this explicit left-to-right order, rather than relying on DOM/
-		   source order. */
+		/* Three-way split — logo (col 1) / nav (col 2) / right, langs+cart
+		   (col 3) — see .Header's own grid-template-columns comment above
+		   for why this is grid-column, not flex order. */
 		.Header__logo {
-			order: 1;
 			padding: 4px 0;
 			/* Kept matching .Header__nav-link's size (PC only — mobile's logo
 			   has no nav-link beside it to stay paired with). */
@@ -402,12 +407,13 @@
 
 		.Header__nav {
 			display: flex;
-			order: 2;
+			grid-column: 2;
 		}
 
 		.Header__right {
 			display: flex;
-			order: 3;
+			grid-column: 3;
+			justify-self: end;
 		}
 	}
 

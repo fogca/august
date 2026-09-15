@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Ôgast site footer.
 	// Holds contact info, site nav and legal links.
+	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
 
 	type LinkItem = { label: string; href: string };
 
@@ -90,6 +91,23 @@
 				<li><a href={item.href}>{item.label}</a></li>
 			{/each}
 		</ul>
+		<!-- Full language list (Header shows only a subset — EN/FR/ES, at the
+		     user's request); DE/ES/CH are buttons only for now, no site copy
+		     translated into them yet — see lang.svelte.ts's own comment. -->
+		<div class="Footer__langs" role="group" aria-label="Language">
+			{#each LANG_OPTIONS as l (l.code)}
+				<button
+					type="button"
+					class="Footer__lang"
+					class:is-active={lang.current === l.code}
+					onclick={() => lang.set(l.code)}
+					aria-pressed={lang.current === l.code}
+					aria-label={l.name}
+				>
+					{l.label}
+				</button>
+			{/each}
+		</div>
 		<p class="Footer__copy">© {YEAR} Ôgast</p>
 	</div>
 </footer>
@@ -274,6 +292,33 @@
 
 	.Footer__legal a {
 		font-size: 12px;
+	}
+
+	.Footer__langs {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.Footer__lang {
+		font-family: inherit;
+		background: none;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+		font-size: 12px;
+		color: inherit;
+		letter-spacing: 0;
+		opacity: 0.55;
+		transition: opacity 0.15s ease;
+	}
+
+	.Footer__lang:hover {
+		opacity: 0.85;
+	}
+
+	.Footer__lang.is-active {
+		opacity: 1;
 	}
 
 	.Footer__copy {
