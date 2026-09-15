@@ -28,13 +28,39 @@
 
      Figma delivered NO Smart-Animate/prototype timing data on either frame
      (get_motion_context — empty), so the timing/easing here is this file's
-     own. The wordmark uses a macron (Ō) while the site's running text
-     settled on the circumflex "Ôgast" — kept as drawn (bespoke logotype art,
-     not running text), flagged rather than reconciled either way. -->
+     own — retimed 2026-09 (at the user's request, "もう少し滑らかに、
+     そしてゆっくり") to a longer, gentler curve; see the timing constants
+     below. The site's running text uses the same macron (Ōgast) as this
+     wordmark — unified 2026-09 at the user's request (it had been the
+     circumflex "Ô" for a while). Norma carries Ō; Elio doesn't yet, so in
+     Elio-set copy that one letter falls back per-glyph to Norma.
+
+     SP layout note: the wordmark is rotated 90deg to read top-to-bottom,
+     pinned to the left edge (Figma 7:782/7:874). Rotating an element whose
+     CSS width/height are its PRE-rotation dimensions, while positioning it
+     with grid `place-items` + a margin, is what caused the "position is
+     off" bug — rotation pivots around the box's own centre, and swapping a
+     692x320-ish box to 320x692 around a fixed centre shifts both edges
+     asymmetrically, pushing the visible glyphs partway off the right edge
+     of the screen (confirmed by measuring the post-rotate bounding box:
+     ~140px of it sat outside a 390px-wide viewport). Fixed by splitting the
+     rotation onto an inner element sized with its dimensions swapped,
+     absolutely centred inside an outer frame that carries the FINAL
+     (post-rotation) box — see .IntroHero__wordmark-frame / __wordmark
+     below.
+
+     First-view snap: at the user's request, the ONE transition from this
+     section into the first typeface section below snaps on a small scroll
+     gesture rather than a full manual 100vh scroll — see
+     armFirstViewSnap(). Deliberately scoped to just that boundary and
+     self-disarming the instant it fires, so it never touches any other
+     scroll behaviour on the page (the typeface sections' own scrubbed
+     reveal included). -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
+	import { initScroll, getLenis } from '$lib/scroll';
 
 	type Letter = {
 		id: string;
@@ -49,6 +75,17 @@
 	const SMALL_SCALE = 0.3825;
 	/** Extra drop below the small resting position for the stagger-in. */
 	const RISE = 26;
+
+	// Timing — retimed 2026-09 for a slower, smoother read (was 0.6/0.09
+	// stagger + 1.3s grow, ~2.5s total; this reads closer to ~3.5s).
+	/** Each letter's own rise-and-fade-in duration. */
+	const STAGGER_DURATION = 0.75;
+	/** Delay between one letter starting and the next. */
+	const STAGGER_INTERVAL = 0.11;
+	/** The small row growing closed into the resting wordmark. */
+	const GROW_DURATION = 1.75;
+	/** Pause between the stagger finishing and the grow beginning. */
+	const GROW_GAP = 0.3;
 
 	// Left-to-right reading order: Ō, G, A, S, T. Latest Figma export.
 	const LETTERS: Letter[] = [
@@ -87,8 +124,85 @@
 	let letterEls: SVGPathElement[] = [];
 	let stageEl: HTMLElement | undefined = $state();
 
+	/** See the file header's "First-view snap" note. Arms a one-shot listener
+	 *  that, on the FIRST meaningful downward wheel/touch gesture while still
+	 *  essentially at the top of this section, smooth-scrolls straight to
+	 *  the first typeface section below instead of letting the user drag
+	 *  through the remaining scroll distance by hand. Fires once, then
+	 *  fully detaches — every scroll interaction after that (including
+	 *  scrolling back up into this section) is plain, untouched scroll. */
+	function armFirstViewSnap(): () => void {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
+		const target = document.querySelector<HTMLElement>('.TypefaceSection');
+		if (!target || !stageEl) return () => {};
+
+		// Reference height, not live scrollY vs innerHeight: correct even if
+		// the intro's own box (100dvh) differs slightly from innerHeight
+		// (mobile URL-bar show/hide).
+		const introHeight = stageEl.getBoundingClientRect().height;
+		let armed = true;
+		let touchStartY = 0;
+
+		function detach() {
+			window.removeEventListener('wheel', onWheel);
+			window.removeEventListener('touchstart', onTouchStart);
+			window.removeEventListener('touchmove', onTouchMove);
+		}
+
+		function trigger() {
+			if (!armed) return;
+			armed = false;
+			detach();
+			initScroll().then(() => {
+				// Non-null: guarded by the early `!target` return above; TS
+				// can't carry that narrowing into this nested closure.
+				getLenis()?.scrollTo(target as HTMLElement, {
+					duration: 1.1,
+					easing: (t: number) => 1 - Math.pow(1 - t, 3)
+				});
+			});
+		}
+
+		function stillInFirstView() {
+			return window.scrollY < introHeight * 0.9;
+		}
+
+		function onWheel(e: WheelEvent) {
+			if (!armed || !stillInFirstView()) return;
+			if (e.deltaY > 4) {
+				e.preventDefault();
+				trigger();
+			}
+		}
+
+		function onTouchStart(e: TouchEvent) {
+			touchStartY = e.touches[0]?.clientY ?? 0;
+		}
+
+		function onTouchMove(e: TouchEvent) {
+			if (!armed || !stillInFirstView()) return;
+			const dy = touchStartY - (e.touches[0]?.clientY ?? touchStartY);
+			if (dy > 14) {
+				e.preventDefault();
+				trigger();
+			}
+		}
+
+		window.addEventListener('wheel', onWheel, { passive: false });
+		window.addEventListener('touchstart', onTouchStart, { passive: true });
+		window.addEventListener('touchmove', onTouchMove, { passive: false });
+
+		return detach;
+	}
+
 	onMount(() => {
 		if (!browser) return;
+
+		// Reduced motion also switches off the snap gesture itself (see
+		// armFirstViewSnap's own early return) — a user who has asked for
+		// less motion shouldn't have their scroll hijacked into one, even a
+		// short one.
+		const detachSnap = armFirstViewSnap();
 
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			// Straight to the resting state — same convention as
@@ -100,7 +214,7 @@
 				el.style.fill = '#000000';
 			});
 			homeIntro.headerReady = true;
-			return;
+			return detachSnap;
 		}
 
 		let cancelled = false;
@@ -133,18 +247,22 @@
 				(window as unknown as { __ogastIntro?: typeof timeline }).__ogastIntro = timeline;
 			}
 
-			// 1 — stagger in from below, left to right, still small.
+			// 1 — stagger in from below, left to right, still small. power2 (not
+			// power3) for a softer arrival with less of a hard stop at rest.
 			timeline.to(letterEls, {
 				opacity: 1,
 				y: (i: number) => LETTERS[i].ty,
-				duration: 0.6,
-				ease: 'power3.out',
-				stagger: 0.09
+				duration: STAGGER_DURATION,
+				ease: 'power2.out',
+				stagger: STAGGER_INTERVAL
 			});
 
 			// 2 — grow from the baseline into the large resting wordmark; the
 			// row closes up as each letter's own width fills the gap beside
-			// it. Stage and fill crossfade over the same beat.
+			// it. Stage and fill crossfade over the same beat. power4 (not
+			// expo) reads smoother through the middle of the curve — expo's
+			// near-flat-then-explosive shape read as a sudden jump rather
+			// than a continuous grow at this slower duration.
 			timeline.to(
 				letterEls,
 				{
@@ -152,14 +270,14 @@
 					x: 0,
 					y: 0,
 					fill: '#000000',
-					duration: 1.3,
-					ease: 'expo.inOut'
+					duration: GROW_DURATION,
+					ease: 'power4.inOut'
 				},
-				'+=0.25'
+				`+=${GROW_GAP}`
 			);
 			timeline.to(
 				stageEl,
-				{ backgroundColor: '#F1F0EF', duration: 1.3, ease: 'power2.inOut' },
+				{ backgroundColor: '#F1F0EF', duration: GROW_DURATION, ease: 'power2.inOut' },
 				'<'
 			);
 
@@ -170,28 +288,34 @@
 					homeIntro.headerReady = true;
 				},
 				[],
-				'-=0.55'
+				`-=${GROW_DURATION * 0.37}`
 			);
 		});
 
 		return () => {
 			cancelled = true;
 			tl?.kill();
+			detachSnap();
 		};
 	});
 </script>
 
-<section class="IntroHero" bind:this={stageEl} aria-label="Ôgast">
-	<svg
-		class="IntroHero__wordmark"
-		viewBox="0 0 1400 385.524"
-		preserveAspectRatio="xMidYMax meet"
-		xmlns="http://www.w3.org/2000/svg"
-	>
-		{#each LETTERS as letter, i (letter.id)}
-			<path bind:this={letterEls[i]} d={letter.d} />
-		{/each}
-	</svg>
+<section class="IntroHero" bind:this={stageEl} aria-label="Ōgast">
+	<!-- .IntroHero__wordmark-frame carries the FINAL on-screen box (identity
+	     on PC; the post-rotation box on SP) so grid place-items positions it
+	     exactly where it visually ends up — see the file header comment. -->
+	<div class="IntroHero__wordmark-frame">
+		<svg
+			class="IntroHero__wordmark"
+			viewBox="0 0 1400 385.524"
+			preserveAspectRatio="xMidYMax meet"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			{#each LETTERS as letter, i (letter.id)}
+				<path bind:this={letterEls[i]} d={letter.d} />
+			{/each}
+		</svg>
+	</div>
 </section>
 
 <style>
@@ -206,10 +330,14 @@
 		overflow: hidden;
 	}
 
+	.IntroHero__wordmark-frame {
+		width: 100%;
+		max-width: 1400px;
+	}
+
 	.IntroHero__wordmark {
 		display: block;
 		width: 100%;
-		max-width: 1400px;
 		height: auto;
 		/* The animated transforms move letters outside the viewBox for a
 		   frame or two at the extremes of the rise — don't let the SVG's own
@@ -237,12 +365,29 @@
 			container-type: size;
 		}
 
-		.IntroHero__wordmark {
-			width: 82cqh;
+		/* This box IS the final, post-rotation visual box — sized and placed
+		   as plain (unrotated) geometry, so grid's place-items:center start
+		   plus this margin land it exactly where it should sit, full stop.
+		   The rotation itself happens one level down, isolated on the SVG
+		   (see below), so it can never disturb this element's own box. */
+		.IntroHero__wordmark-frame {
+			width: 82cqw;
 			max-width: none;
-			height: 82cqw;
-			transform: rotate(90deg);
+			height: 82cqh;
 			margin-left: 6vw;
+			position: relative;
+		}
+
+		.IntroHero__wordmark {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			/* Pre-rotation box — dimensions swapped versus the frame above,
+			   since rotating 90deg is what swaps them back to match it. */
+			width: 82cqh;
+			height: 82cqw;
+			max-width: none;
+			transform: translate(-50%, -50%) rotate(90deg);
 		}
 	}
 </style>
