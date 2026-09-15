@@ -20,12 +20,31 @@
      place of a synthetic glyph tile.
 
      PC keeps two blocks side by side (402:676 ratio, per Figma); SP shows
-     only block A, matching Figma's own single-photo mobile simplification. -->
+     only block A, matching Figma's own single-photo mobile simplification.
+
+     Scroll choreography (2026-09, at the user's request — "かっこよく
+     スクロール...ふわっとテキストがoutしたり画像のcontainerがshrink out"):
+     the sidebar text and panel headline fade+drift out as the section
+     scrolls past (same beat the logo intro's own opacity animation uses),
+     and the block containers shrink+fade — then both reverse coming back
+     into view. Driven by one scrubbed GSAP timeline per section, tied to
+     this section's own position in the viewport, so it plays forward AND
+     backward with scroll direction rather than firing once.
+
+     The mobile footer bar is NOT rendered here any more — the user wants
+     ONE persistent fixed bar at the bottom of the screen (not one per
+     section, scrolling away with it), whose content/colour just switches
+     to whichever typeface is currently centred in view. See
+     TypefaceFooterBar.svelte (rendered once in +page.svelte) and
+     activeTypeface.svelte.ts (the shared signal this section reports
+     itself to, the same cross-sibling pattern as homeIntro.svelte.ts). -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import type { Typeface } from '$lib/data/typefaces';
 	import Arrow from '$lib/components/Arrow.svelte';
+	import { getScrollTrigger } from '$lib/scroll';
+	import { activeTypeface } from '$lib/state/activeTypeface.svelte';
 
 	interface Props {
 		typeface: Typeface;
@@ -37,21 +56,97 @@
 	// optional on the shared Typeface type.
 	const hs = $derived(typeface.homeSection!);
 
+	let sectionEl: HTMLElement | undefined = $state();
+	let sidebarEl: HTMLElement | undefined = $state();
+	let headlineEl: HTMLElement | undefined = $state();
+	let blockAEl: HTMLElement | undefined = $state();
+	let blockBEl: HTMLElement | undefined = $state();
 	let videoEl: HTMLVideoElement | undefined = $state();
+
 	onMount(() => {
 		if (!browser) return;
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+
+		// Reports this section to the shared "currently centred typeface"
+		// signal the fixed mobile footer bar reads — see the file header
+		// comment. `-50% 0px -50% 0px` fires exactly as this section's own
+		// bounds cross the viewport's vertical centre, so consecutive
+		// sections hand off cleanly with no gap/overlap.
+		//
+		// Two independent sections' observers can fire in either order on
+		// the same frame (browsers don't guarantee it), so the "leaving"
+		// branch only clears `visible` if THIS section is still the one
+		// current — otherwise a leave event arriving after the next
+		// section's own enter would incorrectly hide the bar right as it
+		// should be showing the next typeface.
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					activeTypeface.current = typeface;
+					activeTypeface.visible = true;
+				} else if (activeTypeface.current === typeface) {
+					activeTypeface.visible = false;
+				}
+			},
+			{ rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+		);
+		if (sectionEl) observer.observe(sectionEl);
+
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (prefersReducedMotion) {
 			videoEl?.pause();
+			return () => observer.disconnect();
 		}
+
+		let cancelled = false;
+		let scrollTriggerInstance: { kill: () => void } | undefined;
+		getScrollTrigger().then(({ gsap }) => {
+			if (cancelled || !sectionEl) return;
+			videoEl?.pause();
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+			const fadeTargets = [sidebarEl, headlineEl].filter((el): el is HTMLElement => !!el);
+			const shrinkTargets = [blockAEl, blockBEl].filter((el): el is HTMLElement => !!el);
+
+			const tl = gsap.timeline({
+				scrollTrigger: {
+					trigger: sectionEl,
+					start: 'top bottom',
+					end: 'bottom top',
+					scrub: 0.4
+				}
+			});
+			tl.fromTo(
+				fadeTargets,
+				{ opacity: 0, y: 28 },
+				{ opacity: 1, y: 0, duration: 0.2, ease: 'power1.out' },
+				0
+			)
+				.to(fadeTargets, { opacity: 0, y: -28, duration: 0.2, ease: 'power1.in' }, 0.8)
+				.fromTo(
+					shrinkTargets,
+					{ opacity: 0, scale: 0.85 },
+					{ opacity: 1, scale: 1, duration: 0.2, ease: 'power1.out' },
+					0
+				)
+				.to(shrinkTargets, { opacity: 0, scale: 0.85, duration: 0.2, ease: 'power1.in' }, 0.8);
+			scrollTriggerInstance = tl.scrollTrigger;
+		});
+
+		return () => {
+			cancelled = true;
+			observer.disconnect();
+			scrollTriggerInstance?.kill();
+		};
 	});
 </script>
 
 <section
 	class="TypefaceSection"
+	bind:this={sectionEl}
 	style="--panel-bg: {hs.panelBg}; --panel-fg: {hs.panelFg}; --block-bg: {hs.blockBg}; --block-fg: {hs.blockFg};"
 >
 	<!-- PC only — name/tagline/spec/Discover, always on a white ground -->
-	<div class="TypefaceSection__sidebar">
+	<div class="TypefaceSection__sidebar" bind:this={sidebarEl}>
 		<p class="TypefaceSection__name">{typeface.name} Ôgast</p>
 		<p class="TypefaceSection__tagline">{typeface.tagline}</p>
 		<p class="TypefaceSection__meta">
@@ -66,6 +161,7 @@
 	<div class="TypefaceSection__panel">
 		<p
 			class="TypefaceSection__headline"
+			bind:this={headlineEl}
 			style="font-family: '{typeface.fontFamily}', sans-serif; font-variation-settings: 'wght' {hs.headlineWeight}; font-weight: {hs.headlineWeight};"
 		>
 			{hs.headline}
@@ -73,7 +169,7 @@
 	</div>
 
 	<div class="TypefaceSection__blocks">
-		<div class="TypefaceSection__blockA">
+		<div class="TypefaceSection__blockA" bind:this={blockAEl}>
 			{#if typeface.heroVideo}
 				<video
 					bind:this={videoEl}
@@ -92,7 +188,7 @@
 				>
 			{/if}
 		</div>
-		<div class="TypefaceSection__blockB">
+		<div class="TypefaceSection__blockB" bind:this={blockBEl}>
 			{#if typeface.specimen}
 				<div
 					class="TypefaceSection__specimen"
@@ -105,17 +201,6 @@
 			{/if}
 		</div>
 	</div>
-
-	<!-- SP only — compact footer bar: name/tagline left, coloured arrow CTA right -->
-	<a class="TypefaceSection__footer" href="/fonts/{typeface.slug}">
-		<div class="TypefaceSection__footer-text">
-			<p class="TypefaceSection__footer-name">{typeface.name} Ôgast</p>
-			<p class="TypefaceSection__footer-tagline">{typeface.tagline}</p>
-		</div>
-		<div class="TypefaceSection__footer-cta">
-			<Arrow size={11} />
-		</div>
-	</a>
 </section>
 
 <style>
@@ -260,16 +345,14 @@
 		color: var(--block-fg);
 	}
 
-	/* --- Footer (SP only) --- */
-	.TypefaceSection__footer {
-		display: none;
-	}
-
 	@media (max-width: 767.98px) {
 		.TypefaceSection {
 			grid-template-columns: 1fr;
-			grid-template-rows: 358fr 304fr 58fr;
-			grid-template-areas: 'panel' 'blocks' 'footer';
+			/* No footer row any more — the fixed TypefaceFooterBar overlays
+			   the bottom instead, so blocks now runs the rest of the height
+			   that used to belong to the footer (304+58). */
+			grid-template-rows: 358fr 362fr;
+			grid-template-areas: 'panel' 'blocks';
 		}
 
 		.TypefaceSection__sidebar,
@@ -296,58 +379,6 @@
 
 		.TypefaceSection__glyph {
 			font-size: 140px;
-		}
-
-		.TypefaceSection__footer {
-			grid-area: footer;
-			display: flex;
-			align-items: stretch;
-			text-decoration: none;
-		}
-
-		.TypefaceSection__footer-text {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			gap: 1px;
-			padding-left: 15px;
-			min-width: 0;
-			background: #f1f0ef;
-		}
-
-		.TypefaceSection__footer-name {
-			font-family: 'Norma', sans-serif;
-			font-size: 16px;
-			line-height: 1.25;
-			color: #000000;
-			margin: 0;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-
-		.TypefaceSection__footer-tagline {
-			font-family: 'Norma', sans-serif;
-			font-size: 10px;
-			line-height: 1.25;
-			font-weight: var(--fw-light);
-			color: #000000;
-			opacity: 0.6;
-			margin: 0;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-
-		.TypefaceSection__footer-cta {
-			flex-shrink: 0;
-			width: 79px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: var(--panel-bg);
-			color: var(--panel-fg);
 		}
 	}
 </style>

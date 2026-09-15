@@ -3,6 +3,7 @@
 	import Arrow from '$lib/components/Arrow.svelte';
 	import IntroHero from '$lib/components/home/IntroHero.svelte';
 	import TypefaceSection from '$lib/components/home/TypefaceSection.svelte';
+	import TypefaceFooterBar from '$lib/components/home/TypefaceFooterBar.svelte';
 	import { TYPEFACES } from '$lib/data/typefaces';
 
 	// Top page v3 (2026-09) — Figma nodes 3:699/3:733 (PC) + 7:887/7:906 (SP).
@@ -34,6 +35,11 @@
 	{#each homeTypefaces as tf (tf.slug)}
 		<TypefaceSection typeface={tf} />
 	{/each}
+
+	<!-- Mobile-only persistent footer bar for the typeface sections above —
+	     see TypefaceFooterBar.svelte's own header comment. Fixed-position,
+	     so its place in the DOM here is just for readability. -->
+	<TypefaceFooterBar />
 
 	<!-- Buy (red) — the license, plainly -->
 	<section class="Buy">
