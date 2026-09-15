@@ -1,5 +1,5 @@
 <script lang="ts">
-	// /buy — Ôgast license purchase page.
+	// /buy — Ōgast license purchase page.
 	// Entry point is a font's own detail page: /buy?font=<TypefaceSlug>
 	// (see fonts/[slug]/+page.svelte's Buy CTA), so the typeface itself is
 	// never chosen here -- it arrives pre-decided from wherever the buyer
@@ -19,10 +19,17 @@
 
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { getFlatPackages, getPrice, getGrossPrice, formatPrice, type FlatPackage } from '$lib/data/pricing';
+	import {
+		getFlatPackages,
+		getPrice,
+		getGrossPrice,
+		formatPrice,
+		type FlatPackage
+	} from '$lib/data/pricing';
 	import type { CartItem } from '$lib/data/discounts';
 	import { computeTotal, EDUCATIONAL_ACTIVE } from '$lib/data/discounts';
 
+	import PageSection from '$lib/components/PageSection.svelte';
 	import LicenseIntake, { type IntakeMeta } from '$lib/components/Buy/LicenseIntake.svelte';
 	import EducationalToggle from '$lib/components/Buy/EducationalToggle.svelte';
 	import CartSummary from '$lib/components/Buy/CartSummary.svelte';
@@ -96,7 +103,9 @@
 	// highlight instead of keeping a stale claim (see toggleComplete for why
 	// that's a derived read, never a stored flag that could force a clear).
 	const completeSet = $derived(new Set(selectedPackage?.styles ?? []));
-	const isCompleteActive = $derived(completeSet.size > 0 && setsEqual(selectedWeights, completeSet));
+	const isCompleteActive = $derived(
+		completeSet.size > 0 && setsEqual(selectedWeights, completeSet)
+	);
 
 	// A master toggle, not a one-way "select all": clicking while every
 	// style is already selected clears to zero; clicking from any other
@@ -187,34 +196,40 @@
 </script>
 
 <svelte:head>
-	<title>{pageTitle} — Ôgast</title>
+	<title>{pageTitle} — Ōgast</title>
 	<meta
 		name="description"
-		content="Purchase {selectedPackage?.label ?? 'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
+		content="Purchase {selectedPackage?.label ??
+			'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
 	/>
 </svelte:head>
 
-<div class="BuyPage">
-	<div class="BuyPage__grid">
-		<!-- Left column (PC: 65%) — everything that isn't the running order. -->
-		<div class="BuyPage__main">
-			<!-- Page header -->
-			<div class="BuyPage__top">
-				<div class="BuyPage__title-block">
-					<h1 class="BuyPage__heading">{heroHeading}</h1>
-					<p class="BuyPage__sub">Tell us who it's for, then pick your weights. Pay once, yours to keep.</p>
-				</div>
-			</div>
-
-			<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
+<main class="BuyPage">
+	<!-- Figma node 3:671 long-form layout (PageSection `full`): the typeface's
+	     name as the page title, the one-line instruction beside it, and the
+	     existing two-column checkout (steps 65% / sticky cart 35%) running
+	     full width underneath. nativeBody: the checkout keeps its own Norma
+	     type and colours — Elio's currency glyphs aren't finished, and the
+	     cart's inverted button must not be flattened to black text. -->
+	<PageSection title={heroHeading} as="h1" subtitle="Pay once, yours to keep." full nativeBody>
+		{#snippet intro()}
+			<p>Tell us who it's for, then pick your weights.</p>
+		{/snippet}
+		<div class="BuyPage__grid">
+			<!-- Left column (PC: 65%) — everything that isn't the running order. -->
+			<div class="BuyPage__main">
+				<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
 			     the script header comment. Required fields are marked (*) inside
 			     LicenseIntake itself — Steps 2/3 stay hidden until it resolves. -->
-			<div class="BuyStep" id="step-1">
-				<p class="BuyStep__eyebrow">1 — About you</p>
-				<LicenseIntake packages={selectedPackage ? [selectedPackage] : []} onresolve={handleIntakeResolve} />
-			</div>
+				<div class="BuyStep" id="step-1">
+					<p class="BuyStep__eyebrow">1 — About you</p>
+					<LicenseIntake
+						packages={selectedPackage ? [selectedPackage] : []}
+						onresolve={handleIntakeResolve}
+					/>
+				</div>
 
-			<!-- Select styles only appears once Step 1 has actually resolved a
+				<!-- Select styles only appears once Step 1 has actually resolved a
 			     tier — picking weights before that has nothing to price
 			     against, so there was nothing stopping a buyer from filling it
 			     in "out of order" and only discovering Step 1 was required at
@@ -222,99 +237,91 @@
 			     enforced. (No Typeface step: the typeface arrives fixed from
 			     the referring font page's ?font= — see the script header
 			     comment.) -->
-			{#if resolvedTierIndex !== null}
-				<!-- Select styles (informational: Complete always ships every
+				{#if resolvedTierIndex !== null}
+					<!-- Select styles (informational: Complete always ships every
 				     weight shown here at one price — this just lets a buyer mark the
 				     ones they'll reach for first). -->
-				{#if selectedPackage?.styles?.length}
-					<div class="BuyStep">
-						<p class="BuyStep__eyebrow">2 — Select styles</p>
-						<div class="WeightPanel">
-							<!-- Complete Collection — same round-radio card as Typeface
+					{#if selectedPackage?.styles?.length}
+						<div class="BuyStep">
+							<p class="BuyStep__eyebrow">2 — Select styles</p>
+							<div class="WeightPanel">
+								<!-- Complete Collection — same round-radio card as Typeface
 							     selection, formatted identically to it: name, "N weights"
 							     detail, price at the right (struck-through gross → the
 							     discounted final, once Step 1 has resolved a rate). -->
-							<button
-								type="button"
-								class="WeightPanel__collection"
-								class:is-active={isCompleteActive}
-								onclick={toggleComplete}
-								aria-pressed={isCompleteActive}
-							>
-								<span class="TypefaceCard__radio" aria-hidden="true">
-									{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
-								</span>
-								<span class="TypefaceCard__body">
-									<span class="TypefaceCard__name">Complete Collection</span>
-									<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span>
-								</span>
-								{#if completePrice !== null}
-									<span class="TypefaceCard__price">
-										{#if completeGross !== null && completeGross > completePrice}
-											<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
-										{/if}
-										<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
+								<button
+									type="button"
+									class="WeightPanel__collection"
+									class:is-active={isCompleteActive}
+									onclick={toggleComplete}
+									aria-pressed={isCompleteActive}
+								>
+									<span class="TypefaceCard__radio" aria-hidden="true">
+										{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
 									</span>
-								{/if}
-							</button>
+									<span class="TypefaceCard__body">
+										<span class="TypefaceCard__name">Complete Collection</span>
+										<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span
+										>
+									</span>
+									{#if completePrice !== null}
+										<span class="TypefaceCard__price">
+											{#if completeGross !== null && completeGross > completePrice}
+												<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
+											{/if}
+											<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
+										</span>
+									{/if}
+								</button>
 
-							<StyleList
-								pkg={selectedPackage}
-								selectable
-								selected={selectedWeights}
-								onToggle={toggleWeight}
-							/>
+								<StyleList
+									pkg={selectedPackage}
+									selectable
+									selected={selectedWeights}
+									onToggle={toggleWeight}
+								/>
+							</div>
 						</div>
-					</div>
-				{/if}
+					{/if}
 
-				<!-- Educational discount — left out for now (2026-08-29, at the
+					<!-- Educational discount — left out for now (2026-08-29, at the
 				     user's request); see EDUCATIONAL_ACTIVE in $lib/data/discounts. -->
-				{#if EDUCATIONAL_ACTIVE}
-					<div class="BuyPage__options">
-						<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
-					</div>
+					{#if EDUCATIONAL_ACTIVE}
+						<div class="BuyPage__options">
+							<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
+						</div>
+					{/if}
 				{/if}
-			{/if}
-		</div>
+			</div>
 
-		<!-- Right column (PC: 35%, sticky) — order details. Empty state until a
+			<!-- Right column (PC: 35%, sticky) — order details. Empty state until a
 		     license is chosen. inline={isSmall}: mobile keeps the always-open
 		     block CartSummary has always rendered here; PC switches to its
 		     built-in sticky-sidebar mode (position:sticky, top:80px) — see
 		     isSmall above. -->
-		<div class="BuyPage__cart">
-			<CartSummary
-				inline={isSmall}
-				{isStudent}
-				items={cartItems}
-				{intakeMeta}
-				{subtotal}
-				{discounts}
-				{total}
-				packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
-				selectedStyles={hasLicense ? [...selectedWeights] : []}
-				errorMessage={form?.message ?? null}
-			/>
+			<div class="BuyPage__cart">
+				<CartSummary
+					inline={isSmall}
+					{isStudent}
+					items={cartItems}
+					{intakeMeta}
+					{subtotal}
+					{discounts}
+					{total}
+					packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
+					selectedStyles={hasLicense ? [...selectedWeights] : []}
+					errorMessage={form?.message ?? null}
+				/>
+			</div>
 		</div>
-	</div>
-</div>
+	</PageSection>
+</main>
 
 <style>
-	/* ── Page shell ── */
+	/* ── Page shell ── insets, title and min-height all come from PageSection
+	   now (see the markup comment); this only sets the page ground. */
 	.BuyPage {
-		min-height: 100vh;
-		min-height: 100dvh;
-		padding-top: 20vh;
-		padding-bottom: 120px;
-		padding-inline: 20px;
-	}
-
-	@media (min-width: 768px) {
-		.BuyPage {
-			padding-inline: var(--padding);
-			padding-bottom: 80px;
-		}
+		background: #f1f0ef;
 	}
 
 	/* ── Two-column split (PC only) ── referenced from Klim Type Foundry's
@@ -346,26 +353,6 @@
 
 	.BuyPage__main {
 		min-width: 0;
-	}
-
-	/* ── Title row ── */
-	.BuyPage__top {
-		margin-bottom: 40px;
-	}
-
-	.BuyPage__heading {
-		font-family: 'Norma', sans-serif;
-		font-size: clamp(32px, 6vw, 64px);
-		letter-spacing: 0;
-		line-height: 1;
-		margin-bottom: 6px;
-	}
-
-	.BuyPage__sub {
-		font-family: 'Norma', sans-serif;
-		font-size: 12px;
-		color: var(--color-text-mute);
-		letter-spacing: 0;
 	}
 
 	/* ── Steps (shared) ── */

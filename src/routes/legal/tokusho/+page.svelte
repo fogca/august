@@ -1,23 +1,32 @@
 <!-- Legal Notice — disclosure required under Japan's Act on Specified Commercial
      Transactions (特定商取引法). Facts must stay accurate; only the
-     presentation language changed (2026-08, English for now). -->
+     presentation changed (2026-08 English; 2026-09 Figma 3:671 long-form
+     layout via PageSection `flow`, brand macron). -->
+<script lang="ts">
+	import PageSection from '$lib/components/PageSection.svelte';
+</script>
+
 <svelte:head>
-	<title>Legal Notice — Ôgast</title>
-	<meta name="description" content="Specified Commercial Transactions Act disclosure for Ôgast." />
+	<title>Legal Notice — Ōgast</title>
+	<meta name="description" content="Specified Commercial Transactions Act disclosure for Ōgast." />
 </svelte:head>
 
 <main class="Legal">
-	<div class="Legal__inner">
-		<h1>Legal Notice</h1>
-		<p class="Legal__lead">
-			This notice discloses information about Ôgast's font sales as required under
-			Japan's Act on Specified Commercial Transactions (特定商取引法).
+	<PageSection
+		title="Legal Notice"
+		as="h1"
+		subtitle="Specified Commercial Transactions Act — last updated July 2026"
+		flow
+	>
+		<p>
+			This notice discloses information about Ōgast's font sales as required under Japan's Act on
+			Specified Commercial Transactions (特定商取引法).
 		</p>
 
 		<dl class="Legal__facts">
 			<div class="Legal__fact">
 				<dt>Seller</dt>
-				<dd>Mirai Service Co., Ltd. (trading as Ôgast)</dd>
+				<dd>Mirai Service Co., Ltd. (trading as Ōgast)</dd>
 			</div>
 			<div class="Legal__fact">
 				<dt>Person in charge of operations</dt>
@@ -71,56 +80,29 @@
 			</div>
 			<div class="Legal__fact">
 				<dt>System requirements</dt>
-				<dd>Applications that support OpenType (.otf / .ttf), and web browsers that support WOFF2.</dd>
+				<dd>
+					Applications that support OpenType (.otf / .ttf), and web browsers that support WOFF2.
+				</dd>
 			</div>
 		</dl>
-
-		<p class="Legal__note">Last updated: July 2026.</p>
-	</div>
+	</PageSection>
 </main>
 
 <style>
 	.Legal {
-		min-height: 100vh;
-		min-height: 100dvh;
-		padding-block: 96px;
-	}
-
-	@media (min-width: 768px) {
-		.Legal {
-			padding-top: 120px;
-		}
-	}
-
-	.Legal__inner {
-		padding-inline: var(--padding);
-	}
-
-	/* PC: same offset mechanism as the EULA template — a viewport-relative
-	   left inset rather than a percentage margin, and no width cap. */
-	@media (min-width: 768px) {
-		.Legal__inner {
-			padding-left: 25vw;
-		}
-	}
-
-	.Legal h1 {
-		margin: 0 0 24px;
-	}
-
-	.Legal__lead {
-		margin-bottom: 36px;
+		background: #f1f0ef;
 	}
 
 	.Legal__facts {
 		display: flex;
 		flex-direction: column;
 		gap: 18px;
+		margin: 2.5em 0 0;
 	}
 
 	.Legal__fact {
 		display: grid;
-		grid-template-columns: 200px 1fr;
+		grid-template-columns: 220px 1fr;
 		gap: 16px;
 	}
 
@@ -130,34 +112,7 @@
 
 	.Legal__fact dd {
 		margin: 0;
-		line-height: 1.7;
-	}
-
-	.Legal__note {
-		margin-top: 40px;
-		font-size: 11px;
-		opacity: 0.5;
-	}
-
-	.Legal a {
-		text-decoration: underline;
-		text-underline-offset: 3px;
-	}
-
-	/* Font size/weight per the EULA template: 14px mobile (base), 16px
-	   desktop, light weight — applied to the lead paragraph and every fact's
-	   value (dt labels stay at their existing muted style). */
-	.Legal__lead,
-	.Legal__fact dd {
-		font-size: 14px;
-		font-weight: var(--fw-light);
-	}
-
-	@media (min-width: 768px) {
-		.Legal__lead,
-		.Legal__fact dd {
-			font-size: 16px;
-		}
+		line-height: 1.5;
 	}
 
 	@media (max-width: 640px) {

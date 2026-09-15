@@ -1,4 +1,13 @@
+<!-- Catalogue. Layout: Figma node 3:671 long-form (PageSection `full`) —
+     "Fonts" as the page title with its one-line sub-heading, and the card
+     grid running full width underneath, bleeding to the section's edges so
+     its hairlines cross the whole page. nativeBody: each card's specimen is
+     set in that typeface's own face (inline font-family below), which
+     PageSection's brand-font rule would otherwise flatten to Elio. The card
+     chrome itself is in Elio (--font-en), bar the price — Elio's currency
+     glyphs aren't finished, so "From €…" stays in Norma. -->
 <script lang="ts">
+	import PageSection from '$lib/components/PageSection.svelte';
 	import { TYPEFACES } from '$lib/data/typefaces.js';
 	import { getPackage } from '$lib/data/pricing.js';
 	import type { TypefaceSlug } from '$lib/data/pricing.js';
@@ -17,111 +26,85 @@
 </script>
 
 <svelte:head>
-	<title>Fonts — Ôgast</title>
-	<meta
-		name="description"
-		content="Ôgast typeface catalogue — Norma and upcoming releases."
-	/>
+	<title>Fonts — Ōgast</title>
+	<meta name="description" content="Ōgast typeface catalogue — Norma and upcoming releases." />
 </svelte:head>
 
 <main class="Fonts">
-	<header class="Fonts__head">
-		<h1 class="Fonts__heading">Fonts</h1>
-	</header>
+	<PageSection title="Fonts" as="h1" subtitle="Norma and upcoming releases" full nativeBody>
+		<!-- Grid referenced from increments.cc/fonts: two equal columns on
+		     desktop, one on mobile, hairlines standing in for gaps (no real
+		     gutter — the border is the gap). Each card carries its own
+		     catalogBg (§typefaces.ts) so the grid reads as swatches on hover,
+		     not a plain list. -->
+		<div class="Fonts__grid" aria-label="Typeface catalogue">
+			{#each typefaces as tf (tf.slug)}
+				<a href="/fonts/{tf.slug}" class="FontCard" aria-label="View {tf.name}">
+					<div class="FontCard__meta">
+						<span class="FontCard__name">{tf.name}</span>
+						<span class="FontCard__sep" aria-hidden="true">/</span>
+						<span class="FontCard__classification">{tf.classification}</span>
+					</div>
 
-	<!-- Grid referenced from increments.cc/fonts: two equal columns on desktop,
-	     one on mobile, hairlines standing in for gaps (no real gutter — the
-	     border is the gap). Each card carries its own catalogBg (§typefaces.ts)
-	     so the grid reads as swatches, not a plain list. -->
-	<div class="Fonts__grid" aria-label="Typeface catalogue">
-		{#each typefaces as tf (tf.slug)}
-			<a href="/fonts/{tf.slug}" class="FontCard" aria-label="View {tf.name}">
-				<div class="FontCard__meta">
-					<span class="FontCard__name">{tf.name}</span>
-					<span class="FontCard__sep">•</span>
-					<span class="FontCard__classification">{tf.classification}</span>
-				</div>
+					<!-- Specimen: a museum-exhibition label set in the face itself,
+					     rather than the typeface's own name (see typefaces.ts —
+					     referenced from increments.cc's Vorkurs card). All lines share
+					     one size and one weight — no headline/caption hierarchy — so the
+					     label reads as a single set piece of type, not a mini-poster.
+					     Text is always black; the card's own colour (catalogBg) only
+					     appears on hover, via --spec-bg below — omitted entirely
+					     (Norma) for a card with no hover swatch at all. Where
+					     specimenWeight is set (Alfred — no drawings yet) it overrides
+					     the family's default weight uniformly across every line, so the
+					     placeholder reads as "one weight of Norma", not an attempt at
+					     Norma's own real specimen. -->
+					<div
+						class="FontCard__specimen"
+						style="{tf.catalogBg
+							? `--spec-bg: ${tf.catalogBg};`
+							: ''} font-family: '{tf.fontFamily}', sans-serif;"
+					>
+						{#if tf.specimen}
+							{@const wght = tf.specimenWeight
+								? `font-variation-settings: 'wght' ${tf.specimenWeight};`
+								: ''}
+							{#each tf.specimen as line (line)}
+								<span class="FontCard__spec-line" style={wght}>{line}</span>
+							{/each}
+						{:else}
+							<span class="FontCard__spec-line">{tf.name}</span>
+						{/if}
+					</div>
 
-				<!-- Specimen: a museum-exhibition label set in the face itself,
-				     rather than the typeface's own name (see typefaces.ts —
-				     referenced from increments.cc's Vorkurs card). All lines share
-				     one size and one weight — no headline/caption hierarchy — so the
-				     label reads as a single set piece of type, not a mini-poster.
-				     Text is always black; the card's own colour (catalogBg) only
-				     appears on hover, via --spec-bg below — omitted entirely
-				     (Norma) for a card with no hover swatch at all. Where
-				     specimenWeight is set (Alfred — no drawings yet) it overrides
-				     the family's default weight uniformly across every line, so the
-				     placeholder reads as "one weight of Norma", not an attempt at
-				     Norma's own real specimen. -->
-				<div
-					class="FontCard__specimen"
-					style="{tf.catalogBg
-						? `--spec-bg: ${tf.catalogBg};`
-						: ''} font-family: '{tf.fontFamily}', sans-serif;"
-				>
-					{#if tf.specimen}
-						{@const wght = tf.specimenWeight ? `font-variation-settings: 'wght' ${tf.specimenWeight};` : ''}
-						{#each tf.specimen as line (line)}
-							<span class="FontCard__spec-line" style={wght}>{line}</span>
-						{/each}
-					{:else}
-						<span class="FontCard__spec-line">{tf.name}</span>
-					{/if}
-				</div>
-
-				<div class="FontCard__foot">
-					{#if tf.status === 'available'}
-						<span class="FontCard__price">{fromPrice(tf.slug)}</span>
-					{:else}
-						<span class="FontCard__price">Coming soon</span>
-					{/if}
-					<span class="FontCard__view">View</span>
-				</div>
-			</a>
-		{/each}
-	</div>
+					<div class="FontCard__foot">
+						{#if tf.status === 'available'}
+							<span class="FontCard__price">{fromPrice(tf.slug)}</span>
+						{:else}
+							<span class="FontCard__price FontCard__price--soon">Coming soon</span>
+						{/if}
+						<span class="FontCard__view">View</span>
+					</div>
+				</a>
+			{/each}
+		</div>
+	</PageSection>
 </main>
 
 <style>
 	.Fonts {
-		min-height: 100vh;
-		min-height: 100dvh;
-		padding-top: 96px;
-		padding-bottom: 96px;
-	}
-
-	@media (min-width: 768px) {
-		.Fonts {
-			padding-top: 120px;
-		}
-	}
-
-	.Fonts__head {
-		padding-inline: var(--padding);
-		margin-bottom: 48px;
-	}
-
-	.Fonts__heading {
-		font-family: 'Norma', sans-serif;
-		font-size: clamp(36px, 6vw, 64px);
-		letter-spacing: 0;
-		line-height: 1.05;
-		margin: 0;
+		background: #f1f0ef;
 	}
 
 	/* 1 column on phones, 2 equal columns from tablet up — no grid-gap: the
-	   border on each card stands in for it, same as the reference. */
+	   border on each card stands in for it, same as the reference. Bleeds
+	   out to the section's edges (PageSection exposes its insets) so the
+	   hairlines run the full page width; the cards put the inset back as
+	   their own padding. */
 	.Fonts__grid {
 		display: grid;
 		grid-template-columns: 1fr;
 		border-top: 1px solid var(--color-line);
-	}
-
-	@media (min-width: 768px) {
-		.Fonts__grid {
-			grid-template-columns: 1fr 1fr;
-		}
+		margin-inline: calc(-1 * var(--ps-inset-left)) calc(-1 * var(--ps-inset-right));
 	}
 
 	.FontCard {
@@ -130,7 +113,7 @@
 		text-decoration: none;
 		color: var(--color-text);
 		border-bottom: 1px solid var(--color-line);
-		padding-inline: var(--padding);
+		padding-inline: var(--ps-inset-left) var(--ps-inset-right);
 		transition: opacity 0.15s ease;
 	}
 
@@ -138,11 +121,21 @@
 		opacity: 0.75;
 	}
 
-	/* Vertical hairline between the two desktop columns: right border on the
-	   left card of every row (odd items in a 2-col grid). */
 	@media (min-width: 768px) {
+		.Fonts__grid {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		/* Vertical hairline between the two desktop columns: right border on
+		   the left card of every row (odd items in a 2-col grid). Inner edges
+		   get the header's own 20px; outer edges keep the section inset. */
 		.FontCard:nth-child(odd) {
 			border-right: 1px solid var(--color-line);
+			padding-right: 20px;
+		}
+
+		.FontCard:nth-child(even) {
+			padding-left: 20px;
 		}
 	}
 
@@ -153,24 +146,29 @@
 		padding-block: 20px;
 	}
 
-	.FontCard__name {
-		font-family: 'Norma', sans-serif;
-		font-size: 15px;
-		font-weight: var(--fw-ui);
+	/* base.css puts its own font-family straight on every span; the brand
+	   face has to be asserted per element, not inherited. */
+	.FontCard__name,
+	.FontCard__classification,
+	.FontCard__sep,
+	.FontCard__view {
+		font-family: var(--font-en), sans-serif;
+		font-variation-settings: 'wght' 350;
 		letter-spacing: 0;
+		color: var(--color-text);
+	}
+
+	.FontCard__name {
+		font-size: 15px;
 	}
 
 	.FontCard__sep {
-		color: var(--color-text-mute);
-		opacity: 0.6;
+		opacity: 0.4;
 	}
 
 	.FontCard__classification {
-		font-family: 'Norma', sans-serif;
 		font-size: 13px;
-		font-variation-settings: 'wght' 350;
-		color: var(--color-text-mute);
-		letter-spacing: 0;
+		opacity: 0.6;
 	}
 
 	/* Specimen block — fixed aspect so every card in the grid holds the same
@@ -231,17 +229,22 @@
 		margin-top: auto;
 	}
 
+	/* Norma, not Elio — the € sign (see the header comment). */
 	.FontCard__price {
-		font-family: 'Norma', sans-serif;
+		font-family: var(--font-norma), sans-serif;
 		font-size: 13px;
-		color: var(--color-text-mute);
+		font-variation-settings: 'wght' 350;
 		letter-spacing: 0;
+		color: var(--color-text);
+		opacity: 0.6;
+	}
+
+	.FontCard__price--soon {
+		font-family: var(--font-en), sans-serif;
 	}
 
 	.FontCard__view {
-		font-family: 'Norma', sans-serif;
 		font-size: 13px;
-		letter-spacing: 0;
 		border: 1px solid var(--color-line);
 		border-radius: 999px;
 		padding: 8px 18px;
