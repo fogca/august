@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { coverReveal } from '$lib/actions/coverReveal';
 	import Arrow from '$lib/components/Arrow.svelte';
+	import IntroHero from '$lib/components/home/IntroHero.svelte';
 
 	// Top page v2 — red / black / white, type-first.
 	// Scheme:
@@ -29,6 +30,11 @@
 </svelte:head>
 
 <main class="Home">
+	<!-- Entrance animation — small wordmark stagger-in, grows large with a
+	     dark->light crossfade, Header reveals at the same beat. See
+	     IntroHero.svelte's own header comment for the Figma sourcing. -->
+	<IntroHero />
+
 	<!-- Hero (black) — Norma variable-weight video specimen -->
 	<section class="Hero">
 		<p class="Hero__headline">Debut typeface</p>
@@ -144,7 +150,8 @@
 			</div>
 			<!-- Deliberately a span, not an <a>: there is no Alfred page yet, so the
 			     control must not be clickable, focusable, or announced as a link. -->
-			<span class="Alfred__cta" aria-disabled="true"><span class="CtaLabel">Coming Soon</span></span>
+			<span class="Alfred__cta" aria-disabled="true"><span class="CtaLabel">Coming Soon</span></span
+			>
 		</div>
 	</section>
 
@@ -155,9 +162,9 @@
 			<h2 class="Buy__heading">Make it yours.</h2>
 			<p class="Buy__body">
 				Every typeface in our library ships as a single variable font, delivered with statics for
-				desktop and web alike. Licenses are perpetual — pay once, use forever, with no
-				subscription, no seat renewals, and no expiry. Desktop, Web, App and Books licenses are
-				available, priced per typeface you choose.
+				desktop and web alike. Licenses are perpetual — pay once, use forever, with no subscription,
+				no seat renewals, and no expiry. Desktop, Web, App and Books licenses are available, priced
+				per typeface you choose.
 			</p>
 			<a class="Buy__cta" href="/buy">Buy Typeface <Arrow size={10} /></a>
 		</div>
@@ -173,10 +180,10 @@
 				<span>Custom type</span> <span>for corporate</span> <span>identity</span>
 			</h2>
 			<p class="Custom__body">
-				Beyond our retail library, Ôgast designs bespoke typefaces for brands and
-				institutions — a proprietary voice, drawn from the first sketch to a fully realised family.
-				A custom typeface is the most enduring asset a brand can own: it travels across every
-				screen, surface, and language while remaining unmistakably yours.
+				Beyond our retail library, Ôgast designs bespoke typefaces for brands and institutions — a
+				proprietary voice, drawn from the first sketch to a fully realised family. A custom typeface
+				is the most enduring asset a brand can own: it travels across every screen, surface, and
+				language while remaining unmistakably yours.
 			</p>
 			<a class="Custom__cta" href="mailto:hi@august.tf?subject=Custom%20typeface%20enquiry">
 				Enquire <Arrow size={10} />

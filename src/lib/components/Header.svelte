@@ -9,16 +9,20 @@
 	import { onScroll } from '$lib/scroll';
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { lang } from '$lib/state/lang.svelte';
+	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 
 	let open = $state(false);
 
-	// On the home page the header starts hidden (translated up) and slides in
-	// once the user scrolls. Other pages always show it.
+	// On the home page the header starts hidden (translated up) and reveals
+	// on whichever comes first: the user scrolling, or the logo intro
+	// animation reaching its own reveal beat (homeIntro.headerReady — see
+	// that file's own comment). Other pages always show it; homeIntro is
+	// ANDed with isHome below, so its value is inert everywhere else.
 	let scrolled = $state(false);
 	const isHome = $derived(page.url.pathname === '/');
-	const hiddenTop = $derived(isHome && !scrolled && !open);
+	const hiddenTop = $derived(isHome && !scrolled && !open && !homeIntro.headerReady);
 
 	onMount(() => {
 		const update = () => {
