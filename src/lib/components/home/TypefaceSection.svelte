@@ -147,7 +147,7 @@
 >
 	<!-- PC only — name/tagline/spec/Discover, always on a white ground -->
 	<div class="TypefaceSection__sidebar" bind:this={sidebarEl}>
-		<p class="TypefaceSection__name">{typeface.name} Ôgast</p>
+		<p class="TypefaceSection__name">{typeface.name} Ōgast</p>
 		<p class="TypefaceSection__tagline">{typeface.tagline}</p>
 		<p class="TypefaceSection__meta">
 			{typeface.weights.length} weights / {typeface.info?.languages ?? '—'} languages supported

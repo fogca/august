@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-	<title>OpenType — Reference — Ôgast</title>
+	<title>OpenType — Reference — Ōgast</title>
 	<meta name="description" content="A working reference of essential and recommended OpenType features." />
 	<meta name="robots" content="noindex" />
 </svelte:head>

@@ -4,10 +4,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact — Ôgast</title>
+	<title>Contact — Ōgast</title>
 	<meta
 		name="description"
-		content="Contact Ôgast — licensing questions, enterprise scale, custom typefaces, and general enquiries."
+		content="Contact Ōgast — licensing questions, enterprise scale, custom typefaces, and general enquiries."
 	/>
 </svelte:head>
 

@@ -13,8 +13,8 @@
 </script>
 
 <svelte:head>
-	<title>Order Received — Ôgast</title>
-	<meta name="description" content="Order confirmation — Ôgast." />
+	<title>Order Received — Ōgast</title>
+	<meta name="description" content="Order confirmation — Ōgast." />
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -63,7 +63,7 @@
 			<a href="mailto:hi@august.tf">hi@august.tf</a>{#if order}&nbsp;quoting your order reference{/if}.
 		</p>
 
-		<a href="/" class="Success__home">← Back to Ôgast</a>
+		<a href="/" class="Success__home">← Back to Ōgast</a>
 	</div>
 </main>
 

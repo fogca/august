@@ -1,4 +1,4 @@
-// Discount rules for Ôgast
+// Discount rules for Ōgast
 //
 // Discount stacking rules:
 //   - Package discount (built into base price, displayed as anchoring vs gross)

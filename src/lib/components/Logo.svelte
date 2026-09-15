@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Stale brand artwork: these paths were drawn to spell "August", the
-	// foundry's old name (rebranded to Ôgast, 2026-09). No longer referenced
+	// foundry's old name (rebranded to Ōgast, 2026-09). No longer referenced
 	// anywhere in src (Footer switched to plain text, matching Header) — kept
 	// only in case the vector mark is wanted again under a future name. The
 	// `label` default below is the aria-label fallback, not what the SVG
@@ -21,7 +21,7 @@
 		label?: string;
 	}
 
-	let { height = 27, label = 'Ôgast' }: Props = $props();
+	let { height = 27, label = 'Ōgast' }: Props = $props();
 </script>
 
 <svg

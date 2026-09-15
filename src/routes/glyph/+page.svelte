@@ -88,7 +88,7 @@
 </script>
 
 <svelte:head>
-	<title>Glyph Check — Ôgast</title>
+	<title>Glyph Check — Ōgast</title>
 	<meta name="description" content="Proof a typeface across long, varied sample text." />
 	<meta name="robots" content="noindex" />
 </svelte:head>

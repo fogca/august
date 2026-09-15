@@ -4,35 +4,35 @@
      one-view statement (2026-09) — same copy, same three languages (the
      EN/FR/DA pattern from lib/state/lang.svelte.ts / Header.svelte), only
      the layout and the ground (#F1F0EF, per the frame) changed. Copy for
-     the Ôgast rename is unchanged; still no "why Ôgast" story invented
+     the Ōgast rename is unchanged; still no "why Ōgast" story invented
      unilaterally (see the standing note in typefaces.ts). -->
 <script lang="ts">
 	import PageSection from '$lib/components/PageSection.svelte';
 </script>
 
 <svelte:head>
-	<title>About — Ôgast</title>
+	<title>About — Ōgast</title>
 	<meta
 		name="description"
-		content="Ôgast — an independent type foundry from Tokyo. Studio statement and philosophy."
+		content="Ōgast — an independent type foundry from Tokyo. Studio statement and philosophy."
 	/>
 </svelte:head>
 
 <main class="About">
 	<PageSection title="About" as="h1" subtitle="An independent type foundry, Tokyo">
 		<p class="en" lang="en">
-			Ôgast is an independent type foundry, founded in Tokyo in 2026. We cross histories, cultures,
+			Ōgast is an independent type foundry, founded in Tokyo in 2026. We cross histories, cultures,
 			and eras, reinterpret their context, and draw type through a contemporary eye. Anchored in
 			retail families and bespoke commissions, we keep searching for forms not yet seen.
 		</p>
 		<p class="fr" lang="fr">
-			Ôgast est une fonderie de caractères indépendante, fondée à Tokyo en 2026. Nous traversons les
+			Ōgast est une fonderie de caractères indépendante, fondée à Tokyo en 2026. Nous traversons les
 			histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
 			caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
 			commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
 		</p>
 		<p class="da" lang="da">
-			Ôgast er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser historier, kulturer
+			Ōgast er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser historier, kulturer
 			og epoker, gentolker deres sammenhæng og tegner skrift gennem et nutidigt blik. Med
 			udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at lede efter former, der
 			endnu ikke er set.

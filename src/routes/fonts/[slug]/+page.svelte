@@ -55,7 +55,7 @@
 </script>
 
 <svelte:head>
-	<title>{tf.name} — Ôgast</title>
+	<title>{tf.name} — Ōgast</title>
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 
@@ -77,7 +77,7 @@
 	<!-- Name, description (left) and the spec grid (right) -->
 	<section class="FontIntro" aria-label="About {tf.name}">
 		<p class="FontIntro__eyebrow">{tf.tagline}</p>
-		<h1 class="FontIntro__name">{tf.name} Ôgast</h1>
+		<h1 class="FontIntro__name">{tf.name} Ōgast</h1>
 
 		<div class="FontIntro__cols">
 			<div class="FontIntro__text">

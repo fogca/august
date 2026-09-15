@@ -16,10 +16,10 @@
 </script>
 
 <svelte:head>
-	<title>Ôgast — Norma</title>
+	<title>Ōgast — Norma</title>
 	<meta
 		name="description"
-		content="Ôgast — an independent type foundry from Tokyo. Norma, a 20-weight neo-humanist variable typeface."
+		content="Ōgast — an independent type foundry from Tokyo. Norma, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
@@ -66,7 +66,7 @@
 				<span>Custom type</span> <span>for corporate</span> <span>identity</span>
 			</h2>
 			<p class="Custom__body">
-				Beyond our retail library, Ôgast designs bespoke typefaces for brands and institutions — a
+				Beyond our retail library, Ōgast designs bespoke typefaces for brands and institutions — a
 				proprietary voice, drawn from the first sketch to a fully realised family. A custom typeface
 				is the most enduring asset a brand can own: it travels across every screen, surface, and
 				language while remaining unmistakably yours.
@@ -82,7 +82,7 @@
 		<div class="Office__inner">
 			<p class="Office__label">Design Office</p>
 			<p class="Office__text">
-				Ôgast is the pragmatic type design practice led by a creative office in Tokyo.
+				Ōgast is the pragmatic type design practice led by a creative office in Tokyo.
 			</p>
 			<div class="Office__links">
 				<a class="Office__link" href="/about">About type foundry <Arrow size={9} /></a>
@@ -103,7 +103,7 @@
 	.Home {
 		--red: var(--color-signal);
 		/* One display size shared by every section title (Make it yours / Custom
-		   type… / Ôgast is…). Bounded by viewport HEIGHT as well as
+		   type… / Ōgast is…). Bounded by viewport HEIGHT as well as
 		   width, so a long statement still wraps inside its 100dvh section on a
 		   short laptop instead of pushing the section taller. */
 		--display-fs: clamp(40px, min(7vw, 9.5vh), 88px);

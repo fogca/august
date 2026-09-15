@@ -1,4 +1,4 @@
-// Typeface data definitions for Ôgast
+// Typeface data definitions for Ōgast
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
@@ -295,15 +295,15 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
 		description:
-			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Ôgast. ' +
+			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Ōgast. ' +
 			'Details on weights and axis range will be published as the design reaches maturity. ' +
 			'Debuting 2026.',
 		descriptionFr:
-			'gQ est la dernière évolution de Mokuseki Sans — un sans-serif néo-humaniste dessiné chez Ôgast. ' +
+			'gQ est la dernière évolution de Mokuseki Sans — un sans-serif néo-humaniste dessiné chez Ōgast. ' +
 			"Les détails sur les graisses et l'étendue de l'axe seront publiés à mesure que le dessin arrive à maturité. " +
 			'Sortie prévue en 2026.',
 		descriptionDa:
-			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos Ôgast. ' +
+			'gQ er den nyeste udvikling af Mokuseki Sans — en neo-humanistisk grotesk tegnet hos Ōgast. ' +
 			'Detaljer om vægte og akser offentliggøres, efterhånden som designet modnes. Debut i 2026.',
 		classification: 'Neo Humanist Sans · 12 weights',
 		// Provisional weights — same 12-stop axis as Norma until spec is finalised
@@ -366,17 +366,17 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Elio',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'Elio is a sibling to Norma, in development at Ôgast. ' +
+			'Elio is a sibling to Norma, in development at Ōgast. ' +
 			'Where Norma runs wide and even across twenty weights, Elio narrows its focus to eight — an axis built from two hand-drawn extremes, Hair and Ultra, with the six named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Ultra — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'Elio est une police sœur de Norma, en cours de développement chez Ôgast. ' +
+			'Elio est une police sœur de Norma, en cours de développement chez Ōgast. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		descriptionDa:
-			'Elio er en søsterskrift til Norma, under udvikling hos Ôgast. ' +
+			'Elio er en søsterskrift til Norma, under udvikling hos Ōgast. ' +
 			'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development · 8 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -472,13 +472,13 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'Alfred is a Neo Classic typeface in development at Ôgast. ' +
+			'Alfred is a Neo Classic typeface in development at Ōgast. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'Alfred est un caractère Neo Classic en cours de développement chez Ôgast. ' +
+			'Alfred est un caractère Neo Classic en cours de développement chez Ōgast. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		descriptionDa:
-			'Alfred er en Neo Classic-skrift under udvikling hos Ôgast. ' +
+			'Alfred er en Neo Classic-skrift under udvikling hos Ōgast. ' +
 			'Nærmere om retning, vægte og udgivelsestidspunkt følger.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised

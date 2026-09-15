@@ -1,4 +1,4 @@
-<!-- Licensing — plain-language guide to what an Ôgast licence covers,
+<!-- Licensing — plain-language guide to what an Ōgast licence covers,
      meant to sit ahead of the binding EULA (/legal/eula). Prices are
      deliberately left off — they live on /buy, and pulling only the scope
      data (TIER_DEFS names/labels, PROJECT_LICENSE_*) from pricing.ts keeps
@@ -19,17 +19,17 @@
 </script>
 
 <svelte:head>
-	<title>Licensing — Ôgast</title>
+	<title>Licensing — Ōgast</title>
 	<meta
 		name="description"
-		content="What an Ôgast licence covers — Desktop, Web, and App use, bundled into one licence from the Team tier upward."
+		content="What an Ōgast licence covers — Desktop, Web, and App use, bundled into one licence from the Team tier upward."
 	/>
 </svelte:head>
 
 <main class="Licensing">
 	<PageSection title="Licensing" as="h1" subtitle="Per company size, not per platform">
 		<p>
-			Ôgast licences are sold per company size, not per platform. From the Team tier upward, one
+			Ōgast licences are sold per company size, not per platform. From the Team tier upward, one
 			licence already includes Desktop, Web, and App use — there is no separate Desktop, Web, App,
 			or Books licence to buy. The Individual tier is the one exception — it's scoped to desktop use
 			alone. This page is a plain-language guide to that scope; the binding terms are in the <a

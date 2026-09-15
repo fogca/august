@@ -1,5 +1,5 @@
 <script lang="ts">
-	// Ôgast site footer.
+	// Ōgast site footer.
 	// Holds contact info, site nav and legal links.
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
 
@@ -36,12 +36,12 @@
 </script>
 
 <footer class="Footer" aria-labelledby="footer-heading">
-	<h2 id="footer-heading" class="Footer__sr">Ôgast</h2>
+	<h2 id="footer-heading" class="Footer__sr">Ōgast</h2>
 
 	<div class="Footer__grid">
 		<!-- Column 1: brand + ethos -->
 		<section class="Footer__col Footer__col--brand">
-			<a href="/" class="Footer__logo" aria-label="Ôgast — home"> Ôgast </a>
+			<a href="/" class="Footer__logo" aria-label="Ōgast — home"> Ōgast </a>
 			<p class="Footer__tagline">
 				A type foundry.<br />
 				Norma — released 2026.
@@ -108,7 +108,7 @@
 				</button>
 			{/each}
 		</div>
-		<p class="Footer__copy">© {YEAR} Ôgast</p>
+		<p class="Footer__copy">© {YEAR} Ōgast</p>
 	</div>
 </footer>
 

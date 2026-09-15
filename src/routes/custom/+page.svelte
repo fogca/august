@@ -9,30 +9,30 @@
 </script>
 
 <svelte:head>
-	<title>Custom type — Ôgast</title>
+	<title>Custom type — Ōgast</title>
 	<meta
 		name="description"
-		content="Ôgast draws bespoke typefaces for brands and institutions — a proprietary voice, from first sketch to a fully realised family."
+		content="Ōgast draws bespoke typefaces for brands and institutions — a proprietary voice, from first sketch to a fully realised family."
 	/>
 </svelte:head>
 
 <main class="Custom">
 	<PageSection title="Custom" as="h1" subtitle="Bespoke type for corporate identity">
 		<p class="en" lang="en">
-			Beyond our retail library, Ôgast draws bespoke typefaces for brands and institutions — a
+			Beyond our retail library, Ōgast draws bespoke typefaces for brands and institutions — a
 			proprietary voice, from the first sketch to a fully realised family. A custom typeface is the
 			most enduring asset a brand can own: it travels across every screen, surface and language
 			while remaining unmistakably yours, and it does not expire when a licence does.
 		</p>
 		<p class="fr" lang="fr">
-			Au-delà de notre catalogue de caractères de vente, Ôgast dessine des caractères sur mesure
+			Au-delà de notre catalogue de caractères de vente, Ōgast dessine des caractères sur mesure
 			pour des marques et des institutions — une voix qui vous est propre, du premier croquis
 			jusqu'à une famille complète. Un caractère sur mesure est l'actif le plus durable qu'une
 			marque puisse posséder : il traverse tous les écrans, tous les supports et toutes les langues
 			tout en restant indéniablement le vôtre, et il n'expire pas quand une licence expire.
 		</p>
 		<p class="da" lang="da">
-			Ud over vores retail-bibliotek tegner Ôgast skrifter på bestilling til brands og institutioner
+			Ud over vores retail-bibliotek tegner Ōgast skrifter på bestilling til brands og institutioner
 			— en egen stemme, fra den første skitse til en færdig familie. En skrift lavet til én
 			identitet er det mest holdbare aktiv, et brand kan eje: den følger med over hver skærm, hver
 			flade og hvert sprog og bliver ved med at være genkendelig — og den udløber ikke, når en

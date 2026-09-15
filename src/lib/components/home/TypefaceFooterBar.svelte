@@ -22,7 +22,7 @@
 		style="--type-font: '{tf.fontFamily}'; --panel-bg: {hs.panelBg}; --panel-fg: {hs.panelFg};"
 	>
 		<div class="TypefaceFooterBar__text">
-			<p class="TypefaceFooterBar__name">{tf.name} Ôgast</p>
+			<p class="TypefaceFooterBar__name">{tf.name} Ōgast</p>
 			<p class="TypefaceFooterBar__tagline">{tf.tagline}</p>
 		</div>
 		<div class="TypefaceFooterBar__cta">

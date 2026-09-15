@@ -1,7 +1,7 @@
 <script lang="ts">
-	// Ôgast site header.
+	// Ōgast site header.
 	// Mobile (<768px): "Menu" toggle. Open state is a light top panel (Figma
-	//   188:10): Close + Ôgast wordmark, a "Fonts" group of typeface links,
+	//   188:10): Close + Ōgast wordmark, a "Fonts" group of typeface links,
 	//   and page links.
 	// Desktop (≥768px): inline nav links on the left, no toggle.
 	import { onMount } from 'svelte';
@@ -88,10 +88,10 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
-	<!-- Rebrand trial (2026-09) — settled on "Ôgast" (circumflex), mark alone,
+	<!-- Rebrand trial (2026-09) — settled on "Ōgast" (circumflex), mark alone,
 	     no "Type Family" suffix. Easy to revert to "August Type Family" or
 	     flip back to the macron "Ōgast" variant if needed. -->
-	<a class="Header__logo" href="/" onclick={close} aria-label="Ôgast — home"> Ôgast </a>
+	<a class="Header__logo" href="/" onclick={close} aria-label="Ōgast — home"> Ōgast </a>
 
 	<!-- Desktop-only inline nav -->
 	<nav class="Header__nav" aria-label="Primary navigation">
