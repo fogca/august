@@ -1,25 +1,15 @@
-<!-- About — redesigned 2026-09 at the user's request, referenced from two
-     images: a 1619 Project magazine spread (a statement set large enough to
-     fill the whole page, with small index/footnote text below it) and Paul
-     Pacher's own studio site (a huge intro paragraph filling the first
-     screen, with compact "Services"/"Experience" fact-lists underneath).
-     Style note: "Swiss typeface... Helmut Schmid typography" is read here as
-     compositional — a numbered, grid-disciplined, functional layout — not a
-     literal font swap. Norma (this site's own face, via --font-en) stays;
-     nothing here introduces a second typeface.
+<!-- About — Figma node 3:671 layout (see PageSection.svelte): a stack of
+     full-viewport sections, each a large title on the left, copy on the
+     right, and its own sub-heading pinned bottom-left. Replaces the amber
+     one-view statement (2026-09) — same copy, same three languages (the
+     EN/FR/DA pattern from lib/state/lang.svelte.ts / Header.svelte), only
+     the layout and the ground (#F1F0EF, per the frame) changed. Copy for
+     the Ôgast rename is unchanged; still no "why Ôgast" story invented
+     unilaterally (see the standing note in typefaces.ts). -->
+<script lang="ts">
+	import PageSection from '$lib/components/PageSection.svelte';
+</script>
 
-     Revision (same day): merged the former "01 Foundry" / "02 Information"
-     sections into one 100vh view — statement pinned to the top, fact-sheet
-     pinned to the bottom, via justify-content:space-between — and dropped
-     the numbered eyebrows + border-top rules between every section on the
-     page. Copy updated for the Ôgast rename: same statement, only the
-     studio's own name in it changed — no new "why Ôgast" story invented
-     (see the standing note in typefaces.ts on why that isn't done
-     unilaterally).
-
-     Revision (2026-09): added French (site went EN/DA -> EN/FR/DA). Same
-     three-language pattern as before, just one more class per paragraph —
-     see lib/state/lang.svelte.ts and Header.svelte for the switcher itself. -->
 <svelte:head>
 	<title>About — Ôgast</title>
 	<meta
@@ -29,63 +19,51 @@
 </svelte:head>
 
 <main class="About">
-	<!-- Statement pinned to the top, fact-sheet pinned to the bottom — both
-	     inside one 100vh view. -->
-	<section class="About__hero">
-		<div class="About__hero-copy">
-			<p class="About__hero-text en" lang="en">
-				Ôgast is an independent type foundry, founded in Tokyo in 2026. We cross histories,
-				cultures, and eras, reinterpret their context, and draw type through a contemporary eye.
-				Anchored in retail families and bespoke commissions, we keep searching for forms not yet
-				seen.
-			</p>
-			<p class="About__hero-text fr" lang="fr">
-				Ôgast est une fonderie de caractères indépendante, fondée à Tokyo en 2026. Nous traversons
-				les histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
-				caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
-				commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
-			</p>
-			<p class="About__hero-text da" lang="da">
-				Ôgast er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser historier,
-				kulturer og epoker, gentolker deres sammenhæng og tegner skrift gennem et nutidigt blik. Med
-				udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at lede efter former,
-				der endnu ikke er set.
-			</p>
-		</div>
+	<PageSection title="About" as="h1" subtitle="An independent type foundry, Tokyo">
+		<p class="en" lang="en">
+			Ôgast is an independent type foundry, founded in Tokyo in 2026. We cross histories, cultures,
+			and eras, reinterpret their context, and draw type through a contemporary eye. Anchored in
+			retail families and bespoke commissions, we keep searching for forms not yet seen.
+		</p>
+		<p class="fr" lang="fr">
+			Ôgast est une fonderie de caractères indépendante, fondée à Tokyo en 2026. Nous traversons les
+			histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
+			caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
+			commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
+		</p>
+		<p class="da" lang="da">
+			Ôgast er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser historier, kulturer
+			og epoker, gentolker deres sammenhæng og tegner skrift gennem et nutidigt blik. Med
+			udgangspunkt i retail-familier og bespoke-opgaver bliver vi ved med at lede efter former, der
+			endnu ikke er set.
+		</p>
 
 		<!-- Every value here already appears elsewhere on the site (the
-		     statement above states 2026/Tokyo; hi@august.tf is the same
-		     address used on /contact and in Footer.svelte) — nothing new is
-		     asserted. -->
-		<div class="About__facts">
-			<p class="About__facts-eyebrow">Information</p>
-			<dl class="About__facts-grid">
-				<div class="About__facts-item">
-					<dt>Founded</dt>
-					<dd>2026</dd>
-				</div>
-				<div class="About__facts-item">
-					<dt>Location</dt>
-					<dd>Tokyo, Japan</dd>
-				</div>
-				<div class="About__facts-item">
-					<dt>Focus</dt>
-					<dd>Retail typefaces, custom type</dd>
-				</div>
-				<div class="About__facts-item">
-					<dt>Contact</dt>
-					<dd><a href="mailto:hi@august.tf">hi@august.tf</a></dd>
-				</div>
-			</dl>
-		</div>
-	</section>
+		     statement above states 2026/Tokyo; hi@august.tf is the address on
+		     /contact and in Footer.svelte) — nothing new is asserted. -->
+		<dl class="About__facts">
+			<div class="About__fact">
+				<dt>Founded</dt>
+				<dd>2026</dd>
+			</div>
+			<div class="About__fact">
+				<dt>Location</dt>
+				<dd>Tokyo, Japan</dd>
+			</div>
+			<div class="About__fact">
+				<dt>Focus</dt>
+				<dd>Retail typefaces, custom type</dd>
+			</div>
+			<div class="About__fact">
+				<dt>Contact</dt>
+				<dd><a href="mailto:hi@august.tf">hi@august.tf</a></dd>
+			</div>
+		</dl>
+	</PageSection>
 
 	<!-- Norma, the foundry's first release. Same copy as before this
-	     redesign; still no "why Norma" naming story — see the standing note
-	     in typefaces.ts on why that isn't invented unilaterally. -->
-	<section class="About__block">
-		<p class="About__block-eyebrow">Norma</p>
-		<h2 class="About__block-heading">The formative forces of the word, made visible</h2>
+	     redesign; the tagline is the sub-heading. -->
+	<PageSection title="Norma" subtitle="The formative forces of the word, made visible">
 		<p class="en" lang="en">
 			Our first release, Norma, is a twenty-weight neo-humanist sans-serif variable font. The
 			letters are made to feel grown rather than constructed — organic in their curves, human in
@@ -118,222 +96,57 @@
 			En skrift er aldrig betydningen selv. Den er det medium, betydningen passerer igennem — det
 			stille arbejde med at bære en tanke fra ét sind til et andet.
 		</p>
-	</section>
+		<p><a href="/fonts/norma">Discover Norma →</a></p>
+	</PageSection>
 </main>
 
 <style>
-	/* Amber theme — scoped to About only (2026-09, at the user's request;
-	   was a dark theme before). base.css applies color directly to
-	   div / p / span / a / h1-h6, so the parent color loses the cascade;
-	   override every descendant with :global(*). */
 	.About {
-		min-height: 100vh;
-		min-height: 100dvh;
-		background: var(--color-amber);
-		color: var(--color-text);
-		font-family: var(--font-en), sans-serif;
-	}
-
-	.About :global(*) {
-		color: var(--color-text);
+		background: #f1f0ef;
 	}
 
 	/* One language at a time — [data-lang] lives on <html>, set by the header
-	   switch (see lib/state/lang.svelte.ts). Each block below is a positive
-	   match ("hide .en when the page is showing fr or da") rather than a
-	   :not() — :not([data-lang='en']) would also match <body>/<main>/etc.,
-	   which never carry the attribute, and so would always be true
-	   regardless of <html>'s actual value. */
+	   switch (see lib/state/lang.svelte.ts). Positive matches ("hide .en when
+	   the page is showing fr or da") rather than :not() — :not([data-lang='en'])
+	   would also match <body>/<main>/etc., which never carry the attribute,
+	   and so would always be true regardless of <html>'s actual value. The
+	   DE/ES/CH codes have no copy of their own yet and fall through to EN. */
 	:global([data-lang='fr']) .About .en,
 	:global([data-lang='da']) .About .en {
 		display: none;
 	}
 
-	:global([data-lang='en']) .About .fr,
-	:global([data-lang='da']) .About .fr {
+	/* Translations are hidden by default and shown only on an exact match —
+	   with six language codes now, "hide when X or Y" lists don't scale, and
+	   :not([data-lang='fr']) would match <body>/<main> (never carry the
+	   attribute) and hide them always. */
+	.About .fr,
+	.About .da {
 		display: none;
 	}
 
-	:global([data-lang='en']) .About .da,
-	:global([data-lang='fr']) .About .da {
-		display: none;
+	:global([data-lang='fr']) .About .fr,
+	:global([data-lang='da']) .About .da {
+		display: block;
 	}
 
-	/* ── Statement + Information, one 100vh view ──
-	   PC (>=768px): the statement is centered dead-center of the viewport
-	   at a fixed 50vw, independent of the facts block (not "centered in
-	   the remaining space above facts") — both positioned absolutely, at
-	   the user's request.
-	   Mobile: kept as the original simple stack (copy, then facts, both in
-	   normal flow) — 50vw at phone widths wraps the statement into a very
-	   narrow column tall enough to collide with the absolutely-positioned
-	   facts block, so the PC treatment is intentionally not carried down;
-	   flag if a phone-specific centered layout is wanted too. */
-	.About__hero {
-		min-height: 100vh;
-		min-height: 100dvh;
-		padding-inline: 20px;
-		padding-top: 96px;
-	}
-
-	@media (min-width: 768px) {
-		.About__hero {
-			position: relative;
-			padding: 0;
-		}
-	}
-
-	.About__hero-copy {
-		margin-bottom: 48px;
-	}
-
-	/* True dead-center of the first view, at a fixed 50vw. */
-	@media (min-width: 768px) {
-		.About__hero-copy {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			width: 50vw;
-			margin-bottom: 0;
-		}
-	}
-
-	/* Full width, justified, no eyebrow above it (the reference's own giant
-	   paragraph carries no label either) — set at a fixed reading size
-	   rather than the earlier display-scale clamp, now that this behaves as
-	   a body paragraph rather than a headline. line-height opened up from
-	   the headline's 1.15 to 1.5: justify's uneven word-spacing reads easier
-	   with more room between lines at this size. */
-	.About__hero-text {
-		font-family: var(--font-elio);
-		font-size: 36px;
-		line-height: 1.2;
-		font-weight: 300;
-		letter-spacing: 0;
-		text-align: left;
-		margin: 0;
-	}
-
-	.About__hero-text.fr,
-	.About__hero-text.da {
-		font-weight: 300;
-		opacity: 0.8;
-	}
-
-	/* ── Information: a compact fact grid. PC: pinned to the bottom of the
-	   first view, independent of the statement's own centering above.
-	   Mobile: normal flow, right after the statement (see .About__hero's
-	   own note on why the PC layout isn't carried down). ── */
 	.About__facts {
-		padding-bottom: 48px;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 28px 32px;
+		margin: 2.5em 0 0;
 	}
 
-	@media (min-width: 768px) {
-		.About__facts {
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			padding-inline: 20px;
-			padding-bottom: 48px;
-		}
-	}
-
-	.About__facts-eyebrow {
+	.About__fact dt {
 		font-size: 12px;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-		opacity: 0.55;
-		margin: 0 0 32px;
-	}
-
-	.About__facts-grid {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		max-width: 100%;
-		gap: 28px;
-		margin: 0;
-	}
-
-	@media (min-width: 600px) {
-		.About__facts-grid {
-			flex-direction: row;
-			flex-wrap: wrap;
-			gap: 32px 48px;
-		}
-
-		/* Replaces the old grid-template-columns:repeat(2,1fr) — two per
-		   row, wrapping, same as before. */
-		.About__facts-item {
-			flex: 1 1 calc(50% - 24px);
-		}
-	}
-
-	.About__facts-item dt {
-		font-size: 12px;
-		letter-spacing: 0.02em;
-		text-transform: uppercase;
-		opacity: 0.55;
+		line-height: 1.25;
+		opacity: 0.5;
 		margin: 0 0 6px;
 	}
 
-	.About__facts-item dd {
-		font-size: clamp(18px, 2.4vw, 24px);
-		line-height: 1.3;
+	.About__fact dd {
+		font-size: 16px;
+		line-height: 1.25;
 		margin: 0;
-	}
-
-	.About__facts-item a {
-		text-decoration: underline;
-		text-underline-offset: 3px;
-	}
-
-	/* ── Norma statement ── */
-	.About__block {
-		padding-block: 80px;
-		padding-inline: var(--padding);
-	}
-
-	.About__block-eyebrow {
-		font-size: 12px;
-		letter-spacing: 0.04em;
-		text-transform: uppercase;
-		opacity: 0.55;
-		margin: 0 0 20px;
-	}
-
-	.About__block-heading {
-		font-size: clamp(24px, 3.4vw, 36px);
-		line-height: 1.2;
-		max-width: 22ch;
-		margin: 0 0 28px;
-	}
-
-	.About__block .en,
-	.About__block .fr,
-	.About__block .da {
-		max-width: 62ch;
-	}
-
-	.About__block .en {
-		font-size: 15px;
-		line-height: 1.7;
-		margin: 0 0 10px;
-	}
-
-	.About__block .fr,
-	.About__block .da {
-		font-weight: 300;
-		font-size: 14px;
-		line-height: 1.7;
-		opacity: 0.75;
-		margin: 0 0 28px;
-	}
-
-	.About__block .fr:last-child,
-	.About__block .da:last-child {
-		margin-bottom: 0;
 	}
 </style>

@@ -1,9 +1,24 @@
+<!-- Typeface page. Top of the page redesigned 2026-09 per Figma node 12:127
+     ("ogast", file UEy0lKKtgP8jN4x2DWZUOB): a full-width colour band with the
+     typeface's classification headline set in the face itself, then the
+     name, description and spec grid, then a three-block gallery — and the
+     Type Tester follows straight after, at the user's request. The band's
+     colours, headline and headline weight are the same `homeSection` data
+     the home page's typeface section already uses (typefaces.ts), so the
+     two never disagree.
+
+     Figma's three gallery photos are borrowed mockup shots of unrelated
+     type ("Aska"/"Saffron" proof sheets — checked during research) and no
+     typeface here has application photography of its own yet, so the three
+     blocks render as solid colour + real typographic content (the user's
+     own fallback plan): a large glyph, the wght-sweep video where one
+     exists (Norma) or the tagline set in the face's lightest weight, and
+     the A–Z/a–z specimen proof. Real photography drops into the same three
+     slots when it exists. -->
 <script lang="ts">
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
-	import OpenTypeFeatures from '$lib/components/fonts/OpenTypeFeatures.svelte';
-	import GlyphCycle from '$lib/components/fonts/GlyphCycle.svelte';
 	import { getPackage } from '$lib/data/pricing.js';
 	import type { TypefaceSlug } from '$lib/data/pricing.js';
 	import type { PageData } from './$types.js';
@@ -14,18 +29,29 @@
 	const tf = $derived(data.typeface);
 	const isAvailable = $derived(tf.status === 'available');
 	// Same "from" price as the /fonts catalogue's own fromPrice() — the
-	// Individual tier's per-style rate, not the full-collection price. Was
-	// hardcoded as "From €300" (the old full-set price) here specifically;
-	// derive it instead so the two never drift apart again.
+	// Individual tier's per-style rate, not the full-collection price.
 	const fromPriceEur = $derived(
 		getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`)?.baseEur ?? null
 	);
 	// Elio only has 52 letters and no OpenType features drawn yet — Glyph
 	// set / Beyond A-Z / OpenType below are swapped for a plain sample-text
-	// block on its page (see the {#if isElio} further down). GlyphSet itself
-	// still supports a narrower glyphs/weights prop set (see elioGlyphs.ts)
-	// for whenever Elio wants its own glyph inspector back.
+	// block on its page (see the {#if isElio} further down).
 	const isElio = $derived(tf.slug === 'elio');
+
+	// Every visible typeface defines homeSection today; the fallback keeps a
+	// typeface without one rendering sensibly rather than throwing.
+	const hero = $derived(
+		tf.homeSection ?? {
+			panelBg: tf.theme.bg,
+			panelFg: tf.theme.fg,
+			blockBg: tf.theme.bg,
+			blockFg: tf.theme.fg,
+			glyph: 'a',
+			headline: tf.classification,
+			headlineWeight: 400
+		}
+	);
+	const lightestWeight = $derived(tf.weights[0]?.axisValue ?? 300);
 </script>
 
 <svelte:head>
@@ -33,142 +59,117 @@
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 
-<main class="FontDetail" style="--type-font: '{tf.fontFamily}';">
-	<!-- 100vh top-view hero: full-screen media + centered wordmark + meta -->
-	<section
-		class="FontDetail__hero"
-		class:has-media={!!(tf.heroGlyphCycle || tf.heroVideo || tf.thumbnail)}
-		class:white={!!(tf.heroGlyphCycle || tf.heroVideo || tf.thumbnail)}
-		style="background: {tf.theme.bg}; color: {tf.theme.fg};"
-	>
-		<div class="FontDetail__hero-bg">
-			{#if tf.heroGlyphCycle}
-				<GlyphCycle />
-			{:else if tf.heroVideo}
-				<video
-					class="FontDetail__hero-media FontDetail__hero-video"
-					src={tf.heroVideo}
-					muted
-					loop
-					autoplay
-					playsinline
-					preload="auto"
-					disablepictureinpicture
-				></video>
-			{:else if tf.thumbnail}
-				<img class="FontDetail__hero-media" src={tf.thumbnail} alt={tf.imageCredit ?? ''} />
-			{:else}
-				<div class="FontDetail__hero-placeholder" aria-hidden="true">
-					<span class="FontDetail__hero-placeholder-name">{tf.name}</span>
-				</div>
-			{/if}
-		</div>
-
-		{#if tf.imageCredit && !tf.heroGlyphCycle}
-			<!-- Photo credit / colophon — museum-label style, top-right -->
-			<p class="FontDetail__hero-credit">{tf.imageCredit}</p>
-		{/if}
-
-		{#if !tf.heroGlyphCycle && !tf.heroVideo}
-			<!-- The cycling alphabet and the wght-sweep video are both centrepieces
-			     on their own; a wordmark on top of either would just collide. -->
-			<div class="FontDetail__hero-center">
-				<span class="FontDetail__hero-name">{tf.name}</span>
-			</div>
-		{/if}
+<main
+	class="FontDetail"
+	style="--type-font: '{tf.fontFamily}'; --panel-bg: {hero.panelBg}; --panel-fg: {hero.panelFg}; --block-bg: {hero.blockBg}; --block-fg: {hero.blockFg};"
+>
+	<!-- Colour band — the classification headline, set in the face itself
+	     (Figma 12:127: 460/900 tall, headline centred). -->
+	<section class="FontHero" aria-label="{tf.name} — {hero.headline}">
+		<p
+			class="FontHero__headline"
+			style="font-variation-settings: 'wght' {hero.headlineWeight}; font-weight: {hero.headlineWeight};"
+		>
+			{hero.headline}
+		</p>
 	</section>
 
-	<!-- Body: oversized name, then description (left) and the spec table (right) -->
-	<div class="FontDetail__body">
-		{#if !isAvailable && !isElio}
-			<!-- Elio's own page drops this badge (2026-08-31, at the user's
-			     request) — Information already reads "In development" via its
-			     own spec grid, so the badge was redundant there. -->
-			<div class="FontDetail__info">
-				<span class="FontDetail__badge">Coming Soon</span>
-			</div>
-		{/if}
+	<!-- Name, description (left) and the spec grid (right) -->
+	<section class="FontIntro" aria-label="About {tf.name}">
+		<p class="FontIntro__eyebrow">{tf.tagline}</p>
+		<h1 class="FontIntro__name">{tf.name} Ôgast</h1>
 
-		{#if tf.info}
-			<!-- SP only: a shorter spec summary (Collection/Formats/Glyphs/
-			     Supported languages — Information/Design/Release dropped) shown
-			     above the name instead of down in .FontDetail__cols, where the
-			     full .FontDetail__spec aside still renders for PC (see its own
-			     SP display:none below). -->
-			<dl class="FontDetail__spec-grid FontDetail__spec-grid--sp">
-				<div class="FontDetail__spec-item">
-					<dt>Collection</dt>
-					<dd>{tf.info.collection}</dd>
-				</div>
-				<div class="FontDetail__spec-item">
-					<dt>Formats</dt>
-					<dd>{tf.info.formats}</dd>
-				</div>
-				<div class="FontDetail__spec-item">
-					<dt>Glyphs</dt>
-					<dd>{tf.info.glyphs}</dd>
-				</div>
-				<div class="FontDetail__spec-item">
-					<dt>Supported languages</dt>
-					<dd>{tf.info.languages}</dd>
-				</div>
-			</dl>
-			{#if tf.info.note}
-				<p class="FontDetail__spec-note FontDetail__spec-note--sp">{tf.info.note}</p>
-			{/if}
-		{/if}
-
-		<h1 class="FontDetail__name">{tf.name}</h1>
-
-		<div class="FontDetail__cols">
-			<div class="FontDetail__text">
-				<p class="FontDetail__tagline">{tf.tagline}</p>
-				<p class="FontDetail__description">{tf.description}</p>
+		<div class="FontIntro__cols">
+			<div class="FontIntro__text">
+				<p class="FontIntro__description en">{tf.description}</p>
 				{#if tf.descriptionFr}
-					<p class="FontDetail__description-fr" lang="fr">{tf.descriptionFr}</p>
+					<p class="FontIntro__description fr" lang="fr">{tf.descriptionFr}</p>
 				{/if}
 				{#if tf.descriptionDa}
-					<p class="FontDetail__description-da" lang="da">{tf.descriptionDa}</p>
+					<p class="FontIntro__description da" lang="da">{tf.descriptionDa}</p>
 				{/if}
 			</div>
 
 			{#if tf.info}
-				<aside class="FontDetail__spec" aria-label="Information">
-					<p class="FontDetail__spec-title">Information</p>
-					<dl class="FontDetail__spec-grid">
-						<div class="FontDetail__spec-item">
-							<dt>Collection</dt>
-							<dd>{tf.info.collection}</dd>
-						</div>
-						<div class="FontDetail__spec-item">
-							<dt>Formats</dt>
-							<dd>{tf.info.formats}</dd>
-						</div>
-						<div class="FontDetail__spec-item">
-							<dt>Glyphs</dt>
-							<dd>{tf.info.glyphs}</dd>
-						</div>
-						<div class="FontDetail__spec-item">
-							<dt>Supported languages</dt>
-							<dd>{tf.info.languages}</dd>
-						</div>
-					</dl>
+				<dl class="FontIntro__spec" aria-label="Information">
+					<div class="FontIntro__spec-item">
+						<dt>Collection</dt>
+						<dd>{tf.info.collection}</dd>
+					</div>
+					<div class="FontIntro__spec-item">
+						<dt>Formats</dt>
+						<dd>{tf.info.formats}</dd>
+					</div>
+					<div class="FontIntro__spec-item">
+						<dt>Glyphs</dt>
+						<dd>{tf.info.glyphs}</dd>
+					</div>
+					<div class="FontIntro__spec-item">
+						<dt>Supported languages</dt>
+						<dd>{tf.info.languages}</dd>
+					</div>
 					{#if tf.info.note}
-						<p class="FontDetail__spec-note">{tf.info.note}</p>
+						<p class="FontIntro__spec-note">{tf.info.note}</p>
 					{/if}
-				</aside>
+				</dl>
 			{/if}
 		</div>
-	</div>
 
-	<!-- Page order per the user's 2026-09 request: thumbnail (hero, above) >
-	     overview (body, above) > in-use images > weights > inspiration >
-	     type tester > glyph set > specimen > buy (unchanged, stays last). -->
+		<!-- Three-block gallery (Figma: 306 / 489 / 489 wide, all 391 tall). -->
+		<div class="FontGallery" aria-label="Specimens">
+			<div class="FontGallery__block FontGallery__block--a">
+				<span class="FontGallery__glyph">{hero.glyph}</span>
+			</div>
+			<div class="FontGallery__block FontGallery__block--b" class:has-video={!!tf.heroVideo}>
+				{#if tf.heroVideo}
+					<video
+						class="FontGallery__video"
+						src={tf.heroVideo}
+						muted
+						loop
+						autoplay
+						playsinline
+						preload="auto"
+						disablepictureinpicture
+						aria-label="{tf.name} variable weight axis specimen"
+					></video>
+				{:else}
+					<p
+						class="FontGallery__tagline"
+						style="font-variation-settings: 'wght' {lightestWeight}; font-weight: {lightestWeight};"
+					>
+						{tf.tagline}
+					</p>
+				{/if}
+			</div>
+			<div class="FontGallery__block FontGallery__block--c">
+				{#if tf.specimen}
+					<p class="FontGallery__specimen">
+						{#each tf.specimen as line (line)}
+							<span class="FontGallery__specimen-line">{line}</span>
+						{/each}
+					</p>
+				{:else}
+					<span class="FontGallery__glyph">{tf.name}</span>
+				{/if}
+			</div>
+		</div>
+	</section>
+
+	<!-- Type Tester — directly after the intro, per the user's 2026-09
+	     request; the remaining sections keep their earlier order below. -->
+	<TypeTester
+		weights={tf.weights}
+		fontFamily={tf.fontFamily}
+		defaultTexts={tf.defaultTexts}
+		defaultNotes={tf.defaultNotes}
+		available={isAvailable}
+		defaultSizeDesktop={isElio ? 120 : tf.slug === 'norma' ? 36 : undefined}
+	/>
 
 	<!-- In Use — 4-5 real-world application photos in a row. Always renders,
 	     even with none yet: empty slots are an honest "photo pending" state,
-	     consistent with this page's other in-development placeholders
-	     (Alfred's hero, Elio's borrowed-thumbnail note, etc). -->
+	     consistent with this page's other in-development placeholders. -->
 	<section class="FontInUse" aria-label="In use">
 		<p class="FontDetail__spec-title">In Use</p>
 		<div class="FontInUse__row">
@@ -213,9 +214,7 @@
 	{#if tf.inspiration}
 		<!-- Inspiration — reference imagery + a short passage on a specific
 		     design influence. Genuinely optional (see the field's own comment
-		     in typefaces.ts) — skipped entirely rather than shown empty, since
-		     an invented "why this design" passage isn't the same kind of
-		     honest placeholder an empty photo slot is. -->
+		     in typefaces.ts) — skipped entirely rather than shown empty. -->
 		<section class="FontInspiration" aria-label="Inspiration">
 			<p class="FontDetail__spec-title">Inspiration</p>
 			<div class="FontInspiration__row">
@@ -229,32 +228,21 @@
 					</div>
 				{/each}
 			</div>
-			<p class="FontInspiration__text">{tf.inspiration.paragraph}</p>
+			<p class="FontInspiration__text en">{tf.inspiration.paragraph}</p>
 			{#if tf.inspiration.paragraphFr}
-				<p class="FontInspiration__text-fr" lang="fr">{tf.inspiration.paragraphFr}</p>
+				<p class="FontInspiration__text fr" lang="fr">{tf.inspiration.paragraphFr}</p>
 			{/if}
 			{#if tf.inspiration.paragraphDa}
-				<p class="FontInspiration__text-da" lang="da">{tf.inspiration.paragraphDa}</p>
+				<p class="FontInspiration__text da" lang="da">{tf.inspiration.paragraphDa}</p>
 			{/if}
 		</section>
 	{/if}
-
-	<TypeTester
-		weights={tf.weights}
-		fontFamily={tf.fontFamily}
-		defaultTexts={tf.defaultTexts}
-		defaultNotes={tf.defaultNotes}
-		available={isAvailable}
-		defaultSizeDesktop={isElio ? 120 : tf.slug === 'norma' ? 36 : undefined}
-	/>
 
 	{#if isElio}
 		<!-- Elio only has 52 letters and no OpenType features yet — the Glyph
 		     set / specimen / OpenType sections below would mostly show
 		     .notdef/tofu or empty demos. A plain sample-text block instead,
-		     using only characters actually in Elio's cmap (letters, comma,
-		     period, hyphen, space — no digits/other punctuation drawn on
-		     purpose here, keep it simple). -->
+		     using only characters actually in Elio's cmap. -->
 		<section class="ElioSample" aria-label="Sample text">
 			<p class="ElioSample__label">Sample text</p>
 			<p class="ElioSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
@@ -286,7 +274,7 @@
 		     <OpenTypeFeatures fontFamily={tf.fontFamily} /> here when ready. -->
 	{/if}
 
-	<!-- On-page buy block (the fixed CTA scrolls here) -->
+	<!-- On-page buy block -->
 	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">
 		<div class="FontBuy__inner">
 			{#if isAvailable}
@@ -314,151 +302,240 @@
 	</section>
 </main>
 
-<!-- Fixed bottom purchase bar — hidden for now. The on-page buy block
-     (#buy) is the only purchase entry point. To restore, bring back the
-     scroll listener that drove `buybarVisible` along with this markup. -->
-
 <style>
 	.FontDetail {
-		padding: 40px 0 40px;
+		/* The colour band starts at the very top; the fixed header overlays
+		   it (and auto-inverts against it). */
+		padding: 0 0 40px;
 	}
 
-	/* ── 100vh top hero ── */
-	.FontDetail__hero {
-		position: relative;
-		width: 100%;
-		height: 100vh;
-		height: 100dvh;
+	/* ── Colour band + classification headline (Figma 12:127: 460/900) ── */
+	.FontHero {
+		display: grid;
+		place-items: center;
+		height: clamp(300px, 51vh, 560px);
+		height: clamp(300px, 51svh, 560px);
+		background: var(--panel-bg);
+		padding: 80px 20px 24px;
 		overflow: hidden;
 	}
 
-	/* SP: not full viewport height — height driven by width. */
-	@media (max-width: 767.98px) {
-		.FontDetail__hero {
-			height: 90vw;
-		}
+	.FontHero__headline {
+		font-size: clamp(40px, 6.1vw, 88px);
+		line-height: 1.25;
+		letter-spacing: 0;
+		color: var(--panel-fg) !important;
+		text-align: center;
+		margin: 0;
 	}
 
-	/* PC: a 60vh band rather than a full screen, so the name and the body copy
-	   below it are already in view on landing. */
 	@media (min-width: 768px) {
-		.FontDetail__hero {
-			height: 60vh;
-			height: 60dvh;
+		.FontHero__headline {
+			white-space: nowrap;
 		}
 	}
 
-	.FontDetail__hero-bg {
-		position: absolute;
-		inset: 0;
+	/* ── Intro: eyebrow, name, description + spec, gallery ── */
+	.FontIntro {
+		padding: clamp(48px, 9.3vh, 84px) clamp(20px, 3.4vw, 49px) clamp(56px, 8.4vh, 76px)
+			clamp(20px, 4.65vw, 67px);
 	}
 
-	.FontDetail__hero-media {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+	.FontIntro__eyebrow {
+		font-size: 12px;
+		line-height: 1.3;
+		letter-spacing: 0;
+		font-weight: var(--fw-light);
+		color: var(--color-text);
+		opacity: 0.5;
+		margin: 0 0 32px;
+		max-width: 40ch;
+	}
+
+	.FontIntro__name {
+		font-size: clamp(40px, 11vw, 72px);
+		font-weight: 400;
+		line-height: 1;
+		letter-spacing: 0;
+		margin: 0;
+	}
+
+	@media (min-width: 768px) {
+		.FontIntro__name {
+			font-size: 72px;
+		}
+	}
+
+	.FontIntro__cols {
+		display: grid;
+		gap: 40px;
+		margin-top: 34px;
+	}
+
+	@media (min-width: 768px) {
+		.FontIntro__cols {
+			/* 67->685 copy, 913->1391 spec, at the 1440 design width. */
+			grid-template-columns: 618fr 228fr 478fr;
+			gap: 0;
+			align-items: start;
+		}
+
+		.FontIntro__spec {
+			grid-column: 3;
+		}
+	}
+
+	.FontIntro__description {
+		font-size: 14px;
+		line-height: 1.4;
+		letter-spacing: 0;
+		font-weight: var(--fw-light);
+		color: var(--color-text);
+		max-width: 64ch;
+		margin: 0;
+	}
+
+	/* One language at a time — [data-lang] lives on <html>, set by the header
+	   switch (see lib/state/lang.svelte.ts). Translations are hidden by
+	   default and shown only on an exact match, so the DE/ES/CH codes (no
+	   copy of their own yet) fall through to the English. */
+	:global([data-lang='fr']) .FontDetail .en,
+	:global([data-lang='da']) .FontDetail .en {
+		display: none;
+	}
+
+	.FontDetail .fr,
+	.FontDetail .da {
+		display: none;
+	}
+
+	:global([data-lang='fr']) .FontDetail .fr,
+	:global([data-lang='da']) .FontDetail .da {
 		display: block;
 	}
 
-	/* Zoomed in past a plain cover-fit — the "a" row reads as a few large
-	   glyphs rather than a smaller repeating strip, matching how large the
-	   same video plays on the home page. */
-	.FontDetail__hero-video {
-		transform: scale(1.6);
+	.FontIntro__spec {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 40px 24px;
+		margin: 0;
 	}
 
-	.FontDetail__hero-placeholder {
+	.FontIntro__spec-item dt {
+		font-size: 12px;
+		line-height: 1.25;
+		letter-spacing: 0;
+		font-weight: var(--fw-light);
+		color: var(--color-text);
+		opacity: 0.5;
+		margin: 0 0 4px;
+	}
+
+	.FontIntro__spec-item dd {
+		font-size: 16px;
+		line-height: 1.25;
+		letter-spacing: 0;
+		font-weight: var(--fw-light);
+		color: var(--color-text);
+		margin: 0;
+	}
+
+	/* Small caveat under the grid — e.g. Elio's "still in development" note. */
+	.FontIntro__spec-note {
+		grid-column: 1 / -1;
+		font-size: 11px;
+		line-height: 1.5;
+		letter-spacing: 0;
+		color: var(--color-text-mute);
+		margin: -16px 0 0;
+	}
+
+	/* ── Gallery — three blocks standing in for specimen photography ── */
+	.FontGallery {
+		display: grid;
+		gap: 16px;
+		margin-top: clamp(40px, 7vh, 64px);
+	}
+
+	@media (min-width: 768px) {
+		.FontGallery {
+			grid-template-columns: 306.5fr 488.75fr 488.75fr;
+			gap: 20px;
+		}
+	}
+
+	/* A / B / A colour rhythm: the outer two blocks take the band's own
+	   colour pair, the middle one the block pair (or the video's own black)
+	   — Norma reads red / black / red, Elio lime / blue / lime. */
+	.FontGallery__block {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		background: var(--panel-bg);
+		color: var(--panel-fg);
+		aspect-ratio: 488.75 / 391;
+	}
+
+	.FontGallery__block--a {
+		aspect-ratio: 306.5 / 391;
+	}
+
+	@media (max-width: 767.98px) {
+		.FontGallery__block--a {
+			aspect-ratio: 4 / 3;
+		}
+	}
+
+	.FontGallery__block--b {
+		background: var(--block-bg);
+		color: var(--block-fg);
+	}
+
+	.FontGallery__block--b.has-video {
+		background: #000;
+	}
+
+	.FontGallery__video {
+		display: block;
 		width: 100%;
 		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		object-fit: cover;
 	}
 
-	.FontDetail__hero-placeholder-name {
-		font-family: 'Norma', sans-serif;
-		font-size: clamp(80px, 22vw, 360px);
+	/* base.css sets color directly on span/p, which beats inheriting from the
+	   block — assert it (same gotcha as the home page's typeface sections). */
+	.FontGallery__glyph {
+		font-size: clamp(120px, 16vw, 220px);
 		line-height: 1;
-		letter-spacing: 0;
-		color: currentColor;
-		opacity: 0.1;
-		user-select: none;
+		color: var(--panel-fg);
 	}
 
-	/* Photo credit — small, muted, top-right (museum-label style).
-	   Compact on mobile, roomier on desktop. */
-	.FontDetail__hero-credit {
-		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 56px var(--gutter) 0;
-		max-width: 168px;
-		text-align: right;
-		font-family: 'Norma', sans-serif;
-		font-size: 9px;
-		line-height: 1.45;
+	.FontGallery__tagline {
+		font-size: clamp(28px, 3.4vw, 48px);
+		line-height: 1.15;
 		letter-spacing: 0;
-		color: currentColor;
-		opacity: 0.55;
+		text-align: center;
+		color: var(--block-fg);
 		margin: 0;
-		z-index: 2;
+		padding: 0 8%;
 	}
 
-	@media (min-width: 768px) {
-		.FontDetail__hero-credit {
-			padding-top: 64px;
-			max-width: 280px;
-			font-size: 10px;
-			line-height: 1.5;
-			opacity: 0.6;
-		}
+	.FontGallery__specimen {
+		text-align: center;
+		margin: 0;
+		padding: 0 6%;
 	}
 
-	.FontDetail__hero-center {
-		position: absolute;
-		inset: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		pointer-events: none;
-		z-index: 1;
-	}
-
-	.FontDetail__hero-name {
-		font-family: 'Norma', sans-serif;
-		font-size: clamp(40px, 9vw, 120px);
-		line-height: 1.2;
+	.FontGallery__specimen-line {
+		display: block;
+		font-size: clamp(16px, 2vw, 26px);
+		line-height: 1.3;
 		letter-spacing: 0;
-		color: currentColor;
+		color: var(--panel-fg);
 	}
 
-	/* Hero text over media is plain white (via `.white` on the hero) — no inversion. */
-
-	/* ── Body ── */
-	.FontDetail__body {
-		padding: 40px var(--padding) 40px;
-		text-align: left;
-	}
-
-	/* Description left, spec table right — stacked on phones. */
-	.FontDetail__cols {
-		display: grid;
-		gap: 40px;
-		margin-top: 32px;
-	}
-
-	.FontDetail__text {
-		max-width: 62ch;
-	}
-
-	@media (min-width: 768px) {
-		.FontDetail__cols {
-			grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
-			gap: 64px;
-			align-items: start;
-		}
-	}
-
+	/* ── Shared section title ── */
 	.FontDetail__spec-title {
 		font-family: 'Norma', sans-serif;
 		font-size: 14px;
@@ -466,196 +543,6 @@
 		letter-spacing: 0;
 		color: var(--color-text-mute);
 		margin: 0 0 20px;
-	}
-
-	/* Two columns of label/value pairs, filled row-wise:
-	   Collection | Formats / Glyphs | Languages. Design/Release dropped
-	   2026-08-31 (PC and SP both) — same 4-item spec on both breakpoints now. */
-	.FontDetail__spec-grid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 24px 32px;
-		margin: 0;
-	}
-
-	.FontDetail__spec-item dt {
-		font-family: 'Norma', sans-serif;
-		font-size: 14px;
-		line-height: 1.5;
-		letter-spacing: 0;
-		color: var(--color-text-mute);
-	}
-
-	.FontDetail__spec-item dd {
-		font-family: 'Norma', sans-serif;
-		font-size: 14px;
-		line-height: 1.5;
-		letter-spacing: 0;
-		margin: 0;
-	}
-
-	/* Small disclaimer under the spec grid — e.g. Elio's "still in
-	   development" note on Glyphs/Supported languages. Deliberately smaller
-	   and muted vs. the dt/dd pairs above it, so it reads as a caveat, not
-	   another spec line. */
-	.FontDetail__spec-note {
-		font-family: 'Norma', sans-serif;
-		font-size: 11px;
-		line-height: 1.5;
-		letter-spacing: 0;
-		color: var(--color-text-mute);
-		margin: 16px 0 0;
-	}
-
-	/* Hidden on PC by default — same visibility split as .FontDetail__spec-
-	   grid--sp right below, since this note is that block's own caption. */
-	.FontDetail__spec-note--sp {
-		display: none;
-		margin-top: 12px;
-	}
-
-	/* SP-only spec summary shown above the name (see the template) — hidden
-	   on PC, where the full .FontDetail__spec aside (Information/Design/
-	   Release included) still renders in its usual place. */
-	.FontDetail__spec-grid--sp {
-		display: none;
-	}
-
-	@media (max-width: 767.98px) {
-		.FontDetail__spec-grid--sp {
-			display: grid;
-			margin-bottom: 0;
-		}
-
-		.FontDetail__spec-note--sp {
-			display: block;
-		}
-
-		.FontDetail__spec {
-			display: none;
-		}
-	}
-
-	.FontDetail__info {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 12px;
-		margin-bottom: 16px;
-	}
-
-	.FontDetail__badge {
-		font-family: 'Norma', sans-serif;
-		font-size: 10px;
-		letter-spacing: 0;
-		color: var(--color-text-mute);
-		border: 1px solid var(--color-line);
-		padding: 2px 8px;
-		opacity: 0.7;
-	}
-
-	/* The name is the specimen here: 120px on phones, 320px from tablet up. */
-	.FontDetail__name {
-		font-family: 'Norma', sans-serif;
-		font-size: 72px;
-		font-weight: var(--fw-base);
-		line-height: 1;
-		letter-spacing: 0;
-		margin: 0;
-	}
-
-	/* SP: pinned to the bottom of the first view. The square hero above is
-	   90vw tall (see .FontDetail__hero's own SP rule — corrected here from an
-	   earlier "100vw" that didn't match the real value) and .FontDetail__body
-	   adds 64px of padding-top before this element starts — this min-height
-	   makes up the rest of one viewport, so hero + padding + this always sum
-	   to it and the name lands right at the fold.
-	   svh, not dvh: dvh is *live* — it keeps recomputing while Safari's
-	   toolbar collapses/expands, which is exactly what happens while the
-	   page is being scrolled. A calc() built on dvh kept changing mid-
-	   gesture, so the name visibly dragged up/down as the toolbar animated
-	   (reported 2026-09). svh is the small/toolbar-shown viewport — a static
-	   value that doesn't move once painted, trading "always exactly at the
-	   fold" for "never drifts": if the toolbar is already hidden, the name
-	   lands a little short of the true bottom edge instead of sliding. */
-	@media (max-width: 767.98px) {
-		.FontDetail__name {
-			display: flex;
-			align-items: flex-end;
-			min-height: calc(100svh - 90vw - 64px - 100px);
-		}
-	}
-
-	@media (min-width: 768px) {
-		.FontDetail__name {
-			font-size: 160px;
-		}
-	}
-
-	.FontDetail__tagline {
-		font-family: 'Norma', sans-serif;
-		font-size: 18px;
-		line-height: 1.4;
-		letter-spacing: 0.025em;
-		text-transform: uppercase;
-		margin: 0 0 16px;
-		max-width: 56ch;
-	}
-
-	@media (min-width: 768px) {
-		.FontDetail__tagline {
-			font-size: 22px;
-		}
-	}
-
-	.FontDetail__description {
-		/* Explicit now (was inheriting base p's 12px) — bumped for readability
-		   at justified-paragraph length. */
-		font-size: 16px;
-		line-height: 1.4;
-		letter-spacing: 0;
-		color: var(--color-text);
-		text-align: justify;
-		hyphens: auto;
-		max-width: 64ch;
-		margin: 0;
-	}
-
-	/* Japanese running translation — Tazugane Light, ~1.75px smaller than the
-	   Latin. Latin runs inside JA use the page typeface (var(--type-font)).
-	   font-family needs !important to beat the page-wide :global(*) font rule. */
-	/* Danish runs in the typeface itself — no CJK fallback stack needed now that
-	   the secondary language is Latin. Lighter and slightly smaller so it reads
-	   as a translation under the English, not as a second headline. */
-	/* One language at a time — [data-lang] lives on <html>, set by the header
-	   switch (see lib/state/lang.svelte.ts). */
-	:global([data-lang='fr']) .FontDetail__description,
-	:global([data-lang='da']) .FontDetail__description {
-		display: none;
-	}
-
-	:global([data-lang='en']) .FontDetail__description-fr,
-	:global([data-lang='da']) .FontDetail__description-fr {
-		display: none;
-	}
-
-	:global([data-lang='en']) .FontDetail__description-da,
-	:global([data-lang='fr']) .FontDetail__description-da {
-		display: none;
-	}
-
-	.FontDetail .FontDetail__description-fr,
-	.FontDetail .FontDetail__description-da {
-		font-family: var(--type-font, 'Norma'), sans-serif !important;
-		font-weight: 300;
-		font-size: calc(var(--fs-p) - 1px);
-		line-height: 1.7;
-		opacity: 0.75;
-		letter-spacing: 0;
-		color: var(--color-text);
-		text-align: left;
-		max-width: 64ch;
-		margin: 12px 0 0;
 	}
 
 	/* ── In Use — 4-5 application photos in a row ── */
@@ -669,15 +556,11 @@
 		grid-auto-columns: minmax(160px, 1fr);
 		gap: 12px;
 		overflow-x: auto;
-		/* A little breathing room so a scrolled-to-the-edge card isn't flush
-		   against the viewport edge, same padding as the section itself. */
 		scroll-padding-inline: var(--padding);
 	}
 
 	@media (min-width: 768px) {
 		.FontInUse__row {
-			/* Desktop: exactly 5 equal columns, no scroll — 4 real photos plus
-			   an empty slot reads fine, 5 fills the row exactly. */
 			grid-auto-flow: row;
 			grid-template-columns: repeat(5, 1fr);
 			gap: 16px;
@@ -715,8 +598,6 @@
 		padding: 40px var(--padding) 48px;
 	}
 
-	/* Single column on mobile; a long axis (Norma's own 20 stops) reads fine
-	   split into two on wider screens instead of one long scroll. */
 	.FontWeights__list {
 		list-style: none;
 		margin: 0;
@@ -732,9 +613,6 @@
 		}
 	}
 
-	/* Mobile-first base; the >=768px block below restores the original
-	   clamp+padding for desktop — SP set to a fixed 40px/no padding
-	   2026-09 at the user's request. */
 	.FontWeights__item {
 		display: block;
 		padding: 0;
@@ -796,31 +674,10 @@
 		margin: 0;
 	}
 
-	:global([data-lang='fr']) .FontInspiration__text,
-	:global([data-lang='da']) .FontInspiration__text {
-		display: none;
-	}
-
-	:global([data-lang='en']) .FontInspiration__text-fr,
-	:global([data-lang='da']) .FontInspiration__text-fr {
-		display: none;
-	}
-
-	:global([data-lang='en']) .FontInspiration__text-da,
-	:global([data-lang='fr']) .FontInspiration__text-da {
-		display: none;
-	}
-
-	.FontInspiration .FontInspiration__text-fr,
-	.FontInspiration .FontInspiration__text-da {
+	.FontInspiration .FontInspiration__text.fr,
+	.FontInspiration .FontInspiration__text.da {
 		font-weight: 300;
 		font-size: 15px;
-		line-height: 1.6;
-		opacity: 0.75;
-		letter-spacing: 0;
-		color: var(--color-text);
-		max-width: 64ch;
-		margin: 12px 0 0;
 	}
 
 	/* ── Elio: sample text in place of Glyph set / Beyond A-Z / OpenType ── */
@@ -848,9 +705,6 @@
 
 	/* ── On-page buy block ── */
 	.FontBuy {
-		/* Border spans the full content width; only the text column inside
-		   (.FontBuy__inner) is capped to 640px for readability. Was max-width
-		   on this element directly, which shortened the border-top to match. */
 		padding: 96px var(--padding) 120px;
 		border-top: 1px solid var(--color-line);
 	}
@@ -930,12 +784,9 @@
 		max-width: 48ch;
 	}
 
-	/* The fixed bottom purchase bar was removed here along with its markup.
-	   Restore both from git history if it comes back. */
-
-	/* All page content (not header/footer) uses the typeface's own font.
-	   `--type-font` is set on .FontDetail; !important overrides the components'
-	   hardcoded 'Norma'. */
+	/* All page content (not header/footer) uses the typeface's own font —
+	   the page is its own specimen. `--type-font` is set on .FontDetail;
+	   !important overrides the components' hardcoded 'Norma'. */
 	.FontDetail :global(*) {
 		font-family: var(--type-font, 'Norma'), 'Norma', sans-serif !important;
 	}

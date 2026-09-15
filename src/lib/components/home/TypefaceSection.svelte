@@ -150,7 +150,7 @@
 		<p class="TypefaceSection__name">{typeface.name} Ôgast</p>
 		<p class="TypefaceSection__tagline">{typeface.tagline}</p>
 		<p class="TypefaceSection__meta">
-			{typeface.weights.length} weights · {typeface.info?.languages ?? '—'} languages supported
+			{typeface.weights.length} weights / {typeface.info?.languages ?? '—'} languages supported
 		</p>
 		<a class="TypefaceSection__cta" href="/fonts/{typeface.slug}">
 			<span class="CtaLabel">Discover</span>

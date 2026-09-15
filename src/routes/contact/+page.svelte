@@ -1,3 +1,8 @@
+<!-- Contact — Figma node 3:671 layout (see PageSection.svelte). -->
+<script lang="ts">
+	import PageSection from '$lib/components/PageSection.svelte';
+</script>
+
 <svelte:head>
 	<title>Contact — Ôgast</title>
 	<meta
@@ -7,65 +12,22 @@
 </svelte:head>
 
 <main class="Contact">
-	<div class="Contact__inner">
-		<h1 class="Contact__heading">Contact</h1>
-		<p class="Contact__sub">Licensing · Enterprise scale · Custom type · General enquiries</p>
-		<p class="Contact__body">
+	<PageSection title="Contact" as="h1" subtitle="Licensing, custom type, general enquiries">
+		<p>
 			For license questions, enterprise requirements (1,000+ users / 100M+ PV), bespoke typefaces,
-			or anything else — please get in touch. We will respond within 2 business days.
+			or anything else — please get in touch. We will respond within two business days.
 		</p>
-		<a href="mailto:hi@august.tf" class="Contact__link">hi@august.tf</a>
-	</div>
+		<p class="Contact__mail"><a href="mailto:hi@august.tf">hi@august.tf</a></p>
+	</PageSection>
 </main>
 
 <style>
 	.Contact {
-		min-height: 100vh;
-		min-height: 100dvh;
-		display: flex;
-		align-items: center;
-		padding-top: 80px;
-		padding-inline: 24px;
+		background: #f1f0ef;
 	}
 
-	@media (min-width: 768px) {
-		.Contact {
-			padding-inline: var(--padding);
-		}
-	}
-
-	.Contact__inner {
-		max-width: 480px;
-	}
-
-	.Contact__heading {
-		font-family: 'Norma', sans-serif;
-		font-size: clamp(28px, 5vw, 48px);
-		letter-spacing: 0;
-		line-height: 1.1;
-		margin-bottom: 8px;
-	}
-
-	.Contact__sub {
-		font-family: 'Norma', sans-serif;
-		font-size: 12px;
-		color: var(--color-text-mute);
-		margin-bottom: 24px;
-	}
-
-	.Contact__body {
-		font-family: 'Norma', sans-serif;
-		font-size: 14px;
-		font-variation-settings: 'wght' 350;
-		line-height: 1.65;
-		margin-bottom: 28px;
-	}
-
-	.Contact__link {
-		font-family: 'Norma', sans-serif;
-		font-size: 16px;
-		font-weight: var(--fw-ui);
-		text-decoration: underline;
-		text-underline-offset: 3px;
+	.Contact__mail {
+		margin-top: 2em;
+		font-size: clamp(20px, 2.2vw, 32px);
 	}
 </style>
