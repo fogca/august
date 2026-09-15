@@ -120,6 +120,13 @@
 
 <style>
 	.TypefaceSection {
+		/* base.css's global `section { padding-left/right: var(--padding) }`
+		   reset would otherwise inset this whole full-bleed section from
+		   both edges (visible as a stray white margin down the left of the
+		   sidebar AND the right of the panel/blocks) — this is a 100vw
+		   section by design, not one of the site's inset content sections. */
+		padding-left: 0;
+		padding-right: 0;
 		display: grid;
 		grid-template-columns: 362fr 1078fr;
 		grid-template-rows: 453fr 447fr;

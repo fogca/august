@@ -104,23 +104,37 @@
 		{/each}
 	</nav>
 
-	<!-- Desktop-only language switch — its own flex group so .Header's three-
-	     way split (logo / nav / langs) works via plain justify-content:
-	     space-between, rather than living inside .Header__nav. Three direct
-	     options rather than one cycling toggle — see the LANGS note above. -->
-	<div class="Header__langs" role="group" aria-label="Language">
-		{#each LANGS as l (l.code)}
-			<button
-				type="button"
-				class="Header__nav-link Header__lang"
-				class:is-active={lang.current === l.code}
-				onclick={() => lang.set(l.code)}
-				aria-pressed={lang.current === l.code}
-				aria-label={l.name}
-			>
-				{l.label}
-			</button>
-		{/each}
+	<!-- Desktop-only right-hand group — language switch + the Figma end-state
+	     header's "Account / Cart (0)" pairing (node 1:654) — one flex group
+	     so .Header's three-way split (logo / nav / right) still works via
+	     plain justify-content:space-between on .Header. -->
+	<div class="Header__right">
+		<!-- Three direct options rather than one cycling toggle — see the
+		     LANGS note above. -->
+		<div class="Header__langs" role="group" aria-label="Language">
+			{#each LANGS as l (l.code)}
+				<button
+					type="button"
+					class="Header__nav-link Header__lang"
+					class:is-active={lang.current === l.code}
+					onclick={() => lang.set(l.code)}
+					aria-pressed={lang.current === l.code}
+					aria-label={l.name}
+				>
+					{l.label}
+				</button>
+			{/each}
+		</div>
+
+		<!-- Inert (aria-disabled spans, not links) — there is no account
+		     system or persistent cart anywhere in this codebase (/buy is a
+		     direct Stripe checkout), so this is the same "visually present,
+		     not wired up" treatment already used elsewhere for not-yet-real
+		     features (e.g. Alfred's "Coming Soon" on the home page). -->
+		<div class="Header__cart" aria-hidden="true">
+			<span class="Header__nav-link" aria-disabled="true">Account</span>
+			<span class="Header__nav-link" aria-disabled="true">Cart (0)</span>
+		</div>
 	</div>
 
 	<!-- Mobile-only: Menu/Close toggles the panel. Sits on the right; the logo
@@ -219,6 +233,21 @@
 		pointer-events: auto;
 	}
 
+	/* base.css's universal `div,...{color:var(--color-text)}` reset otherwise
+	   sets every plain <div> inside the header to black — breaking the
+	   mix-blend-mode:difference trick above for anything inside one, since a
+	   BLACK source is difference-blend's identity element (|0-X|=X for any
+	   backdrop X), i.e. invisible against literally any background. This bit
+	   the mobile Menu toggle (.Header__actions) and the desktop right-hand
+	   group (.Header__right/.Header__langs/.Header__cart) — both invisible
+	   sitewide until this rule, found while adding the Account/Cart pairing.
+	   .Header__nav-link's own color:inherit (on the <a>/<button>/<span>
+	   leaves) only works if every ancestor div in between keeps inheriting
+	   too, hence one blanket rule here rather than patching each div. */
+	.Header div {
+		color: inherit;
+	}
+
 	/* Home page at the very top: hide the header above the fold; it slides in on scroll */
 	.Header.is-hidden-top {
 		transform: translateY(-100%);
@@ -259,13 +288,19 @@
 		align-items: center;
 	}
 
-	/* Language switch group: hidden on mobile (the toggle only lives in the
-	   slide-down MenuPanel there), its own flex group on desktop — see
-	   .Header's three-way split (logo / nav / langs) below. Tighter gap than
-	   .Header__nav's 20px — three short codes read as one switcher, not as
-	   three more nav items. */
-	.Header__langs {
+	/* Wraps .Header__langs + .Header__cart into .Header's third (right-hand)
+	   flex slot — hidden on mobile like its two children, shown as one flex
+	   row on desktop below. */
+	.Header__right {
 		display: none;
+		align-items: center;
+	}
+
+	/* Language switch group: its own flex group inside .Header__right.
+	   Tighter gap than .Header__nav's 20px — three short codes read as one
+	   switcher, not as three more nav items. */
+	.Header__langs {
+		display: flex;
 		gap: 10px;
 		align-items: center;
 	}
@@ -285,6 +320,24 @@
 
 	.Header__lang.is-active {
 		opacity: 1;
+	}
+
+	/* Inert (see the template comment) — half-strength, no pointer affordance.
+	   Visibility comes from the .Header__right parent (mobile/desktop), not
+	   from this rule. */
+	.Header__cart {
+		display: flex;
+		gap: 20px;
+		align-items: center;
+		/* Separates the cart pairing from the language switch beside it. */
+		margin-left: 20px;
+	}
+
+	.Header__cart .Header__nav-link {
+		opacity: 0.4;
+		cursor: default;
+		pointer-events: none;
+		user-select: none;
 	}
 
 	.Header__nav-link {
@@ -335,9 +388,10 @@
 			display: none;
 		}
 
-		/* Three-way split — logo / nav / langs — via plain justify-content:
-		   space-between on .Header (set once, above) plus this explicit
-		   left-to-right order, rather than relying on DOM/source order. */
+		/* Three-way split — logo / nav / right (langs + cart) — via plain
+		   justify-content:space-between on .Header (set once, above) plus
+		   this explicit left-to-right order, rather than relying on DOM/
+		   source order. */
 		.Header__logo {
 			order: 1;
 			padding: 4px 0;
@@ -351,7 +405,7 @@
 			order: 2;
 		}
 
-		.Header__langs {
+		.Header__right {
 			display: flex;
 			order: 3;
 		}
