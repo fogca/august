@@ -344,7 +344,7 @@ export const TYPEFACES: Typeface[] = [
 		// they diverge a lot: a variable font can only ship a glyph once
 		// BOTH masters are shape-compatible, so ~28 of the 174 encoded
 		// characters that already have real ink in Hair are still hard-
-		// excluded from Elio-VF11.woff2 while Ultra catches up (144 ship
+		// excluded from Elio-VF12.woff2 while Ultra catches up (144 ship
 		// today — a big jump from VF10's 107, since all 4 remaining
 		// Hair-only combining marks got drawn in Ultra — see
 		// static/fonts/README.md). Quoting that 144 as "the" glyph count
