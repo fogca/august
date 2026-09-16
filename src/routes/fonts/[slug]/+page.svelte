@@ -157,7 +157,10 @@
 	</section>
 
 	<!-- Type Tester — directly after the intro, per the user's 2026-09
-	     request; the remaining sections keep their earlier order below. -->
+	     request; the remaining sections keep their earlier order below.
+	     (An "In Use" section used to sit directly below this — 4-5
+	     application-photo slots — removed 2026-09 at the user's request;
+	     tf.inUseImages in typefaces.ts is unused now but left in place.) -->
 	<TypeTester
 		weights={tf.weights}
 		fontFamily={tf.fontFamily}
@@ -166,24 +169,6 @@
 		available={isAvailable}
 		defaultSizeDesktop={isElio ? 120 : tf.slug === 'norma' ? 36 : undefined}
 	/>
-
-	<!-- In Use — 4-5 real-world application photos in a row. Always renders,
-	     even with none yet: empty slots are an honest "photo pending" state,
-	     consistent with this page's other in-development placeholders. -->
-	<section class="FontInUse" aria-label="In use">
-		<p class="FontDetail__spec-title">In Use</p>
-		<div class="FontInUse__row">
-			{#each tf.inUseImages ?? [null, null, null, null] as img, i (i)}
-				<div class="FontInUse__cell">
-					{#if img}
-						<img src={img.src} alt={img.alt} loading="lazy" />
-					{:else}
-						<span class="FontInUse__placeholder">Application photo</span>
-					{/if}
-				</div>
-			{/each}
-		</div>
-	</section>
 
 	<!-- Weights — the named axis stops, each set in its own weight. A quick
 	     visual index of the range; GlyphSet (further down) is the deep,
@@ -223,7 +208,7 @@
 						{#if img.src}
 							<img src={img.src} alt={img.alt} loading="lazy" />
 						{:else}
-							<span class="FontInUse__placeholder">Reference photo</span>
+							<span class="FontInspiration__placeholder">Reference photo</span>
 						{/if}
 					</div>
 				{/each}
@@ -545,54 +530,6 @@
 		margin: 0 0 20px;
 	}
 
-	/* ── In Use — 4-5 application photos in a row ── */
-	.FontInUse {
-		padding: 40px var(--padding) 48px;
-	}
-
-	.FontInUse__row {
-		display: grid;
-		grid-auto-flow: column;
-		grid-auto-columns: minmax(160px, 1fr);
-		gap: 12px;
-		overflow-x: auto;
-		scroll-padding-inline: var(--padding);
-	}
-
-	@media (min-width: 768px) {
-		.FontInUse__row {
-			grid-auto-flow: row;
-			grid-template-columns: repeat(5, 1fr);
-			gap: 16px;
-		}
-	}
-
-	.FontInUse__cell {
-		aspect-ratio: 3 / 4;
-		background: var(--color-bg-gray, #f3f3f3);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow: hidden;
-	}
-
-	.FontInUse__cell img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		display: block;
-	}
-
-	.FontInUse__placeholder {
-		font-family: 'Norma', sans-serif;
-		font-size: 11px;
-		letter-spacing: 0;
-		color: var(--color-text-mute);
-		opacity: 0.6;
-		text-align: center;
-		padding: 0 12px;
-	}
-
 	/* ── Weights — the named axis stops, each set in its own weight ── */
 	.FontWeights {
 		padding: 40px var(--padding) 48px;
@@ -663,6 +600,18 @@
 		height: 100%;
 		object-fit: cover;
 		display: block;
+	}
+
+	/* Moved here from the removed In Use section (2026-09) — this was the
+	   only other place it was used. */
+	.FontInspiration__placeholder {
+		font-family: 'Norma', sans-serif;
+		font-size: 11px;
+		letter-spacing: 0;
+		color: var(--color-text-mute);
+		opacity: 0.6;
+		text-align: center;
+		padding: 0 12px;
 	}
 
 	.FontInspiration__text {
