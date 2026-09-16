@@ -49,13 +49,29 @@
      (post-rotation) box — see .IntroHero__wordmark-frame / __wordmark
      below.
 
-     First-view snap: at the user's request, the ONE transition from this
-     section into the first typeface section below snaps on a small scroll
-     gesture rather than a full manual 100vh scroll — see
-     armFirstViewSnap(). Deliberately scoped to just that boundary and
-     self-disarming the instant it fires, so it never touches any other
-     scroll behaviour on the page (the typeface sections' own scrubbed
-     reveal included). -->
+     Scroll lock: the user asked for scrolling to be disabled for the
+     duration of the OP ("OP中はスクロール禁止"). lockScroll() below
+     preventDefaults wheel/touch/the usual scroll keys and stops Lenis;
+     released the instant the entrance timeline completes. Gated on
+     actually being at the top of the page at mount (`window.scrollY` ≈
+     0) — the user's own flagged edge case: a restored mid-page scroll
+     position (SvelteKit's own back-navigation scroll restoration, most
+     likely) must never collide with this lock, or a visitor lands
+     scrolled partway down with scrolling switched off and no way to move.
+     When that's the case, the OP is skipped outright (jump straight to
+     the resting state, same as prefers-reduced-motion) rather than risk
+     it.
+
+     Section-to-section snap (2026-09, referencing yadohouse.jp's own
+     top-page feel at the user's request): once the OP is genuinely done
+     (`homeIntro.introComplete` — see homeIntro.svelte.ts), a small scroll
+     gesture snaps precisely to the next full-viewport section, all the
+     way through the typeface sections, using Lenis's own official Snap
+     companion (`lenis/snap`) rather than a hand-rolled gesture detector.
+     THIS file only flips the `introComplete` signal at the right moments
+     (all three exit paths below do); +page.svelte owns the actual Snap
+     instance, since it's the one that knows about every section (this one
+     plus each TypefaceSection) to snap between. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -124,101 +140,73 @@
 	let letterEls: SVGPathElement[] = [];
 	let stageEl: HTMLElement | undefined = $state();
 
-	/** See the file header's "First-view snap" note. Arms a one-shot listener
-	 *  that, on the FIRST meaningful downward wheel/touch gesture while still
-	 *  essentially at the top of this section, smooth-scrolls straight to
-	 *  the first typeface section below instead of letting the user drag
-	 *  through the remaining scroll distance by hand. Fires once, then
-	 *  fully detaches — every scroll interaction after that (including
-	 *  scrolling back up into this section) is plain, untouched scroll. */
-	function armFirstViewSnap(): () => void {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
-		const target = document.querySelector<HTMLElement>('.TypefaceSection');
-		if (!target || !stageEl) return () => {};
+	/** Straight to the resting state — same convention as PageTransition.svelte
+	 *  and the home page's video pause. Inline style, not setAttribute: a
+	 *  presentation attribute would lose to this file's own CSS fill fallback.
+	 *  Shared by the reduced-motion path and the "not actually at the top"
+	 *  guard (see the file header's "Scroll lock" note) — both skip the OP
+	 *  outright and land here instead, for their own separate reasons; both
+	 *  still count as the intro's own business being "done" either way. */
+	function jumpToRestingState() {
+		if (stageEl) stageEl.style.backgroundColor = '#F1F0EF';
+		letterEls.forEach((el) => {
+			el.style.fill = '#000000';
+		});
+		homeIntro.headerReady = true;
+		homeIntro.introComplete = true;
+	}
 
-		// Reference height, not live scrollY vs innerHeight: correct even if
-		// the intro's own box (100dvh) differs slightly from innerHeight
-		// (mobile URL-bar show/hide).
-		const introHeight = stageEl.getBoundingClientRect().height;
-		let armed = true;
-		let touchStartY = 0;
-
-		function detach() {
-			window.removeEventListener('wheel', onWheel);
-			window.removeEventListener('touchstart', onTouchStart);
-			window.removeEventListener('touchmove', onTouchMove);
-		}
-
-		function trigger() {
-			if (!armed) return;
-			armed = false;
-			detach();
-			initScroll().then(() => {
-				// Non-null: guarded by the early `!target` return above; TS
-				// can't carry that narrowing into this nested closure.
-				getLenis()?.scrollTo(target as HTMLElement, {
-					duration: 1.1,
-					easing: (t: number) => 1 - Math.pow(1 - t, 3)
-				});
-			});
-		}
-
-		function stillInFirstView() {
-			return window.scrollY < introHeight * 0.9;
-		}
-
-		function onWheel(e: WheelEvent) {
-			if (!armed || !stillInFirstView()) return;
-			if (e.deltaY > 4) {
-				e.preventDefault();
-				trigger();
-			}
-		}
-
-		function onTouchStart(e: TouchEvent) {
-			touchStartY = e.touches[0]?.clientY ?? 0;
-		}
-
-		function onTouchMove(e: TouchEvent) {
-			if (!armed || !stillInFirstView()) return;
-			const dy = touchStartY - (e.touches[0]?.clientY ?? touchStartY);
-			if (dy > 14) {
-				e.preventDefault();
-				trigger();
-			}
-		}
-
+	/** See the file header's "Scroll lock" note. preventDefaults every common
+	 *  way to move the page (wheel, touch-drag, the usual scroll keys) and
+	 *  stops Lenis, so nothing can scroll while the OP plays — not merely
+	 *  "no smooth scroll", genuinely nothing moves. Returns the matching
+	 *  unlock function. */
+	function lockScroll(): () => void {
+		const blockedKeys = new Set([' ', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End']);
+		const onWheel = (e: WheelEvent) => e.preventDefault();
+		const onTouchMove = (e: TouchEvent) => e.preventDefault();
+		const onKeydown = (e: KeyboardEvent) => {
+			if (blockedKeys.has(e.key)) e.preventDefault();
+		};
 		window.addEventListener('wheel', onWheel, { passive: false });
-		window.addEventListener('touchstart', onTouchStart, { passive: true });
 		window.addEventListener('touchmove', onTouchMove, { passive: false });
+		window.addEventListener('keydown', onKeydown);
+		getLenis()?.stop();
 
-		return detach;
+		return () => {
+			window.removeEventListener('wheel', onWheel);
+			window.removeEventListener('touchmove', onTouchMove);
+			window.removeEventListener('keydown', onKeydown);
+			getLenis()?.start();
+		};
 	}
 
 	onMount(() => {
 		if (!browser) return;
 
-		// Reduced motion also switches off the snap gesture itself (see
-		// armFirstViewSnap's own early return) — a user who has asked for
-		// less motion shouldn't have their scroll hijacked into one, even a
-		// short one.
-		const detachSnap = armFirstViewSnap();
-
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			// Straight to the resting state — same convention as
-			// PageTransition.svelte and the home page's video pause. Inline
-			// style, not setAttribute: a presentation attribute would lose to
-			// this file's own CSS fill fallback.
-			if (stageEl) stageEl.style.backgroundColor = '#F1F0EF';
-			letterEls.forEach((el) => {
-				el.style.fill = '#000000';
-			});
-			homeIntro.headerReady = true;
-			return detachSnap;
+			jumpToRestingState();
+			return;
+		}
+
+		// The user's own flagged edge case (see the file header's "Scroll
+		// lock" note): don't let a restored mid-page scroll position collide
+		// with the lock below. Only play (and lock for) the OP when this is
+		// genuinely a fresh view from the top.
+		if (window.scrollY > 4) {
+			jumpToRestingState();
+			return;
 		}
 
 		let cancelled = false;
 		let tl: { kill: () => void } | undefined;
+		let unlock: (() => void) | undefined;
+
+		initScroll().then(() => {
+			if (cancelled) return;
+			unlock = lockScroll();
+		});
+
 		import('gsap').then(({ gsap }) => {
 			if (cancelled || !stageEl) return;
 
@@ -236,6 +224,12 @@
 				delay: 0.25,
 				onComplete: () => {
 					homeIntro.headerReady = true;
+					// The OP has genuinely finished — release the lock and
+					// signal +page.svelte that section-to-section snap can
+					// now arm.
+					unlock?.();
+					unlock = undefined;
+					homeIntro.introComplete = true;
 				}
 			});
 			tl = timeline;
@@ -283,6 +277,9 @@
 
 			// 3 — Header slides in from above during the tail of the grow, so
 			// it reads as the same beat rather than a separate later step.
+			// (Scroll itself stays locked until the timeline's own
+			// onComplete above — the header appearing early is just a
+			// visual beat, not the signal that the OP, or the lock, is done.)
 			timeline.call(
 				() => {
 					homeIntro.headerReady = true;
@@ -295,7 +292,7 @@
 		return () => {
 			cancelled = true;
 			tl?.kill();
-			detachSnap();
+			unlock?.();
 		};
 	});
 </script>

@@ -13,6 +13,15 @@
 // with no onMount flash before the intro's own JS takes over.
 class HomeIntroState {
 	headerReady = $state(false);
+	/** True once the intro's own business is genuinely finished — whichever
+	 *  of its three paths got there (the full animated OP, the
+	 *  prefers-reduced-motion instant-rest state, or the "not actually at
+	 *  the top" guard — see IntroHero.svelte). Distinct from `headerReady`,
+	 *  which flips early (during the OP's own tail) purely as a visual
+	 *  beat — the Home page uses THIS one as the signal that it's now safe
+	 *  to arm section-to-section scroll snap (see +page.svelte), since
+	 *  doing that any earlier would let a snap fire mid-OP. */
+	introComplete = $state(false);
 }
 
 export const homeIntro = new HomeIntroState();
