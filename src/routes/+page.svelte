@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { coverReveal } from '$lib/actions/coverReveal';
 	import Arrow from '$lib/components/Arrow.svelte';
 	import IntroHero from '$lib/components/home/IntroHero.svelte';
 	import TypefaceSection from '$lib/components/home/TypefaceSection.svelte';
 	import TypefaceFooterBar from '$lib/components/home/TypefaceFooterBar.svelte';
 	import { TYPEFACES } from '$lib/data/typefaces';
+	import { homeIntro } from '$lib/state/homeIntro.svelte';
+	import { initScroll, getLenis } from '$lib/scroll';
+	import type Snap from 'lenis/snap';
 
 	// Top page v3 (2026-09) — Figma nodes 3:699/3:733 (PC) + 7:887/7:906 (SP).
 	// Scheme:
@@ -13,6 +17,183 @@
 	//   (today: Norma, Elio) — see TypefaceSection.svelte for the redesign
 	//   Buy (red) / Custom (black) / Office (white) : v1 cover reveals (unchanged)
 	const homeTypefaces = TYPEFACES.filter((tf) => !tf.hidden && tf.homeSection);
+
+	// Section-to-section snap (2026-09, referencing yadohouse.jp's own
+	// top-page feel at the user's request): "少しのスクロールで次のセク
+	// ションにピッタリとスナップ...それぞれのコンテンツが入れ替わる" — a
+	// small scroll gesture snaps precisely to the next section (Intro, then
+	// each TypefaceSection), rather than a normal continuous scroll, all the
+	// way through the typeface sections; Buy/Custom/Office below keep
+	// scrolling normally.
+	//
+	// Built on Lenis's own official Snap companion (`lenis/snap`) for its
+	// bookkeeping — computing each section's snap offset, animating there
+	// via Lenis's own scrollTo, tracking which one is "current" — but NOT
+	// its own built-in auto-trigger (`snap.stop()` right after creation
+	// disables that). Checked in the installed package's own source, not
+	// just its docs: none of its three auto modes actually match "any
+	// small gesture commits one full step" — 'mandatory'/'proximity' both
+	// resolve to whichever snap point is NUMERICALLY NEAREST the scroll
+	// position after the gesture settles, so a small nudge (nowhere near
+	// halfway to the next section) just falls back to where it started;
+	// 'lock' looked directional at a glance but only reacts to wheel input
+	// (touchmove is explicitly ignored in its own onSnap) and its own
+	// same-initiator guard against re-triggering during its animation
+	// didn't reliably clear between gestures in testing. So this drives
+	// `snap.next()` / `snap.previous()` directly from a small first-party
+	// wheel/touch gesture detector instead (same technique proven earlier
+	// this session for the old single-boundary version of this feature) —
+	// simple direction + a low threshold, no distance ambiguity.
+	//
+	// Armed only once `homeIntro.introComplete` is true — IntroHero.svelte
+	// flips that the moment the OP's own business is finished (whichever of
+	// its three paths got there), so a snap can never fire mid-OP, on top
+	// of that file's own separate scroll lock for the same reason.
+	$effect(() => {
+		if (!browser || !homeIntro.introComplete) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+		let cancelled = false;
+		let snap: Snap | undefined;
+		let observer: IntersectionObserver | undefined;
+		let detachGesture: (() => void) | undefined;
+
+		Promise.all([import('lenis/snap'), initScroll()]).then(([{ default: SnapCtor }]) => {
+			if (cancelled) return;
+			const lenis = getLenis();
+			if (!lenis) return;
+
+			const introEl = document.querySelector<HTMLElement>('.IntroHero');
+			const typefaceEls = Array.from(document.querySelectorAll<HTMLElement>('.TypefaceSection'));
+			const sectionEls = [introEl, ...typefaceEls].filter((el): el is HTMLElement => !!el);
+			// Nothing to snap between (e.g. every typeface is hidden) — leave
+			// scrolling alone entirely rather than snap a single section.
+			if (sectionEls.length < 2) return;
+
+			snap = new SnapCtor(lenis, {
+				duration: 1,
+				easing: (t: number) => 1 - Math.pow(1 - t, 3)
+			});
+			snap.addElements(sectionEls, { align: 'start' });
+			// Disable Snap's own automatic resolution entirely — see the
+			// comment above; every step through this region is driven by the
+			// gesture handlers below instead.
+			snap.stop();
+
+			// True only while the snap chain (Intro..last TypefaceSection) is
+			// at least partly on screen — toggled by the IntersectionObserver
+			// below. Outside it (scrolled into Buy/Custom/Office, or above
+			// the very top), the gesture handlers do nothing and plain
+			// scrolling behaves exactly as everywhere else on the site.
+			let inRegion = true;
+			let busy = false;
+			let touchStartY = 0;
+			const lastIndex = sectionEls.length - 1;
+
+			// Which section the reader is actually looking at RIGHT NOW,
+			// computed fresh from real scroll geometry every time — not
+			// trusted from Snap's own `currentSnapIndex`, which only moves
+			// when WE call next()/previous()/goTo() ourselves. That distinction
+			// matters right at this region's edges: once a forward gesture at
+			// the last section is allowed to fall through to plain scroll
+			// (see canStep below), the reader can drift past this region, or
+			// partway back into it, purely by native scrolling — and a stale
+			// counter would then send the next gesture to the wrong section
+			// (observed while testing: it happily overshot straight past the
+			// last section back to the one before it). Each section is
+			// exactly one viewport tall with no gaps, so "which one's top has
+			// crossed the viewport's own vertical midpoint, last" is exactly
+			// which one is current.
+			function currentIndex(): number {
+				let idx = 0;
+				for (let i = 0; i < sectionEls.length; i++) {
+					if (sectionEls[i].getBoundingClientRect().top <= window.innerHeight / 2) idx = i;
+				}
+				return idx;
+			}
+
+			// Whether a gesture in this direction should be intercepted at
+			// all. Without this, a forward gesture at the LAST section would
+			// keep re-triggering a snap to the same spot forever, permanently
+			// trapping the reader there with no way to reach
+			// Buy/Custom/Office by wheel/touch at all. Backward at the very
+			// first section has no equivalent problem (there's nothing above
+			// it to reveal either way) but is excluded for symmetry.
+			function canStep(direction: 1 | -1) {
+				const current = currentIndex();
+				if (direction > 0) return current < lastIndex;
+				return current > 0;
+			}
+
+			function step(direction: 1 | -1) {
+				if (busy || !snap) return;
+				const target = Math.max(0, Math.min(currentIndex() + direction, lastIndex));
+				busy = true;
+				snap.goTo(target);
+				// Snap's own goTo() animates for `duration` seconds (1s, set
+				// above) — hold the gesture guard a little past that so the
+				// next real gesture (not the tail of this one) is what
+				// registers.
+				window.setTimeout(() => {
+					busy = false;
+				}, 1150);
+			}
+
+			function onWheel(e: WheelEvent) {
+				if (!inRegion || busy) return;
+				if (Math.abs(e.deltaY) > 4) {
+					const direction = e.deltaY > 0 ? 1 : -1;
+					if (!canStep(direction)) return; // let it fall through to native scroll
+					e.preventDefault();
+					step(direction);
+				}
+			}
+
+			function onTouchStart(e: TouchEvent) {
+				touchStartY = e.touches[0]?.clientY ?? 0;
+			}
+
+			function onTouchMove(e: TouchEvent) {
+				if (!inRegion || busy) return;
+				const dy = touchStartY - (e.touches[0]?.clientY ?? touchStartY);
+				if (Math.abs(dy) > 14) {
+					const direction = dy > 0 ? 1 : -1;
+					if (!canStep(direction)) return;
+					e.preventDefault();
+					step(direction);
+				}
+			}
+
+			window.addEventListener('wheel', onWheel, { passive: false });
+			window.addEventListener('touchstart', onTouchStart, { passive: true });
+			window.addEventListener('touchmove', onTouchMove, { passive: false });
+			detachGesture = () => {
+				window.removeEventListener('wheel', onWheel);
+				window.removeEventListener('touchstart', onTouchStart);
+				window.removeEventListener('touchmove', onTouchMove);
+			};
+
+			const lastEl = sectionEls[sectionEls.length - 1];
+			observer = new IntersectionObserver(
+				([entry]) => {
+					// The last snap section has fully scrolled past the TOP of
+					// the viewport (moved on into Buy/Custom/Office below) —
+					// release the gesture takeover; re-arm if the reader
+					// scrolls back up into it.
+					inRegion = entry.isIntersecting || entry.boundingClientRect.top >= 0;
+				},
+				{ threshold: 0 }
+			);
+			observer.observe(lastEl);
+		});
+
+		return () => {
+			cancelled = true;
+			observer?.disconnect();
+			detachGesture?.();
+			snap?.destroy();
+		};
+	});
 </script>
 
 <svelte:head>
