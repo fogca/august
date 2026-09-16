@@ -1,20 +1,11 @@
 <script lang="ts">
 	// Ōgast site footer.
-	// Holds contact info, site nav and legal links.
+	// Holds site nav, contact and legal links.
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
+	import { SITE_NAV } from '$lib/data/nav';
 	import Logo from '$lib/components/Logo.svelte';
 
 	type LinkItem = { label: string; href: string };
-
-	const SITE_NAV: LinkItem[] = [
-		{ label: 'Fonts', href: '/fonts' },
-		{ label: 'About', href: '/about' },
-		{ label: 'Contact', href: '/contact' }
-	];
-
-	// Social accounts are not live yet — placeholder links must not ship.
-	// Re-add entries here once the foundry accounts exist.
-	const SOCIAL: LinkItem[] = [];
 
 	const LEGAL: LinkItem[] = [
 		// Plain-language "what's included" guide — sits ahead of the EULA
@@ -51,8 +42,9 @@
 			</p>
 		</section>
 
-		<!-- Column 2: site nav (no heading, direct links — its first item,
-		     Fonts, is what lines up with "Email" opposite it on mobile). -->
+		<!-- Column 2: site nav (no heading, direct links) — shared verbatim
+		     with the Header's own desktop nav (see $lib/data/nav.ts), at the
+		     user's request, so the two lists can't drift apart. -->
 		<nav class="Footer__col Footer__col--nav" aria-label="Footer navigation">
 			<ul class="Footer__list">
 				{#each SITE_NAV as item (item.href)}
@@ -61,24 +53,9 @@
 			</ul>
 		</nav>
 
-		<!-- Column 3: social / contact -->
-		<section class="Footer__col Footer__col--email">
-			<h3 class="Footer__heading">Email</h3>
-			<ul class="Footer__list">
-				{#each SOCIAL as item (item.href)}
-					<li>
-						<a href={item.href} target="_blank" rel="noopener noreferrer">
-							{item.label} ↗
-						</a>
-					</li>
-				{/each}
-				<li>
-					<a href="mailto:hi@august.tf">hi@august.tf</a>
-				</li>
-			</ul>
-		</section>
-
-		<!-- Column 4: contact -->
+		<!-- Column 3: contact. The separate Email column (a bare mailto link)
+		     was dropped (2026-09, at the user's request) — /contact itself is
+		     now the actual place to get in touch (see that route). -->
 		<section class="Footer__col Footer__col--contact">
 			<h3 class="Footer__heading">Contact</h3>
 			<p class="Footer__note">Licensing, custom type, and general enquiries.</p>
@@ -94,9 +71,9 @@
 				<li><a href={item.href}>{item.label}</a></li>
 			{/each}
 		</ul>
-		<!-- Full language list (Header shows only a subset — EN/FR/ES, at the
-		     user's request); DE/ES/CH are buttons only for now, no site copy
-		     translated into them yet — see lang.svelte.ts's own comment. -->
+		<!-- Same four codes as the Header (see lang.svelte.ts's own comment) —
+		     DE/ES are buttons only for now, no site copy translated into them
+		     yet. -->
 		<div class="Footer__langs" role="group" aria-label="Language">
 			{#each LANG_OPTIONS as l (l.code)}
 				<button
@@ -152,20 +129,18 @@
 		border: 0;
 	}
 
-	/* Mobile: brand spans full width; nav ("Links") and Email+Contact
-	   ("Contact") sit side by side below it as two columns — nav's first
-	   item (Fonts) lines up with the Email heading opposite it since neither
-	   column carries its own extra heading above that row. */
+	/* Mobile: brand spans full width; nav and Contact sit side by side below
+	   it as two columns (the separate Email column that used to pair with
+	   nav here is gone — see the template comment). */
 	.Footer__grid {
 		display: grid;
-		/* auto, not 1fr 1fr: nav's links (Fonts/About/Buy/Contact) are short
-		   and a rigid 50/50 split left a wide dead gap inside that column on
-		   top of the real column-gap. Hug the nav to its content instead and
-		   let the fixed 40px gap do the actual separating. */
+		/* auto, not 1fr 1fr: nav's links are short and a rigid 50/50 split
+		   left a wide dead gap inside that column on top of the real
+		   column-gap. Hug the nav to its content instead and let the fixed
+		   40px gap do the actual separating. */
 		grid-template-columns: auto 1fr;
 		grid-template-areas:
 			'brand  brand'
-			'nav    email'
 			'nav    contact';
 		column-gap: 40px;
 		row-gap: 32px;
@@ -180,18 +155,14 @@
 		grid-area: nav;
 	}
 
-	.Footer__col--email {
-		grid-area: email;
-	}
-
 	.Footer__col--contact {
 		grid-area: contact;
 	}
 
 	@media (min-width: 768px) {
 		.Footer__grid {
-			grid-template-columns: 2fr 1fr 1fr 2fr;
-			grid-template-areas: 'brand nav email contact';
+			grid-template-columns: 2fr 1fr 2fr;
+			grid-template-areas: 'brand nav contact';
 			gap: 32px;
 			padding-inline: var(--padding);
 		}
@@ -321,8 +292,22 @@
 		opacity: 1;
 	}
 
+	/* Mobile (see .Footer__bottom's own column layout below): last in DOM
+	   order already puts this at the bottom of the stack — align-self pins
+	   it to the right edge too, at the user's request ("© 2026 Ōgastが
+	   一番下で、右端に"). Reset on desktop, where .Footer__bottom is a ROW
+	   or align-self would instead just bottom-align it within the row's
+	   own height, not reposition it horizontally — space-between there
+	   already puts it at the right end of the row. */
 	.Footer__copy {
 		margin: 0;
 		font-size: 12px;
+		align-self: flex-end;
+	}
+
+	@media (min-width: 768px) {
+		.Footer__copy {
+			align-self: auto;
+		}
 	}
 </style>
