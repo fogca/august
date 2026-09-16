@@ -102,6 +102,10 @@
 	const GROW_DURATION = 1.75;
 	/** Pause between the stagger finishing and the grow beginning. */
 	const GROW_GAP = 0.3;
+	/** How much later the stage's own dark->light crossfade starts than the
+	 *  letters' own grow — at the user's own request, so the background
+	 *  doesn't begin lightening in the exact same instant the grow begins. */
+	const BG_DELAY = 0.2;
 
 	// Left-to-right reading order: Ō, G, A, S, T. Latest Figma export.
 	const LETTERS: Letter[] = [
@@ -272,7 +276,7 @@
 			timeline.to(
 				stageEl,
 				{ backgroundColor: '#F1F0EF', duration: GROW_DURATION, ease: 'power2.inOut' },
-				'<'
+				`<+=${BG_DELAY}`
 			);
 
 			// 3 — Header slides in from above during the tail of the grow, so
