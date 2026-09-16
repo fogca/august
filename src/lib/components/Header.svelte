@@ -1,14 +1,21 @@
 <script lang="ts">
 	// Ōgast site header.
-	// Mobile (<768px): "Menu" toggle. Open state is a light top panel (Figma
-	//   188:10): Close + Ōgast wordmark, a "Fonts" group of typeface links,
-	//   and page links.
+	// Mobile (<768px): right-hand group is a language pulldown, an inert
+	//   Cart(0), and a two-bar Menu icon that becomes an X when open
+	//   (2026-09, at the user's request — was a single "Menu"/"Close" text
+	//   toggle before, with no language switch of its own in the collapsed
+	//   bar; picking a language used to only be possible from inside the
+	//   open panel). Open state is a light top panel (Figma 188:10): Close +
+	//   Ōgast wordmark, a "Fonts" group of typeface links, and page links —
+	//   its own language buttons were removed once the collapsed bar grew
+	//   one of its own, rather than offering the same switch twice.
 	// Desktop (≥768px): inline nav links on the left, no toggle.
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { onScroll } from '$lib/scroll';
 	import { TYPEFACES } from '$lib/data/typefaces';
-	import { lang, LANG_OPTIONS, HEADER_LANG_CODES } from '$lib/state/lang.svelte';
+	import { SITE_NAV } from '$lib/data/nav';
+	import { lang, LANG_OPTIONS, type Lang } from '$lib/state/lang.svelte';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
@@ -33,25 +40,16 @@
 		return onScroll(update);
 	});
 
-	type NavItem = { label: string; href: string };
-
 	// Explicit buttons rather than one cycling toggle — clearer with more
 	// than two, and each is self-describing (its own aria-label +
-	// aria-pressed) without a separate sr-only announcement span. The header
-	// shows only a subset (EN/FR/ES, at the user's choice) — Footer.svelte
-	// shows the full LANG_OPTIONS list.
-	const LANGS = LANG_OPTIONS.filter((l) => HEADER_LANG_CODES.includes(l.code));
+	// aria-pressed) without a separate sr-only announcement span. Header and
+	// Footer show the exact same four codes now (2026-09, at the user's
+	// request, "Headerも共通で" — DA and CH were both dropped, and Header no
+	// longer shows a smaller subset of Footer's own list).
+	const LANGS = LANG_OPTIONS;
 
-	// Desktop inline nav. License -> /licensing, not /license — that shorter
-	// URL is a stable redirect to /legal/eula baked into the shipped fonts'
-	// own OpenType nameID 13/14 metadata (see Footer.svelte's LEGAL array).
-	const NAV: NavItem[] = [
-		{ label: 'Fonts', href: '/fonts' },
-		{ label: 'Custom', href: '/custom' },
-		{ label: 'License', href: '/licensing' },
-		{ label: 'About', href: '/about' },
-		{ label: 'Contact', href: '/contact' }
-	];
+	// Desktop inline nav — the shared list verbatim (see $lib/data/nav.ts).
+	const NAV = SITE_NAV;
 
 	// Mobile panel: typeface shortcuts + page links
 	const fonts = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
@@ -63,14 +61,9 @@
 	// left out here to avoid listing each of them twice. Put them back if
 	// `hidden` in typefaces.ts is reverted to true.
 	const UPCOMING: string[] = [];
-	// Mirrors the desktop nav (the Fonts group above stands in for its "Fonts"
-	// link, and the language switch is appended after these).
-	const PAGES: NavItem[] = [
-		{ label: 'Custom', href: '/custom' },
-		{ label: 'License', href: '/licensing' },
-		{ label: 'About', href: '/about' },
-		{ label: 'Contact', href: '/contact' }
-	];
+	// Mirrors the desktop nav minus Fonts — the mobile panel's own "Fonts"
+	// group (above) already stands in for that one link.
+	const PAGES = SITE_NAV.filter((item) => item.href !== '/fonts');
 
 	function toggle() {
 		open = !open;
@@ -132,23 +125,50 @@
 		     treatment already used elsewhere for not-yet-real features (e.g.
 		     Alfred's "Coming Soon" on the home page). "Account" is hidden for
 		     now, at the user's request (2026-09) — no account system exists
-		     yet either. -->
+		     yet either. Mobile carries the same inert Cart — see
+		     .Header__actions below. -->
 		<div class="Header__cart" aria-hidden="true">
 			<span class="Header__nav-link" aria-disabled="true">Cart (0)</span>
 		</div>
 	</div>
 
-	<!-- Mobile-only: Menu/Close toggles the panel. Sits on the right; the logo
-	     (above) takes the left. -->
+	<!-- Mobile-only: language pulldown, inert Cart(0), Menu/Close icon toggle
+	     — in that order. Sits on the right; the logo (above) takes the left.
+	     A native <select> for the language switch (not the desktop's row of
+	     buttons — no room for three separate targets here): it already comes
+	     with its own accessible, touch-friendly picker UI on every mobile
+	     browser, so there's nothing bespoke to build. -->
 	<div class="Header__actions">
+		<select
+			class="Header__lang-select"
+			aria-label="Language"
+			value={lang.current}
+			onchange={(e) => lang.set(e.currentTarget.value as Lang)}
+		>
+			{#each LANGS as l (l.code)}
+				<option value={l.code}>{l.label}</option>
+			{/each}
+		</select>
+
+		<div class="Header__cart" aria-hidden="true">
+			<span class="Header__nav-link" aria-disabled="true">Cart (0)</span>
+		</div>
+
 		<button
 			class="Header__toggle"
 			type="button"
 			onclick={toggle}
 			aria-expanded={open}
 			aria-controls="primary-nav"
+			aria-label={open ? 'Close menu' : 'Open menu'}
 		>
-			{open ? 'Close' : 'Menu'}
+			<!-- Two bars (w:25px, gap:6px, per the user's own spec) that rotate
+			     into an X when the panel is open — the icon equivalent of the
+			     old text swap between "Menu" and "Close". -->
+			<span class="Header__toggle-icon" class:is-open={open} aria-hidden="true">
+				<span class="Header__toggle-bar"></span>
+				<span class="Header__toggle-bar"></span>
+			</span>
 		</button>
 	</div>
 </header>
@@ -179,23 +199,12 @@
 				</ul>
 			</div>
 
+			<!-- Language switching lives in the collapsed header's own pulldown
+			     now (see .Header__actions) — not repeated here as a second
+			     set of controls for the same thing. -->
 			<ul class="MenuPanel__pages">
 				{#each PAGES as item (item.href)}
 					<li><a href={item.href} onclick={close}>{item.label}</a></li>
-				{/each}
-				{#each LANGS as l (l.code)}
-					<li>
-						<button
-							type="button"
-							class="MenuPanel__lang"
-							class:is-active={lang.current === l.code}
-							onclick={() => lang.set(l.code)}
-							aria-pressed={lang.current === l.code}
-							aria-label={l.name}
-						>
-							{l.label}
-						</button>
-					</li>
 				{/each}
 			</ul>
 		</div>
@@ -277,19 +286,96 @@
 		justify-self: end;
 		display: flex;
 		align-items: center;
-		gap: 4px;
+		/* Three distinct controls now (language / Cart / Menu icon), not one
+		   button — wider than the old 4px so they read as separate targets. */
+		gap: 16px;
+	}
+
+	/* This group's own Cart doesn't need .Header__cart's desktop spacing
+	   (that assumed it followed the button row of .Header__langs) —
+	   .Header__actions' own gap already separates every child evenly. */
+	.Header__actions .Header__cart {
+		margin-left: 0;
+	}
+
+	/* Language pulldown — a plain, unstyled-chrome <select> (appearance:none)
+	   rather than the desktop's row of three buttons: no room here for three
+	   separate tap targets, and a native select already comes with its own
+	   accessible picker UI on every mobile browser. base.css's universal
+	   reset doesn't list `select` among the tags it forces a colour onto, so
+	   `color: inherit` here is just normal inheritance from the button —
+	   not a fix for that reset the way the icon bars below need (see that
+	   rule's own comment). */
+	.Header__lang-select {
+		appearance: none;
+		-webkit-appearance: none;
+		background: transparent;
+		border: 0;
+		color: inherit;
+		font: inherit;
+		font-size: 13px;
+		font-weight: var(--fw-ui);
+		letter-spacing: 0;
+		padding: 4px 0;
+		cursor: pointer;
+	}
+
+	/* The dropdown's own OPTIONS render in a native, OS-drawn popover outside
+	   this page's mix-blend-mode:difference context — that context is what
+	   normally makes the trigger's own text legible against light or dark
+	   (see .Header's own comment on the technique), so it can't be relied on
+	   here. Fixed colour instead, same as any ordinary popover UI. */
+	.Header__lang-select option {
+		color: #000;
+		background: #fff;
 	}
 
 	.Header__toggle {
 		background: transparent;
 		border: 0;
 		cursor: pointer;
-		font: inherit;
-		font-size: 14px;
-		font-weight: var(--fw-ui);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
 		color: inherit;
-		letter-spacing: 0;
-		padding: 4px 8px;
+	}
+
+	/* Two bars, per the user's own spec (w:25px, gap:6px) — base.css's own
+	   universal `span { color: ... }` reset re-asserts on EVERY span
+	   individually (inheritance doesn't skip it), so both this wrapper and
+	   the bars themselves need their own explicit `color: inherit` — one
+	   level's fix doesn't carry down to the next. Rotates into an X when
+	   open, the icon equivalent of the old text swap between "Menu"/"Close". */
+	.Header__toggle-icon {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 25px;
+		gap: 6px;
+		color: inherit;
+	}
+
+	.Header__toggle-bar {
+		display: block;
+		width: 100%;
+		height: 1px;
+		background: currentColor;
+		color: inherit;
+		transition:
+			transform 0.25s ease,
+			opacity 0.2s ease;
+	}
+
+	/* Half of (gap + bar thickness) = 3.5px — moves each bar to the shared
+	   centre line it needs to pivot around to form a clean X. */
+	.Header__toggle-icon.is-open .Header__toggle-bar:first-child {
+		transform: translateY(3.5px) rotate(45deg);
+	}
+
+	.Header__toggle-icon.is-open .Header__toggle-bar:last-child {
+		transform: translateY(-3.5px) rotate(-45deg);
 	}
 
 	/* Inline nav: hidden on mobile, shown on desktop */
@@ -470,8 +556,7 @@
 	}
 
 	.MenuPanel__list a,
-	.MenuPanel__pages a,
-	.MenuPanel__lang {
+	.MenuPanel__pages a {
 		font-size: 16px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -482,25 +567,8 @@
 	}
 
 	.MenuPanel__list a:hover,
-	.MenuPanel__pages a:hover,
-	.MenuPanel__lang:hover {
+	.MenuPanel__pages a:hover {
 		opacity: 0.55;
-	}
-
-	/* a <button> among links — drop the UA chrome so it sits on the same line */
-	.MenuPanel__lang {
-		font-family: inherit;
-		background: none;
-		border: 0;
-		padding: 0;
-		cursor: pointer;
-		/* Inactive options recede; the current language reads at full
-		   strength — same convention as the desktop .Header__lang group. */
-		opacity: 0.4;
-	}
-
-	.MenuPanel__lang.is-active {
-		opacity: 1;
 	}
 
 	/* Unreleased faces: same slot, half-strength, and never interactive. */
