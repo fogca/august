@@ -129,20 +129,15 @@
 		border: 0;
 	}
 
-	/* Mobile: brand spans full width; nav and Contact sit side by side below
-	   it as two columns (the separate Email column that used to pair with
-	   nav here is gone — see the template comment). */
+	/* Mobile: brand spans full width, nav sits below it — Contact is hidden
+	   entirely on this breakpoint (see .Footer__col--contact's own comment),
+	   so there's no second column left to share the row with it. */
 	.Footer__grid {
 		display: grid;
-		/* auto, not 1fr 1fr: nav's links are short and a rigid 50/50 split
-		   left a wide dead gap inside that column on top of the real
-		   column-gap. Hug the nav to its content instead and let the fixed
-		   40px gap do the actual separating. */
-		grid-template-columns: auto 1fr;
+		grid-template-columns: 1fr;
 		grid-template-areas:
-			'brand  brand'
-			'nav    contact';
-		column-gap: 40px;
+			'brand'
+			'nav';
 		row-gap: 32px;
 		padding-inline: 16px;
 	}
@@ -155,8 +150,17 @@
 		grid-area: nav;
 	}
 
-	.Footer__col--contact {
-		grid-area: contact;
+	/* Hidden on mobile (2026-09, at the user's request, "SPでは以下不要" —
+	   naming this column's own heading/note/link verbatim) — desktop still
+	   shows it. /contact itself already carries this same "Licensing,
+	   custom type, general enquiries" framing as its own page subtitle, so
+	   nothing here is lost, just not repeated in the footer on a small
+	   screen. The doubled-up class (not just `.Footer__col--contact`) is
+	   deliberate: `.Footer__col`'s own `display: flex` is declared LATER in
+	   this file at the same specificity, so a single-class `display: none`
+	   here would have lost to it on source order alone. */
+	.Footer__col.Footer__col--contact {
+		display: none;
 	}
 
 	@media (min-width: 768px) {
@@ -165,6 +169,14 @@
 			grid-template-areas: 'brand nav contact';
 			gap: 32px;
 			padding-inline: var(--padding);
+		}
+
+		.Footer__col--contact {
+			grid-area: contact;
+		}
+
+		.Footer__col.Footer__col--contact {
+			display: flex;
 		}
 	}
 
