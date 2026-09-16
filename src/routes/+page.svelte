@@ -40,15 +40,26 @@
 	// (touchmove is explicitly ignored in its own onSnap) and its own
 	// same-initiator guard against re-triggering during its animation
 	// didn't reliably clear between gestures in testing. So this drives
-	// `snap.next()` / `snap.previous()` directly from a small first-party
-	// wheel/touch gesture detector instead (same technique proven earlier
-	// this session for the old single-boundary version of this feature) —
-	// simple direction + a low threshold, no distance ambiguity.
+	// `snap.goTo()` directly from a small first-party wheel/touch gesture
+	// detector instead (same technique proven earlier this session for the
+	// old single-boundary version of this feature) — simple direction + a
+	// low threshold, no distance ambiguity.
 	//
 	// Armed only once `homeIntro.introComplete` is true — IntroHero.svelte
 	// flips that the moment the OP's own business is finished (whichever of
 	// its three paths got there), so a snap can never fire mid-OP, on top
 	// of that file's own separate scroll lock for the same reason.
+	//
+	// `snapModule` kicks the `lenis/snap` chunk off loading at mount —
+	// well before `introComplete` ever flips, given the OP's own ~3.5s
+	// runway — rather than only starting that fetch once it's actually
+	// needed. On a slow/cold load the fetch can otherwise still be in
+	// flight right as the OP finishes, so the very first post-OP gesture
+	// silently falls through as plain scroll instead of snapping (caught
+	// live on the production deploy, not just locally where the dev
+	// server already has the module warm).
+	const snapModule = browser ? import('lenis/snap') : null;
+
 	$effect(() => {
 		if (!browser || !homeIntro.introComplete) return;
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -58,8 +69,9 @@
 		let observer: IntersectionObserver | undefined;
 		let detachGesture: (() => void) | undefined;
 
-		Promise.all([import('lenis/snap'), initScroll()]).then(([{ default: SnapCtor }]) => {
-			if (cancelled) return;
+		Promise.all([snapModule, initScroll()]).then(([mod]) => {
+			if (cancelled || !mod) return;
+			const SnapCtor = mod.default;
 			const lenis = getLenis();
 			if (!lenis) return;
 
