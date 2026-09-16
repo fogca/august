@@ -3,10 +3,11 @@
      where each section was its own 100vh PageSection). "About" stays pinned
      on the left the whole time; the subtitle beneath it shuffles from this
      section's own line to "Norma"'s as the reader scrolls past. Same copy,
-     same three languages (the EN/FR/DA pattern from lib/state/lang.svelte.ts
-     / Header.svelte) as before this layout change. Copy for the Ōgast
-     rename is unchanged; still no "why Ōgast" story invented unilaterally
-     (see the standing note in typefaces.ts). -->
+     same languages (the EN/FR pattern from lib/state/lang.svelte.ts /
+     Header.svelte — DA's own copy here was removed 2026-09 when the
+     language itself was dropped site-wide) as before this layout change.
+     Copy for the Ōgast rename is unchanged; still no "why Ōgast" story
+     invented unilaterally (see the standing note in typefaces.ts). -->
 <script lang="ts">
 	import PageStack from '$lib/components/PageStack.svelte';
 </script>
@@ -42,13 +43,6 @@
 		caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos commandes
 		sur mesure, nous continuons de chercher des formes encore jamais vues.
 	</p>
-	<p class="da" lang="da">
-		Ōgast er et uafhængigt skriftstøberi, grundlagt i Tokyo i 2026. Vi krydser historier, kulturer
-		og epoker, gentolker deres sammenhæng og tegner skrift gennem et nutidigt blik. Med udgangspunkt
-		i retail-familier og bespoke-opgaver bliver vi ved med at lede efter former, der endnu ikke er
-		set.
-	</p>
-
 	<!-- Every value here already appears elsewhere on the site (the
 	     statement above states 2026/Tokyo; hi@august.tf is the address on
 	     /contact and in Footer.svelte) — nothing new is asserted. -->
@@ -90,13 +84,6 @@
 		l'alphabet du métro londonien de Johnston (1916), le Gill Sans, le Neuzeit, le Rotis d'Otl
 		Aicher — jamais en surface, seulement dans le terreau.
 	</p>
-	<p class="da" lang="da">
-		Vores første udgivelse, Norma, er en neo-humanistisk grotesk i tyve vægte, tegnet som variabel
-		skrift. Bogstaverne skal føles groede snarere end konstruerede — organiske i kurverne,
-		menneskelige i proportionen. Den humanistiske slægt løber stille nedenunder — Johnstons
-		Underground-alfabet fra 1916, Gill Sans, Neuzeit, Otl Aichers Rotis — aldrig overfladen, kun
-		jorden.
-	</p>
 	<p class="en" lang="en">
 		A typeface is never the meaning itself. It is the medium meaning passes through — doing the
 		quiet work of carrying a thought from one mind to another.
@@ -104,10 +91,6 @@
 	<p class="fr" lang="fr">
 		Un caractère typographique n'est jamais le sens lui-même. Il est le medium à travers lequel le
 		sens circule — accomplissant le travail discret de porter une pensée d'un esprit à un autre.
-	</p>
-	<p class="da" lang="da">
-		En skrift er aldrig betydningen selv. Den er det medium, betydningen passerer igennem — det
-		stille arbejde med at bære en tanke fra ét sind til et andet.
 	</p>
 	<p><a href="/fonts/norma">Discover Norma →</a></p>
 {/snippet}
@@ -118,27 +101,21 @@
 	}
 
 	/* One language at a time — [data-lang] lives on <html>, set by the header
-	   switch (see lib/state/lang.svelte.ts). Positive matches ("hide .en when
-	   the page is showing fr or da") rather than :not() — :not([data-lang='en'])
+	   switch (see lib/state/lang.svelte.ts). Positive match ("hide .en when
+	   the page is showing fr") rather than :not() — :not([data-lang='en'])
 	   would also match <body>/<main>/etc., which never carry the attribute,
 	   and so would always be true regardless of <html>'s actual value. The
-	   DE/ES/CH codes have no copy of their own yet and fall through to EN. */
-	:global([data-lang='fr']) .About .en,
-	:global([data-lang='da']) .About .en {
+	   DE/ES codes have no copy of their own yet and fall through to EN. */
+	:global([data-lang='fr']) .About .en {
 		display: none;
 	}
 
-	/* Translations are hidden by default and shown only on an exact match —
-	   with six language codes now, "hide when X or Y" lists don't scale, and
-	   :not([data-lang='fr']) would match <body>/<main> (never carry the
-	   attribute) and hide them always. */
-	.About .fr,
-	.About .da {
+	/* Translations are hidden by default and shown only on an exact match. */
+	.About .fr {
 		display: none;
 	}
 
-	:global([data-lang='fr']) .About .fr,
-	:global([data-lang='da']) .About .da {
+	:global([data-lang='fr']) .About .fr {
 		display: block;
 	}
 

@@ -85,9 +85,6 @@
 				{#if tf.descriptionFr}
 					<p class="FontIntro__description fr" lang="fr">{tf.descriptionFr}</p>
 				{/if}
-				{#if tf.descriptionDa}
-					<p class="FontIntro__description da" lang="da">{tf.descriptionDa}</p>
-				{/if}
 			</div>
 
 			{#if tf.info}
@@ -216,9 +213,6 @@
 			<p class="FontInspiration__text en">{tf.inspiration.paragraph}</p>
 			{#if tf.inspiration.paragraphFr}
 				<p class="FontInspiration__text fr" lang="fr">{tf.inspiration.paragraphFr}</p>
-			{/if}
-			{#if tf.inspiration.paragraphDa}
-				<p class="FontInspiration__text da" lang="da">{tf.inspiration.paragraphDa}</p>
 			{/if}
 		</section>
 	{/if}
@@ -382,20 +376,17 @@
 
 	/* One language at a time — [data-lang] lives on <html>, set by the header
 	   switch (see lib/state/lang.svelte.ts). Translations are hidden by
-	   default and shown only on an exact match, so the DE/ES/CH codes (no
-	   copy of their own yet) fall through to the English. */
-	:global([data-lang='fr']) .FontDetail .en,
-	:global([data-lang='da']) .FontDetail .en {
+	   default and shown only on an exact match, so the DE/ES codes (no copy
+	   of their own yet) fall through to the English. */
+	:global([data-lang='fr']) .FontDetail .en {
 		display: none;
 	}
 
-	.FontDetail .fr,
-	.FontDetail .da {
+	.FontDetail .fr {
 		display: none;
 	}
 
-	:global([data-lang='fr']) .FontDetail .fr,
-	:global([data-lang='da']) .FontDetail .da {
+	:global([data-lang='fr']) .FontDetail .fr {
 		display: block;
 	}
 
@@ -623,8 +614,7 @@
 		margin: 0;
 	}
 
-	.FontInspiration .FontInspiration__text.fr,
-	.FontInspiration .FontInspiration__text.da {
+	.FontInspiration .FontInspiration__text.fr {
 		font-weight: 300;
 		font-size: 15px;
 	}
