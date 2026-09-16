@@ -12,6 +12,7 @@
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import Logo from '$lib/components/Logo.svelte';
 
 	let open = $state(false);
 
@@ -88,10 +89,13 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
-	<!-- Rebrand trial (2026-09) — settled on "Ōgast" (circumflex), mark alone,
-	     no "Type Family" suffix. Easy to revert to "August Type Family" or
-	     flip back to the macron "Ōgast" variant if needed. -->
-	<a class="Header__logo" href="/" onclick={close} aria-label="Ōgast — home"> Ōgast </a>
+	<!-- The real wordmark (Logo.svelte) rather than plain text (2026-09, at
+	     the user's request) — the same artwork IntroHero.svelte animates on
+	     the home page, at rest. label='' — this link's own aria-label
+	     already names it. -->
+	<a class="Header__logo" href="/" onclick={close} aria-label="Ōgast — home">
+		<Logo height={14} label="" />
+	</a>
 
 	<!-- Desktop-only inline nav -->
 	<nav class="Header__nav" aria-label="Primary navigation">
@@ -363,18 +367,15 @@
 		padding: 4px 0;
 	}
 
-	/* Plain typed text now, same treatment as .Header__nav-link — not the
-	   Logo.svelte wordmark (still used as-is elsewhere: Footer, home hero),
-	   and no longer signal red — just inherits the header's own black.
-	   Always column 1 (left), on every breakpoint. */
+	/* The Logo wordmark (SVG, currentColor) — inherits the header's own
+	   colour/blend-mode chain same as .Header__nav-link used to. Always
+	   column 1 (left), on every breakpoint. */
 	.Header__logo {
 		grid-column: 1;
 		justify-self: start;
-		font-size: 12px;
-		font-weight: var(--fw-ui);
-		text-decoration: none;
+		display: flex;
+		align-items: center;
 		color: inherit;
-		letter-spacing: 0;
 		padding: 4px 8px;
 	}
 
@@ -400,9 +401,6 @@
 		   for why this is grid-column, not flex order. */
 		.Header__logo {
 			padding: 4px 0;
-			/* Kept matching .Header__nav-link's size (PC only — mobile's logo
-			   has no nav-link beside it to stay paired with). */
-			font-size: 13px;
 		}
 
 		.Header__nav {

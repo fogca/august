@@ -2,6 +2,7 @@
 	// Ōgast site footer.
 	// Holds contact info, site nav and legal links.
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
+	import Logo from '$lib/components/Logo.svelte';
 
 	type LinkItem = { label: string; href: string };
 
@@ -41,7 +42,9 @@
 	<div class="Footer__grid">
 		<!-- Column 1: brand + ethos -->
 		<section class="Footer__col Footer__col--brand">
-			<a href="/" class="Footer__logo" aria-label="Ōgast — home"> Ōgast </a>
+			<a href="/" class="Footer__logo" aria-label="Ōgast — home">
+				<Logo height={26} label="" />
+			</a>
 			<p class="Footer__tagline">
 				A type foundry.<br />
 				Norma — released 2026.
@@ -206,12 +209,9 @@
 	}
 
 	.Footer__logo {
-		font-size: 32px;
-		font-weight: var(--fw-ui);
-		letter-spacing: 0;
-		text-decoration: none;
+		display: block;
+		width: fit-content;
 		color: inherit;
-		line-height: 1;
 	}
 
 	.Footer__tagline {
