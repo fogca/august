@@ -44,8 +44,8 @@
 		sur mesure, nous continuons de chercher des formes encore jamais vues.
 	</p>
 	<!-- Every value here already appears elsewhere on the site (the
-	     statement above states 2026/Tokyo; hi@august.tf is the address on
-	     /contact and in Footer.svelte) — nothing new is asserted. -->
+	     statement above states 2026/Tokyo; /contact is the same enquiry
+	     route linked from Footer.svelte) — nothing new is asserted. -->
 	<dl class="About__facts">
 		<div class="About__fact">
 			<dt>Founded</dt>
@@ -61,7 +61,7 @@
 		</div>
 		<div class="About__fact">
 			<dt>Contact</dt>
-			<dd><a href="mailto:hi@august.tf">hi@august.tf</a></dd>
+			<dd><a href="/contact">Contact form →</a></dd>
 		</div>
 	</dl>
 {/snippet}

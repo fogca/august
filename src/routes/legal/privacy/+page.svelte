@@ -40,7 +40,7 @@
 			count) you purchased, which becomes your Sales Receipt.
 		</p>
 		<p>
-			Correspondence — anything you email to <a href="mailto:hi@august.tf">hi@august.tf</a>,
+			Correspondence — anything you send us through our <a href="/contact">contact form</a>,
 			including support requests, licensing questions, and upgrade requests.
 		</p>
 		<p>
@@ -100,7 +100,7 @@
 		<h3>Your Rights &amp; Choices</h3>
 		<p>
 			You can ask us at any time to see what personal information we hold about you, correct
-			anything that's wrong, or delete it — email <a href="mailto:hi@august.tf">hi@august.tf</a>
+			anything that's wrong, or delete it — reach us through our <a href="/contact">contact form</a>
 			and we'll handle it directly; there's no account or portal to log into. If the law where you live
 			gives you additional rights — for example the EU/UK GDPR, or Japan's Act on the Protection of Personal
 			Information — we'll honour those too on request. The one limit: if a request would mean losing a
@@ -128,8 +128,8 @@
 		<h3>Children's Privacy</h3>
 		<p>
 			Ōgast isn't directed at children, and we don't knowingly collect personal information from
-			anyone under 16. If you believe a minor has given us personal information, contact
-			<a href="mailto:hi@august.tf">hi@august.tf</a> and we'll delete it.
+			anyone under 16. If you believe a minor has given us personal information, contact us through
+			our <a href="/contact">contact form</a> and we'll delete it.
 		</p>
 
 		<h3>Changes to This Policy</h3>
@@ -141,10 +141,10 @@
 
 		<h3>Contact Us</h3>
 		<p>
-			Questions about this policy, or about your own information, go to
-			<a href="mailto:hi@august.tf">hi@august.tf</a>. You can also write to us at Mirai Service Co.,
-			Ltd. (trading as Ōgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan. This
-			policy is governed by the laws of Japan.
+			Questions about this policy, or about your own information, go to our
+			<a href="/contact">contact form</a>. You can also write to us at Mirai Service Co., Ltd.
+			(trading as Ōgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan. This policy
+			is governed by the laws of Japan.
 		</p>
 	</PageSection>
 </main>

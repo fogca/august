@@ -98,8 +98,8 @@
 		— {organisationTierLine}.
 	</p>
 	<p>
-		Global (500+ people) is quoted individually rather than sold self-serve — get in touch at
-		<a href="mailto:hi@august.tf">hi@august.tf</a>.
+		Global (500+ people) is quoted individually rather than sold self-serve — get in touch via our
+		<a href="/contact">contact form</a>.
 	</p>
 	<h3>{PROJECT_LICENSE_LABEL}</h3>
 	<p>{PROJECT_LICENSE_BLURB}</p>

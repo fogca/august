@@ -23,8 +23,8 @@ export default defineConfig({
 				type: 'module'
 			},
 			manifest: {
-				name: 'August Type Foundry',
-				short_name: 'August',
+				name: 'Ōgast',
+				short_name: 'Ōgast',
 				description: 'An independent type foundry from Tokyo.',
 				theme_color: '#ffffff',
 				background_color: '#ffffff',

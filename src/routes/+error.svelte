@@ -27,7 +27,7 @@
 		</p>
 		<div class="ErrorPage__links">
 			<a href="/">← Ōgast</a>
-			<a href="mailto:hi@august.tf">hi@august.tf</a>
+			<a href="/contact">Contact</a>
 		</div>
 	</div>
 </main>

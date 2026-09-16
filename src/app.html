@@ -119,7 +119,11 @@
 			}
 		</style>
 
-		<!-- Icons -->
+		<!-- Icons — the Ō (macron O) from the wordmark (Logo.svelte's own first
+		     path), on the same dark square the old "A" favicon used. SVG first
+		     (scalable, and what modern browsers pick), PNG as the fallback for
+		     browsers that don't support SVG favicons. -->
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<link rel="icon" type="image/png" href="%sveltekit.assets%/favicon.png" />
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
 		<meta name="theme-color" content="#ffffff" />
@@ -133,8 +137,6 @@
 			property="og:description"
 			content="An independent type foundry from Tokyo. Norma — a 20-weight neo-humanist variable typeface."
 		/>
-		<!-- og.png itself likely has "Asger" baked into the image — regenerating
-		     it is outside this rename's scope, flag separately. -->
 		<meta property="og:image" content="https://august.tf/og.png" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="Ōgast — Norma" />

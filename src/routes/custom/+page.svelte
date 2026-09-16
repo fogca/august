@@ -28,7 +28,7 @@
 			{ subtitle: 'Reading first, drawing second', body: howBody },
 			{ subtitle: 'Owned outright, delivered complete', body: whatBody },
 			{ subtitle: 'A retail family, modified for you', body: shortBody },
-			{ subtitle: 'hi@august.tf', body: enquireBody }
+			{ subtitle: 'Get in touch', body: enquireBody }
 		]}
 	/>
 </main>
@@ -126,12 +126,12 @@
 {#snippet enquireBody()}
 	<h2>Enquire</h2>
 	<p class="en" lang="en">
-		Tell us what the type has to do, and where it has to do it. Write to
-		<a href="mailto:hi@august.tf?subject=Custom%20typeface%20enquiry">hi@august.tf</a>.
+		Tell us what the type has to do, and where it has to do it. Write to us through our
+		<a href="/contact">contact form</a>.
 	</p>
 	<p class="fr" lang="fr">
-		Dites-nous ce que le caractère doit accomplir, et où il doit l'accomplir. Écrivez-nous à
-		<a href="mailto:hi@august.tf?subject=Custom%20typeface%20enquiry">hi@august.tf</a>.
+		Dites-nous ce que le caractère doit accomplir, et où il doit l'accomplir. Écrivez-nous via notre
+		<a href="/contact">formulaire de contact</a>.
 	</p>
 {/snippet}
 

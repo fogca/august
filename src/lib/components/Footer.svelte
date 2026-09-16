@@ -1,11 +1,18 @@
 <script lang="ts">
 	// Ōgast site footer.
-	// Holds site nav, contact and legal links.
+	// Holds site nav and legal links.
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
 	import { SITE_NAV } from '$lib/data/nav';
-	import Logo from '$lib/components/Logo.svelte';
 
 	type LinkItem = { label: string; href: string };
+
+	// Desktop shows a shorter, horizontal cut of the same nav — Fonts / Custom
+	// / Contact only (2026-09, at the user's request). License and About stay
+	// reachable from the Header's own nav, and from the mobile list below,
+	// which still shows all five.
+	const FOOTER_NAV_DESKTOP = SITE_NAV.filter((item) =>
+		['/fonts', '/custom', '/contact'].includes(item.href)
+	);
 
 	const LEGAL: LinkItem[] = [
 		// Plain-language "what's included" guide — sits ahead of the EULA
@@ -30,40 +37,23 @@
 <footer class="Footer" aria-labelledby="footer-heading">
 	<h2 id="footer-heading" class="Footer__sr">Ōgast</h2>
 
-	<div class="Footer__grid">
-		<!-- Column 1: brand + ethos -->
-		<section class="Footer__col Footer__col--brand">
-			<a href="/" class="Footer__logo" aria-label="Ōgast — home">
-				<Logo height={26} label="" />
-			</a>
-			<p class="Footer__tagline">
-				A type foundry.<br />
-				Norma — released 2026.
-			</p>
-		</section>
-
-		<!-- Column 2: site nav (no heading, direct links) — shared verbatim
-		     with the Header's own desktop nav (see $lib/data/nav.ts), at the
-		     user's request, so the two lists can't drift apart. -->
-		<nav class="Footer__col Footer__col--nav" aria-label="Footer navigation">
-			<ul class="Footer__list">
-				{#each SITE_NAV as item (item.href)}
-					<li><a href={item.href}>{item.label}</a></li>
-				{/each}
-			</ul>
-		</nav>
-
-		<!-- Column 3: contact. The separate Email column (a bare mailto link)
-		     was dropped (2026-09, at the user's request) — /contact itself is
-		     now the actual place to get in touch (see that route). -->
-		<section class="Footer__col Footer__col--contact">
-			<h3 class="Footer__heading">Contact</h3>
-			<p class="Footer__note">Licensing, custom type, and general enquiries.</p>
-			<ul class="Footer__list">
-				<li><a href="/contact">Contact us →</a></li>
-			</ul>
-		</section>
-	</div>
+	<!-- Site nav — shared verbatim with the Header's own desktop nav (see
+	     $lib/data/nav.ts) so the two can't drift out of sync. Rendered twice
+	     (full five-item column on mobile, Fonts/Custom/Contact-only row on
+	     desktop) and toggled by breakpoint in CSS — see FOOTER_NAV_DESKTOP's
+	     own comment above for why desktop drops License/About. -->
+	<nav class="Footer__nav" aria-label="Footer navigation">
+		<ul class="Footer__list Footer__list--mobile">
+			{#each SITE_NAV as item (item.href)}
+				<li><a href={item.href}>{item.label}</a></li>
+			{/each}
+		</ul>
+		<ul class="Footer__list Footer__list--desktop">
+			{#each FOOTER_NAV_DESKTOP as item (item.href)}
+				<li><a href={item.href}>{item.label}</a></li>
+			{/each}
+		</ul>
+	</nav>
 
 	<div class="Footer__bottom">
 		<ul class="Footer__legal">
@@ -97,15 +87,13 @@
 		font-family: var(--font-en), sans-serif;
 		font-weight: var(--fw-ui);
 		/* No background (was the same red as the Buy/licence section) and
-		   black text, per the user's request — border-color follows (a white
-		   border-top would be invisible with no background behind it). */
+		   black text, per the user's request. */
 		color: #000;
 		padding: 64px 0 24px;
 		margin-top: 0;
 		/* sit above the cover-reveal sections (z-index:1) above it */
 		position: relative;
 		z-index: 2;
-		border-top: 1px solid var(--color-line);
 	}
 
 	/* Force all child elements to inherit black text color, overriding base.css tokens */
@@ -129,90 +117,14 @@
 		border: 0;
 	}
 
-	/* Mobile: brand spans full width, nav sits below it — Contact is hidden
-	   entirely on this breakpoint (see .Footer__col--contact's own comment),
-	   so there's no second column left to share the row with it. */
-	.Footer__grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-areas:
-			'brand'
-			'nav';
-		row-gap: 32px;
+	.Footer__nav {
 		padding-inline: 16px;
 	}
 
-	.Footer__col--brand {
-		grid-area: brand;
-	}
-
-	.Footer__col--nav {
-		grid-area: nav;
-	}
-
-	/* Hidden on mobile (2026-09, at the user's request, "SPでは以下不要" —
-	   naming this column's own heading/note/link verbatim) — desktop still
-	   shows it. /contact itself already carries this same "Licensing,
-	   custom type, general enquiries" framing as its own page subtitle, so
-	   nothing here is lost, just not repeated in the footer on a small
-	   screen. The doubled-up class (not just `.Footer__col--contact`) is
-	   deliberate: `.Footer__col`'s own `display: flex` is declared LATER in
-	   this file at the same specificity, so a single-class `display: none`
-	   here would have lost to it on source order alone. */
-	.Footer__col.Footer__col--contact {
-		display: none;
-	}
-
 	@media (min-width: 768px) {
-		.Footer__grid {
-			grid-template-columns: 2fr 1fr 2fr;
-			grid-template-areas: 'brand nav contact';
-			gap: 32px;
+		.Footer__nav {
 			padding-inline: var(--padding);
 		}
-
-		.Footer__col--contact {
-			grid-area: contact;
-		}
-
-		.Footer__col.Footer__col--contact {
-			display: flex;
-		}
-	}
-
-	.Footer__col {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-		/* Three of the four columns are <section>s, and base.css still carries a
-		   bare `section { padding-inline: var(--padding) }`. Left alone it inset
-		   those columns ~19px while the <nav> column stayed flush, so Fonts /
-		   About / Buy sat out of line with the logo and Email/Contact. */
-		padding-inline: 0;
-	}
-
-	.Footer__logo {
-		display: block;
-		width: fit-content;
-		color: inherit;
-	}
-
-	.Footer__tagline {
-		font-size: 13px;
-		line-height: 1.5;
-		opacity: 0.7;
-		max-width: 28ch;
-	}
-
-	.Footer__heading {
-		font-size: 12px;
-		font-weight: var(--fw-strong);
-		letter-spacing: 0;
-		opacity: 0.6;
-		/* .Footer__col's flex gap (16px) already spaces every child; pull 3px
-		   off just below the heading, tightening the label-to-content gap
-		   without touching the other gaps in the same column. */
-		margin: 0 0 -3px;
 	}
 
 	.Footer__list {
@@ -222,6 +134,24 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+	}
+
+	/* Mobile shows the full five-item nav as a column; desktop swaps it for
+	   a shorter horizontal row (FOOTER_NAV_DESKTOP — see the script block). */
+	.Footer__list--desktop {
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		.Footer__list--mobile {
+			display: none;
+		}
+
+		.Footer__list--desktop {
+			display: flex;
+			flex-direction: row;
+			gap: 24px;
+		}
 	}
 
 	.Footer__list a,
@@ -236,13 +166,6 @@
 	.Footer__list a:hover,
 	.Footer__legal a:hover {
 		opacity: 1;
-	}
-
-	.Footer__note {
-		font-size: 12px;
-		line-height: 1.5;
-		opacity: 0.7;
-		margin: 0;
 	}
 
 	.Footer__bottom {

@@ -59,8 +59,8 @@
 		</p>
 
 		<p class="Success__support">
-			Questions, or nothing arrived? Write to
-			<a href="mailto:hi@august.tf">hi@august.tf</a>{#if order}&nbsp;quoting your order reference{/if}.
+			Questions, or nothing arrived? <a href="/contact">Get in touch</a>{#if order}, quoting your
+				order reference{/if}.
 		</p>
 
 		<a href="/" class="Success__home">← Back to Ōgast</a>
