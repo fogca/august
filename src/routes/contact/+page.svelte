@@ -23,7 +23,7 @@
 
 <style>
 	.Contact {
-		background: #f1f0ef;
+		background: #ffffff;
 	}
 
 	.Contact__mail {
