@@ -5,24 +5,26 @@
      イメージで"). The page's own name (`title`) stays put the whole time —
      it never changes — while a subtitle line beneath it tracks whichever
      body section is currently in view, transitioning between one section's
-     subtitle and the next's via a character-scramble animation rather than
-     a hard cut ("Bespoke type for corporate identityがHow We Workに
-     テキストシャッフルアニメーションする感じ"). Each section's OWN more
-     specific heading (e.g. "How We Work") lives inline at the top of its
-     own body instead of duplicated in the pinned column — the pinned
-     column's job is just "which part of the page am I looking at", the
-     inline heading is the part itself.
+     subtitle and the next's with a plain crossfade (a character-scramble
+     effect was tried first, at the user's own request, then dropped the
+     same way — "フェード系にして"). Each section's OWN more specific
+     heading (e.g. "How We Work") lives inline at the top of its own body
+     instead of duplicated in the pinned column — the pinned column's job
+     is just "which part of the page am I looking at", the inline heading
+     is the part itself.
 
      The body runs as one continuous, naturally-lengthed scroll — no
      artificial 100vh floor per section — which is the other half of the
      request: these are long-form "other pages", not one-beat-per-viewport
      compositions like the top page's typeface sections.
 
-     Uses gsap's ScrambleTextPlugin (present in this repo's own gsap
-     install — a Club GreenSock plugin, not the free core) for the shuffle;
-     falls back to a plain text swap under prefers-reduced-motion or before
-     the plugin has loaded (the very first paint needs no animation at all —
-     see setSubtitleText's own comment). -->
+     Desktop pins the identity column sticky AND vertically centred in the
+     viewport, matching Figma 3:671's own default (centred) composition —
+     see .PageStack__head's desktop rule for how (a plain `position:sticky`
+     only pins to an EDGE, it has no native "stay centred" mode). Falls
+     back to a plain text swap under prefers-reduced-motion or before gsap
+     has loaded (the very first paint needs no animation at all — see
+     setSubtitleText's own comment). -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
@@ -47,10 +49,10 @@
 	let subtitleEl: HTMLElement | undefined = $state();
 	let itemEls: HTMLElement[] = [];
 
-	/** Plain textContent until the scramble plugin is ready below — the very
-	 *  first paint shows items[0]'s subtitle directly (seeded by the
-	 *  template), so there is nothing to animate yet; only a LATER change
-	 *  (the reader scrolling to a new section) should ever scramble. */
+	/** Plain textContent until gsap is ready below — the very first paint
+	 *  shows items[0]'s subtitle directly (seeded by the template), so
+	 *  there is nothing to animate yet; only a LATER change (the reader
+	 *  scrolling to a new section) should ever crossfade. */
 	let setSubtitleText: (text: string) => void = (text) => {
 		if (subtitleEl) subtitleEl.textContent = text;
 	};
@@ -74,20 +76,21 @@
 
 		let cancelled = false;
 		if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-			Promise.all([import('gsap'), import('gsap/ScrambleTextPlugin')]).then(
-				([{ gsap }, { ScrambleTextPlugin }]) => {
-					if (cancelled) return;
-					gsap.registerPlugin(ScrambleTextPlugin);
-					setSubtitleText = (text) => {
-						if (!subtitleEl) return;
-						gsap.to(subtitleEl, {
-							duration: 0.7,
-							ease: 'none',
-							scrambleText: { text, chars: 'upperAndLowerCase', speed: 0.4, revealDelay: 0.15 }
-						});
-					};
-				}
-			);
+			import('gsap').then(({ gsap }) => {
+				if (cancelled) return;
+				setSubtitleText = (text) => {
+					if (!subtitleEl) return;
+					// Plain crossfade: out, swap the text underneath while
+					// invisible, back in.
+					gsap
+						.timeline()
+						.to(subtitleEl, { opacity: 0, duration: 0.22, ease: 'power1.in' })
+						.call(() => {
+							if (subtitleEl) subtitleEl.textContent = text;
+						})
+						.to(subtitleEl, { opacity: 0.6, duration: 0.32, ease: 'power1.out' });
+				};
+			});
 		}
 
 		return () => {
@@ -256,11 +259,33 @@
 			margin-bottom: 0;
 			background: transparent;
 			align-self: start;
+			/* Sticky pins to an EDGE only — `top: 0` alone would leave the
+			   title pinned flush against the viewport's top edge the whole
+			   time (not what Figma 3:671 shows: the title sits vertically
+			   centred). Fix: give the STICKY BOX ITSELF the viewport's own
+			   height, then centre its content inside that box with flex — the
+			   box fills the viewport for as long as it's stuck, so its
+			   centred content reads as "always vertically centred" exactly
+			   like the plain (non-stacked) PageSection default already does. */
+			position: sticky;
+			top: 0;
+			min-height: 100vh;
+			min-height: 100svh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			/* Grid items default to a content-based minimum width, which lets
+			   a long subtitle push this column wider than its 549fr share and
+			   squeeze the body column beside it (observed live: the body's
+			   own width visibly narrowed on a longer subtitle) — this opts
+			   out, deferring entirely to the grid track's own fr sizing. */
+			min-width: 0;
 		}
 
 		.PageStack__body {
 			grid-column: 2;
 			padding-top: clamp(24px, 10.7vh, 96px);
+			min-width: 0;
 		}
 
 		.PageStack__title {
