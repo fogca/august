@@ -17,6 +17,7 @@
 	import { SITE_NAV } from '$lib/data/nav';
 	import { lang, LANG_OPTIONS, type Lang } from '$lib/state/lang.svelte';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
+	import { headerSolid } from '$lib/state/headerSolid.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import Logo from '$lib/components/Logo.svelte';
@@ -81,7 +82,12 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<header class="Header" class:is-open={open} class:is-hidden-top={hiddenTop}>
+<header
+	class="Header"
+	class:is-open={open}
+	class:is-hidden-top={hiddenTop}
+	class:is-solid={headerSolid.active}
+>
 	<!-- The real wordmark (Logo.svelte) rather than plain text (2026-09, at
 	     the user's request) — the same artwork IntroHero.svelte animates on
 	     the home page, at rest. label='' — this link's own aria-label
@@ -273,6 +279,18 @@
 	/* When the mobile panel is open, the header sits on top of the light panel —
 	   drop the blend and paint it solid black (same logo, just black). */
 	.Header.is-open {
+		mix-blend-mode: normal;
+		color: #000;
+	}
+
+	/* Same opt-out, asked for by a section rather than by the menu: over the
+	   home page's raining-glyph canvas the backdrop changes per PIXEL, so a
+	   difference blend tears the wordmark into black and white fragments many
+	   times a second. Driven by $lib/state/headerSolid.svelte.ts. The menu's own
+	   is-open wins over this one (it is declared first but with equal
+	   specificity, so order matters — keep this AFTER it only for the solid
+	   colour, and let is-open re-assert black below). */
+	.Header.is-solid {
 		mix-blend-mode: normal;
 		color: #000;
 	}

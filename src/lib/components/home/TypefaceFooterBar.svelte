@@ -22,8 +22,12 @@
 		style="--type-font: '{tf.fontFamily}'; --panel-bg: {hs.panelBg}; --panel-fg: {hs.panelFg};"
 	>
 		<div class="TypefaceFooterBar__text">
-			<p class="TypefaceFooterBar__name">{tf.name} Ōgast</p>
-			<p class="TypefaceFooterBar__tagline">{tf.tagline}</p>
+			{#key tf.slug}
+				<div class="TypefaceFooterBar__lines">
+					<p class="TypefaceFooterBar__name">{tf.name} Ōgast</p>
+					<p class="TypefaceFooterBar__tagline">{tf.tagline}</p>
+				</div>
+			{/key}
 		</div>
 		<div class="TypefaceFooterBar__cta">
 			<Arrow size={11} />
@@ -60,10 +64,30 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			gap: 1px;
 			padding-left: 15px;
 			min-width: 0;
 			background: #f1f0ef;
+		}
+
+		/* Re-created by {#key} on every typeface change, so the fade runs on
+		   each swap rather than only on first mount. */
+		.TypefaceFooterBar__lines {
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
+			min-width: 0;
+			animation: footerbar-fade 0.28s ease both;
+		}
+
+		@keyframes footerbar-fade {
+			from {
+				opacity: 0;
+				transform: translateY(4px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
 		}
 
 		.TypefaceFooterBar__name {
