@@ -9,7 +9,6 @@
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { headerSolid } from '$lib/state/headerSolid.svelte';
-	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 	import { initScroll, getLenis } from '$lib/scroll';
 	import { onMount } from 'svelte';
 
@@ -379,11 +378,7 @@
 	<!-- 5. Contact — no in-page form (2026-09, at the user's request, "トップに
 	     問い合わせフォームを設置する必要はない"); a plain button in the form's old
 	     spot hands off to /contact instead. -->
-	<section
-		class="Home__contact"
-		id="contact"
-		style="--summer-color: {summerColorHex(summerColor.current)};"
-	>
+	<section class="Home__contact" id="contact">
 		<div class="Contact__inner">
 			<p class="Contact__eyebrow">Contact</p>
 			<h2 class="Contact__heading">Licensing, custom type, general enquiries.</h2>
@@ -410,11 +405,13 @@
 		/* Keep the pile clear of the Header's own band — see GlyphFill's note. */
 		--glyph-top: clamp(52px, 7vh, 72px);
 		position: relative;
-		/* Fixed, not min-height (2026-09, at the user's request, "100vhで") —
-		   the card's own content used to be able to push this taller than one
-		   screen; overflow:hidden below now clips it back to exactly 100svh
-		   instead. */
-		height: 100svh;
+		/* Fixed, not min-height (2026-09, at the user's request, "100vhで",
+		   then refined to "100lvhで" — the large viewport unit, so this
+		   doesn't shrink when the mobile URL bar is showing) — the card's own
+		   content used to be able to push this taller than one screen;
+		   overflow:hidden below now clips it back to exactly one screen. */
+		height: 100vh;
+		height: 100lvh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -508,19 +505,20 @@
 		min-height: 100svh;
 		display: flex;
 		align-items: center;
-		/* Same debug-switchable colour as About, black text (2026-09, at the
-		   user's request — "夏らしいブランドカラーを...AboutやContactで背景
-		   色として使うべき...テキストカラーは黒") — was solid black/white. */
-		background: var(--summer-color, var(--color-amber, #ffbb32));
+		/* Fixed dark grey, white text (2026-09, at the user's request — About
+		   and Contact reading as the exact same colour was the problem, not
+		   the colour itself, so Contact now gets its own fixed tone instead of
+		   sharing the debug-switchable --summer-color with About/the /contact
+		   page). */
+		background: #333333;
 		padding-block: clamp(96px, 12vh, 140px);
 	}
 
-	/* base.css §7 re-asserts black on div/p/span/a/h2/button/input individually,
-	   so a plain `color` on the section would never reach them — the same
-	   :global(*) pattern the Footer and the old Buy band use. Black now,
-	   matching the bright background above (was white, for the old black bg). */
+	/* base.css §7 re-asserts a colour on div/p/span/a/h2/button/input
+	   individually, so a plain `color` on the section would never reach them —
+	   the same :global(*) pattern the Footer and the old Buy band use. */
 	.Home__contact :global(*) {
-		color: #000000;
+		color: #ffffff;
 	}
 
 	.Contact__inner {
@@ -561,9 +559,9 @@
 	/* Stands in for the form that used to start here — same 2em gap
 	   ContactForm's own .ContactForm__form used. Square corners are
 	   deliberate (unlike the pill-shaped submit button elsewhere on the
-	   site). Black on the bright ground (was white-on-black for the old
-	   black section) — wins over .Home__contact's :global(*) black-out above
-	   by coming later in source order at equal specificity. */
+	   site). Light on the dark #333 ground now — wins over .Home__contact's
+	   :global(*) white-out above by coming later in source order at equal
+	   specificity. */
 	.Contact__cta {
 		display: inline-flex;
 		align-items: center;
@@ -574,8 +572,8 @@
 		font-size: 15px;
 		font-weight: 500;
 		font-variation-settings: 'wght' 500;
-		color: #ffffff;
-		background: #000000;
+		color: #000000;
+		background: #ffffff;
 		border: 0;
 		border-radius: 0;
 		text-decoration: none;

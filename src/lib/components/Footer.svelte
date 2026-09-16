@@ -56,17 +56,17 @@
 	</nav>
 
 	<div class="Footer__bottom">
-		<!-- Legal links + language switcher grouped together (2026-09, at the
-		     user's request — "言語やLicensing-EULAなどの位置を下げて、コピー
-		     マークと同じ高さに合わせて") so both sit on the same row as the
-		     copyright below, rather than each stacking as its own full-width
-		     line on mobile. -->
-		<div class="Footer__meta">
-			<ul class="Footer__legal">
-				{#each LEGAL as item (item.href)}
-					<li><a href={item.href}>{item.label}</a></li>
-				{/each}
-			</ul>
+		<!-- Legal links sit on their own row, above the language switch
+		     (2026-09, at the user's revised request — "言語の上＝左端の上に
+		     LicenseやEULAなどを配置して"). -->
+		<ul class="Footer__legal">
+			{#each LEGAL as item (item.href)}
+				<li><a href={item.href}>{item.label}</a></li>
+			{/each}
+		</ul>
+		<!-- Language (left) + copyright (right) on the same row — the user's
+		     own spec: "一番下の左が言語、その同じ高さの右端にコピーライト". -->
+		<div class="Footer__row">
 			<!-- Same four codes as the Header (see lang.svelte.ts's own comment) —
 			     DE/ES are buttons only for now, no site copy translated into them
 			     yet. -->
@@ -84,8 +84,8 @@
 					</button>
 				{/each}
 			</div>
+			<p class="Footer__copy">© {YEAR} Ōgast</p>
 		</div>
-		<p class="Footer__copy">© {YEAR} Ōgast</p>
 	</div>
 </footer>
 
@@ -175,22 +175,23 @@
 		opacity: 1;
 	}
 
-	/* Row, not column: legal links + language switcher (grouped in
-	   .Footer__meta) sit on the same line as the copyright, wrapping onto a
-	   second line together if a narrow phone can't fit all three. Mobile's
-	   own margin-top is tighter than desktop's — the gap to the nav links
-	   above read as too large at the smaller size. */
+	/* Revised layout (2026-09, at the user's own follow-up spec — the earlier
+	   "everything wraps together" version wasn't what was asked for):
+	   legal links get their own row, ABOVE the language switch; the language
+	   switch (left) and copyright (right) share the row below it, at the
+	   same height. Column on mobile so those are genuinely two separate
+	   rows; row on desktop, where .Footer__row (langs + copy) grows to fill
+	   the space after the legal links so the three still read as one line —
+	   see .Footer__row's own comment below. Mobile's own margin-top is
+	   tighter than desktop's — the gap to the nav links above read as too
+	   large at the smaller size. */
 	.Footer__bottom {
 		margin-top: 28px;
 		padding: 24px 16px 0;
 		border-top: 1px solid rgba(255, 255, 255, 0.15);
 		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		row-gap: 10px;
-		column-gap: 20px;
+		flex-direction: column;
+		gap: 14px;
 		font-size: 12px;
 		opacity: 0.6;
 	}
@@ -198,16 +199,29 @@
 	@media (min-width: 768px) {
 		.Footer__bottom {
 			margin-top: 56px;
-			flex-wrap: nowrap;
+			flex-direction: row;
+			align-items: center;
+			gap: 20px;
 			padding-inline: var(--padding);
 		}
 	}
 
-	.Footer__meta {
+	/* Language switch (left) + copyright (right), same row/height — the
+	   user's own spec: "一番下の左が言語、その同じ高さの右端にコピーライト".
+	   On desktop this grows to fill whatever width the legal links (its
+	   sibling) don't use, so langs sits right after them and copy still
+	   lands at the row's own right edge. */
+	.Footer__row {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
-		gap: 10px 20px;
+		justify-content: space-between;
+		gap: 20px;
+	}
+
+	@media (min-width: 768px) {
+		.Footer__row {
+			flex: 1;
+		}
 	}
 
 	.Footer__legal {
@@ -250,10 +264,9 @@
 		opacity: 1;
 	}
 
-	/* .Footer__bottom is a row on every breakpoint now (2026-09) — being last
-	   in DOM order plus justify-content:space-between already puts this at
-	   the right end of the row, at the user's request ("© 2026 Ōgastが
-	   一番下で、右端に"), with no per-breakpoint align-self needed. */
+	/* Sits at the right end of .Footer__row via that row's own
+	   justify-content:space-between (see above), at the user's request
+	   ("© 2026 Ōgastが一番下で、右端に"). */
 	.Footer__copy {
 		margin: 0;
 		font-size: 12px;

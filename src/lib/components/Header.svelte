@@ -212,7 +212,12 @@
 
 	<!-- Light panel (Figma 188:10). Opens from the top; the existing header logo +
 	     Close toggle sit on top of this panel (turned black); the nav drops in below. -->
-	<div class="MenuPanel" id="primary-nav" transition:slide={{ duration: 420, easing: cubicOut }}>
+	<div
+		class="MenuPanel"
+		id="primary-nav"
+		in:slide={{ duration: 600, easing: cubicOut }}
+		out:slide={{ duration: 420, easing: cubicOut }}
+	>
 		<div class="MenuPanel__nav" in:fly={{ y: 10, duration: 520, delay: 160, easing: cubicOut }}>
 			<div class="MenuPanel__fonts">
 				<span class="MenuPanel__label">Fonts</span>
@@ -578,11 +583,11 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		/* Was auto (content height only) — much shorter than the panel's own
-		   backdrop, at the user's request (2026-09, "SP MENUは...80vhまで伸ば
-		   してほしい"). overflow-y is a safety net for a long fonts/pages list
-		   on a short landscape phone, not something normal content should hit. */
-		height: 80vh;
+		/* Was auto (content height only), then 80vh, then dialled back to 50vh
+		   (2026-09, at the user's request — 80vh read as too tall once seen
+		   live). overflow-y is a safety net for a long fonts/pages list on a
+		   short landscape phone, not something normal content should hit. */
+		height: 50vh;
 		overflow-y: auto;
 		/* below the header (z 100) so the existing logo + Close show on top */
 		z-index: 95;

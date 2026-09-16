@@ -1,22 +1,31 @@
 <!-- About — its own individual design (2026-09, at the user's request:
      "その他ページデザインの対象からAboutは外して個別のデザインにするべき"),
-     no longer sharing PageStack with Custom/Licensing. Reuses the SAME large-
-     statement layout the home page's own About teaser
-     (home/AboutSection.svelte) already established, just complete rather
-     than truncated: the full studio statement, the facts list, then the
-     Norma introduction as a second full-bleed block underneath.
+     no longer sharing PageStack with Custom/Licensing. Ported to match the
+     home page's own About teaser (home/AboutSection.svelte) closely rather
+     than just conceptually — same small dateline-style label, the same
+     oversized indented statement paragraph, the same facts row (2026-09, at
+     the user's follow-up request: "Aboutページは、TopのAboutセクションの
+     ようにして") — this is the complete version of that same layout, not a
+     differently-styled page that happens to share its copy.
 
-     Same summer background colour as Contact (2026-09, "AboutやContactで
-     背景色として使うべき") — driven by the shared, debug-switchable state so
-     the two can never disagree while the colour is still being picked. Text
-     stays black.
+     Both blocks now carry the summer colour (2026-09, "その下も全体的に
+     背景色ありにして") rather than the Norma introduction sitting on plain
+     white — the whole page reads as one continuous coloured page. Driven by
+     the shared, debug-switchable state so About/Contact/this page can never
+     disagree while the colour is still being picked ("一旦黄色で進めて" —
+     amber for now). Text stays black throughout.
+
+     No arrow-icon link here any more (2026-09, at the user's request —
+     "▶︎のリンクはなるべく使わないようにして、角丸なしのボックスリンクに
+     Aboutも統一して") — "Discover Norma" is a solid, square-cornered box
+     link now, matching the Home page's own Contact CTA rather than the
+     Arrow.svelte pattern used elsewhere.
 
      Copy for the Ōgast rename is unchanged; still no "why Ōgast" story
      invented unilaterally (see the standing note in typefaces.ts). "Tokyo"
      stays out of the copy (2026-09, "Tokyo Japanという情報はなるべく
      控えて"). -->
 <script lang="ts">
-	import Arrow from '$lib/components/Arrow.svelte';
 	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 </script>
 
@@ -31,7 +40,7 @@
 <main class="About" style="--summer-color: {summerColorHex(summerColor.current)};">
 	<section class="About__statement">
 		<div class="About__inner">
-			<h1 class="About__title">About</h1>
+			<h1 class="About__label">About</h1>
 
 			<div class="About__body">
 				<p class="en" lang="en">
@@ -61,7 +70,7 @@
 				</div>
 				<div class="About__fact">
 					<dt>Contact</dt>
-					<dd><a href="/contact">Contact form →</a></dd>
+					<dd><a href="/contact">Contact form</a></dd>
 				</div>
 			</dl>
 		</div>
@@ -94,10 +103,7 @@
 					esprit à un autre.
 				</p>
 			</div>
-			<a class="About__cta" href="/fonts/norma">
-				<span class="CtaLabel">Discover Norma</span>
-				<Arrow size={9} />
-			</a>
+			<a class="About__cta" href="/fonts/norma">Discover Norma</a>
 		</div>
 	</section>
 </main>
@@ -123,7 +129,9 @@
 		margin-inline: auto;
 	}
 
-	/* --- Statement block: same summer colour + black text as Contact --- */
+	/* --- Statement block: same layout as the home page's About teaser
+	   (AboutSection.svelte's .HomeAbout) — small label, oversized indented
+	   statement, facts row — ported rather than just referenced. --- */
 	.About__statement {
 		min-height: 100svh;
 		display: flex;
@@ -143,24 +151,32 @@
 		gap: clamp(28px, 4vh, 48px);
 	}
 
-	.About__title {
+	/* Small dateline-style label standing in for a display title — same
+	   treatment as .HomeAbout__label, just "About" instead of "2026" (this
+	   is a standalone page, not a teaser, so it still needs to say what page
+	   it is). Still the real <h1>. */
+	.About__label {
 		font-family: var(--font-en), sans-serif;
-		font-size: clamp(40px, min(7vw, 9.5vh), 88px);
-		line-height: 1.02;
-		letter-spacing: 0.01em;
+		font-size: 12px;
+		font-weight: var(--fw-ui);
+		letter-spacing: 0.04em;
+		opacity: 0.75;
 		margin: 0;
 	}
 
+	/* The statement IS the layout — several steps above body copy, same
+	   magazine justification + first-line indent as the teaser. */
 	.About__body p {
 		font-family: var(--font-en), sans-serif;
-		font-size: clamp(20px, 2.6vw, 34px);
-		line-height: 1.3;
+		font-size: clamp(26px, max(3.4vw, 4.6vh), 50px);
+		line-height: 1.16;
 		font-variation-settings: 'wght' 400;
 		letter-spacing: -0.005em;
 		text-align: justify;
 		text-justify: inter-word;
 		-webkit-hyphens: auto;
 		hyphens: auto;
+		text-indent: 2.4em;
 		margin: 0;
 	}
 
@@ -184,9 +200,11 @@
 		margin: 0;
 	}
 
-	/* --- Norma block: white ground, plain text, same as the rest of the site --- */
+	/* --- Norma block: same summer colour as the statement above, not white
+	   (2026-09, "その下も全体的に背景色ありにして") — the whole page reads
+	   as one continuous coloured page rather than half-coloured/half-white. --- */
 	.About__norma {
-		background: #ffffff;
+		background: var(--summer-color, var(--color-amber, #ffbb32));
 		padding-inline: var(--padding);
 		padding-block: clamp(96px, 14vh, 160px);
 	}
@@ -215,26 +233,29 @@
 		margin-bottom: 0;
 	}
 
-	.CtaLabel {
-		display: inline-block;
-		transform: translateY(1.5px);
-	}
-
+	/* Solid, square-cornered box link (2026-09, at the user's request —
+	   "▶︎のリンクはなるべく使わないようにして、角丸なしのボックスリンクに
+	   Aboutも統一して") — replaces the Arrow.svelte + text pattern used
+	   elsewhere, matching the Home page's own Contact CTA. */
 	.About__cta {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		justify-content: center;
 		margin-top: 28px;
+		padding: 16px 32px;
 		font-family: var(--font-elio), sans-serif;
 		font-size: 15px;
 		font-weight: var(--fw-ui);
-		color: var(--color-text);
+		color: #ffffff;
+		background: #000000;
+		border: 0;
+		border-radius: 0;
 		text-decoration: none;
-		transition: opacity 0.2s ease;
+		transition: opacity 0.15s ease;
 	}
 
 	.About__cta:hover {
-		opacity: 0.6;
+		opacity: 0.8;
 	}
 
 	@media (max-width: 767.98px) {
@@ -244,6 +265,12 @@
 
 		.About__body p {
 			text-align: left;
+			text-indent: 1.6em;
+		}
+
+		.About__cta {
+			display: flex;
+			width: 100%;
 		}
 	}
 </style>

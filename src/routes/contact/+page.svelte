@@ -12,7 +12,6 @@
 <script lang="ts">
 	import PageSection from '$lib/components/PageSection.svelte';
 	import ContactForm from '$lib/components/ContactForm.svelte';
-	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 	import type { ActionData } from './$types';
 
 	// Only used for the no-JS path: with JS on, ContactForm owns its own state
@@ -28,7 +27,7 @@
 	/>
 </svelte:head>
 
-<main class="Contact" style="--summer-color: {summerColorHex(summerColor.current)};">
+<main class="Contact">
 	<!-- No subtitle (2026-09, at the user's request, "Licensing, custom type,
 	     general enquiriesがあるけどこれ不要") — the paragraph just below
 	     already says the same thing in full sentences. -->
@@ -38,15 +37,31 @@
 			or anything else — please get in touch. We will respond within five business days.
 		</p>
 
-		<ContactForm result={form} />
+		<ContactForm result={form} tone="dark" />
 	</PageSection>
 </main>
 
 <style>
-	/* Same debug-switchable summer colour as About (2026-09, at the user's
-	   request) — was plain white. Text stays black, PageSection's own
-	   default. */
+	/* Fixed dark grey, white text (2026-09, at the user's request — About and
+	   Contact reading as the exact same colour was the problem, not the
+	   colour itself, so this no longer shares the debug-switchable
+	   --summer-color with About). --color-text is PageSection's own text
+	   colour variable — overriding it here reaches every descendant PageSection
+	   paints, without touching PageSection.svelte itself. */
 	.Contact {
-		background: var(--summer-color, var(--color-amber, #ffbb32));
+		background: #333333;
+		--color-text: #ffffff;
+	}
+
+	/* PageSection defaults to min-height:100vh, vertically centring/filling
+	   the viewport regardless of content — with no subtitle here (see the
+	   note above) that left a long stretch of empty grey below the form on a
+	   normal-height screen. Cut to about half (2026-09, at the user's
+	   request, "Contactのpadding bottomが少し長いので、半分くらいに削って"),
+	   scoped to this page rather than PageSection itself, which several
+	   other pages still rely on being a full screen. */
+	.Contact :global(.PageSection) {
+		min-height: 50vh;
+		min-height: 50svh;
 	}
 </style>
