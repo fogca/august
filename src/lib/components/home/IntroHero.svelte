@@ -35,19 +35,32 @@
      circumflex "Ô" for a while). Norma carries Ō; Elio doesn't yet, so in
      Elio-set copy that one letter falls back per-glyph to Norma.
 
-     SP layout note: the wordmark is rotated 90deg to read top-to-bottom,
-     pinned to the left edge (Figma 7:782/7:874). Rotating an element whose
-     CSS width/height are its PRE-rotation dimensions, while positioning it
-     with grid `place-items` + a margin, is what caused the "position is
-     off" bug — rotation pivots around the box's own centre, and swapping a
-     692x320-ish box to 320x692 around a fixed centre shifts both edges
-     asymmetrically, pushing the visible glyphs partway off the right edge
-     of the screen (confirmed by measuring the post-rotate bounding box:
-     ~140px of it sat outside a 390px-wide viewport). Fixed by splitting the
-     rotation onto an inner element sized with its dimensions swapped,
-     absolutely centred inside an outer frame that carries the FINAL
-     (post-rotation) box — see .IntroHero__wordmark-frame / __wordmark
-     below.
+     SP layout note: the wordmark is rotated 90deg to read top-to-bottom
+     (Figma 7:782/7:874). Rotating an element whose CSS width/height are its
+     PRE-rotation dimensions, while positioning it with grid `place-items` +
+     a margin, is what caused the "position is off" bug — rotation pivots
+     around the box's own centre, and swapping a 692x320-ish box to 320x692
+     around a fixed centre shifts both edges asymmetrically, pushing the
+     visible glyphs partway off the right edge of the screen (confirmed by
+     measuring the post-rotate bounding box: ~140px of it sat outside a
+     390px-wide viewport). Fixed by splitting the rotation onto an inner
+     element sized with its dimensions swapped, absolutely centred inside an
+     outer frame that carries the FINAL (post-rotation) box — see
+     .IntroHero__wordmark-frame / __wordmark below.
+
+     The SVG's own preserveAspectRatio was originally xMidYMax — i.e.
+     bottom-aligned pre-rotation, which becomes LEFT-aligned once rotated
+     (a 90deg turn maps the pre-rotation bottom edge to the post-rotation
+     left edge). At rest, the grown wordmark's own em-box (ascender to
+     descender) doesn't fill this frame's full width, so that left-alignment
+     read as the resting wordmark sitting visibly left of centre (2026-09,
+     at the user's own report: "SPでは、ロゴが左に寄ってるが大きくなった時に
+     中心に来るように調整して"). xMidYMid centres it instead — measured via
+     Playwright, the resting glyph union's centre moved from ~119px to
+     ~183px in a 390px viewport (target 195). Harmless on PC: the
+     un-rotated SVG there has height:auto, so its box already matches the
+     viewBox's own aspect ratio with no slack for either alignment to
+     redistribute.
 
      Scroll lock: the user asked for scrolling to be disabled for the
      duration of the OP ("OP中はスクロール禁止"). lockScroll() below
@@ -94,6 +107,7 @@
 	import { browser } from '$app/environment';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { initScroll, getLenis } from '$lib/scroll';
+	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 
 	type Letter = {
 		id: string;
@@ -229,6 +243,11 @@
 		let tl: { kill: () => void } | undefined;
 		let unlock: (() => void) | undefined;
 		let bailed = false;
+		/** See the timeline's onComplete below — the one-shot listener that
+		 *  fades the stage from yellow to white on the reader's first scroll
+		 *  after the OP. Tracked here so it can be torn down on unmount even
+		 *  if it never fires (e.g. the reader navigates away first). */
+		let onFirstScrollToWhite: (() => void) | undefined;
 
 		/** See the file header's "That mount-time check alone isn't enough"
 		 *  note: a late scroll restoration lands after this component has
@@ -283,6 +302,18 @@
 					unlock?.();
 					unlock = undefined;
 					homeIntro.introComplete = true;
+
+					// The stage holds at the summer colour it just grew into
+					// (2026-09, at the user's request — "ダークグレーから
+					// イエローにして、そこからスクロール検知でホワイトになる
+					// ようにして") until the reader's own first scroll, which
+					// is what actually fades it the rest of the way to white.
+					// {once:true} — this is a one-shot beat, not a standing
+					// listener; nothing ever needs to fade it back.
+					onFirstScrollToWhite = () => {
+						if (stageEl) gsap.to(stageEl, { backgroundColor: '#F1F0EF', duration: 0.6, ease: 'power2.out' });
+					};
+					window.addEventListener('scroll', onFirstScrollToWhite, { once: true, passive: true });
 				}
 			});
 			tl = timeline;
@@ -322,9 +353,17 @@
 				},
 				`+=${GROW_GAP}`
 			);
+			// Crossfades to the shared summer colour, not straight to white
+			// (2026-09, at the user's request) — the fade to white is a
+			// separate, later beat, gated on the reader's first scroll (see
+			// the timeline's own onComplete above).
 			timeline.to(
 				stageEl,
-				{ backgroundColor: '#F1F0EF', duration: GROW_DURATION, ease: 'power2.inOut' },
+				{
+					backgroundColor: summerColorHex(summerColor.current),
+					duration: GROW_DURATION,
+					ease: 'power2.inOut'
+				},
 				`<+=${BG_DELAY}`
 			);
 
@@ -345,6 +384,7 @@
 		return () => {
 			cancelled = true;
 			window.removeEventListener('scroll', bailFromExternalScroll);
+			if (onFirstScrollToWhite) window.removeEventListener('scroll', onFirstScrollToWhite);
 			tl?.kill();
 			unlock?.();
 		};
@@ -359,7 +399,7 @@
 		<svg
 			class="IntroHero__wordmark"
 			viewBox="0 0 1400 385.524"
-			preserveAspectRatio="xMidYMax meet"
+			preserveAspectRatio="xMidYMid meet"
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			{#each LETTERS as letter, i (letter.id)}

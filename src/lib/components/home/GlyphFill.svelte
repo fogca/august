@@ -88,7 +88,24 @@
 		let sprites = new Map<string, { bmp: HTMLCanvasElement; w: number; h: number }>();
 		let radii = new Map<string, number>();
 		let cssW = 0;
+		/** Physics playfield height — shorter than the canvas itself by
+		 *  `topClearance` (see below). Everything physics-related (walls,
+		 *  floor, spawn columns, despawn margin) is sized against this, same
+		 *  as before this was split out. */
 		let cssH = 0;
+		/** Header clearance (2026-09, at the user's request — "OGUSTスタック
+		 *  のcanvasもしっかり100vhにして"): the <canvas> element itself is
+		 *  now the section's full height (see .GlyphFill's own CSS comment),
+		 *  but the pile still must not build up behind the fixed Header —
+		 *  same clamp(52px, 7vh, 72px) the CSS `--glyph-top` used to encode,
+		 *  now applied as a paint-time offset instead of a crop. Physics is
+		 *  untouched: cssH/the wall layout are exactly what they were when
+		 *  the canvas was physically shorter, so the pile still overflows
+		 *  upward into open headroom rather than a hard ceiling — a real
+		 *  ceiling here would recreate the exact "3x the circle area the box
+		 *  can hold, nowhere to go" bug createBoundaries()'s own comment
+		 *  describes, since fillDensity is 3.2. */
+		let topClearance = 0;
 		let dpr = 1;
 		let glyphPx = fontSize;
 
@@ -238,19 +255,38 @@
 			if (!ctx) return;
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			// clearRect, never an opaque repaint — the section paints its own
-			// background and the canvas sits on top of it.
-			ctx.clearRect(0, 0, cssW, cssH);
+			// background and the canvas sits on top of it. Clears the FULL
+			// canvas (cssH + topClearance), not just the physics playfield —
+			// see topClearance's own comment above.
+			ctx.clearRect(0, 0, cssW, cssH + topClearance);
+			ctx.save();
+			// A body can (and often does) sit slightly above physics-y=0 — the
+			// off-screen cull below only excludes it once it clears a full
+			// sprite height above that line, same margin the old code used
+			// when the canvas itself physically ended there. Now that the
+			// canvas extends into the header-clearance band too, that same
+			// near-the-top jitter would otherwise paint directly into it —
+			// clip it out so the band stays genuinely empty instead.
+			ctx.beginPath();
+			ctx.rect(0, topClearance, cssW, cssH);
+			ctx.clip();
 			for (const { body, char } of bodies) {
 				const sprite = sprites.get(char);
 				if (!sprite) continue;
 				const { x, y } = body.position;
 				if (y < -sprite.h || y > cssH + sprite.h) continue; // off-screen overflow
 				ctx.save();
-				ctx.translate(x, y);
+				// +topClearance shifts physics-space (0..cssH, floor at the
+				// bottom) down into canvas-pixel-space (topClearance..full
+				// height) — the clip above is what actually keeps the top
+				// strip empty; this offset just repositions the playfield
+				// within the taller canvas.
+				ctx.translate(x, y + topClearance);
 				ctx.rotate(body.angle);
 				ctx.drawImage(sprite.bmp, -sprite.w / 2, -sprite.h / 2, sprite.w, sprite.h);
 				ctx.restore();
 			}
+			ctx.restore();
 		}
 
 		/** True once nothing is moving and nothing is left to pour. */
@@ -283,16 +319,28 @@
 		}
 
 		function resize() {
+			// `section` (.GlyphFill) is now inset:0 — its rect IS the full
+			// section height (100vh/100lvh), unlike before this was split
+			// into a visual canvas and a physics playfield (see topClearance's
+			// own comment above).
 			const rect = section.getBoundingClientRect();
 			const nextW = Math.round(rect.width);
-			const nextH = Math.round(rect.height);
-			if (nextW === cssW && nextH === cssH) return;
+			const nextFullH = Math.round(rect.height);
+			// Same clamp(52px, 7vh, 72px) the old CSS `--glyph-top` encoded,
+			// against this section's own height rather than the CSS `vh` unit
+			// — equivalent since .Home__custom is exactly one viewport tall.
+			const nextTopClearance = Math.round(Math.min(72, Math.max(52, nextFullH * 0.07)));
+			const nextH = nextFullH - nextTopClearance;
+			if (nextW === cssW && nextH === cssH && nextTopClearance === topClearance) return;
 			const hadPile = bodies.length > 0;
 			cssW = nextW;
 			cssH = nextH;
+			topClearance = nextTopClearance;
 			dpr = Math.min(window.devicePixelRatio || 1, 2);
 			canvas.width = Math.round(cssW * dpr);
-			canvas.height = Math.round(cssH * dpr);
+			// Full section height, not just the physics playfield — this is
+			// the part that makes the <canvas> element itself 100vh.
+			canvas.height = Math.round(nextFullH * dpr);
 			measureGlyphs();
 			createBoundaries();
 			// The walls move, but a pile packed for the old box does not: glyph
@@ -411,13 +459,17 @@
 </div>
 
 <style>
-	/* --glyph-top lets the host section hold the pile clear of the fixed
-	   Header's own band. The header is transparent by design and paints itself
-	   solid over this section (see headerSolid.svelte.ts), so without the inset
-	   a black glyph can sit directly under black header text and swallow it. */
+	/* Full section height now (2026-09, "OGUSTスタックのcanvasもしっかり
+	   100vhにして") — was inset from the top by --glyph-top to hold the pile
+	   clear of the fixed Header's own band (it paints itself solid black
+	   over this section — see headerSolid.svelte.ts — and a black glyph
+	   directly behind that would swallow it). That clearance is now kept as
+	   a paint-time offset inside GlyphFill's own script (topClearance) rather
+	   than a CSS crop, so the <canvas> element itself is genuinely 100vh
+	   while the pile still can't reach behind the header. */
 	.GlyphFill {
 		position: absolute;
-		inset: var(--glyph-top, 0px) 0 0 0;
+		inset: 0;
 		overflow: hidden;
 		pointer-events: none;
 	}

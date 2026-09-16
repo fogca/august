@@ -17,7 +17,6 @@
      `:not([data-lang='en'])` — that also matches every element with no
      attribute at all, which is most of the document. -->
 <script lang="ts">
-	import Arrow from '$lib/components/Arrow.svelte';
 	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 </script>
 
@@ -55,10 +54,7 @@
 				</div>
 			</dl>
 
-			<a class="HomeAbout__cta" href="/about">
-				<span class="CtaLabel">Read more</span>
-				<Arrow size={9} />
-			</a>
+			<a class="HomeAbout__cta" href="/about">Read more</a>
 		</div>
 	</div>
 </section>
@@ -102,8 +98,8 @@
 	}
 
 	/* The statement IS the layout: several steps above body copy, wrapping to
-	   fill the screen. Justified inter-word with hyphenation, the same
-		 magazine treatment the rest of the home page uses. */
+	   fill the screen. Left-aligned, not justified (2026-09, at the user's
+	   request — "Aboutセクションの文章justifyからleftにalign調整して"). */
 	.HomeAbout__statement p {
 		font-family: var(--font-en), sans-serif;
 		/* Width AND height aware: a pure-vw clamp bottomed out at the 26px floor
@@ -112,12 +108,10 @@
 		   axes has room, so a short-but-wide laptop stays bounded too. */
 		font-size: clamp(26px, max(3.4vw, 4.6vh), 50px);
 		line-height: 1.16;
-		font-variation-settings: 'wght' 400;
+		/* 2026-09, at the user's request — "Aboutセクションの文章はwght250にして". */
+		font-variation-settings: 'wght' 250;
 		letter-spacing: -0.005em;
-		text-align: justify;
-		text-justify: inter-word;
-		-webkit-hyphens: auto;
-		hyphens: auto;
+		text-align: left;
 		/* First-line indent, as in the reference layout. */
 		text-indent: 2.4em;
 		margin: 0;
@@ -169,24 +163,29 @@
 		margin: 0;
 	}
 
-	.CtaLabel {
-		display: inline-block;
-		transform: translateY(1.5px);
-	}
-
+	/* Solid, square-cornered box link (2026-09, at the user's request —
+	   "Top AboutとCustomセクションのボタンもContact同様ボックスリンクに変更")
+	   — replaces the Arrow.svelte + text pattern, matching the Home page's
+	   own Contact CTA. */
 	.HomeAbout__cta {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		justify-content: center;
+		padding: 16px 32px;
 		font-family: var(--font-en), sans-serif;
 		font-size: 15px;
-		font-weight: var(--fw-ui);
+		font-weight: 500;
+		font-variation-settings: 'wght' 500;
+		color: #ffffff;
+		background: #000000;
+		border: 0;
+		border-radius: 0;
 		text-decoration: none;
-		transition: opacity 0.2s ease;
+		transition: opacity 0.15s ease;
 	}
 
 	.HomeAbout__cta:hover {
-		opacity: 0.6;
+		opacity: 0.8;
 	}
 
 	@media (max-width: 767.98px) {
@@ -197,10 +196,7 @@
 		}
 
 		.HomeAbout__statement p {
-			text-align: left;
 			text-indent: 1.6em;
-			-webkit-hyphens: auto;
-			hyphens: auto;
 		}
 
 		.HomeAbout__facts {

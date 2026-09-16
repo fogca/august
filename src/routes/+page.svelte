@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import Arrow from '$lib/components/Arrow.svelte';
 	import IntroHero from '$lib/components/home/IntroHero.svelte';
 	import TypefaceStage from '$lib/components/home/TypefaceStage.svelte';
 	import TypefaceFooterBar from '$lib/components/home/TypefaceFooterBar.svelte';
@@ -358,7 +357,7 @@
 			<!-- Spans, not <br>: they stay inline on desktop and become the three
 			     designed lines on phones. -->
 			<h2 class="Custom__heading">
-				<span>Custom type</span> <span>for corporate</span> <span>identity</span>
+				<span>Custom Type</span> <span>for Corporate</span> <span>Identity</span>
 			</h2>
 			<p class="Custom__body">
 				Beyond our retail library, Ōgast designs bespoke typefaces for brands and institutions — a
@@ -366,9 +365,7 @@
 				is the most enduring asset a brand can own: it travels across every screen, surface, and
 				language while remaining unmistakably yours.
 			</p>
-			<a class="Custom__cta" href="/custom">
-				Explore custom type <Arrow size={10} />
-			</a>
+			<a class="Custom__cta" href="/custom">Explore custom type</a>
 		</div>
 	</section>
 
@@ -402,8 +399,9 @@
 
 	/* --- 3. Custom type for business (glyph field) --- */
 	.Home__custom {
-		/* Keep the pile clear of the Header's own band — see GlyphFill's note. */
-		--glyph-top: clamp(52px, 7vh, 72px);
+		/* Header clearance for the glyph pile now lives inside GlyphFill.svelte
+		   itself (topClearance) rather than as a CSS crop here — see that
+		   file's own comment. */
 		position: relative;
 		/* Fixed, not min-height (2026-09, at the user's request, "100vhで",
 		   then refined to "100lvhで" — the large viewport unit, so this
@@ -449,7 +447,9 @@
 		font-family: var(--font-en), sans-serif;
 		font-size: clamp(32px, min(5.2vw, 7vh), 64px);
 		line-height: 1.02;
-		text-transform: uppercase;
+		/* Title case in the copy itself now, not CSS text-transform (2026-09,
+		   at the user's request — "uppercase外して、Custom Type for
+		   Corporate Identityに変更"). */
 		letter-spacing: 0.025em;
 		margin: 0 0 24px;
 	}
@@ -480,24 +480,29 @@
 		margin: 0 auto 28px;
 	}
 
+	/* Solid, square-cornered box link (2026-09, at the user's request —
+	   "Top AboutとCustomセクションのボタンもContact同様ボックスリンクに変更")
+	   — replaces the Arrow.svelte + text pattern. Keeps the brand red this
+	   CTA already had, now as the box's own fill rather than the text colour. */
 	.Custom__cta {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		justify-content: center;
+		padding: 16px 32px;
 		font-family: var(--font-en), sans-serif;
 		font-size: 15px;
-		font-weight: var(--fw-ui);
+		font-weight: 500;
+		font-variation-settings: 'wght' 500;
+		color: #ffffff;
+		background: var(--red);
+		border: 0;
+		border-radius: 0;
 		text-decoration: none;
-		color: var(--red);
-		transition: opacity 0.2s ease;
-	}
-
-	.Custom__cta :global(*) {
-		color: var(--red);
+		transition: opacity 0.15s ease;
 	}
 
 	.Custom__cta:hover {
-		opacity: 0.7;
+		opacity: 0.8;
 	}
 
 	/* --- 5. Contact --- */

@@ -165,17 +165,17 @@
 	}
 
 	/* The statement IS the layout — several steps above body copy, same
-	   magazine justification + first-line indent as the teaser. */
+	   first-line indent as the teaser. Left-aligned, not justified (2026-09,
+	   at the user's request — "Aboutセクションの文章justifyからleftに
+	   align調整して"). */
 	.About__body p {
 		font-family: var(--font-en), sans-serif;
 		font-size: clamp(26px, max(3.4vw, 4.6vh), 50px);
 		line-height: 1.16;
-		font-variation-settings: 'wght' 400;
+		/* 2026-09, at the user's request — "Aboutセクションの文章はwght250にして". */
+		font-variation-settings: 'wght' 250;
 		letter-spacing: -0.005em;
-		text-align: justify;
-		text-justify: inter-word;
-		-webkit-hyphens: auto;
-		hyphens: auto;
+		text-align: left;
 		text-indent: 2.4em;
 		margin: 0;
 	}
@@ -264,7 +264,6 @@
 		}
 
 		.About__body p {
-			text-align: left;
 			text-indent: 1.6em;
 		}
 
