@@ -44,6 +44,7 @@
 	import Arrow from '$lib/components/Arrow.svelte';
 	import { onScroll } from '$lib/scroll';
 	import { activeTypeface } from '$lib/state/activeTypeface.svelte';
+	import { homeIntro } from '$lib/state/homeIntro.svelte';
 
 	interface Props {
 		typefaces: Typeface[];
@@ -172,7 +173,13 @@
 		// identity — Vite HMR can leave two same-slug instances around (the
 		// bug that broke the old per-section observer mid-session).
 		if (activeTf && next.current?.slug !== activeTf.slug) next.current = activeTf;
-		next.visible = rect.top < window.innerHeight && rect.bottom > 0;
+		// Gated on the intro OP being genuinely done (2026-09, at the user's
+		// report: "OP中にNormaの書体フッターが表示されてる") — rect.top alone
+		// isn't enough: IntroHero is sized in dvh while this reads against
+		// window.innerHeight (the static layout viewport), and on mobile those
+		// two can disagree enough that this stage already reads as "on
+		// screen" while the OP is still playing over it.
+		next.visible = homeIntro.introComplete && rect.top < window.innerHeight && rect.bottom > 0;
 	}
 
 	onMount(() => {
@@ -236,6 +243,15 @@
 			window.removeEventListener('resize', schedule);
 			activeTypeface.visible = false;
 		};
+	});
+
+	// Re-run the reader the instant the OP finishes, rather than waiting for
+	// the reader's next scroll/resize — otherwise, if the stage already reads
+	// as "on screen" at rest (see the dvh/innerHeight note above), the footer
+	// bar would stay hidden until the reader happens to scroll again, even
+	// though the OP is genuinely done and it should show now.
+	$effect(() => {
+		if (homeIntro.introComplete && pinned) update();
 	});
 
 	// Norma's wght-sweep clip only plays while its own layer is the active one

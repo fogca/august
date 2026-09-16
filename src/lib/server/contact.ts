@@ -25,6 +25,10 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export interface EnquiryFields {
 	name: string;
 	email: string;
+	/** Both optional (2026-09, at the user's request — "必須ではないけど会社
+	 *  名・スタジオ名、またそのリンクも入力できるようにして"). */
+	company: string;
+	companyUrl: string;
 	reason: string;
 	message: string;
 }
@@ -37,6 +41,12 @@ function readFields(data: FormData): EnquiryFields {
 		email: String(data.get('email') ?? '')
 			.trim()
 			.slice(0, 200),
+		company: String(data.get('company') ?? '')
+			.trim()
+			.slice(0, 200),
+		companyUrl: String(data.get('companyUrl') ?? '')
+			.trim()
+			.slice(0, 300),
 		reason: String(data.get('reason') ?? '')
 			.trim()
 			.slice(0, 120),
@@ -55,7 +65,7 @@ function readFields(data: FormData): EnquiryFields {
 export async function handleEnquiry(request: Request) {
 	const data = await request.formData();
 	const fields = readFields(data);
-	const { name, email, reason, message } = fields;
+	const { name, email, company, companyUrl, reason, message } = fields;
 
 	if (!name || !email || !message) {
 		return fail(400, { ...fields, error: 'missing' as const });
@@ -79,6 +89,9 @@ export async function handleEnquiry(request: Request) {
 	}
 
 	const subject = reason ? `${reason} — ${name}` : `Contact form — ${name}`;
+	const companyLine = company
+		? `Company: ${company}${companyUrl ? ` (${companyUrl})` : ''}\n`
+		: '';
 	let res: Response;
 	try {
 		res = await fetch(RESEND_ENDPOINT, {
@@ -92,7 +105,7 @@ export async function handleEnquiry(request: Request) {
 				to: [TO_ADDRESS],
 				reply_to: email,
 				subject,
-				text: `From: ${name} <${email}>\nReason: ${reason || '(not specified)'}\n\n${message}`
+				text: `From: ${name} <${email}>\n${companyLine}Reason: ${reason || '(not specified)'}\n\n${message}`
 			})
 		});
 	} catch (err) {

@@ -12,6 +12,7 @@
 <script lang="ts">
 	import PageSection from '$lib/components/PageSection.svelte';
 	import ContactForm from '$lib/components/ContactForm.svelte';
+	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 	import type { ActionData } from './$types';
 
 	// Only used for the no-JS path: with JS on, ContactForm owns its own state
@@ -27,11 +28,14 @@
 	/>
 </svelte:head>
 
-<main class="Contact">
-	<PageSection title="Contact" as="h1" subtitle="Licensing, custom type, general enquiries">
+<main class="Contact" style="--summer-color: {summerColorHex(summerColor.current)};">
+	<!-- No subtitle (2026-09, at the user's request, "Licensing, custom type,
+	     general enquiriesがあるけどこれ不要") — the paragraph just below
+	     already says the same thing in full sentences. -->
+	<PageSection title="Contact" as="h1">
 		<p>
 			For license questions, enterprise requirements (1,000+ users / 100M+ PV), bespoke typefaces,
-			or anything else — please get in touch. We will respond within two business days.
+			or anything else — please get in touch. We will respond within five business days.
 		</p>
 
 		<ContactForm result={form} />
@@ -39,7 +43,10 @@
 </main>
 
 <style>
+	/* Same debug-switchable summer colour as About (2026-09, at the user's
+	   request) — was plain white. Text stays black, PageSection's own
+	   default. */
 	.Contact {
-		background: #ffffff;
+		background: var(--summer-color, var(--color-amber, #ffbb32));
 	}
 </style>

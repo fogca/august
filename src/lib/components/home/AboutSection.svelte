@@ -5,9 +5,10 @@
      large indented paragraph that fills the screen, then a short list below).
 
      The copy is lifted VERBATIM from /about (both languages) — nothing here is
-     newly written. Same for the three facts: they are the existing About page's
-     own <dl>, minus Contact, which now has its own section directly below this
-     one.
+     newly written. Same for the facts: they are the existing About page's own
+     <dl>, minus Contact (which now has its own section directly below this
+     one) and Location (2026-09, at the user's request, to keep the studio's
+     city out of the site's copy as far as reasonably possible).
 
      Amber ground per base.css's own note on --color-amber ("New brand color
      (2026-09) — first use: the About page background. Pairs with black text").
@@ -17,22 +18,26 @@
      attribute at all, which is most of the document. -->
 <script lang="ts">
 	import Arrow from '$lib/components/Arrow.svelte';
+	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 </script>
 
-<section class="HomeAbout" id="about">
+<section
+	class="HomeAbout"
+	id="about"
+	style="--summer-color: {summerColorHex(summerColor.current)};"
+>
 	<div class="HomeAbout__inner">
-		<p class="HomeAbout__label">2026 — Tokyo</p>
+		<p class="HomeAbout__label">2026</p>
 
 		<div class="HomeAbout__statement">
 			<p class="en" lang="en">
-				Ōgast is an independent type foundry, founded in Tokyo in 2026. We cross histories,
-				cultures, and eras, reinterpret their context, and draw type through a contemporary eye.
-				Anchored in retail families and bespoke commissions, we keep searching for forms not yet
-				seen.
+				Ōgast is an independent type foundry, founded in 2026. We cross histories, cultures, and
+				eras, reinterpret their context, and draw type through a contemporary eye. Anchored in
+				retail families and bespoke commissions, we keep searching for forms not yet seen.
 			</p>
 			<p class="fr" lang="fr">
-				Ōgast est une fonderie de caractères indépendante, fondée à Tokyo en 2026. Nous traversons
-				les histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
+				Ōgast est une fonderie de caractères indépendante, fondée en 2026. Nous traversons les
+				histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
 				caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
 				commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
 			</p>
@@ -43,10 +48,6 @@
 				<div class="HomeAbout__fact">
 					<dt>Founded</dt>
 					<dd>2026</dd>
-				</div>
-				<div class="HomeAbout__fact">
-					<dt>Location</dt>
-					<dd>Tokyo, Japan</dd>
 				</div>
 				<div class="HomeAbout__fact">
 					<dt>Focus</dt>
@@ -65,7 +66,9 @@
 <style>
 	.HomeAbout {
 		min-height: 100svh;
-		background: var(--color-amber, #ffbb32);
+		/* Driven by the debug switcher (2026-09) — falls back to the amber
+		   token if --summer-color somehow isn't set. */
+		background: var(--summer-color, var(--color-amber, #ffbb32));
 		display: flex;
 		align-items: center;
 		padding-block: clamp(96px, 12vh, 160px);
@@ -144,7 +147,9 @@
 
 	.HomeAbout__facts {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, auto));
+		/* Two facts (Founded, Focus) since Location was dropped — see the
+		   script header comment on why. */
+		grid-template-columns: repeat(2, minmax(0, auto));
 		gap: 16px 48px;
 		margin: 0;
 	}

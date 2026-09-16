@@ -24,9 +24,12 @@
 		/** When false, show an "in development" notice */
 		available?: boolean;
 		/** Per-typeface override for the desktop default title size — falls
-		 *  back to WEIGHT_ROW_SIZE_DEFAULT_DESKTOP when omitted. Mobile's
-		 *  default isn't overridable here; nothing has asked for that yet. */
+		 *  back to WEIGHT_ROW_SIZE_DEFAULT_DESKTOP when omitted. */
 		defaultSizeDesktop?: number;
+		/** Same, for the mobile default (2026-09, at the user's request —
+		 *  "NormaのタイプテスターデフォfsをSpでは24pxにして") — falls back to
+		 *  WEIGHT_ROW_SIZE_DEFAULT_MOBILE when omitted. */
+		defaultSizeMobile?: number;
 	}
 
 	let {
@@ -35,17 +38,18 @@
 		defaultTexts,
 		defaultNotes,
 		available = true,
-		defaultSizeDesktop
+		defaultSizeDesktop,
+		defaultSizeMobile
 	}: Props = $props();
 
 	// Viewport-dependent default size (evaluated once on mount). Only the
-	// initial defaultSizeDesktop prop value is read — same deliberate
-	// one-time-read pattern as GlyphSet.svelte's DEFAULT_WEIGHT/DEFAULT_GLYPH,
-	// wrapped in untrack() to say so explicitly rather than leave it as an
-	// unexplained lint warning.
+	// initial defaultSizeDesktop/defaultSizeMobile prop values are read — same
+	// deliberate one-time-read pattern as GlyphSet.svelte's
+	// DEFAULT_WEIGHT/DEFAULT_GLYPH, wrapped in untrack() to say so explicitly
+	// rather than leave it as an unexplained lint warning.
 	const isPhone = browser && window.innerWidth < MOBILE_BREAKPOINT_PX;
 	const initialSize = isPhone
-		? WEIGHT_ROW_SIZE_DEFAULT_MOBILE
+		? (untrack(() => defaultSizeMobile) ?? WEIGHT_ROW_SIZE_DEFAULT_MOBILE)
 		: (untrack(() => defaultSizeDesktop) ?? WEIGHT_ROW_SIZE_DEFAULT_DESKTOP);
 	const initialNoteSize = isPhone
 		? WEIGHT_ROW_NOTE_DEFAULT_MOBILE

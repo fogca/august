@@ -62,6 +62,23 @@
      the resting state, same as prefers-reduced-motion) rather than risk
      it.
 
+     That mount-time check alone isn't enough (2026-09, at the user's own
+     follow-up report: "SPでスクロールバックとかでトップに戻った時スクロー
+     ルがOP中で禁止されてる問題") — SvelteKit's scroll restoration on a
+     back-navigation to "/" can land AFTER this component has already
+     mounted at scrollY 0 and started the (now locked) OP, jumping the
+     real window scroll out from under it while Lenis is stopped. Lenis
+     drives window.scrollTo itself per rAF from its own internal target,
+     so a scroll it didn't originate leaves that internal target stale —
+     the page then reads as permanently stuck, because the very next
+     gesture animates back toward the stale pre-restoration target instead
+     of from where the reader actually is. `watchForExternalScroll` below
+     catches exactly that: any scroll appearing during the OP that this
+     file didn't itself cause is treated the same as the mount-time guard
+     — bail to the resting state and release the lock immediately, then
+     resync Lenis's internal position to the real window.scrollY so the
+     next gesture starts from the right place instead of snapping back. */
+
      Section-to-section snap (2026-09, referencing yadohouse.jp's own
      top-page feel at the user's request): once the OP is genuinely done
      (`homeIntro.introComplete` — see homeIntro.svelte.ts), a small scroll
@@ -181,7 +198,13 @@
 			window.removeEventListener('wheel', onWheel);
 			window.removeEventListener('touchmove', onTouchMove);
 			window.removeEventListener('keydown', onKeydown);
-			getLenis()?.start();
+			const l = getLenis();
+			l?.start();
+			// Resync Lenis's own internal scroll target to wherever the window
+			// actually is — see the file header's "That mount-time check alone
+			// isn't enough" note. Cheap no-op on the common path (nothing moved
+			// the window while stopped), but the fix for the one that did.
+			l?.scrollTo(window.scrollY, { immediate: true, force: true });
 		};
 	}
 
@@ -205,6 +228,29 @@
 		let cancelled = false;
 		let tl: { kill: () => void } | undefined;
 		let unlock: (() => void) | undefined;
+		let bailed = false;
+
+		/** See the file header's "That mount-time check alone isn't enough"
+		 *  note: a late scroll restoration lands after this component has
+		 *  already started (and locked) the OP. Bail exactly like the
+		 *  mount-time guard above — kill the timeline, release the lock,
+		 *  jump straight to the resting state — rather than staying locked
+		 *  for the rest of the OP's ~3.5s while the page reads as stuck. */
+		function bailFromExternalScroll() {
+			if (bailed || cancelled) return;
+			bailed = true;
+			cancelled = true;
+			tl?.kill();
+			unlock?.();
+			unlock = undefined;
+			jumpToRestingState();
+		}
+
+		// Nothing in this file's own OP ever calls scrollTo — the whole scene
+		// is a fixed, pinned stage — so ANY scroll event arriving before the
+		// OP completes is necessarily external (scroll restoration, or a
+		// gesture that slipped past the lock).
+		window.addEventListener('scroll', bailFromExternalScroll, { passive: true });
 
 		initScroll().then(() => {
 			if (cancelled) return;
@@ -230,7 +276,10 @@
 					homeIntro.headerReady = true;
 					// The OP has genuinely finished — release the lock and
 					// signal +page.svelte that section-to-section snap can
-					// now arm.
+					// now arm. Also stop watching for an external scroll:
+					// from here on a moving window is expected, normal
+					// scrolling, not a restoration racing the lock.
+					window.removeEventListener('scroll', bailFromExternalScroll);
 					unlock?.();
 					unlock = undefined;
 					homeIntro.introComplete = true;
@@ -295,6 +344,7 @@
 
 		return () => {
 			cancelled = true;
+			window.removeEventListener('scroll', bailFromExternalScroll);
 			tl?.kill();
 			unlock?.();
 		};

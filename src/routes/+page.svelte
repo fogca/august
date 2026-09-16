@@ -6,17 +6,12 @@
 	import TypefaceFooterBar from '$lib/components/home/TypefaceFooterBar.svelte';
 	import GlyphFill from '$lib/components/home/GlyphFill.svelte';
 	import AboutSection from '$lib/components/home/AboutSection.svelte';
-	import ContactForm from '$lib/components/ContactForm.svelte';
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { headerSolid } from '$lib/state/headerSolid.svelte';
+	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
 	import { initScroll, getLenis } from '$lib/scroll';
 	import { onMount } from 'svelte';
-	import type { ActionData } from './$types';
-
-	// Only used for the no-JS path — see ContactForm's own note. With JS on, the
-	// form posts through use:enhance and never navigates, so this stays null.
-	let { form }: { form: ActionData } = $props();
 
 	// Top page v4 (2026-09, at the user's request):
 	//   OP logo  →  typeface showcase  →  Custom for business  →  About  →  Contact  →  Footer
@@ -338,7 +333,7 @@
 	<title>Ōgast — Norma</title>
 	<meta
 		name="description"
-		content="Ōgast — an independent type foundry from Tokyo. Norma, a 20-weight neo-humanist variable typeface."
+		content="Ōgast — an independent type foundry. Norma, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
@@ -381,17 +376,22 @@
 	<!-- 4. About — one screen of running text, set well above body size. -->
 	<AboutSection />
 
-	<!-- 5. Contact — the same form /contact uses, posting to this route's own
-	     named action so it never navigates away. -->
-	<section class="Home__contact" id="contact">
+	<!-- 5. Contact — no in-page form (2026-09, at the user's request, "トップに
+	     問い合わせフォームを設置する必要はない"); a plain button in the form's old
+	     spot hands off to /contact instead. -->
+	<section
+		class="Home__contact"
+		id="contact"
+		style="--summer-color: {summerColorHex(summerColor.current)};"
+	>
 		<div class="Contact__inner">
 			<p class="Contact__eyebrow">Contact</p>
 			<h2 class="Contact__heading">Licensing, custom type, general enquiries.</h2>
 			<p class="Contact__body">
 				For license questions, enterprise requirements (1,000+ users / 100M+ PV), bespoke typefaces,
-				or anything else — please get in touch. We will respond within two business days.
+				or anything else — please get in touch. We will respond within five business days.
 			</p>
-			<ContactForm action="?/contact" tone="dark" result={form} />
+			<a class="Contact__cta" href="/contact">Contact us</a>
 		</div>
 	</section>
 </main>
@@ -410,7 +410,11 @@
 		/* Keep the pile clear of the Header's own band — see GlyphFill's note. */
 		--glyph-top: clamp(52px, 7vh, 72px);
 		position: relative;
-		min-height: 100svh;
+		/* Fixed, not min-height (2026-09, at the user's request, "100vhで") —
+		   the card's own content used to be able to push this taller than one
+		   screen; overflow:hidden below now clips it back to exactly 100svh
+		   instead. */
+		height: 100svh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -504,15 +508,19 @@
 		min-height: 100svh;
 		display: flex;
 		align-items: center;
-		background: #000000;
+		/* Same debug-switchable colour as About, black text (2026-09, at the
+		   user's request — "夏らしいブランドカラーを...AboutやContactで背景
+		   色として使うべき...テキストカラーは黒") — was solid black/white. */
+		background: var(--summer-color, var(--color-amber, #ffbb32));
 		padding-block: clamp(96px, 12vh, 140px);
 	}
 
 	/* base.css §7 re-asserts black on div/p/span/a/h2/button/input individually,
 	   so a plain `color` on the section would never reach them — the same
-	   :global(*) pattern the Footer and the old Buy band use. */
+	   :global(*) pattern the Footer and the old Buy band use. Black now,
+	   matching the bright background above (was white, for the old black bg). */
 	.Home__contact :global(*) {
-		color: #ffffff;
+		color: #000000;
 	}
 
 	.Contact__inner {
@@ -548,5 +556,40 @@
 		opacity: 0.8;
 		max-width: 52ch;
 		margin: 0;
+	}
+
+	/* Stands in for the form that used to start here — same 2em gap
+	   ContactForm's own .ContactForm__form used. Square corners are
+	   deliberate (unlike the pill-shaped submit button elsewhere on the
+	   site). Black on the bright ground (was white-on-black for the old
+	   black section) — wins over .Home__contact's :global(*) black-out above
+	   by coming later in source order at equal specificity. */
+	.Contact__cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 2em;
+		padding: 16px 32px;
+		font-family: var(--font-en), sans-serif;
+		font-size: 15px;
+		font-weight: 500;
+		font-variation-settings: 'wght' 500;
+		color: #ffffff;
+		background: #000000;
+		border: 0;
+		border-radius: 0;
+		text-decoration: none;
+		transition: opacity 0.15s ease;
+	}
+
+	.Contact__cta:hover {
+		opacity: 0.8;
+	}
+
+	@media (max-width: 767.98px) {
+		.Contact__cta {
+			display: flex;
+			width: 100%;
+		}
 	}
 </style>

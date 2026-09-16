@@ -32,6 +32,8 @@
 			error?: string;
 			name?: string;
 			email?: string;
+			company?: string;
+			companyUrl?: string;
 			reason?: string;
 			message?: string;
 		} | null;
@@ -71,7 +73,7 @@
 	{#if sent}
 		<div class="ContactForm__done">
 			<p class="ContactForm__success" role="status" tabindex="-1" bind:this={successEl}>
-				Thanks — your message is on its way. We'll respond within two business days.
+				Thanks — your message is on its way. We'll respond within five business days.
 			</p>
 			<button
 				class="ContactForm__again"
@@ -134,6 +136,29 @@
 						required
 						value={result?.email ?? ''}
 						oninput={() => (errorCode = null)}
+					/>
+				</label>
+			</div>
+
+			<div class="ContactForm__row">
+				<label class="ContactForm__field">
+					<span>Company / Studio</span>
+					<input
+						type="text"
+						name="company"
+						autocomplete="organization"
+						placeholder="Optional"
+						value={result?.company ?? ''}
+					/>
+				</label>
+				<label class="ContactForm__field">
+					<span>Website</span>
+					<input
+						type="url"
+						name="companyUrl"
+						autocomplete="url"
+						placeholder="Optional"
+						value={result?.companyUrl ?? ''}
 					/>
 				</label>
 			</div>
@@ -282,6 +307,9 @@
 		outline-offset: 2px;
 	}
 
+	/* Square corners (2026-09, at the user's request — "送信ボタンは角丸なし
+	   で") — was a pill, like .ContactForm__again below still is; that one
+	   wasn't part of the request, left as-is. */
 	.ContactForm .ContactForm__submit {
 		align-self: flex-start;
 		font: inherit;
@@ -291,7 +319,7 @@
 		color: var(--submit-fg);
 		background: var(--submit-bg);
 		border: 0;
-		border-radius: 999px;
+		border-radius: 0;
 		padding: 12px 28px;
 		cursor: pointer;
 		transition: opacity 0.15s ease;

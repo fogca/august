@@ -56,27 +56,34 @@
 	</nav>
 
 	<div class="Footer__bottom">
-		<ul class="Footer__legal">
-			{#each LEGAL as item (item.href)}
-				<li><a href={item.href}>{item.label}</a></li>
-			{/each}
-		</ul>
-		<!-- Same four codes as the Header (see lang.svelte.ts's own comment) —
-		     DE/ES are buttons only for now, no site copy translated into them
-		     yet. -->
-		<div class="Footer__langs" role="group" aria-label="Language">
-			{#each LANG_OPTIONS as l (l.code)}
-				<button
-					type="button"
-					class="Footer__lang"
-					class:is-active={lang.current === l.code}
-					onclick={() => lang.set(l.code)}
-					aria-pressed={lang.current === l.code}
-					aria-label={l.name}
-				>
-					{l.label}
-				</button>
-			{/each}
+		<!-- Legal links + language switcher grouped together (2026-09, at the
+		     user's request — "言語やLicensing-EULAなどの位置を下げて、コピー
+		     マークと同じ高さに合わせて") so both sit on the same row as the
+		     copyright below, rather than each stacking as its own full-width
+		     line on mobile. -->
+		<div class="Footer__meta">
+			<ul class="Footer__legal">
+				{#each LEGAL as item (item.href)}
+					<li><a href={item.href}>{item.label}</a></li>
+				{/each}
+			</ul>
+			<!-- Same four codes as the Header (see lang.svelte.ts's own comment) —
+			     DE/ES are buttons only for now, no site copy translated into them
+			     yet. -->
+			<div class="Footer__langs" role="group" aria-label="Language">
+				{#each LANG_OPTIONS as l (l.code)}
+					<button
+						type="button"
+						class="Footer__lang"
+						class:is-active={lang.current === l.code}
+						onclick={() => lang.set(l.code)}
+						aria-pressed={lang.current === l.code}
+						aria-label={l.name}
+					>
+						{l.label}
+					</button>
+				{/each}
+			</div>
 		</div>
 		<p class="Footer__copy">© {YEAR} Ōgast</p>
 	</div>
@@ -168,24 +175,39 @@
 		opacity: 1;
 	}
 
+	/* Row, not column: legal links + language switcher (grouped in
+	   .Footer__meta) sit on the same line as the copyright, wrapping onto a
+	   second line together if a narrow phone can't fit all three. Mobile's
+	   own margin-top is tighter than desktop's — the gap to the nav links
+	   above read as too large at the smaller size. */
 	.Footer__bottom {
-		margin-top: 56px;
+		margin-top: 28px;
 		padding: 24px 16px 0;
 		border-top: 1px solid rgba(255, 255, 255, 0.15);
 		display: flex;
-		flex-direction: column;
-		gap: 16px;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		row-gap: 10px;
+		column-gap: 20px;
 		font-size: 12px;
 		opacity: 0.6;
 	}
 
 	@media (min-width: 768px) {
 		.Footer__bottom {
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
+			margin-top: 56px;
+			flex-wrap: nowrap;
 			padding-inline: var(--padding);
 		}
+	}
+
+	.Footer__meta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 10px 20px;
 	}
 
 	.Footer__legal {
@@ -193,6 +215,7 @@
 		padding: 0;
 		margin: 0;
 		display: flex;
+		flex-wrap: wrap;
 		gap: 16px;
 	}
 
@@ -227,22 +250,12 @@
 		opacity: 1;
 	}
 
-	/* Mobile (see .Footer__bottom's own column layout below): last in DOM
-	   order already puts this at the bottom of the stack — align-self pins
-	   it to the right edge too, at the user's request ("© 2026 Ōgastが
-	   一番下で、右端に"). Reset on desktop, where .Footer__bottom is a ROW
-	   or align-self would instead just bottom-align it within the row's
-	   own height, not reposition it horizontally — space-between there
-	   already puts it at the right end of the row. */
+	/* .Footer__bottom is a row on every breakpoint now (2026-09) — being last
+	   in DOM order plus justify-content:space-between already puts this at
+	   the right end of the row, at the user's request ("© 2026 Ōgastが
+	   一番下で、右端に"), with no per-breakpoint align-self needed. */
 	.Footer__copy {
 		margin: 0;
 		font-size: 12px;
-		align-self: flex-end;
-	}
-
-	@media (min-width: 768px) {
-		.Footer__copy {
-			align-self: auto;
-		}
 	}
 </style>

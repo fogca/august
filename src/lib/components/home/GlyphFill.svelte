@@ -1,6 +1,7 @@
 <!-- Raining-glyph fill — the background of the home page's "Custom type"
-     section. Large Ō-gast letterforms (O and G) pour in from above and pack
-     the whole screen, several layers deep.
+     section. The five letters of OGAST (2026-09, at the user's request —
+     grown from just O/G) pour in from above and pack the whole screen,
+     several layers deep.
 
      Ported from the standalone study at Dev/Ωstudies/glyph-stack/og-fill.html,
      with p5.js dropped on the way in: everything that study used p5 for
@@ -35,7 +36,7 @@
 		fillDensity?: number;
 	}
 	let {
-		characters = ['O', 'G'],
+		characters = ['O', 'G', 'A', 'S', 'T'],
 		color = '#0d0d0d',
 		fontFamily = 'Norma',
 		fontWeight = 850,

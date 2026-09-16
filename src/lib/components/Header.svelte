@@ -1,7 +1,8 @@
 <script lang="ts">
 	// Ōgast site header.
-	// Mobile (<768px): right-hand group is a language pulldown, an inert
-	//   Cart(0), and a two-bar Menu icon that becomes an X when open
+	// Mobile (<768px): right-hand group is a language pulldown, a Cart(0)
+	//   that reveals an "available from October" note on click, and a
+	//   two-bar Menu icon that becomes an X when open
 	//   (2026-09, at the user's request — was a single "Menu"/"Close" text
 	//   toggle before, with no language switch of its own in the collapsed
 	//   bar; picking a language used to only be possible from inside the
@@ -74,6 +75,20 @@
 		open = false;
 	}
 
+	// Cart/checkout isn't live yet (2026-09, at the user's request — "今カー
+	// トや決済機能は実装してないので、クリックとかで10月より使用開始と文言
+	// 調整"): the pairing stays visually present but clicking it reveals this
+	// note instead of doing nothing. One shared flag is fine — the desktop and
+	// mobile Cart are never both rendered at once (each hidden by the other's
+	// breakpoint), so there's never a second instance to disagree with.
+	let cartNoteVisible = $state(false);
+	let cartNoteTimer: ReturnType<typeof setTimeout> | undefined;
+	function showCartNote() {
+		cartNoteVisible = true;
+		clearTimeout(cartNoteTimer);
+		cartNoteTimer = setTimeout(() => (cartNoteVisible = false), 3200);
+	}
+
 	// Escape closes the mobile panel
 	function handleKeydown(e: KeyboardEvent) {
 		if (e.key === 'Escape' && open) close();
@@ -125,20 +140,21 @@
 			{/each}
 		</div>
 
-		<!-- Inert (aria-disabled span, not a link) — there is no persistent
-		     cart anywhere in this codebase (/buy is a direct Stripe
-		     checkout), so this is the same "visually present, not wired up"
-		     treatment already used elsewhere for not-yet-real features (e.g.
-		     Alfred's "Coming Soon" on the home page). "Account" is hidden for
-		     now, at the user's request (2026-09) — no account system exists
-		     yet either. Mobile carries the same inert Cart — see
-		     .Header__actions below. -->
-		<div class="Header__cart" aria-hidden="true">
-			<span class="Header__nav-link" aria-disabled="true">Cart (0)</span>
+		<!-- Not inert any more (2026-09) — clicking reveals the "available from
+		     October" note below rather than doing nothing. "Account" stays
+		     hidden, at the user's request — no account system exists yet.
+		     Mobile carries the same Cart — see .Header__actions below. -->
+		<div class="Header__cart">
+			<button type="button" class="Header__nav-link" onclick={showCartNote}>Cart (0)</button>
+			{#if cartNoteVisible}
+				<p class="Header__cart-note" role="status" transition:fade={{ duration: 150 }}>
+					Available from October
+				</p>
+			{/if}
 		</div>
 	</div>
 
-	<!-- Mobile-only: language pulldown, inert Cart(0), Menu/Close icon toggle
+	<!-- Mobile-only: language pulldown, Cart(0), Menu/Close icon toggle
 	     — in that order. Sits on the right; the logo (above) takes the left.
 	     A native <select> for the language switch (not the desktop's row of
 	     buttons — no room for three separate targets here): it already comes
@@ -156,8 +172,13 @@
 			{/each}
 		</select>
 
-		<div class="Header__cart" aria-hidden="true">
-			<span class="Header__nav-link" aria-disabled="true">Cart (0)</span>
+		<div class="Header__cart">
+			<button type="button" class="Header__nav-link" onclick={showCartNote}>Cart (0)</button>
+			{#if cartNoteVisible}
+				<p class="Header__cart-note" role="status" transition:fade={{ duration: 150 }}>
+					Available from October
+				</p>
+			{/if}
 		</div>
 
 		<button
@@ -437,10 +458,12 @@
 		opacity: 1;
 	}
 
-	/* Inert (see the template comment) — half-strength, no pointer affordance.
-	   Visibility comes from the .Header__right parent (mobile/desktop), not
-	   from this rule. */
+	/* Clickable now (see the template comment), not inert — half-strength
+	   still reads as "not a real cart yet". position:relative anchors the
+	   revealed note below it. Visibility comes from the .Header__right
+	   parent (mobile/desktop), not from this rule. */
 	.Header__cart {
+		position: relative;
 		display: flex;
 		gap: 20px;
 		align-items: center;
@@ -450,9 +473,28 @@
 
 	.Header__cart .Header__nav-link {
 		opacity: 0.4;
-		cursor: default;
-		pointer-events: none;
-		user-select: none;
+		transition: opacity 0.15s ease;
+	}
+
+	.Header__cart .Header__nav-link:hover {
+		opacity: 0.7;
+	}
+
+	/* Reveal note — mix-blend-mode:difference doesn't read well on tiny text
+	   over a busy backdrop, so this gets an opaque chip of its own instead of
+	   inheriting the header's usual blend trick. */
+	.Header__cart-note {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		margin: 8px 0 0;
+		padding: 6px 10px;
+		font-size: 11px;
+		line-height: 1.3;
+		white-space: nowrap;
+		color: #ffffff;
+		background: #000000;
+		mix-blend-mode: normal;
 	}
 
 	.Header__nav-link {
@@ -536,6 +578,12 @@
 		top: 0;
 		left: 0;
 		right: 0;
+		/* Was auto (content height only) — much shorter than the panel's own
+		   backdrop, at the user's request (2026-09, "SP MENUは...80vhまで伸ば
+		   してほしい"). overflow-y is a safety net for a long fonts/pages list
+		   on a short landscape phone, not something normal content should hit. */
+		height: 80vh;
+		overflow-y: auto;
 		/* below the header (z 100) so the existing logo + Close show on top */
 		z-index: 95;
 		background: #ffffff;

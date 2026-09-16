@@ -5,6 +5,7 @@
 	import PageTransition from '$lib/stock/PageTransition.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import DebugColorSwitcher from '$lib/components/DebugColorSwitcher.svelte';
 	import { initScroll, destroyScroll, getLenis, refreshTriggers } from '$lib/scroll';
 	import { lang } from '$lib/state/lang.svelte';
 
@@ -69,3 +70,7 @@
 	{@render children()}
 	<Footer />
 </PageTransition>
+
+<!-- Rendered once, everywhere, rather than per-page — see the component's own
+     header comment. Temporary; remove once a colour is picked. -->
+<DebugColorSwitcher />

@@ -131,9 +131,8 @@
 	.PageStack {
 		--brand-weight: 350;
 		/* No top padding here on mobile (unlike PageSection) — .PageStack__head
-		   owns that clearance itself now, as its own padding-top, so its
-		   opaque background covers the SAME region while sticky. See that
-		   rule's own comment for why. */
+		   owns that clearance itself now, as its own padding-top, matching the
+		   page's own left/right inset. See that rule's own comment for why. */
 		padding: 0 20px 96px;
 		font-family: var(--font-elio), sans-serif;
 		font-weight: var(--brand-weight);
@@ -144,30 +143,18 @@
 		font-family: var(--font-elio), sans-serif;
 	}
 
-	/* Sticky on every breakpoint (unlike PageSection's `flow`, which only
-	   pins on desktop) — the user asked for the identity column to stay put
-	   full stop, phones included.
-
-	   Mobile bug this fixes: sticking at `top: 64px` (a plain visual offset)
-	   left the band from y=0 to y=64 uncovered by anything opaque — the
-	   real fixed Header is deliberately transparent everywhere on this site
-	   (mix-blend-mode:difference, see Header.svelte), so whatever body text
-	   the page had ALSO scrolled to that exact band showed straight through
-	   it, overlapping this head's own title (confirmed live: a "What You
-	   Get" heading rendering at y=34, above this head's y=64 top edge).
-	   Fix: `top: 0` plus this element's OWN padding-top for the clearance,
-	   so its opaque background (matching the page's own — white, currently
-	   every page that uses this component) is what covers y=0 down to where
-	   the title visually starts, not a gap before an offset that only the text
-	   itself respected. (.PageStack's own top padding moved here to match —
-	   see that rule's comment — so the unstuck, top-of-page position is
-	   unchanged.) Desktop doesn't need this: the head sits in its own grid
-	   column there, never sharing horizontal space with the scrolling body
-	   column, so nothing can render "above" it in the first place. */
+	/* Static on mobile (2026-09, at the user's request — "SPでは固定不要でそ
+	   の背景白で本文が見える面積が減ってる"): a stuck white head was eating
+	   into the small amount of screen a phone has for the body text, so it
+	   just scrolls away with everything else there now. Desktop keeps the
+	   sticky column — see that breakpoint's own rule for the mechanism (and
+	   for why THIS clearance padding still applies at every size: the real
+	   fixed Header is deliberately transparent everywhere on this site,
+	   mix-blend-mode:difference, so page content has to clear it with its own
+	   opaque space rather than the header pushing anything down itself —
+	   confirmed live: a "What You Get" heading once rendered at y=34,
+	   overlapping this head's own title). */
 	.PageStack__head {
-		position: sticky;
-		top: 0;
-		z-index: 2;
 		background: #ffffff;
 		padding-top: calc(96px + env(safe-area-inset-top, 0px));
 		padding-bottom: 24px;
@@ -175,7 +162,7 @@
 	}
 
 	.PageStack__title {
-		font-size: clamp(32px, 9vw, 100px);
+		font-size: clamp(36px, 11vw, 120px);
 		line-height: 1.1;
 		font-weight: var(--brand-weight);
 		font-variation-settings: 'wght' var(--brand-weight);
@@ -199,6 +186,14 @@
 	}
 
 	.PageStack__item {
+		/* This is a <section>, and base.css still carries a bare
+		   `section { padding-inline: var(--padding) }` — left alone it insets
+		   every item's own content ~20px further right than .PageStack__title
+		   (a plain element, not a section), which is exactly the misalignment
+		   the user flagged (2026-09, "タイトルと本文でpadding inlineなのか
+		   左がズレてる"). Same recurring gotcha documented elsewhere in this
+		   codebase (Footer.svelte's own history). */
+		padding-inline: 0;
 		margin-bottom: 56px;
 		max-width: 68ch;
 	}
@@ -245,15 +240,24 @@
 			display: grid;
 			grid-template-columns: 549fr 821fr;
 			align-items: start;
-			padding: calc(64px + env(safe-area-inset-top, 0px)) 20px 96px clamp(24px, 3.47vw, 50px);
+			/* No top padding here any more (2026-09) — it used to be what made
+			   the head "settle" into its stuck position only after ~80px of
+			   scroll (a real, if slight, gap the user flagged: "固定される
+			   まで僅かにギャップがある...最初から所定の位置にて固定されて
+			   いて欲しい"). The head now carries its own clearance directly
+			   (below), so its natural position already equals its stuck
+			   position — nothing to settle into, it just reads as fixed from
+			   the very first frame. The body regains the lost offset on its
+			   own padding-top instead. */
+			padding: 0 20px 96px clamp(24px, 3.47vw, 50px);
 		}
 
 		.PageStack__head {
 			grid-column: 1;
-			/* Desktop gets its top clearance from .PageStack's own padding-top
-			   above instead (the mobile-only fix's padding-top would double up
-			   with it otherwise) — see .PageStack__head's base rule comment. */
-			padding-top: 0;
+			/* Own clearance now, not inherited from .PageStack's padding — see
+			   that rule's comment on why removing the shared offset is what
+			   kills the pre-stick gap. */
+			padding-top: calc(64px + env(safe-area-inset-top, 0px));
 			padding-right: 24px;
 			padding-bottom: 0;
 			margin-bottom: 0;
@@ -284,12 +288,12 @@
 
 		.PageStack__body {
 			grid-column: 2;
-			padding-top: clamp(24px, 10.7vh, 96px);
+			padding-top: calc(64px + env(safe-area-inset-top, 0px) + clamp(24px, 10.7vh, 96px));
 			min-width: 0;
 		}
 
 		.PageStack__title {
-			font-size: clamp(56px, 6.94vw, 100px);
+			font-size: clamp(64px, 8vw, 140px);
 			line-height: 1.25;
 		}
 

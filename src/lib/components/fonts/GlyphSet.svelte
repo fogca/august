@@ -445,7 +445,14 @@
 		line-height: 1;
 		color: #fff;
 		background: transparent;
-		border: 1px solid rgba(255, 255, 255, 0.25);
+		/* Lighter and thinner-reading than the first pass (2026-09, at the
+		   user's request — "グリフ枠の線が太いのと色が濃いので薄めて"): with
+		   no gap between cells (see .GlyphSet__grid's own note), each shared
+		   edge is two adjacent 1px borders stacked on top of one another,
+		   which read heavier than a single hairline even before the colour
+		   itself — lowering the opacity is the fix for both complaints at
+		   once, since a fainter line reads as thinner at the same width. */
+		border: 1px solid rgba(255, 255, 255, 0.12);
 		cursor: pointer;
 		padding: 0;
 		transition: background-color 0.12s, color 0.12s, box-shadow 0.12s;

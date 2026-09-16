@@ -52,6 +52,17 @@
 		}
 	);
 	const lightestWeight = $derived(tf.weights[0]?.axisValue ?? 300);
+
+	// Checkout isn't open yet (2026-09, at the user's request — same "10月
+	// より使用開始" note as the Header's Cart). Purchase License stays a
+	// clickable button rather than a live link to /buy until then.
+	let buyNoteVisible = $state(false);
+	let buyNoteTimer: ReturnType<typeof setTimeout> | undefined;
+	function showBuyNote() {
+		buyNoteVisible = true;
+		clearTimeout(buyNoteTimer);
+		buyNoteTimer = setTimeout(() => (buyNoteVisible = false), 3200);
+	}
 </script>
 
 <svelte:head>
@@ -165,6 +176,7 @@
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
 		defaultSizeDesktop={isElio ? 120 : tf.slug === 'norma' ? 36 : undefined}
+		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 	/>
 
 	<!-- Weights — the named axis stops, each set in its own weight. A quick
@@ -263,14 +275,11 @@
 					{fromPriceEur !== null ? `From €${fromPriceEur}` : 'Price on request'} · pay once, every license
 					included
 				</p>
-				<ul class="FontBuy__licenses">
-					<li>Desktop</li>
-					<li>Web</li>
-					<li>App</li>
-					<li>Books</li>
-				</ul>
-				<a class="FontBuy__cta" href="/buy?font={tf.slug}">Purchase License →</a>
-				<p class="FontBuy__note">20 weights — Hairline to Ultra.</p>
+				<button type="button" class="FontBuy__cta" onclick={showBuyNote}>Purchase License →</button
+				>
+				<p class="FontBuy__note">
+					{buyNoteVisible ? 'Available from October.' : '20 weights — Hairline to Ultra.'}
+				</p>
 			{:else}
 				<p class="FontBuy__eyebrow">Coming Soon</p>
 				<h2 class="FontBuy__heading">{tf.name}</h2>
@@ -521,7 +530,15 @@
 		margin: 0 0 20px;
 	}
 
-	/* ── Weights — the named axis stops, each set in its own weight ── */
+	/* ── Weights — the named axis stops, each set in its own weight ──
+	   More subdued than the first pass (2026-09, at the user's request —
+	   "各書体ページのweight表示はもう少し控えめにして"): smaller, lower
+	   opacity, so this reads as a reference list rather than another
+	   display headline competing with the gallery above it. Two columns
+	   from the base breakpoint up, not just desktop (2026-09, "Normaの
+	   wightsは1-95までと長いので折り返して2カラムとかで対応") — Norma's
+	   twenty weights made this the tallest section on the page at one
+	   column on SP. */
 	.FontWeights {
 		padding: 40px var(--padding) 48px;
 	}
@@ -531,28 +548,29 @@
 		margin: 0;
 		padding: 0;
 		display: grid;
-		grid-template-columns: 1fr;
-		column-gap: 48px;
-	}
-
-	@media (min-width: 600px) {
-		.FontWeights__list {
-			grid-template-columns: repeat(2, 1fr);
-		}
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 24px;
 	}
 
 	.FontWeights__item {
 		display: block;
-		padding: 0;
-		font-size: 40px;
-		line-height: 1.2;
+		padding: 6px 0;
+		font-size: clamp(18px, 6vw, 24px);
+		line-height: 1.25;
 		letter-spacing: 0;
+		opacity: 0.7;
+	}
+
+	@media (min-width: 600px) {
+		.FontWeights__list {
+			column-gap: 48px;
+		}
 	}
 
 	@media (min-width: 768px) {
 		.FontWeights__item {
-			padding: 10px 0;
-			font-size: clamp(22px, 4vw, 36px);
+			padding: 8px 0;
+			font-size: clamp(20px, 2.6vw, 28px);
 		}
 	}
 
@@ -677,25 +695,6 @@
 		margin: 0 0 24px;
 	}
 
-	.FontBuy__licenses {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		list-style: none;
-		padding: 0;
-		margin: 0 0 32px;
-	}
-
-	.FontBuy__licenses li {
-		font-family: 'Norma', sans-serif;
-		font-size: 12px;
-		letter-spacing: 0;
-		padding: 6px 14px;
-		border: 1px solid var(--color-line);
-		border-radius: 999px;
-		color: var(--color-text);
-	}
-
 	.FontBuy__cta {
 		display: inline-block;
 		font-family: 'Norma', sans-serif;
@@ -706,6 +705,8 @@
 		color: var(--color-bg);
 		background: var(--color-text);
 		padding: 14px 28px;
+		border: 0;
+		cursor: pointer;
 		transition: opacity 0.15s ease;
 	}
 
