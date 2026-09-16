@@ -83,7 +83,20 @@
 				if (entry.isIntersecting) {
 					activeTypeface.current = typeface;
 					activeTypeface.visible = true;
-				} else if (activeTypeface.current === typeface) {
+					// Compared by slug, not object identity (`===`) — caught
+					// live in testing: Vite HMR can end up with this
+					// component's own `typeface` prop and activeTypeface's
+					// singleton state referencing two DIFFERENT (if
+					// same-slug) object instances after enough edits to
+					// typefaces.ts mid-session, which silently broke this
+					// guard (the leave branch never matched, so the mobile
+					// footer bar never cleared once past the last typeface
+					// section). Slug is a stable identifier either way —
+					// production may never actually hit the reference
+					// mismatch, but there's no reason to depend on module
+					// identity holding when a plain string comparison is
+					// just as correct and can't be fooled by it.
+				} else if (activeTypeface.current?.slug === typeface.slug) {
 					activeTypeface.visible = false;
 				}
 			},
