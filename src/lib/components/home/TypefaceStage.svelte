@@ -178,8 +178,16 @@
 		// isn't enough: IntroHero is sized in dvh while this reads against
 		// window.innerHeight (the static layout viewport), and on mobile those
 		// two can disagree enough that this stage already reads as "on
-		// screen" while the OP is still playing over it.
-		next.visible = homeIntro.introComplete && rect.top < window.innerHeight && rect.bottom > 0;
+		// screen" while the OP is still playing over it. window.scrollY > 0
+		// is a further explicit backstop (2026-09, "Topスクロール位置0の時は、
+		// 書体フッター非表示にして") — at the very top of the page this stage
+		// can never be the one actually in view, no matter what the rect math
+		// above says.
+		next.visible =
+			homeIntro.introComplete &&
+			window.scrollY > 0 &&
+			rect.top < window.innerHeight &&
+			rect.bottom > 0;
 	}
 
 	onMount(() => {

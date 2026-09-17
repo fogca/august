@@ -20,6 +20,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { loadMatter } from '$lib/physics';
+	import { onScroll } from '$lib/scroll';
 
 	interface Props {
 		/** Characters poured in. */
@@ -74,6 +75,7 @@
 		let frame = 0;
 		let onScreen = false;
 		let settled = false;
+		let offRepaintScroll: (() => void) | undefined;
 
 		// Everything below is component-local: the study kept this state in
 		// file-level globals, which would collide across mounts and HMR.
@@ -251,8 +253,27 @@
 			}
 		}
 
+		/** How much of the top of the canvas to keep clear THIS frame — see
+		 *  the file's own note on why this can't just be the constant
+		 *  `topClearance` (2026-09, at the user's report of a white gap
+		 *  between the typeface section and this one: "書体とCustomの間に
+		 *  白の余白がある"). The header is fixed to the VIEWPORT's own top
+		 *  ~52-72px band, not to this section's own top edge — while this
+		 *  (ordinary, scrolling — not pinned) section is still entering from
+		 *  below, its own y=0 sits well below the header on screen, so
+		 *  nothing needs protecting there yet; reserving the full amount
+		 *  regardless of scroll position is what painted a static white
+		 *  strip that read as a seam between sections. Physics stays
+		 *  completely untouched — only how much of the already-simulated
+		 *  playfield gets clipped away changes, not the playfield itself. */
+		function currentClearance() {
+			const top = section.getBoundingClientRect().top;
+			return Math.max(0, topClearance - Math.max(0, top));
+		}
+
 		function paint() {
 			if (!ctx) return;
+			const clip = currentClearance();
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			// clearRect, never an opaque repaint — the section paints its own
 			// background and the canvas sits on top of it. Clears the FULL
@@ -266,9 +287,11 @@
 			// when the canvas itself physically ended there. Now that the
 			// canvas extends into the header-clearance band too, that same
 			// near-the-top jitter would otherwise paint directly into it —
-			// clip it out so the band stays genuinely empty instead.
+			// clip it out so the band stays genuinely empty instead. `clip`
+			// (not the constant `topClearance`) is what actually varies with
+			// scroll — see currentClearance() above.
 			ctx.beginPath();
-			ctx.rect(0, topClearance, cssW, cssH);
+			ctx.rect(0, clip, cssW, cssH + topClearance - clip);
 			ctx.clip();
 			for (const { body, char } of bodies) {
 				const sprite = sprites.get(char);
@@ -416,6 +439,28 @@
 			// resizing their window should not be left with a stale one.
 			window.addEventListener('resize', onResize, { passive: true });
 
+			// Re-clip on every scroll tick, independent of the physics loop and
+			// registered for every path (including reduced motion, which never
+			// starts one) — see currentClearance()'s own comment. The loop
+			// stops once the pile settles (by design, a settled pile costs
+			// nothing to leave on screen), but the CLIP still needs to keep
+			// tracking the section's own position on screen even after that,
+			// or scrolling this section back through the header's band later
+			// would show the same stale gap again. A loose proximity check
+			// (not the IntersectionObserver's own onScreen, which reduced
+			// motion never sets) — cheap, and skips the redraw for scrolls
+			// happening nowhere near this section.
+			let scrollFrame = 0;
+			offRepaintScroll = onScroll(() => {
+				if (scrollFrame) return;
+				scrollFrame = requestAnimationFrame(() => {
+					scrollFrame = 0;
+					if (disposed) return;
+					const rect = section.getBoundingClientRect();
+					if (rect.top < window.innerHeight + 200 && rect.bottom > -200) paint();
+				});
+			});
+
 			if (reduced) {
 				// No animation at all: settle it headlessly, then paint the
 				// result once. base.css's reduced-motion blanket only zeroes CSS
@@ -448,6 +493,7 @@
 			io?.disconnect();
 			document.removeEventListener('visibilitychange', onVisibility);
 			window.removeEventListener('resize', onResize);
+			offRepaintScroll?.();
 			if (Matter && engine) {
 				Matter.World.clear(engine.world, false);
 				Matter.Engine.clear(engine);

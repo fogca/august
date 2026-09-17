@@ -468,15 +468,9 @@
 		line-height: 1.7;
 		letter-spacing: 0.02em;
 		opacity: 0.85;
-		/* Magazine-style justification: stretch the space BETWEEN words only.
-		   inter-character (and its `distribute` alias) is what produces the
-		   letter-by-letter gaps inside words that make justified English look
-		   broken. hyphens:auto gives the line breaker more places to break. */
-		text-align: justify;
-		text-align-last: center;
-		text-justify: inter-word;
-		-webkit-hyphens: auto;
-		hyphens: auto;
+		/* Centred, not justified (2026-09, at the user's request —
+		   "Custom文章justifyからcenterへ"). */
+		text-align: center;
 		margin: 0 auto 28px;
 	}
 
