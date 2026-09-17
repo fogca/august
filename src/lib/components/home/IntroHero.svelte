@@ -392,33 +392,48 @@
 </script>
 
 <section class="IntroHero" bind:this={stageEl} aria-label="Ōgast">
-	<!-- .IntroHero__wordmark-frame carries the FINAL on-screen box (identity
-	     on PC; the post-rotation box on SP) so grid place-items positions it
-	     exactly where it visually ends up — see the file header comment. -->
-	<div class="IntroHero__wordmark-frame">
-		<svg
-			class="IntroHero__wordmark"
-			viewBox="0 0 1400 385.524"
-			preserveAspectRatio="xMidYMid meet"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			{#each LETTERS as letter, i (letter.id)}
-				<path bind:this={letterEls[i]} d={letter.d} />
-			{/each}
-		</svg>
+	<!-- Split from .IntroHero itself (2026-09, at the user's request —
+	     "ロゴは100svhの配置で問題ないけど、背景自体は100lvhで"): the section's
+	     own background needs to cover the full LARGE viewport so nothing of
+	     the page behind it ever shows through iOS Safari's own translucent
+	     chrome, but the wordmark's grid placement should stay anchored to the
+	     SMALL (guaranteed-visible) viewport rather than grow/shift with it.
+	     .IntroHero__content carries that grid at 100svh; .IntroHero itself
+	     (this section) just supplies the 100lvh coloured backdrop behind it. -->
+	<div class="IntroHero__content">
+		<!-- .IntroHero__wordmark-frame carries the FINAL on-screen box (identity
+		     on PC; the post-rotation box on SP) so grid place-items positions it
+		     exactly where it visually ends up — see the file header comment. -->
+		<div class="IntroHero__wordmark-frame">
+			<svg
+				class="IntroHero__wordmark"
+				viewBox="0 0 1400 385.524"
+				preserveAspectRatio="xMidYMid meet"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				{#each LETTERS as letter, i (letter.id)}
+					<path bind:this={letterEls[i]} d={letter.d} />
+				{/each}
+			</svg>
+		</div>
 	</div>
 </section>
 
 <style>
 	.IntroHero {
 		height: 100vh;
-		height: 100dvh;
+		height: 100lvh;
+		background: #1f1b1a;
+		overflow: hidden;
+	}
+
+	.IntroHero__content {
+		height: 100vh;
+		height: 100svh;
 		display: grid;
 		place-items: end center;
-		background: #1f1b1a;
 		padding-inline: 20px;
 		padding-bottom: 20px;
-		overflow: hidden;
 	}
 
 	.IntroHero__wordmark-frame {
@@ -444,12 +459,14 @@
 		will-change: transform, opacity, fill;
 	}
 
-	/* SP: the same composition spun vertical to read top-to-bottom, pinned
-	   to the left edge (Figma 7:782/7:874). Sized via container-query units
-	   so the rotated box's on-screen width/height come from the UN-rotated
-	   container's height/width respectively. */
+	/* SP: the same composition spun vertical to read top-to-bottom (Figma
+	   7:782/7:874). Sized via container-query units so the rotated box's
+	   on-screen width/height come from the UN-rotated container's
+	   height/width respectively — that container is now .IntroHero__content
+	   (100svh), not .IntroHero itself (100lvh — see that split's own
+	   comment), so these units still resolve against the safe-visible area. */
 	@media (max-width: 767.98px) {
-		.IntroHero {
+		.IntroHero__content {
 			place-items: center start;
 			padding-inline: 0;
 			padding-bottom: 0;
@@ -460,12 +477,18 @@
 		   as plain (unrotated) geometry, so grid's place-items:center start
 		   plus this margin land it exactly where it should sit, full stop.
 		   The rotation itself happens one level down, isolated on the SVG
-		   (see below), so it can never disturb this element's own box. */
+		   (see below), so it can never disturb this element's own box.
+		   margin-left centres the frame itself within the container ((100 -
+		   82) / 2 = 9cqw) plus a touch more (2026-09, at the user's own
+		   follow-up — "マクロンがあるのでもう少しSPは右側に配置して": the
+		   macron on Ō reads as a light accent rather than solid ink, so
+		   centring on the raw glyph bounding box alone still reads slightly
+		   left-heavy). */
 		.IntroHero__wordmark-frame {
 			width: 82cqw;
 			max-width: none;
 			height: 82cqh;
-			margin-left: 6vw;
+			margin-left: 11vw;
 			position: relative;
 		}
 

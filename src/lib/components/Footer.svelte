@@ -56,34 +56,33 @@
 	</nav>
 
 	<div class="Footer__bottom">
-		<!-- Legal links sit on their own row, above the language switch
-		     (2026-09, at the user's revised request — "言語の上＝左端の上に
-		     LicenseやEULAなどを配置して"). -->
-		<ul class="Footer__legal">
-			{#each LEGAL as item (item.href)}
-				<li><a href={item.href}>{item.label}</a></li>
+		<!-- Language switch sits on its own row, above the legal links
+		     (2026-09, at the user's own follow-up — swapping the previous
+		     order: "SPフッターの言語とLicense EULAなどの位置入れ替えて"). -->
+		<!-- Same four codes as the Header (see lang.svelte.ts's own comment) —
+		     DE/ES are buttons only for now, no site copy translated into them
+		     yet. -->
+		<div class="Footer__langs" role="group" aria-label="Language">
+			{#each LANG_OPTIONS as l (l.code)}
+				<button
+					type="button"
+					class="Footer__lang"
+					class:is-active={lang.current === l.code}
+					onclick={() => lang.set(l.code)}
+					aria-pressed={lang.current === l.code}
+					aria-label={l.name}
+				>
+					{l.label}
+				</button>
 			{/each}
-		</ul>
-		<!-- Language (left) + copyright (right) on the same row — the user's
-		     own spec: "一番下の左が言語、その同じ高さの右端にコピーライト". -->
+		</div>
+		<!-- Legal links (left) + copyright (right) on the same row. -->
 		<div class="Footer__row">
-			<!-- Same four codes as the Header (see lang.svelte.ts's own comment) —
-			     DE/ES are buttons only for now, no site copy translated into them
-			     yet. -->
-			<div class="Footer__langs" role="group" aria-label="Language">
-				{#each LANG_OPTIONS as l (l.code)}
-					<button
-						type="button"
-						class="Footer__lang"
-						class:is-active={lang.current === l.code}
-						onclick={() => lang.set(l.code)}
-						aria-pressed={lang.current === l.code}
-						aria-label={l.name}
-					>
-						{l.label}
-					</button>
+			<ul class="Footer__legal">
+				{#each LEGAL as item (item.href)}
+					<li><a href={item.href}>{item.label}</a></li>
 				{/each}
-			</div>
+			</ul>
 			<p class="Footer__copy">© {YEAR} Ōgast</p>
 		</div>
 	</div>
@@ -175,16 +174,16 @@
 		opacity: 1;
 	}
 
-	/* Revised layout (2026-09, at the user's own follow-up spec — the earlier
-	   "everything wraps together" version wasn't what was asked for):
-	   legal links get their own row, ABOVE the language switch; the language
-	   switch (left) and copyright (right) share the row below it, at the
-	   same height. Column on mobile so those are genuinely two separate
-	   rows; row on desktop, where .Footer__row (langs + copy) grows to fill
-	   the space after the legal links so the three still read as one line —
-	   see .Footer__row's own comment below. Mobile's own margin-top is
-	   tighter than desktop's — the gap to the nav links above read as too
-	   large at the smaller size. */
+	/* Revised layout (2026-09, at the user's own follow-up spec, then swapped
+	   once more — "SPフッターの言語とLicense EULAなどの位置入れ替えて"):
+	   the language switch gets its own row, ABOVE the legal links; the legal
+	   links (left) and copyright (right) share the row below, at the same
+	   height. Column on mobile so those are genuinely two separate rows; row
+	   on desktop, where .Footer__row (legal + copy) grows to fill the space
+	   after the language switch so the three still read as one line — see
+	   .Footer__row's own comment below. Mobile's own margin-top is tighter
+	   than desktop's — the gap to the nav links above read as too large at
+	   the smaller size. */
 	.Footer__bottom {
 		margin-top: 28px;
 		padding: 24px 16px 0;
@@ -206,10 +205,9 @@
 		}
 	}
 
-	/* Language switch (left) + copyright (right), same row/height — the
-	   user's own spec: "一番下の左が言語、その同じ高さの右端にコピーライト".
-	   On desktop this grows to fill whatever width the legal links (its
-	   sibling) don't use, so langs sits right after them and copy still
+	/* Legal links (left) + copyright (right), same row/height. On desktop
+	   this grows to fill whatever width the language switch (its sibling)
+	   doesn't use, so the legal links sit right after it and copy still
 	   lands at the row's own right edge. */
 	.Footer__row {
 		display: flex;

@@ -336,7 +336,11 @@
 			cssW = nextW;
 			cssH = nextH;
 			topClearance = nextTopClearance;
-			dpr = Math.min(window.devicePixelRatio || 1, 2);
+			// Capped at 2 read soft on modern phones (DPR 3 is common there) —
+			// 2026-09, at the user's request ("CustomのCanvasの解像度が少し
+			// SPで低く感じる"). 3 still bounds the backing-store size against
+			// anything unusually high.
+			dpr = Math.min(window.devicePixelRatio || 1, 3);
 			canvas.width = Math.round(cssW * dpr);
 			// Full section height, not just the physics playfield — this is
 			// the part that makes the <canvas> element itself 100vh.

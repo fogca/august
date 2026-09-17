@@ -507,7 +507,10 @@
 
 	/* --- 5. Contact --- */
 	.Home__contact {
-		min-height: 100svh;
+		/* Not a full screen (2026-09, at the user's request — "トップの
+		   Contactセクションは100vhではなくて良いのでもう少し低く適切な
+		   余白ーpadding-y 100pxとかで") — was min-height:100svh; sized by
+		   its own content plus a plain top/bottom padding instead. */
 		display: flex;
 		align-items: center;
 		/* Fixed dark grey, white text (2026-09, at the user's request — About
@@ -516,7 +519,7 @@
 		   sharing the debug-switchable --summer-color with About/the /contact
 		   page). */
 		background: #333333;
-		padding-block: clamp(96px, 12vh, 140px);
+		padding-block: 100px;
 	}
 
 	/* base.css §7 re-asserts a colour on div/p/span/a/h2/button/input
