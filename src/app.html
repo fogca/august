@@ -82,12 +82,15 @@
 			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 850,
 			   full wght range interpolated between them). Used on the Elio
 			   typeface page's Type Tester and the top-page A-Z specimen.
-			   VF12 (2026-09-15): same 144-glyph exclusion set as VF11 — a
-			   re-export picking up "a"'s refined outline (no metric or
-			   kerning change). Full history: static/fonts/README.md. */
+			   VF13 (2026-09-17): Ō/ō (O with macron, U+014C/014D) added —
+			   new "macroncomb" mark built proportionally from hyphen's
+			   stroke weight + circumflexcomb's width/placement convention,
+			   composed the same anchor-based way as the other accented
+			   letters. 147 glyphs ship now (was 144 in VF12). Full history:
+			   static/fonts/README.md. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF12.woff2?v=20260915b') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF13.woff2?v=20260917a') format('woff2-variations');
 				font-weight: 150 850;
 				font-style: normal;
 				font-display: swap;

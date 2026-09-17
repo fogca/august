@@ -371,26 +371,30 @@ export const TYPEFACES: Typeface[] = [
 		// Norma's info, where those two numbers are nearly the same since
 		// Norma is finished across all masters. For Elio, mid-development,
 		// they diverge a lot: a variable font can only ship a glyph once
-		// BOTH masters are shape-compatible, so ~28 of the 174 encoded
+		// BOTH masters are shape-compatible, so ~28 of the 177 encoded
 		// characters that already have real ink in Hair are still hard-
-		// excluded from Elio-VF12.woff2 while Ultra catches up (144 ship
+		// excluded from Elio-VF13.woff2 while Ultra catches up (147 ship
 		// today — a big jump from VF10's 107, since all 4 remaining
 		// Hair-only combining marks got drawn in Ultra — see
-		// static/fonts/README.md). Quoting that 144 as "the" glyph count
+		// static/fonts/README.md). Quoting that 147 as "the" glyph count
 		// would undersell finished design work that just hasn't cleared
 		// the interpolation-compatibility bar yet.
-		// Measured 2026-09-05 directly from the Glyphs glyph box:
-		//   176 total - "新規グリフ" (empty placeholder) - three.ss01
-		//   (unencoded alt slot) = 174 encoded; 172 of those have real
-		//   Hair ink (only asciitilde/asciicircum are still blank).
+		// Re-measured 2026-09-17 directly from the Glyphs glyph box (was
+		// 172/79 on 2026-09-05): 180 total - "新規グリフ" (empty
+		// placeholder) - three.ss01 - t.ss01 (unencoded alt slots) = 177
+		// encoded; 175 of those have real Hair ink (only asciitilde/
+		// asciicircum are still blank) — +3 vs the 2026-09-05 count for
+		// Ōmacron/ōmacron/macroncomb, added this round.
 		// Languages: Hyperglot 0.7.3, base support, validity=verified
-		// (same method/thresholds as Norma's "93") against those 172 chars.
+		// (same method/thresholds as Norma's "93") against those 175
+		// chars — unchanged at 79; Ō/ō alone didn't clear any additional
+		// language at the verified tier.
 		info: {
 			design: 'Takumi Isobe',
 			release: 'TBD',
 			collection: '8 weights',
 			formats: 'OTF, TTF, WOFF2',
-			glyphs: '172',
+			glyphs: '175',
 			languages: '79',
 			note: 'Reflects the drawn design repertoire (Hair). The live variable font currently ships a smaller, interpolation-compatible subset while Ultra catches up — see the specimen below.'
 		},
