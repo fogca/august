@@ -16,6 +16,7 @@
      the A–Z/a–z specimen proof. Real photography drops into the same three
      slots when it exists. -->
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
@@ -24,6 +25,23 @@
 	import type { PageData } from './$types.js';
 
 	let { data }: { data: PageData } = $props();
+
+	// Gallery block A cycles A-Z instead of showing one fixed glyph (2026-09,
+	// at the user's request — "1つ目のaとなってるのは、A-zまで切り替わる
+	// アニメーションにして"). ALPHABET rather than tf.glyphOrder or similar:
+	// this is a generic showcase of the face's caps, not tied to any
+	// per-typeface data.
+	const ALPHABET = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+	const GALLERY_LETTER_INTERVAL = 900;
+	let galleryLetterIndex = $state(0);
+
+	onMount(() => {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		const id = setInterval(() => {
+			galleryLetterIndex = (galleryLetterIndex + 1) % ALPHABET.length;
+		}, GALLERY_LETTER_INTERVAL);
+		return () => clearInterval(id);
+	});
 
 	// Use $derived so these stay reactive if data changes on navigation
 	const tf = $derived(data.typeface);
@@ -126,7 +144,14 @@
 		<!-- Three-block gallery (Figma: 306 / 489 / 489 wide, all 391 tall). -->
 		<div class="FontGallery" aria-label="Specimens">
 			<div class="FontGallery__block FontGallery__block--a">
-				<span class="FontGallery__glyph">{hero.glyph}</span>
+				<!-- .FontDetail :global(*) already forces --type-font onto every
+				     descendant (see this file's own font-family rule) — no need to
+				     restate it here. -->
+				{#key galleryLetterIndex}
+					<span class="FontGallery__glyph FontGallery__glyph--cycle"
+						>{ALPHABET[galleryLetterIndex]}</span
+					>
+				{/key}
 			</div>
 			<div class="FontGallery__block FontGallery__block--b" class:has-video={!!tf.heroVideo}>
 				{#if tf.heroVideo}
@@ -496,6 +521,24 @@
 		color: var(--panel-fg);
 	}
 
+	/* Block A cycles A-Z instead of one fixed glyph (2026-09, at the user's
+	   request). {#key} re-mounts this span on every letter change, which is
+	   what re-triggers the animation each time — same idiom as the home
+	   page's own TypefaceFooterBar__lines fade. */
+	@keyframes gallery-glyph-fade {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.FontGallery__glyph--cycle {
+		display: inline-block;
+		animation: gallery-glyph-fade 0.3s ease both;
+	}
+
 	.FontGallery__tagline {
 		font-size: clamp(28px, 3.4vw, 48px);
 		line-height: 1.15;
@@ -514,7 +557,8 @@
 
 	.FontGallery__specimen-line {
 		display: block;
-		font-size: clamp(16px, 2vw, 26px);
+		/* 2026-09, at the user's request — "3つ目のfsを64pxにして". */
+		font-size: 64px;
 		line-height: 1.3;
 		letter-spacing: 0;
 		color: var(--panel-fg);
