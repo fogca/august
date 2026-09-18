@@ -74,6 +74,7 @@
 			if (!lenis) return;
 
 			const introEl = document.querySelector<HTMLElement>('.IntroHero');
+			const introContentEl = document.querySelector<HTMLElement>('.IntroHero__content');
 			const stageEl = document.querySelector<HTMLElement>('.TypefaceStage');
 			const pinEl = document.querySelector<HTMLElement>('.TypefaceStage__pin');
 			const customEl = document.querySelector<HTMLElement>('.Home__custom');
@@ -96,10 +97,26 @@
 					(pinEl ?? stageEl).getBoundingClientRect().height || window.innerHeight
 				);
 				const inner = homeTypefaces.map((_, k) => stageTop + k * stepH);
+				// The intro is two screens tall on PC now (its content pins for
+				// the first one while the letters fall onto the wordmark — see
+				// IntroHero's own .has-fall note), so it owns a second stop of
+				// its own. Derived from the measured gap between the section and
+				// its pinned content rather than assumed: that gap is exactly 0
+				// wherever the fall isn't running (SP, reduced motion), which
+				// collapses this back to the single stop it used to be.
+				const introTop = top(introEl);
+				const introTravel = introContentEl
+					? Math.round(
+							introEl.getBoundingClientRect().height -
+								introContentEl.getBoundingClientRect().height
+						)
+					: 0;
+				const introSteps =
+					introTravel > 8 ? [introTop, introTop + introTravel] : [introTop];
 				// customTop is MEASURED rather than computed as stageTop + N*stepH
 				// so svh/px rounding can't drift, and it doubles as the release
 				// point — the stage has fully un-stuck by then.
-				targets = [top(introEl), ...inner, top(customEl)];
+				targets = [...introSteps, ...inner, top(customEl)];
 			}
 
 			measure();

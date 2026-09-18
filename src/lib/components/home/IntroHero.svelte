@@ -108,6 +108,7 @@
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { initScroll, getLenis } from '$lib/scroll';
 	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
+	import GlyphFill from '$lib/components/home/GlyphFill.svelte';
 
 	type Letter = {
 		id: string;
@@ -172,8 +173,94 @@
 		}
 	];
 
+	/** The wordmark's own viewBox width — the divisor that turns its path data
+	 *  into CSS px (see wordmarkShapes below). Kept beside the markup's own
+	 *  viewBox attribute, which must match it. */
+	const VIEWBOX_W = 1400;
+
 	let letterEls: SVGPathElement[] = [];
 	let stageEl: HTMLElement | undefined = $state();
+	let svgEl: SVGSVGElement | undefined = $state();
+	let fallEl: HTMLElement | undefined = $state();
+
+	// ── Falling-letter stack (2026-09, at the user's request) ──────────────
+	// PC only, and only when motion is welcome: on SP the wordmark is turned
+	// 90deg against the left edge, which leaves nothing to fall ONTO, and the
+	// section stays exactly one screen tall there.
+	let fallEnabled = $state(false);
+	let fallArmed = $state(false);
+
+	/** The wordmark's five letters as landing surfaces for the pile, in the
+	 *  content box's own pixel space (GlyphFill sits inset:0 inside it, so the
+	 *  two share an origin). Read live rather than from the LETTERS table: the
+	 *  table is viewBox units, and what the pile has to land on is wherever
+	 *  those paths actually ended up at this viewport size.
+	 *
+	 *  Per letter rather than one box across the whole wordmark — the gaps
+	 *  between letters (19-43px at 1440) are what let some glyphs fall past to
+	 *  the floor instead of every one of them resting on an invisible shelf.
+	 *  Ō's box starts at its macron, so letters land on the macron rather than
+	 *  the bowl; that reads correctly, the macron is real ink. */
+	function wordmarkObstacles() {
+		if (!fallEl) return [];
+		// Measured against the CANVAS's own box, not the content box: the two
+		// differ now that the canvas breaks out to the full viewport width
+		// (see .IntroHero__fall), and the obstacles have to land in the same
+		// space the physics runs in.
+		const base = fallEl.getBoundingClientRect();
+		return letterEls.filter(Boolean).map((el) => {
+			const r = el.getBoundingClientRect();
+			return { x: r.left - base.left, y: r.top - base.top, w: r.width, h: r.height };
+		});
+	}
+
+	/** The five letters that fall are the wordmark's OWN paths at the
+	 *  wordmark's own size (2026-09, at the user's request — "OGASTは同じSVG
+	 *  で同じサイズで実装して"): Norma set at some approximating weight read
+	 *  visibly heavier beside the drawn wordmark it was landing on.
+	 *
+	 *  getBBox() is deliberately the measurement here rather than
+	 *  getBoundingClientRect(): it reports the path's own geometry in viewBox
+	 *  units and ignores transforms, so it reads the same whether the OP has
+	 *  finished or is still mid-grow. The viewBox→px scale comes off the live
+	 *  <svg> box instead of being assumed, so this tracks the viewport. */
+	function wordmarkShapes() {
+		if (!svgEl) return [];
+		const scale = svgEl.getBoundingClientRect().width / VIEWBOX_W;
+		if (!scale) return [];
+		return letterEls.filter(Boolean).map((el, i) => {
+			const bb = el.getBBox();
+			return {
+				d: LETTERS[i].d,
+				ox: bb.x,
+				oy: bb.y,
+				w: bb.width * scale,
+				h: bb.height * scale,
+				scale
+			};
+		});
+	}
+
+	// Its own lifecycle, deliberately separate from the OP's onMount below:
+	// that one has two early-exit paths (reduced motion, and landing already
+	// scrolled down) and the fall has to set itself up whichever it takes.
+	onMount(() => {
+		const motionOk = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const pc = window.matchMedia('(min-width: 768px)');
+		const sync = () => (fallEnabled = motionOk && pc.matches);
+		sync();
+		pc.addEventListener('change', sync);
+
+		// The reader's own first scroll starts the fall — the same beat that
+		// fades the stage from the summer colour to white.
+		const armFall = () => (fallArmed = true);
+		window.addEventListener('scroll', armFall, { once: true, passive: true });
+
+		return () => {
+			pc.removeEventListener('change', sync);
+			window.removeEventListener('scroll', armFall);
+		};
+	});
 
 	/** Straight to the resting state — same convention as PageTransition.svelte
 	 *  and the home page's video pause. Inline style, not setAttribute: a
@@ -391,7 +478,7 @@
 	});
 </script>
 
-<section class="IntroHero" bind:this={stageEl} aria-label="Ōgast">
+<section class="IntroHero" class:has-fall={fallEnabled} bind:this={stageEl} aria-label="Ōgast">
 	<!-- Split from .IntroHero itself (2026-09, at the user's request —
 	     "ロゴは100svhの配置で問題ないけど、背景自体は100lvhで"): the section's
 	     own background needs to cover the full LARGE viewport so nothing of
@@ -407,6 +494,7 @@
 		<div class="IntroHero__wordmark-frame">
 			<svg
 				class="IntroHero__wordmark"
+				bind:this={svgEl}
 				viewBox="0 0 1400 385.524"
 				preserveAspectRatio="xMidYMid meet"
 				xmlns="http://www.w3.org/2000/svg"
@@ -416,6 +504,25 @@
 				{/each}
 			</svg>
 		</div>
+
+		<!-- Last in the box, and absolutely positioned, so it paints OVER the
+		     wordmark — the point is watching letters land on it, not behind it.
+		     The falling letters ARE the wordmark's own paths at its own size
+		     (see wordmarkShapes), so this is a handful of full-size letters
+		     tumbling down rather than the Custom section's packed field of
+		     typeset ones — hence a density tuned for that, not for filling the
+		     screen. Black to match the wordmark's own resting fill. -->
+		{#if fallEnabled}
+			<div class="IntroHero__fall" bind:this={fallEl}>
+				<GlyphFill
+					armed={fallArmed}
+					obstacles={wordmarkObstacles}
+					shapes={wordmarkShapes}
+					color="#000000"
+					fillDensity={0.35}
+				/>
+			</div>
+		{/if}
 	</div>
 </section>
 
@@ -428,12 +535,55 @@
 	}
 
 	.IntroHero__content {
+		position: relative;
 		height: 100vh;
 		height: 100svh;
 		display: grid;
 		place-items: end center;
 		padding-inline: 20px;
 		padding-bottom: 20px;
+	}
+
+	/* The falling letters need the WHOLE screen (2026-09, at the user's
+	   request — "100vw 100vhでちゃんと表示して"). .IntroHero is a <section>,
+	   so base.css's global `section { padding-inline: var(--padding) }` insets
+	   everything inside it by 5vw a side — which is right for the wordmark
+	   (that inset IS its measure) but wrong for the field it falls through,
+	   which was ending up 144px narrower than the viewport with dead margins
+	   down both edges. Negative insets of exactly that padding put this layer
+	   back on the viewport's own edges; the height is already the full pinned
+	   screen. Anything absolutely positioned resolves against the padding box
+	   of .IntroHero__content, hence -var(--padding) rather than 0. */
+	.IntroHero__fall {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: calc(-1 * var(--padding));
+		right: calc(-1 * var(--padding));
+	}
+
+	/* The falling-letter variant (PC + motion welcome — see fallEnabled):
+	   one EXTRA screen of section height, with the stage pinned for the whole
+	   of it, so the reader has a screen's worth of scrolling to watch the
+	   letters come down instead of the snap carrying them straight past it.
+	   Same sticky-pin shape TypefaceStage already uses.
+
+	   overflow moves from the section down onto the pinned content: a clipping
+	   ANCESTOR is exactly what kills position:sticky (see TypefaceStage's own
+	   note), while overflow on the sticky element itself is harmless — and the
+	   clip is still wanted, to keep the OP's own letter overshoot inside. */
+	@media (min-width: 768px) {
+		.IntroHero.has-fall {
+			height: 200vh;
+			height: 200lvh;
+			overflow: visible;
+		}
+
+		.IntroHero.has-fall .IntroHero__content {
+			position: sticky;
+			top: 0;
+			overflow: hidden;
+		}
 	}
 
 	.IntroHero__wordmark-frame {

@@ -35,6 +35,30 @@
 		/** Circle-area poured in, as a multiple of the canvas area. >1 overflows
 		 *  into a packed, several-layers-deep pile. */
 		fillDensity?: number;
+		/** Static things the pile can land ON, as boxes in CSS px relative to
+		 *  THIS element's own box (it is inset:0, so the host section's box).
+		 *  Called fresh every time the walls are rebuilt — a resize, and the
+		 *  moment `armed` flips — so a caller measuring live DOM (the intro's
+		 *  own wordmark, say) reads it at rest rather than mid-animation.
+		 *  Only the top edge of each box is ever really seen: bodies land on
+		 *  it and roll off, and anything falling through a gap between boxes
+		 *  carries on to the floor. */
+		obstacles?: () => { x: number; y: number; w: number; h: number }[];
+		/** Draw THESE shapes instead of typesetting `characters` with the
+		 *  webfont. For the intro, where the pile has to be the wordmark's own
+		 *  drawn letterforms at the wordmark's own size — not Norma set at some
+		 *  approximating weight, which reads visibly heavier beside it.
+		 *  `d` is path data in viewBox units; `ox`/`oy` its bbox origin in
+		 *  those same units (so the sprite can be centred on the ink rather
+		 *  than on the viewBox); `scale` converts to CSS px; `w`/`h` are the
+		 *  already-scaled on-screen size. Re-read whenever the walls are, so a
+		 *  caller measuring live DOM gets it at rest. */
+		shapes?: () => { d: string; ox: number; oy: number; w: number; h: number; scale: number }[];
+		/** False holds the pour back even once the section is on screen — for
+		 *  a caller that wants to start it on its own signal (scroll phase,
+		 *  say) rather than on first intersection. Default true keeps the
+		 *  original "pour as soon as it's visible" behaviour. */
+		armed?: boolean;
 	}
 	let {
 		characters = ['O', 'G', 'A', 'S', 'T'],
@@ -42,7 +66,10 @@
 		fontFamily = 'Norma',
 		fontWeight = 850,
 		fontSize = 190,
-		fillDensity = 3.2
+		fillDensity = 3.2,
+		obstacles = undefined,
+		shapes = undefined,
+		armed = true
 	}: Props = $props();
 
 	// Physics feel — carried over from the study, where these were tuned by eye.
@@ -62,6 +89,16 @@
 
 	let sectionEl: HTMLElement | undefined = $state();
 	let canvasEl: HTMLCanvasElement | undefined = $state();
+	/** Set by onMount; see its own comment where it's assigned. */
+	let arm: (() => void) | undefined;
+
+	// Re-measures the obstacles and releases the pour when the caller arms it.
+	// The IntersectionObserver path also calls start(), which checks `armed`
+	// itself — so whichever of the two happens second is the one that runs,
+	// and neither needs to know about the other.
+	$effect(() => {
+		if (armed) arm?.();
+	});
 
 	onMount(() => {
 		if (!browser || !canvasEl || !sectionEl) return;
@@ -88,6 +125,16 @@
 		let nextColumn = 0;
 		let queueRemaining = 0;
 		let sprites = new Map<string, { bmp: HTMLCanvasElement; w: number; h: number }>();
+		/** Shape mode only (see the `shapes` prop): the paths get filled straight
+		 *  into the frame rather than pre-rendered to a bitmap first. The sprite
+		 *  cache exists to keep 400 rotated fillText calls affordable; a handful
+		 *  of big letterforms is nothing to fill directly, and going direct is
+		 *  also visibly sharper — a rotated blit resamples its bitmap, which at
+		 *  this size reads as soft edges. */
+		let vectors = new Map<
+			string,
+			{ path: Path2D; ox: number; oy: number; w: number; h: number; scale: number }
+		>();
 		let radii = new Map<string, number>();
 		let cssW = 0;
 		/** Physics playfield height — shorter than the canvas itself by
@@ -113,14 +160,46 @@
 
 		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+		/** The keys spawnOne() draws from — the characters themselves in the
+		 *  webfont case, or one key per supplied shape. Everything downstream
+		 *  (radii, sprites, spawn columns, target count) is keyed off these, so
+		 *  neither path has to know which one is in play. */
+		let pieceKeys: string[] = [...characters];
+
 		function measureGlyphs() {
 			if (!ctx) return;
+			radii.clear();
+			sprites.clear();
+			vectors.clear();
+
+			const shapeList = shapes?.();
+			if (shapeList?.length) {
+				pieceKeys = shapeList.map((_, i) => `shape-${i}`);
+				shapeList.forEach((s, i) => {
+					const key = pieceKeys[i];
+					// Circumscribing radius, not the webfont path's half-ADVANCE:
+					// these are whole drawn letterforms rather than one size of
+					// type, and at this scale a radius that fits inside the ink
+					// lets neighbours visibly overlap — which reads as a bug,
+					// where a little air between them does not.
+					radii.set(key, Math.max(s.w, s.h) / 2);
+					vectors.set(key, {
+						path: new Path2D(s.d),
+						ox: s.ox,
+						oy: s.oy,
+						w: s.w,
+						h: s.h,
+						scale: s.scale
+					});
+				});
+				return;
+			}
+
+			pieceKeys = [...characters];
 			// Phones get a smaller pour — the body count scales as area/r², so a
 			// fixed 190px glyph on a 375pt screen would be a handful of boulders.
 			glyphPx = cssW < 768 ? Math.max(90, Math.round(fontSize * 0.58)) : fontSize;
 			ctx.font = `${fontWeight} ${glyphPx}px "${fontFamily}", sans-serif`;
-			radii.clear();
-			sprites.clear();
 			for (const ch of characters) {
 				const w = ctx.measureText(ch).width;
 				radii.set(ch, w / 2);
@@ -167,11 +246,24 @@
 				Bodies.rectangle(-t / 2, sideCenterY, t, sideH, { isStatic: true }),
 				Bodies.rectangle(cssW + t / 2, sideCenterY, t, sideH, { isStatic: true })
 			];
+
+			// Caller-supplied landing surfaces (see the `obstacles` prop). Their
+			// boxes are element-pixel space, physics space is that minus
+			// topClearance — the same offset paint() adds back on the way out.
+			for (const o of obstacles?.() ?? []) {
+				if (o.w <= 0 || o.h <= 0) continue;
+				boundaries.push(
+					Bodies.rectangle(o.x + o.w / 2, o.y + o.h / 2 - topClearance, o.w, o.h, {
+						isStatic: true
+					})
+				);
+			}
+
 			Composite.add(world, boundaries);
 		}
 
 		function setupColumns() {
-			const maxR = Math.max(...characters.map((c) => radii.get(c) ?? glyphPx / 2));
+			const maxR = Math.max(...pieceKeys.map((c) => radii.get(c) ?? glyphPx / 2));
 			const diameter = maxR * 2;
 			const n = Math.max(3, Math.floor(cssW / (diameter * 0.9)));
 			spawnColumns = Array.from({ length: n }, (_, i) => ({
@@ -183,7 +275,7 @@
 
 		function targetCount() {
 			const avgR =
-				characters.reduce((sum, c) => sum + (radii.get(c) ?? glyphPx / 2), 0) / characters.length;
+				pieceKeys.reduce((sum, c) => sum + (radii.get(c) ?? glyphPx / 2), 0) / pieceKeys.length;
 			const avgArea = Math.PI * avgR * avgR;
 			return Math.min(Math.ceil(((cssW * cssH) / avgArea) * fillDensity), MAX_TOTAL);
 		}
@@ -196,7 +288,7 @@
 		function spawnOne() {
 			if (!Matter || !world) return;
 			const { Bodies, Body, Composite } = Matter;
-			const char = characters[Math.floor(Math.random() * characters.length)];
+			const char = pieceKeys[Math.floor(Math.random() * pieceKeys.length)];
 			const radius = radii.get(char) ?? glyphPx / 2;
 
 			const col = spawnColumns[nextColumn % spawnColumns.length];
@@ -293,11 +385,16 @@
 			ctx.beginPath();
 			ctx.rect(0, clip, cssW, cssH + topClearance - clip);
 			ctx.clip();
+			ctx.fillStyle = color;
 			for (const { body, char } of bodies) {
-				const sprite = sprites.get(char);
-				if (!sprite) continue;
+				const vec = vectors.get(char);
+				const sprite = vec ? undefined : sprites.get(char);
+				// How far off the playfield a piece has to be before it stops
+				// being worth drawing — its own drawn extent, either way.
+				const reach = vec ? Math.max(vec.w, vec.h) : sprite?.h;
+				if (reach === undefined) continue;
 				const { x, y } = body.position;
-				if (y < -sprite.h || y > cssH + sprite.h) continue; // off-screen overflow
+				if (y < -reach || y > cssH + reach) continue; // off-screen overflow
 				ctx.save();
 				// +topClearance shifts physics-space (0..cssH, floor at the
 				// bottom) down into canvas-pixel-space (topClearance..full
@@ -306,7 +403,17 @@
 				// within the taller canvas.
 				ctx.translate(x, y + topClearance);
 				ctx.rotate(body.angle);
-				ctx.drawImage(sprite.bmp, -sprite.w / 2, -sprite.h / 2, sprite.w, sprite.h);
+				if (vec) {
+					// Centre the INK on the body, then into the path's own
+					// viewBox space: no intermediate bitmap, so this stays crisp
+					// at any rotation and any devicePixelRatio.
+					ctx.translate(-vec.w / 2, -vec.h / 2);
+					ctx.scale(vec.scale, vec.scale);
+					ctx.translate(-vec.ox, -vec.oy);
+					ctx.fill(vec.path);
+				} else if (sprite) {
+					ctx.drawImage(sprite.bmp, -sprite.w / 2, -sprite.h / 2, sprite.w, sprite.h);
+				}
 				ctx.restore();
 			}
 			ctx.restore();
@@ -337,9 +444,23 @@
 		}
 
 		function start() {
-			if (disposed || settled || frame) return;
+			if (disposed || settled || frame || !armed) return;
 			frame = requestAnimationFrame(loop);
 		}
+
+		// Called from the $effect below the moment `armed` flips true. Shapes
+		// and walls are re-read first on purpose: a caller measuring live DOM
+		// for either (the intro measures its own wordmark for both) would
+		// otherwise have been read at init time, while that wordmark was still
+		// mid-entrance. Nothing has spawned yet at this point — the queue is
+		// still full — so re-deriving the radii and the count is free.
+		arm = () => {
+			if (disposed || !armed) return;
+			measureGlyphs();
+			createBoundaries();
+			refill();
+			start();
+		};
 
 		function resize() {
 			// `section` (.GlyphFill) is now inset:0 — its rect IS the full
@@ -489,6 +610,7 @@
 
 		return () => {
 			disposed = true;
+			arm = undefined;
 			if (frame) cancelAnimationFrame(frame);
 			io?.disconnect();
 			document.removeEventListener('visibilitychange', onVisibility);
@@ -500,6 +622,7 @@
 			}
 			bodies = [];
 			sprites.clear();
+			vectors.clear();
 		};
 	});
 </script>
