@@ -28,6 +28,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
+	import WeightReveal from '$lib/components/WeightReveal.svelte';
 
 	interface StackItem {
 		/** Drives the pinned subtitle line while this item's body is the one
@@ -115,7 +116,10 @@
 
 <div class="PageStack">
 	<div class="PageStack__head">
-		<svelte:element this={as} class="PageStack__title">{title}</svelte:element>
+		<!-- `to` tracks --brand-weight, which is what this title rests at. -->
+		<svelte:element this={as} class="PageStack__title">
+			<WeightReveal text={title} to={350} />
+		</svelte:element>
 		<p class="PageStack__subtitle" bind:this={subtitleEl}>{items[0]?.subtitle ?? ''}</p>
 	</div>
 	<div class="PageStack__body">

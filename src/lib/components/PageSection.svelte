@@ -29,6 +29,7 @@
      edges (the catalogue's hairline grid) without repeating these values. -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import WeightReveal from '$lib/components/WeightReveal.svelte';
 
 	interface Props {
 		title: string;
@@ -72,7 +73,10 @@
 
 <section class="PageSection" class:is-flow={isFlow} class:is-full={full} {id}>
 	<div class="PageSection__head">
-		<svelte:element this={as} class="PageSection__title">{title}</svelte:element>
+		<!-- `to` tracks --brand-weight, which is what this title rests at. -->
+		<svelte:element this={as} class="PageSection__title">
+			<WeightReveal text={title} to={350} />
+		</svelte:element>
 		{#if subtitle && isFlow}
 			<p class="PageSection__sub PageSection__sub--inline">{subtitle}</p>
 		{/if}
