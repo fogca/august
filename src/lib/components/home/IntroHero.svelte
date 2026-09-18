@@ -520,6 +520,7 @@
 					shapes={wordmarkShapes}
 					color="#000000"
 					fillDensity={0.35}
+					headerClearance={false}
 				/>
 			</div>
 		{/if}
@@ -570,8 +571,16 @@
 
 	   overflow moves from the section down onto the pinned content: a clipping
 	   ANCESTOR is exactly what kills position:sticky (see TypefaceStage's own
-	   note), while overflow on the sticky element itself is harmless — and the
-	   clip is still wanted, to keep the OP's own letter overshoot inside. */
+	   note), while overflow on the sticky element itself is harmless.
+
+	   Vertical only. A full `overflow: hidden` here also clipped the fall
+	   layer back to this box's own 5vw-inset width, straight through its
+	   negative insets — the letters were cut off 5vw short of both screen
+	   edges even though the layer's own box measured the full viewport. The
+	   only thing that ever needed clipping here is the OP's letter overshoot,
+	   and that happens vertically (letters rise from below). `clip`, not
+	   `hidden`: pairing `visible` with `hidden` on the other axis silently
+	   turns `visible` into `auto`, which clips anyway; `clip` doesn't. */
 	@media (min-width: 768px) {
 		.IntroHero.has-fall {
 			height: 200vh;
@@ -582,7 +591,8 @@
 		.IntroHero.has-fall .IntroHero__content {
 			position: sticky;
 			top: 0;
-			overflow: hidden;
+			overflow-x: visible;
+			overflow-y: clip;
 		}
 	}
 

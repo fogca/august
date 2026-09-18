@@ -59,6 +59,14 @@
 		 *  say) rather than on first intersection. Default true keeps the
 		 *  original "pour as soon as it's visible" behaviour. */
 		armed?: boolean;
+		/** Keep the fixed Header's band clear (see topClearance). The Custom
+		 *  section needs it: a packed field of black glyphs moving behind the
+		 *  header tears its wordmark apart. The intro turns it off — a handful
+		 *  of big letters that have to visibly fall IN from the true top edge
+		 *  of the screen, not appear out of a hard cut 60-70px below it; over
+		 *  the intro the header is still in its difference-blend mode, so its
+		 *  text inverts over a letter passing behind it rather than vanishing. */
+		headerClearance?: boolean;
 	}
 	let {
 		characters = ['O', 'G', 'A', 'S', 'T'],
@@ -69,7 +77,8 @@
 		fillDensity = 3.2,
 		obstacles = undefined,
 		shapes = undefined,
-		armed = true
+		armed = true,
+		headerClearance = true
 	}: Props = $props();
 
 	// Physics feel — carried over from the study, where these were tuned by eye.
@@ -473,7 +482,9 @@
 			// Same clamp(52px, 7vh, 72px) the old CSS `--glyph-top` encoded,
 			// against this section's own height rather than the CSS `vh` unit
 			// — equivalent since .Home__custom is exactly one viewport tall.
-			const nextTopClearance = Math.round(Math.min(72, Math.max(52, nextFullH * 0.07)));
+			const nextTopClearance = headerClearance
+				? Math.round(Math.min(72, Math.max(52, nextFullH * 0.07)))
+				: 0;
 			const nextH = nextFullH - nextTopClearance;
 			if (nextW === cssW && nextH === cssH && nextTopClearance === topClearance) return;
 			const hadPile = bodies.length > 0;
