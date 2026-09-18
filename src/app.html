@@ -35,27 +35,26 @@
 		     filename/version scheme unchanged. Declared under two family names
 		     from the SAME file:
 		     'Norma' (kept stable — most components still hardcode this) and
-		     'Norma VF06' (versioned; --font-en/--font-ja below use this one,
+		     'Norma VF07' (versioned; --font-en/--font-ja below use this one,
 		     so anything reading var(--font-en)'s computed value sees the
 		     build number). Bump both the URL and the second name's suffix
-		     together on every export. VF06 (2026-09-15): 's' sidebearing
-		     tightened (RSB -14, cascades to sacute/scaron/scedilla/
-		     scircumflex/scommaaccent) and 't' refined again (outline only,
-		     no metric change) — the only 2 glyphs that changed vs VF05,
-		     confirmed by a full byte-diff. ogonekcomb/baht remain excluded
-		     (still master-incompatible) — see static/fonts/README.md. -->
+		     together on every export. VF07 (2026-09-18): 'N' and 't' outlines
+		     refined again (no metric or kerning change) — the only 2 glyphs
+		     that changed vs VF06, confirmed by a full byte-diff. ogonekcomb/
+		     baht remain excluded (still master-incompatible) — see
+		     static/fonts/README.md. -->
 		<style>
 			@font-face {
 				font-family: 'Norma';
-				src: url('%sveltekit.assets%/fonts/Norma-VF06.woff2?v=20260915a') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Norma-VF07.woff2?v=20260918a') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
 			@font-face {
-				font-family: 'Norma VF06';
-				src: url('%sveltekit.assets%/fonts/Norma-VF06.woff2?v=20260915a') format('woff2-variations');
+				font-family: 'Norma VF07';
+				src: url('%sveltekit.assets%/fonts/Norma-VF07.woff2?v=20260918a') format('woff2-variations');
 				font-weight: 1 950;
 				font-style: normal;
 				font-display: swap;
@@ -106,14 +105,14 @@
 			   per the Figma frames. The versioned Norma name goes first in the
 			   fallback chain — see the @font-face comment above. */
 			:root {
-				--font-en: 'Elio', 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-en: 'Elio', 'Norma VF07', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 				--font-ja:
-					'Elio', 'Norma VF06', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
-				--font-elio: 'Elio', 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+					'Elio', 'Norma VF07', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-elio: 'Elio', 'Norma VF07', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 				/* Norma on its own, for the places that deliberately keep it
 				   (Header chrome, the buy flow — Elio's currency glyphs aren't
 				   finished, and prices are the one place that would show). */
-				--font-norma: 'Norma VF06', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-norma: 'Norma VF07', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 			}
 
 			html,
