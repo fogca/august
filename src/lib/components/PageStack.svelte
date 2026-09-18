@@ -260,28 +260,23 @@
 			grid-column: 1;
 			/* Own clearance now, not inherited from .PageStack's padding — see
 			   that rule's comment on why removing the shared offset is what
-			   kills the pre-stick gap. */
-			padding-top: calc(64px + env(safe-area-inset-top, 0px));
+			   kills the pre-stick gap. 100px and top-aligned (2026-09, the
+			   user's own values) — was vertically centred in the viewport. */
+			padding-top: 100px;
 			padding-right: 24px;
 			padding-bottom: 0;
 			margin-bottom: 0;
 			background: transparent;
 			align-self: start;
-			/* Sticky pins to an EDGE only — `top: 0` alone would leave the
-			   title pinned flush against the viewport's top edge the whole
-			   time (not what Figma 3:671 shows: the title sits vertically
-			   centred). Fix: give the STICKY BOX ITSELF the viewport's own
-			   height, then centre its content inside that box with flex — the
-			   box fills the viewport for as long as it's stuck, so its
-			   centred content reads as "always vertically centred" exactly
-			   like the plain (non-stacked) PageSection default already does. */
+			/* The sticky box keeps the viewport's own height, so the title stays
+			   pinned at this padding from the top for as long as it's stuck. */
 			position: sticky;
 			top: 0;
 			min-height: 100vh;
 			min-height: 100svh;
 			display: flex;
 			flex-direction: column;
-			justify-content: center;
+			justify-content: flex-start;
 			/* Grid items default to a content-based minimum width, which lets
 			   a long subtitle push this column wider than its 549fr share and
 			   squeeze the body column beside it (observed live: the body's
@@ -299,6 +294,10 @@
 		.PageStack__title {
 			font-size: clamp(64px, 8vw, 140px);
 			line-height: 1.25;
+			/* Optical alignment (the user's own value): at this size the first
+			   letter's left sidebearing reads as an indent against the
+			   subtitle and body edge below it. */
+			margin-left: -7.5px;
 		}
 
 		.PageStack__subtitle {
