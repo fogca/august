@@ -212,7 +212,7 @@
 		font-weight: var(--brand-weight);
 		font-variation-settings: 'wght' var(--brand-weight);
 		letter-spacing: 0;
-		margin: 0 0 20px;
+		margin: 0 0 10px;
 	}
 
 	.PageStack__item :global(h3) {
@@ -227,7 +227,7 @@
 		font-weight: var(--brand-weight);
 		font-variation-settings: 'wght' var(--brand-weight);
 		letter-spacing: 0;
-		margin: 0 0 1em;
+		margin: 0 0 3px;
 	}
 
 	.PageStack__item :global(p:last-child) {
@@ -301,7 +301,7 @@
 		}
 
 		.PageStack__subtitle {
-			font-size: clamp(22px, 2.22vw, 32px);
+			font-size: 24px;
 		}
 
 		.PageStack__item {
