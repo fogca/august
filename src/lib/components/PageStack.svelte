@@ -306,7 +306,7 @@
 
 		.PageStack__item {
 			max-width: none;
-			margin-bottom: 96px;
+			margin-bottom: 40px;
 		}
 
 		.PageStack__item :global(p) {
