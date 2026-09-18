@@ -93,7 +93,12 @@ export default defineConfig({
 							networkTimeoutSeconds: 3,
 							expiration: {
 								maxEntries: 50,
-								maxAgeSeconds: 60 * 60 * 24 * 7
+								// 1 day, not 7 (2026-09, at the user's request — the design
+								// changes frequently and this is only ever a fallback for
+								// a failed/slow network call in the first place, so
+								// shortening it costs nothing on the common path and caps
+								// how stale that fallback can be on the uncommon one.
+								maxAgeSeconds: 60 * 60 * 24
 							}
 						}
 					}
