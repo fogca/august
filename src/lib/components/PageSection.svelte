@@ -69,13 +69,24 @@
 	}: Props = $props();
 
 	const isFlow = $derived(flow || full);
+
+	/** Flips once the title's weight sweep lands — everything but the title
+	 *  fades in after it (2026-09, at the user's request — "wghtアニメーション
+	 *  終わってから、本文や小見出しfade-inするようにして"). */
+	let revealed = $state(false);
 </script>
 
-<section class="PageSection" class:is-flow={isFlow} class:is-full={full} {id}>
+<section
+	class="PageSection"
+	class:is-flow={isFlow}
+	class:is-full={full}
+	class:is-revealed={revealed}
+	{id}
+>
 	<div class="PageSection__head">
 		<!-- `to` tracks --brand-weight, which is what this title rests at. -->
 		<svelte:element this={as} class="PageSection__title">
-			<WeightReveal text={title} to={350} />
+			<WeightReveal text={title} to={350} onDone={() => (revealed = true)} />
 		</svelte:element>
 		{#if subtitle && isFlow}
 			<p class="PageSection__sub PageSection__sub--inline">{subtitle}</p>
@@ -206,6 +217,42 @@
 
 	.PageSection__head-extra {
 		margin-bottom: 32px;
+	}
+
+	/* Everything but the title is held back until the title's weight sweep
+	   lands, then faded in (see `revealed`). Same mechanism as PageStack's —
+	   see its own note for the reasoning: a `from`-only keyframe animates to
+	   each element's OWN opacity (the inline subtitle rests at 0.6) rather
+	   than overwriting it; `backwards` so it stops holding the property once
+	   it ends; and the hold is itself a 5s animation, present from the
+	   server-rendered first paint but self-releasing if JS never arrives. */
+	.PageSection:not(.is-revealed) .PageSection__sub,
+	.PageSection:not(.is-revealed) .PageSection__head-extra,
+	.PageSection:not(.is-revealed) .PageSection__intro,
+	.PageSection:not(.is-revealed) .PageSection__body {
+		animation: pagesection-hold 5s backwards;
+	}
+
+	.PageSection.is-revealed .PageSection__sub,
+	.PageSection.is-revealed .PageSection__head-extra,
+	.PageSection.is-revealed .PageSection__intro,
+	.PageSection.is-revealed .PageSection__body {
+		animation: pagesection-reveal 0.6s ease backwards;
+	}
+
+	@keyframes pagesection-hold {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 0;
+		}
+	}
+
+	@keyframes pagesection-reveal {
+		from {
+			opacity: 0;
+		}
 	}
 
 	@media (min-width: 768px) {

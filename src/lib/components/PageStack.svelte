@@ -49,6 +49,10 @@
 	let activeIndex = $state(0);
 	let subtitleEl: HTMLElement | undefined = $state();
 	let itemEls: HTMLElement[] = [];
+	/** Flips once the title's weight sweep lands — the subtitle and body
+	 *  fade in after it (2026-09, at the user's request — "wghtアニメーション
+	 *  終わってから、本文や小見出しfade-inするようにして"). */
+	let revealed = $state(false);
 
 	/** Plain textContent until gsap is ready below — the very first paint
 	 *  shows items[0]'s subtitle directly (seeded by the template), so
@@ -114,11 +118,11 @@
 	});
 </script>
 
-<div class="PageStack">
+<div class="PageStack" class:is-revealed={revealed}>
 	<div class="PageStack__head">
 		<!-- `to` tracks --brand-weight, which is what this title rests at. -->
 		<svelte:element this={as} class="PageStack__title">
-			<WeightReveal text={title} to={350} />
+			<WeightReveal text={title} to={350} onDone={() => (revealed = true)} />
 		</svelte:element>
 		<p class="PageStack__subtitle" bind:this={subtitleEl}>{items[0]?.subtitle ?? ''}</p>
 	</div>
@@ -237,6 +241,45 @@
 	.PageStack__item :global(a) {
 		text-decoration: underline;
 		text-underline-offset: 3px;
+	}
+
+	/* Held back until the title's weight sweep lands, then faded in (see
+	   `revealed`). Keyframe animations rather than an opacity transition, for
+	   two reasons: the subtitle's own opacity is driven by GSAP inline styles
+	   (its text crossfade) and a CSS transition on opacity would drag every one
+	   of those tweens; and a `from`-only keyframe animates to whatever the
+	   element's OWN opacity is (0.6 for the subtitle, 1 for the body) instead
+	   of overwriting it. `backwards`, not `both`, so neither animation keeps
+	   holding the property once it ends — GSAP gets it back.
+
+	   The hold is itself an animation that ends after 5s: it is present from
+	   the server-rendered first paint (so there's no flash of content before
+	   hydration hides it), but if JS never arrives it releases on its own
+	   rather than leaving the page blank. Reduced motion zeroes both in
+	   base.css, and WeightReveal reports done immediately there. */
+	.PageStack:not(.is-revealed) .PageStack__subtitle,
+	.PageStack:not(.is-revealed) .PageStack__body {
+		animation: pagestack-hold 5s backwards;
+	}
+
+	.PageStack.is-revealed .PageStack__subtitle,
+	.PageStack.is-revealed .PageStack__body {
+		animation: pagestack-reveal 0.6s ease backwards;
+	}
+
+	@keyframes pagestack-hold {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 0;
+		}
+	}
+
+	@keyframes pagestack-reveal {
+		from {
+			opacity: 0;
+		}
 	}
 
 	@media (min-width: 768px) {
