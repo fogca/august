@@ -128,8 +128,12 @@
 	}
 
 	@media (min-width: 768px) {
+		.Footer {
+			padding: 60px 30px 20px;
+		}
+
 		.Footer__nav {
-			padding-inline: var(--padding);
+			padding-inline: 0;
 		}
 	}
 
@@ -157,6 +161,10 @@
 			display: flex;
 			flex-direction: row;
 			gap: 24px;
+		}
+
+		.Footer__nav .Footer__list a {
+			font-weight: 650;
 		}
 	}
 
@@ -197,11 +205,12 @@
 
 	@media (min-width: 768px) {
 		.Footer__bottom {
-			margin-top: 56px;
+			margin-top: 0;
 			flex-direction: row;
 			align-items: center;
 			gap: 20px;
-			padding-inline: var(--padding);
+			padding-top: 10px;
+			padding-inline: 0;
 		}
 	}
 

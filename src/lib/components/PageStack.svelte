@@ -211,7 +211,7 @@
 	}
 
 	.PageStack__item :global(h2) {
-		font-size: clamp(24px, 3.2vw, 36px);
+		font-size: 24px;
 		line-height: 1.2;
 		font-weight: var(--brand-weight);
 		font-variation-settings: 'wght' var(--brand-weight);

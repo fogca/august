@@ -540,7 +540,7 @@
 
 	@media (min-width: 768px) {
 		.Header {
-			padding: 8px 20px;
+			padding: 12px 30px;
 		}
 
 		.Header__actions {
