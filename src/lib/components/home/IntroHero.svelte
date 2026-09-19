@@ -519,7 +519,7 @@
 					obstacles={wordmarkObstacles}
 					shapes={wordmarkShapes}
 					color="#000000"
-					fillDensity={0.35}
+					fillDensity={0.5}
 					headerClearance={false}
 				/>
 			</div>

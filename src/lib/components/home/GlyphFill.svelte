@@ -186,12 +186,21 @@
 				pieceKeys = shapeList.map((_, i) => `shape-${i}`);
 				shapeList.forEach((s, i) => {
 					const key = pieceKeys[i];
-					// Circumscribing radius, not the webfont path's half-ADVANCE:
-					// these are whole drawn letterforms rather than one size of
-					// type, and at this scale a radius that fits inside the ink
-					// lets neighbours visibly overlap — which reads as a bug,
-					// where a little air between them does not.
-					radii.set(key, Math.max(s.w, s.h) / 2);
+					// Area-equivalent radius (sqrt(w*h)/2), not the circumscribing
+					// max(w,h)/2 this used to be (2026-09, at the user's report —
+					// letters that should read as resting on one another, like a
+					// G directly over an S, instead sat with visible daylight
+					// between them). A letterform's aspect ratio varies a lot — S
+					// is roughly half as wide as it is tall — and max(w,h)/2
+					// circumscribes the TALLER dimension even for the narrow
+					// ones, so two circles at rest (tangent) could easily leave
+					// the actual ink well short of touching. sqrt(w*h) is the
+					// radius of a circle with the same AREA as the w*h box,
+					// which shrinks for elongated shapes but is unchanged for
+					// roughly square ones (O, G) — letters sit closer, and pairs
+					// like G-on-S now read as genuinely touching rather than
+					// floating.
+					radii.set(key, Math.sqrt(s.w * s.h) / 2);
 					vectors.set(key, {
 						path: new Path2D(s.d),
 						ox: s.ox,
