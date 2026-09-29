@@ -344,10 +344,12 @@ export const TYPEFACES: Typeface[] = [
 	},
 	{
 		// Sibling face to Norma. Renamed from "Asta" 2026-08-31. Now a real
-		// variable font (2026-09-02) — both masters (Hair 150 / Ultra 850)
-		// are drawn and exported; the other 6 of the 8 named stops are
-		// interpolated between them, same as Norma. Re-shown 2026-08-29 at
-		// the user's request (temporary).
+		// variable font (2026-09-02) — both masters (Hair 150 / Ultra 950)
+		// are drawn and exported; the other 7 of the 9 named stops are
+		// interpolated between them, same as Norma. Ultra's own axis
+		// position moved from wght 850 to 950 on 2026-09-22, at the user's
+		// request, so Elio's scale now reaches Norma's own top stop.
+		// Re-shown 2026-08-29 at the user's request (temporary).
 		slug: 'elio',
 		name: 'Elio',
 		order: 3,
@@ -357,7 +359,7 @@ export const TYPEFACES: Typeface[] = [
 		tagline: 'Reticent and Ravenous.',
 		description:
 			'Elio is a sibling to Norma, in development at Ōgast. ' +
-			'Where Norma runs wide and even across twenty weights, Elio narrows its focus to eight — an axis built from two hand-drawn extremes, Hair and Ultra, with the six named stops between them genuinely interpolated rather than invented. ' +
+			'Where Norma runs wide and even across twenty weights, Elio narrows its focus to nine — an axis built from two hand-drawn extremes, Hair and Ultra, with the seven named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Ultra — the same letterforms pulled toward opposite instincts. ' +
@@ -365,7 +367,7 @@ export const TYPEFACES: Typeface[] = [
 		descriptionFr:
 			'Elio est une police sœur de Norma, en cours de développement chez Ōgast. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
-		classification: 'In development · 8 weights',
+		classification: 'In development · 9 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
 		// (Asta.glyphs' own glyph box), not the shipped VF's cmap — unlike
 		// Norma's info, where those two numbers are nearly the same since
@@ -384,7 +386,11 @@ export const TYPEFACES: Typeface[] = [
 		// placeholder) - three.ss01 - t.ss01 (unencoded alt slots) = 177
 		// encoded; 175 of those have real Hair ink (only asciitilde/
 		// asciicircum are still blank) — +3 vs the 2026-09-05 count for
-		// Ōmacron/ōmacron/macroncomb, added this round.
+		// Ōmacron/ōmacron/macroncomb, added this round. Shape set hasn't
+		// grown since, so these two numbers are still accurate as of
+		// Elio-VF15.woff2 (2026-09-29) — 149 of the 175 currently ship
+		// (up from 147 in VF13), the rest still hard-excluded pending
+		// Ultra.
 		// Languages: Hyperglot 0.7.3, base support, validity=verified
 		// (same method/thresholds as Norma's "93") against those 175
 		// chars — unchanged at 79; Ō/ō alone didn't clear any additional
@@ -392,13 +398,13 @@ export const TYPEFACES: Typeface[] = [
 		info: {
 			design: 'Takumi Isobe',
 			release: 'TBD',
-			collection: '8 weights',
+			collection: '9 weights',
 			formats: 'OTF, TTF, WOFF2',
 			glyphs: '175',
 			languages: '79',
 			note: 'Reflects the drawn design repertoire (Hair). The live variable font currently ships a smaller, interpolation-compatible subset while Ultra catches up — see the specimen below.'
 		},
-		// Now a real variable font — all 8 named stops are genuine
+		// Now a real variable font — all 9 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
 		weights: ELIO_WEIGHTS,
 		// One word per weight row (150 -> 850, lightest to heaviest), A-H —
