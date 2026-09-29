@@ -78,20 +78,20 @@
 				font-display: swap;
 			}
 
-			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 850,
+			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 950,
 			   full wght range interpolated between them). Used on the Elio
 			   typeface page's Type Tester and the top-page A-Z specimen.
 			   VF14 (2026-09-22): the Ultra master's own axis position moved
 			   from wght 850 to 950, making room for a full 9-stop named
 			   scale — 150 Hair/250 Thin/350 Light/450 Regular/550 Medium/
-			   650 Bold/750 Heavy/850 Black/950 Ultra (Hair's outline is
-			   unchanged; every intermediate stop's rendered weight shifted
-			   slightly since it now interpolates across 150-950 instead of
-			   150-850). VF15 (2026-09-29): N/M/S/dollar outline touch-ups
-			   + 4 new kerning pairs. Full history: static/fonts/README.md. */
+			   650 Bold/750 Heavy/850 Black/950 Ultra. VF15 (2026-09-29):
+			   N/M/S/dollar outline touch-ups + 4 new kerning pairs. VF16
+			   (2026-09-29): S/dollar refined further + 1 new kerning pair
+			   (R-C) — no metric change. Full history:
+			   static/fonts/README.md. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF15.woff2?v=20260929a') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF16.woff2?v=20260929b') format('woff2-variations');
 				font-weight: 150 950;
 				font-style: normal;
 				font-display: swap;
