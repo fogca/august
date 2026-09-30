@@ -388,11 +388,10 @@ export const TYPEFACES: Typeface[] = [
 		// asciicircum are still blank) — +3 vs the 2026-09-05 count for
 		// Ōmacron/ōmacron/macroncomb, added this round. Shape set hasn't
 		// grown since, so these two numbers are still accurate as of
-		// Elio-VF18.woff2 (2026-09-30) — 150 of the 175 currently ship
-		// (up from 147 in VF13, 149 in VF15/16; `yen` became compatible at
-		// VF17 — its Ultra layer was missing the `Y` component entirely —
-		// and VF18 only refines outlines, no compatibility change), the
-		// rest still hard-excluded pending Ultra.
+		// Elio-VF19.woff2 (2026-09-30) — 151 of the 175 currently ship
+		// (up from 147 in VF13, 149 in VF15/16, 150 in VF17/18; `endash`
+		// became compatible at VF19), the rest still hard-excluded pending
+		// Ultra.
 		// Languages: Hyperglot 0.7.3, base support, validity=verified
 		// (same method/thresholds as Norma's "93") against those 175
 		// chars — unchanged at 79; Ō/ō alone didn't clear any additional

@@ -81,23 +81,20 @@
 			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 950,
 			   full wght range interpolated between them). Used on the Elio
 			   typeface page's Type Tester and the top-page A-Z specimen.
-			   VF14 (2026-09-22): the Ultra master's own axis position moved
-			   from wght 850 to 950, making room for a full 9-stop named
-			   scale — 150 Hair/250 Thin/350 Light/450 Regular/550 Medium/
-			   650 Bold/750 Heavy/850 Black/950 Ultra. VF15 (2026-09-29):
-			   N/M/S/dollar outline touch-ups + 4 new kerning pairs. VF16
-			   (2026-09-29): S/dollar refined further + 1 new kerning pair
-			   (R-C) — no metric change. VF17 (2026-09-30): "yen" now ships —
-			   Ultra's layer was missing its "Y" component reference entirely
-			   (only the two crossbar strokes existed); restored by
-			   re-referencing Ultra's own "Y" the same way dollar/cent/euro
-			   already do, with a matching width/position fix. VF18 (same
-			   day): further outline refinement on G/K/R/f/g/t and a follow-up
-			   yen touch-up — no compatibility change. Full history:
+			   Early history (VF14-16, 2026-09-22/29): Ultra's axis moved
+			   850→950 for a full 9-stop named scale; N/M/S/dollar outline
+			   touch-ups and new kerning pairs. VF17 (2026-09-30): "yen" now
+			   ships — Ultra's layer was missing its "Y" component reference
+			   entirely; restored by re-referencing Ultra's own "Y" the same
+			   way dollar/cent/euro already do. VF18 (same day): outline
+			   refinement on G/K/R/f/g/t + a yen touch-up. **VF19** (same
+			   day): "endash" now ships too, plus outline refinement on
+			   e/eacute/egrave/ecircumflex/edieresis/d/A/emdash/b/w/r/g/two/
+			   three — no other compatibility change. Full history:
 			   static/fonts/README.md. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF18.woff2?v=20260930c') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF19.woff2?v=20260930d') format('woff2-variations');
 				font-weight: 150 950;
 				font-style: normal;
 				font-display: swap;
