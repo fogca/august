@@ -87,11 +87,15 @@
 			   650 Bold/750 Heavy/850 Black/950 Ultra. VF15 (2026-09-29):
 			   N/M/S/dollar outline touch-ups + 4 new kerning pairs. VF16
 			   (2026-09-29): S/dollar refined further + 1 new kerning pair
-			   (R-C) — no metric change. Full history:
+			   (R-C) — no metric change. VF17 (2026-09-30): "yen" now ships —
+			   Ultra's layer was missing its "Y" component reference entirely
+			   (only the two crossbar strokes existed); restored by
+			   re-referencing Ultra's own "Y" the same way dollar/cent/euro
+			   already do, with a matching width/position fix. Full history:
 			   static/fonts/README.md. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF16.woff2?v=20260929b') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF17.woff2?v=20260930a') format('woff2-variations');
 				font-weight: 150 950;
 				font-style: normal;
 				font-display: swap;
