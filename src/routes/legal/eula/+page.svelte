@@ -172,6 +172,8 @@
 
 	.Eula__section {
 		padding-inline: 0;
+		/* Section-nav jumps land below the Header's opaque compact bar. */
+		scroll-margin-top: calc(var(--header-bar-h) + env(safe-area-inset-top, 0px) + 24px);
 	}
 
 	.Eula__heading {

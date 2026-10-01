@@ -315,14 +315,14 @@
 		   .CartSummary (e.g. buy/+page.svelte's .BuyPage__cart, itself
 		   stretched to match the left column) — verified live: without this,
 		   .CartSummary__details' top went to -161px on scroll instead of
-		   holding at 80px. */
+		   holding at its offset. */
 		.CartSummary {
 			height: 100%;
-			/* Single source for the sticky offset below — reused (doubled) to
-			   size the panel itself, so top and bottom read as a matching
-			   pair rather than one hardcoded number and one derived from it
-			   by hand. */
-			--cart-top-offset: 80px;
+			/* Single source for the gap the panel keeps above (below the
+			   Header's opaque compact bar, base.css --header-bar-h) and below
+			   it, so top and bottom read as a matching pair. */
+			--cart-gap: 20px;
+			--cart-top-offset: calc(var(--header-bar-h) + var(--cart-gap));
 		}
 
 		/* Fixed height, not content-hugging: 100% of the viewport minus the
@@ -334,8 +334,8 @@
 			display: block;
 			position: sticky;
 			top: var(--cart-top-offset);
-			height: calc(100vh - (var(--cart-top-offset) * 2));
-			height: calc(100dvh - (var(--cart-top-offset) * 2));
+			height: calc(100vh - var(--cart-top-offset) - var(--cart-gap));
+			height: calc(100dvh - var(--cart-top-offset) - var(--cart-gap));
 			overflow-y: auto;
 		}
 	}

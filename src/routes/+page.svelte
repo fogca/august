@@ -288,15 +288,27 @@
 		const heroesEl = document.querySelector<HTMLElement>('.HomeHeroes');
 		const barEl = document.querySelector<HTMLElement>('.Header__bar');
 		if (!heroesEl) return;
+		// Layout offsets, not getBoundingClientRect: the heroes may still carry
+		// their entrance transform when this first runs (a reload that lands
+		// on a hero), which would put them ~half a screen too low.
+		const docTop = () => {
+			let y = 0;
+			for (let el: HTMLElement | null = heroesEl; el; el = el.offsetParent as HTMLElement | null) {
+				y += el.offsetTop;
+			}
+			return y;
+		};
 		const update = () => {
 			const line = barEl?.offsetHeight ?? 0;
-			const r = heroesEl.getBoundingClientRect();
-			headerYield.active = r.top < line && r.bottom > line;
+			const top = docTop() - window.scrollY;
+			headerYield.active = top < line && top + heroesEl.offsetHeight > line;
 		};
 		update();
 		const off = onScroll(update);
+		window.addEventListener('resize', update, { passive: true });
 		return () => {
 			off();
+			window.removeEventListener('resize', update);
 			headerYield.active = false;
 		};
 	});

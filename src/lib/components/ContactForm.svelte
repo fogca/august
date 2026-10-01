@@ -209,7 +209,9 @@
 		--field-fg: var(--color-text);
 		--submit-bg: var(--color-text);
 		--submit-fg: #ffffff;
-		--error-fg: var(--color-signal);
+		/* The signal red is 3.4:1 on the peach page — a deeper red of the
+		   same hue clears AA (4.7:1 on peach, 5.4:1 on white). */
+		--error-fg: #b3261e;
 	}
 
 	.ContactForm.is-dark {

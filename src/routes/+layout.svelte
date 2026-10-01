@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import PageTransition from '$lib/stock/PageTransition.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import { initScroll, destroyScroll, getLenis, refreshTriggers } from '$lib/scroll';
 	import { lang } from '$lib/state/lang.svelte';
+	import { homeIntro } from '$lib/state/homeIntro.svelte';
 
 	let { children } = $props();
 
@@ -51,6 +52,12 @@
 
 	// New page content means new layout heights — recompute trigger positions.
 	afterNavigate(() => refreshTriggers());
+
+	// Any in-app navigation (never fired for the initial load): from here on
+	// the home page's opening is skipped — see HomeTop.svelte.
+	onNavigate(() => {
+		homeIntro.inApp = true;
+	});
 
 	// PWA wiring -- injectRegister:'auto' (vite.config.ts) only patches a
 	// static index.html, which doesn't exist here (this app is SSR'd fresh

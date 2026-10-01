@@ -128,13 +128,15 @@
 	/* --- Statement block: same layout as the home page's About teaser
 	   (AboutSection.svelte's .HomeAbout) — small label, oversized indented
 	   statement, facts row — ported rather than just referenced. --- */
+	/* The rest of the first screen below the layout's masthead spacer
+	   (which already clears the Header's large wordmark). */
 	.About__statement {
-		min-height: 100svh;
+		min-height: calc(100svh - var(--masthead-h));
 		display: flex;
 		align-items: center;
 		background: var(--color-bg);
 		padding-inline: var(--padding);
-		padding-block: clamp(96px, 12vh, 160px);
+		padding-block: 0 clamp(48px, 8vh, 96px);
 	}
 
 	.About__statement .About__inner {

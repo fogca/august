@@ -24,7 +24,6 @@
 	import { SITE_NAV } from '$lib/data/nav';
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
 	import { headerYield } from '$lib/state/headerYield.svelte';
-	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import Logo from '$lib/components/Logo.svelte';
@@ -40,6 +39,8 @@
 	/** Transitions switch on only after the first measured layout, so a page
 	 *  loaded mid-scroll doesn't animate its logo shrinking on arrival. */
 	let ready = $state(false);
+	/** Set once on mount (see .is-prescrolled in the styles). */
+	let hydrated = $state(false);
 	const compact = $derived(scrolled || open || focusInside);
 
 	let wordEls: HTMLElement[] = $state([]);
@@ -71,19 +72,38 @@
 		});
 	}
 
+	/** Measure, then arm transitions two frames later (one frame paints the
+	 *  measured state). Also used on resize, which can swap the words' base
+	 *  geometry outright (crossing the SP breakpoint) — animating from the
+	 *  stale transform would fly them across the page. */
+	let armRaf = 0;
+	function measureThenArm() {
+		ready = false;
+		cancelAnimationFrame(armRaf);
+		armRaf = requestAnimationFrame(() => {
+			measure();
+			armRaf = requestAnimationFrame(() => {
+				armRaf = requestAnimationFrame(() => (ready = true));
+			});
+		});
+	}
+
 	onMount(() => {
 		const update = () => {
 			scrolled = window.scrollY > COMPACT_AFTER;
+			// Back at the top, a focus left behind in the header (a keyboard
+			// user who has tabbed on into the page) no longer holds it compact.
+			if (!scrolled && !headerHasFocus()) focusInside = false;
 		};
 		update();
 		measure();
-		// Two frames: one to paint the measured state, one to arm transitions.
-		requestAnimationFrame(() => requestAnimationFrame(() => (ready = true)));
+		hydrated = true;
+		measureThenArm();
 
 		let raf = 0;
 		const onResize = () => {
 			cancelAnimationFrame(raf);
-			raf = requestAnimationFrame(measure);
+			raf = requestAnimationFrame(measureThenArm);
 		};
 		window.addEventListener('resize', onResize, { passive: true });
 		const offScroll = onScroll(update);
@@ -91,6 +111,7 @@
 			offScroll();
 			window.removeEventListener('resize', onResize);
 			cancelAnimationFrame(raf);
+			cancelAnimationFrame(armRaf);
 		};
 	});
 
@@ -116,10 +137,16 @@
 		if (e.key === 'Escape' && open) close();
 	}
 
+	let headerEl: HTMLElement | undefined = $state();
+	const headerHasFocus = () => !!headerEl?.contains(document.activeElement);
+
 	// Keyboard users tabbing in at the top of a page reach the nav too: focus
-	// anywhere inside opens the compact state, where it is visible.
-	function onFocusIn() {
-		focusInside = true;
+	// anywhere inside opens the compact state, where it is visible (and brings
+	// the header back if a hero had sent it away). Keyboard focus only — a
+	// click also focuses a button in most browsers, and that must not pin the
+	// header compact once the reader scrolls back to the top.
+	function onFocusIn(e: FocusEvent) {
+		if ((e.target as Element).matches(':focus-visible')) focusInside = true;
 	}
 	function onFocusOut(e: FocusEvent) {
 		const next = e.relatedTarget as Node | null;
@@ -134,8 +161,9 @@
 	class:is-compact={compact}
 	class:is-open={open}
 	class:is-ready={ready}
-	class:is-yielded={headerYield.active && !open}
-	class:is-masked={homeIntro.openingActive}
+	class:is-hydrated={hydrated}
+	class:is-yielded={headerYield.active && !open && !focusInside}
+	bind:this={headerEl}
 	onfocusin={onFocusIn}
 	onfocusout={onFocusOut}
 >
@@ -147,6 +175,9 @@
 		<span class="Header__slot Header__slot--apres" bind:this={slotEls[0]}></span>
 		<span class="Header__slot Header__slot--guerre" bind:this={slotEls[1]}></span>
 		<span class="Header__sub" lang="ja">アプレゲール タイプファウンダリ ジャパン</span>
+		<!-- Focus ring around the compact lockup — the link's own box is
+		     zero-height, and an outline on the scaled words would shrink too. -->
+		<span class="Header__ring" aria-hidden="true"></span>
 	</a>
 
 	<nav class="Header__nav" aria-label="Primary navigation">
@@ -233,14 +264,17 @@
 
 <style>
 	.Header {
-		/* Compact lockup geometry — PC per Figma 3:671 (1440 frame). */
-		--bar-h: 100px;
+		/* Compact lockup geometry — PC per Figma 3:671 (1440 frame). The bar
+		   height is the shared base.css token, so sticky page UI can clear it. */
+		--bar-h: var(--header-bar-h);
 		--lockup-w: 273.3px;
 		--lockup-top: 28px;
 		--sub-top: 71px;
 		--sub-fs: 12px;
 		--edge: 40px;
 		--row-top: 33px;
+		/* Vertical centre of the lockup's wordmark (the toggle's row). */
+		--row-mid: calc(var(--lockup-top) + var(--lockup-w) * 156 / 1360 / 2);
 		--safe-top: env(safe-area-inset-top, 0px);
 		--ease: cubic-bezier(0.65, 0, 0.35, 1);
 
@@ -299,15 +333,33 @@
 		transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--k, 1));
 	}
 
-	/* The home page's opening is showing its own copy of the mark — see
-	   homeIntro.openingActive. */
-	.Header.is-masked .Header__logo :global(.Logo__word) {
-		opacity: 0;
+	/* The link's own box is zero-height (a stray full-width line if
+	   outlined); the ring goes around the compact lockup instead — focus
+	   always compacts the header. */
+	.Header__logo:focus-visible {
+		outline: none;
 	}
 
-	.Header__logo:focus-visible :global(.Logo__word) {
+	.Header__ring {
+		position: absolute;
+		top: calc(var(--lockup-top) + var(--safe-top) - 6px);
+		left: calc(50% - var(--lockup-w) / 2 - 8px);
+		width: calc(var(--lockup-w) + 16px);
+		height: calc(var(--lockup-w) * 156 / 1360 + 12px);
 		outline: 1px solid currentColor;
-		outline-offset: 4px;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.Header__logo:focus-visible .Header__ring {
+		opacity: 1;
+	}
+
+	/* A page that loads already scrolled (a restored position) would show
+	   the large top-of-page mark over its content until hydration measures
+	   and compacts it. app.html's pre-hydration script flags that case. */
+	:global(html.is-prescrolled) .Header:not(.is-hydrated) .Header__logo :global(.Logo__word) {
+		visibility: hidden;
 	}
 
 	.Header__slot {
@@ -446,24 +498,26 @@
 		transition: opacity 0.5s ease 0.35s;
 	}
 
-	/* Menu toggle — SP only. */
+	/* Menu toggle — below 960px only. */
 	.Header__toggle {
 		display: none;
 	}
 
-	/* ── SP ── */
+	/* ── SP lockup sizes ── */
 	@media (max-width: 767.98px) {
 		.Header {
-			--bar-h: 66px;
 			--lockup-w: 180px;
 			--lockup-top: 16px;
 			--sub-top: 42px;
 			--sub-fs: 9px;
 			--edge: 20px;
-			/* Vertical centre of the lockup's wordmark. */
-			--row-mid: calc(var(--lockup-top) + var(--lockup-w) * 156 / 1360 / 2);
 		}
+	}
 
+	/* ── Below 960px: menu toggle instead of the inline nav ── the PC nav
+	   (≈239px from x=40) runs into the centred 273px lockup under ~830px,
+	   and is tight until ~910px, so tablets in portrait get the SP menu. */
+	@media (max-width: 959.98px) {
 		.Header__nav {
 			display: none;
 		}
@@ -539,7 +593,7 @@
 		/* Under the header (z 100), whose compact bar sits on top. */
 		z-index: 95;
 		background: var(--color-bg);
-		padding: calc(84px + env(safe-area-inset-top, 0px)) 20px 16px;
+		padding: calc(var(--header-bar-h) + 18px + env(safe-area-inset-top, 0px)) 20px 16px;
 	}
 
 	.MenuPanel :global(*) {

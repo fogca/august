@@ -68,12 +68,14 @@
 </main>
 
 <style>
+	/* The rest of the screen below the layout's masthead spacer (which
+	   already clears the Header), content centred in it. */
 	.Success {
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: calc(100vh - var(--masthead-h));
+		min-height: calc(100dvh - var(--masthead-h));
 		display: flex;
 		align-items: center;
-		padding-top: 80px;
+		padding-block: 0 48px;
 		padding-inline: 24px;
 	}
 

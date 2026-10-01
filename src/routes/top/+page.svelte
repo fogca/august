@@ -214,15 +214,14 @@
 
 <style>
 	.Top {
-		min-height: 100vh;
-		min-height: 100dvh;
+		min-height: calc(100vh - var(--masthead-h));
+		min-height: calc(100dvh - var(--masthead-h));
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		gap: 40px;
-		background: #fff;
-		color: #000;
+		background: var(--color-bg);
 		padding-block: 96px;
 		overflow: hidden;
 	}

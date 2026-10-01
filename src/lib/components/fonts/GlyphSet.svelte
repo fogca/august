@@ -485,15 +485,17 @@
 			height: 900vh;
 		}
 
+		/* Pinned just below the Header's opaque compact bar (base.css
+		   --header-bar-h), 48px clear of the screen's bottom edge. */
 		.GlyphSet__panel {
 			position: sticky;
-			top: 72px;
+			top: calc(var(--header-bar-h) + 16px);
 			display: grid;
 			grid-template-columns: 35fr 65fr;
 			align-items: stretch;
 			gap: 48px;
-			height: calc(100vh - 120px);
-			height: calc(100dvh - 120px);
+			height: calc(100vh - var(--header-bar-h) - 64px);
+			height: calc(100dvh - var(--header-bar-h) - 64px);
 			min-height: 560px;
 		}
 

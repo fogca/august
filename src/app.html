@@ -26,10 +26,23 @@
 					document.documentElement.dataset.lang = displayLang;
 				}
 			} catch (e) {}
+			// A page that lands already scrolled (a restored position) flags it
+			// before hydration, so the Header hides its large top-of-page
+			// wordmark rather than paint it over the content (Header.svelte).
+			addEventListener(
+				'scroll',
+				function flagPrescrolled() {
+					if (scrollY > 8) {
+						document.documentElement.classList.add('is-prescrolled');
+						removeEventListener('scroll', flagPrescrolled);
+					}
+				},
+				{ passive: true }
+			);
 		</script>
 		<!-- Per-page <meta name="description"> comes from each route's svelte:head -->
 		<!-- Global design tokens and reset (bump ?v= whenever base.css changes) -->
-		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20261002a" />
+		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20261002b" />
 		<!-- Norma VF — latest export (version in the filename). Renamed from
 		     "Steiner"/"Asger", then "Atom", 2026-08-30/31 (product renames);
 		     filename/version scheme unchanged. Declared under two family names

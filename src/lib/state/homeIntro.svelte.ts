@@ -6,12 +6,10 @@
 // full animation, reduced motion, or a page that loaded already scrolled).
 class HomeIntroState {
 	introComplete = $state(false);
-	/** True while the opening's own copy of the wordmark is the one on show.
-	 *  The opening overlay normally sits above the Header, but during a
-	 *  client-side navigation the page fades in on an opacity layer that the
-	 *  Header outranks — its static mark would then cover the letters rising
-	 *  underneath. The Header hides its mark while this is set. */
-	openingActive = $state(false);
+	/** True after the first in-app navigation (set by +layout.svelte). The
+	 *  opening plays once, on arriving at the site, not on every return to
+	 *  "/". */
+	inApp = $state(false);
 }
 
 export const homeIntro = new HomeIntroState();

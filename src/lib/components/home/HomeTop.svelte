@@ -17,8 +17,15 @@
      first paint without waiting on hydration, and a page that never gets its
      JS still finishes (the overlay fades on its own). The script only adds
      what CSS can't: the scroll lock while it plays ("OP中はスクロール禁止"),
-     skipping it when the page loads already scrolled, and signalling
-     completion (homeIntro.introComplete) so the page's snap can arm.
+     skipping it, and signalling completion (homeIntro.introComplete) so the
+     page's snap can arm. Completion is read off the running animation itself
+     (getAnimations / .finished), never off animation events alone: on a slow
+     hydration those can fire before any listener exists, which would leave
+     the page locked for good.
+
+     It plays once, on arriving at the site. An in-app navigation back to "/"
+     (homeIntro.inApp) and a page that loads already scrolled (a restored
+     position) both land straight on the resting state.
 
      Heroes (175:178): one per typeface, a full screen tall (90vh on SP, at
      the user's request), dark, with a tagline top-left and the face's name
@@ -44,6 +51,7 @@
 	/** True once the opening is over or was skipped: the overlay goes and
 	 *  the heroes/lead render at rest with no animation. */
 	let settled = $state(false);
+	let heroesEl: HTMLElement | undefined = $state();
 
 	function finish() {
 		settled = true;
@@ -51,22 +59,27 @@
 	}
 
 	/** Blocks every common way to move the page (wheel, touch-drag, scroll
-	 *  keys) and stops Lenis. Returns the matching unlock. */
+	 *  keys) and stops Lenis. Capture phase, with propagation stopped, so
+	 *  Lenis never sees the gesture even if something else restarts it
+	 *  mid-opening. Returns the matching unlock. */
 	function lockScroll(): () => void {
 		const blockedKeys = new Set([' ', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End']);
-		const onWheel = (e: WheelEvent) => e.preventDefault();
-		const onTouchMove = (e: TouchEvent) => e.preventDefault();
+		const block = (e: Event) => {
+			e.preventDefault();
+			e.stopPropagation();
+		};
 		const onKeydown = (e: KeyboardEvent) => {
 			if (blockedKeys.has(e.key)) e.preventDefault();
 		};
-		window.addEventListener('wheel', onWheel, { passive: false });
-		window.addEventListener('touchmove', onTouchMove, { passive: false });
+		const opts = { capture: true, passive: false };
+		window.addEventListener('wheel', block, opts);
+		window.addEventListener('touchmove', block, opts);
 		window.addEventListener('keydown', onKeydown);
 		getLenis()?.stop();
 
 		return () => {
-			window.removeEventListener('wheel', onWheel);
-			window.removeEventListener('touchmove', onTouchMove);
+			window.removeEventListener('wheel', block, opts);
+			window.removeEventListener('touchmove', block, opts);
 			window.removeEventListener('keydown', onKeydown);
 			const l = getLenis();
 			l?.start();
@@ -76,66 +89,67 @@
 		};
 	}
 
-	/** Releases the scroll lock; set while the opening plays. */
-	let release: (() => void) | undefined;
+	/** The heroes' entrance — the opening's last beat — if it is still to
+	 *  run or running. Svelte scopes keyframe names, hence endsWith. */
+	function heroesEntrance(): Animation | undefined {
+		return heroesEl
+			?.getAnimations()
+			.find((a) => 'animationName' in a && String(a.animationName).endsWith('heroes-in'));
+	}
 
 	onMount(() => {
 		homeIntro.introComplete = false;
 
+		const entrance = heroesEntrance();
 		if (
+			homeIntro.inApp ||
+			window.scrollY > AT_TOP ||
 			window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-			window.scrollY > AT_TOP
+			!entrance ||
+			entrance.playState === 'finished'
 		) {
 			finish();
 			return;
 		}
 
-		homeIntro.openingActive = true;
 		let unlock: (() => void) | undefined;
 		let released = false;
 
 		// Nothing in the opening scrolls the page, so any scroll while it plays
-		// is external — SvelteKit restoring a back-navigation's position after
-		// this already mounted at 0, most likely. Bail to the resting state
-		// rather than stay locked with the page moved out from under the lock.
+		// is external. Bail to the resting state rather than stay locked with
+		// the page moved out from under the lock.
 		const onExternalScroll = () => {
-			release?.();
+			release();
 			finish();
 		};
 
-		release = () => {
+		function release() {
 			if (released) return;
 			released = true;
-			homeIntro.openingActive = false;
 			window.removeEventListener('scroll', onExternalScroll);
 			unlock?.();
 			unlock = undefined;
-		};
+		}
 
 		window.addEventListener('scroll', onExternalScroll, { passive: true });
 		initScroll().then(() => {
 			if (!released) unlock = lockScroll();
 		});
 
-		return () => release?.();
+		// Resolves at the end; rejects if the animation is cancelled (settling
+		// early removes it) — either way the opening is over.
+		const done = () => {
+			release();
+			finish();
+		};
+		entrance.finished.then(done, done);
+
+		return release;
 	});
-
-	/** The overlay starts lifting: the Header's own mark takes over from
-	 *  here (see homeIntro.openingActive). */
-	function onLiftStart(e: AnimationEvent) {
-		if (e.target === e.currentTarget) homeIntro.openingActive = false;
-	}
-
-	/** The heroes' entrance is the last beat of the opening. */
-	function onHeroesIn(e: AnimationEvent) {
-		if (e.target !== e.currentTarget || settled) return;
-		release?.();
-		finish();
-	}
 </script>
 
 <div class="HomeTop" class:is-settled={settled}>
-	<div class="Opening" aria-hidden="true" onanimationstart={onLiftStart}>
+	<div class="Opening" aria-hidden="true">
 		<div class="Opening__logo"><Logo /></div>
 	</div>
 
@@ -151,7 +165,7 @@
 		</p>
 	</section>
 
-	<div class="HomeHeroes" onanimationend={onHeroesIn}>
+	<div class="HomeHeroes" bind:this={heroesEl}>
 		{#each typefaces as tf (tf.slug)}
 			<a class="HomeHero" href="/fonts/{tf.slug}">
 				<p class="HomeHero__tagline">{tf.homeSection?.headline}</p>

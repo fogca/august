@@ -209,7 +209,8 @@ a {
 html[data-theme='page'] {
   --color-bg:        var(--brand-peach);
   --color-text:      var(--brand-blue);
-  --color-text-mute: rgba(38, 51, 153, 0.6);
+  /* 0.8: ≥4.5:1 (WCAG AA) on both the peach and the raised panels below. */
+  --color-text-mute: rgba(38, 51, 153, 0.8);
   --color-line:      rgba(38, 51, 153, 0.2);
   /* Raised panels (cards, order summary): the peach lifted toward white. */
   --color-bg-gray:   #f8e6d7;
@@ -220,6 +221,18 @@ html[data-theme='page'] {
    Mirrors Logo.svelte's geometry — PC one line 35px down at
    (100vw - 80px) wide (156/1360 tall); SP two lines 28px down, 341.4
    viewBox units tall at 87.34vw / 747.08 per unit — plus a gap below. */
+/* The Header's compact bar (Header.svelte) — opaque, so anything pinned to
+   the top of the screen (sticky panels, jump targets) has to clear it. */
+:root {
+  --header-bar-h: 100px;
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --header-bar-h: 66px;
+  }
+}
+
 :root {
   --masthead-gap: 60px;
   --masthead-h: calc(
