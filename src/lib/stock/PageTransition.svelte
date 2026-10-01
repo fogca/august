@@ -65,7 +65,9 @@
 		// custom intro/loader so we skip the fade-in step.
 		skipFadeIn?: boolean;
 		// Panel background — supports per-route theming.
-		panelColor?: string;
+		/** A colour, or a function of the destination path returning one —
+		 *  so the panel can match the page it reveals. */
+		panelColor?: string | ((toPath: string) => string);
 		// Lifecycle hooks
 		onPanelUp?: () => void; // called when the outgoing animation starts (good for lenis.stop())
 		onFadeInStart?: () => void; // called as the new page begins to fade in (good for Header reveal)
@@ -180,7 +182,10 @@
 			height: m.height,
 			y: m.offY,
 			yPercent: 0,
-			backgroundColor: panelColor
+			backgroundColor:
+				typeof panelColor === 'function'
+					? panelColor(navigation.to?.url.pathname ?? '')
+					: panelColor
 		});
 		gsap.set('.darken-overlay', { display: 'block', top: m.top, height: m.height, opacity: 0 });
 

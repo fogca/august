@@ -202,10 +202,12 @@
 </div>
 
 <style>
+	/* Light tone follows the page theme (blue on peach since the 2026-10
+	   redesign; black on white wherever the theme is the default). */
 	.ContactForm {
-		--field-line: rgba(0, 0, 0, 0.35);
-		--field-fg: #000000;
-		--submit-bg: #000000;
+		--field-line: color-mix(in srgb, var(--color-text) 35%, transparent);
+		--field-fg: var(--color-text);
+		--submit-bg: var(--color-text);
 		--submit-fg: #ffffff;
 		--error-fg: var(--color-signal);
 	}
@@ -350,7 +352,7 @@
 
 	.ContactForm .ContactForm__success {
 		font-size: clamp(18px, 1.8vw, 24px);
-		color: #000000;
+		color: var(--field-fg);
 		margin: 0;
 		outline: none;
 	}

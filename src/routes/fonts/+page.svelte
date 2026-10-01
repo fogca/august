@@ -26,8 +26,8 @@
 </script>
 
 <svelte:head>
-	<title>Fonts — Ōgast</title>
-	<meta name="description" content="Ōgast typeface catalogue — Norma and upcoming releases." />
+	<title>Fonts — Apres Guerre</title>
+	<meta name="description" content="Apres Guerre typeface catalogue — Norma and upcoming releases." />
 </svelte:head>
 
 <main class="Fonts">
@@ -92,7 +92,7 @@
 
 <style>
 	.Fonts {
-		background: #f1f0ef;
+		background: var(--color-bg);
 	}
 
 	/* 1 column on phones, 2 equal columns from tablet up — no grid-gap: the

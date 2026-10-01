@@ -1,7 +1,7 @@
 <!-- Raining-glyph fill — the background of the home page's "Custom type"
-     section. The five letters of OGAST (2026-09, at the user's request —
-     grown from just O/G) pour in from above and pack the whole screen,
-     several layers deep.
+     section. The letters of the wordmark pour in from above and pack the
+     whole screen, several layers deep — A P R E S G U since the 2026-10
+     Apres Guerre rename (O G A S T before it).
 
      Ported from the standalone study at Dev/Ωstudies/glyph-stack/og-fill.html,
      with p5.js dropped on the way in: everything that study used p5 for
@@ -61,15 +61,14 @@
 		armed?: boolean;
 		/** Keep the fixed Header's band clear (see topClearance). The Custom
 		 *  section needs it: a packed field of black glyphs moving behind the
-		 *  header tears its wordmark apart. The intro turns it off — a handful
-		 *  of big letters that have to visibly fall IN from the true top edge
-		 *  of the screen, not appear out of a hard cut 60-70px below it; over
-		 *  the intro the header is still in its difference-blend mode, so its
-		 *  text inverts over a letter passing behind it rather than vanishing. */
+		 *  header tears its wordmark apart. Off is for a pile that has to
+		 *  visibly fall IN from the true top edge of the screen (the old intro
+		 *  fall, removed in the 2026-10 redesign), not appear out of a hard cut
+		 *  60-70px below it. */
 		headerClearance?: boolean;
 	}
 	let {
-		characters = ['O', 'G', 'A', 'S', 'T'],
+		characters = ['A', 'P', 'R', 'E', 'S', 'G', 'U'],
 		color = '#0d0d0d',
 		fontFamily = 'Norma',
 		fontWeight = 850,
@@ -654,9 +653,8 @@
 <style>
 	/* Full section height now (2026-09, "OGUSTスタックのcanvasもしっかり
 	   100vhにして") — was inset from the top by --glyph-top to hold the pile
-	   clear of the fixed Header's own band (it paints itself solid black
-	   over this section — see headerSolid.svelte.ts — and a black glyph
-	   directly behind that would swallow it). That clearance is now kept as
+	   clear of the fixed Header's own band (glyphs packed directly behind
+	   the header's wordmark would swallow it). That clearance is now kept as
 	   a paint-time offset inside GlyphFill's own script (topClearance) rather
 	   than a CSS crop, so the <canvas> element itself is genuinely 100vh
 	   while the pile still can't reach behind the header. */

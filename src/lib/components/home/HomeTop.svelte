@@ -1,0 +1,363 @@
+<!-- Home page top (2026-10 redesign, Figma "II-ii"): the opening (1:635 PC,
+     7:782 SP), then the resting top (175:178 PC, 7:874 SP).
+
+     Opening: the wordmark's letters rise into place, left to right, on the
+     orange ground. Then the ground lifts away to the white page underneath
+     while the first typeface hero comes up from below, growing as it rises,
+     until its top edge rests at half the screen height ("OPから背景が白に
+     なり、下から大きくなりながら書体Hero100vhがinして、50vh分見える感じ").
+
+     The opening is a fixed overlay carrying its own copy of the wordmark
+     (Logo.svelte, the same component and position as the Header's), above
+     the Header. When the overlay fades, the Header's own mark is already
+     sitting on exactly the same pixels underneath, so the hand-over is
+     invisible and nothing has to be told to "show" the Header.
+
+     The whole sequence is CSS animation, so it runs from the server-rendered
+     first paint without waiting on hydration, and a page that never gets its
+     JS still finishes (the overlay fades on its own). The script only adds
+     what CSS can't: the scroll lock while it plays ("OP中はスクロール禁止"),
+     skipping it when the page loads already scrolled, and signalling
+     completion (homeIntro.introComplete) so the page's snap can arm.
+
+     Heroes (175:178): one per typeface, a full screen tall (90vh on SP, at
+     the user's request), dark, with a tagline top-left and the face's name
+     set in itself bottom-left; 4px of page between them. -->
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import type { Typeface } from '$lib/data/typefaces';
+	import { homeIntro } from '$lib/state/homeIntro.svelte';
+	import { initScroll, getLenis } from '$lib/scroll';
+	import Logo from '$lib/components/Logo.svelte';
+
+	interface Props {
+		typefaces: Typeface[];
+	}
+
+	let { typefaces }: Props = $props();
+
+	/** Distance (px) the page may already be scrolled before the opening is
+	 *  skipped outright — a restored mid-page position must never meet the
+	 *  scroll lock. */
+	const AT_TOP = 4;
+
+	/** True once the opening is over or was skipped: the overlay goes and
+	 *  the heroes/lead render at rest with no animation. */
+	let settled = $state(false);
+
+	function finish() {
+		settled = true;
+		homeIntro.introComplete = true;
+	}
+
+	/** Blocks every common way to move the page (wheel, touch-drag, scroll
+	 *  keys) and stops Lenis. Returns the matching unlock. */
+	function lockScroll(): () => void {
+		const blockedKeys = new Set([' ', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End']);
+		const onWheel = (e: WheelEvent) => e.preventDefault();
+		const onTouchMove = (e: TouchEvent) => e.preventDefault();
+		const onKeydown = (e: KeyboardEvent) => {
+			if (blockedKeys.has(e.key)) e.preventDefault();
+		};
+		window.addEventListener('wheel', onWheel, { passive: false });
+		window.addEventListener('touchmove', onTouchMove, { passive: false });
+		window.addEventListener('keydown', onKeydown);
+		getLenis()?.stop();
+
+		return () => {
+			window.removeEventListener('wheel', onWheel);
+			window.removeEventListener('touchmove', onTouchMove);
+			window.removeEventListener('keydown', onKeydown);
+			const l = getLenis();
+			l?.start();
+			// Resync Lenis's internal target to wherever the window really is
+			// (a scroll it didn't originate leaves it stale — see below).
+			l?.scrollTo(window.scrollY, { immediate: true, force: true });
+		};
+	}
+
+	/** Releases the scroll lock; set while the opening plays. */
+	let release: (() => void) | undefined;
+
+	onMount(() => {
+		homeIntro.introComplete = false;
+
+		if (
+			window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+			window.scrollY > AT_TOP
+		) {
+			finish();
+			return;
+		}
+
+		homeIntro.openingActive = true;
+		let unlock: (() => void) | undefined;
+		let released = false;
+
+		// Nothing in the opening scrolls the page, so any scroll while it plays
+		// is external — SvelteKit restoring a back-navigation's position after
+		// this already mounted at 0, most likely. Bail to the resting state
+		// rather than stay locked with the page moved out from under the lock.
+		const onExternalScroll = () => {
+			release?.();
+			finish();
+		};
+
+		release = () => {
+			if (released) return;
+			released = true;
+			homeIntro.openingActive = false;
+			window.removeEventListener('scroll', onExternalScroll);
+			unlock?.();
+			unlock = undefined;
+		};
+
+		window.addEventListener('scroll', onExternalScroll, { passive: true });
+		initScroll().then(() => {
+			if (!released) unlock = lockScroll();
+		});
+
+		return () => release?.();
+	});
+
+	/** The overlay starts lifting: the Header's own mark takes over from
+	 *  here (see homeIntro.openingActive). */
+	function onLiftStart(e: AnimationEvent) {
+		if (e.target === e.currentTarget) homeIntro.openingActive = false;
+	}
+
+	/** The heroes' entrance is the last beat of the opening. */
+	function onHeroesIn(e: AnimationEvent) {
+		if (e.target !== e.currentTarget || settled) return;
+		release?.();
+		finish();
+	}
+</script>
+
+<div class="HomeTop" class:is-settled={settled}>
+	<div class="Opening" aria-hidden="true" onanimationstart={onLiftStart}>
+		<div class="Opening__logo"><Logo /></div>
+	</div>
+
+	<section class="HomeLead">
+		<h1 class="HomeLead__title">Apres Guerre</h1>
+		<!-- The frame's own copy (it repeats twice there as filler), with the
+		     brand name updated and "from Tokyo" left out, per the user's
+		     earlier request to keep the city out of the site's copy. -->
+		<p class="HomeLead__text">
+			Apres Guerre is an independent type foundry. We draw humanist typefaces that treat the letter
+			as the medium meaning passes through — retail families and bespoke type for those who value
+			the power of design.
+		</p>
+	</section>
+
+	<div class="HomeHeroes" onanimationend={onHeroesIn}>
+		{#each typefaces as tf (tf.slug)}
+			<a class="HomeHero" href="/fonts/{tf.slug}">
+				<p class="HomeHero__tagline">{tf.homeSection?.headline}</p>
+				<p
+					class="HomeHero__name"
+					style="font-family: '{tf.fontFamily}', var(--font-norma); font-variation-settings: 'wght' {tf
+						.homeSection?.heroWeight ?? 400};"
+				>
+					{tf.homeSection?.heroName ?? tf.name}
+				</p>
+			</a>
+		{/each}
+	</div>
+</div>
+
+<style>
+	.HomeTop {
+		/* Opening timeline (seconds from first paint). */
+		--rise-at: 0.3s;
+		--rise-dur: 1.2s;
+		--rise-step: 60ms;
+		--lift-at: 2.4s;
+		--lift-dur: 0.8s;
+		/* The ground turns white first, then the hero comes up into it. */
+		--hero-at: 2.75s;
+		--hero-dur: 1.6s;
+		--lead-at: 3.2s;
+		--lead-dur: 0.8s;
+		--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+		--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+		/* Heroes: full screen PC, 90vh SP; the lead holds the top half. */
+		--hero-h: 100vh;
+		--lead-h: 50vh;
+		--edge: 40px;
+	}
+
+	/* ── Opening overlay ── */
+	.Opening {
+		position: fixed;
+		inset: 0;
+		/* Above the Header (100), whose own mark it hands over to. */
+		z-index: 200;
+		background: var(--brand-orange);
+		pointer-events: none;
+		animation: opening-lift var(--lift-dur) ease var(--lift-at) forwards;
+	}
+
+	.Opening__logo {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 0;
+	}
+
+	/* Each letter rises out of its word's own box (the <svg> clips to its
+	   viewBox), staggered left to right. translateY is in viewBox units here
+	   — 170 clears the 156-unit-tall box entirely. */
+	.Opening :global(.Logo__word path) {
+		animation: letter-rise var(--rise-dur) var(--ease-out-expo) backwards;
+		animation-delay: calc(var(--rise-at) + var(--i) * var(--rise-step));
+	}
+
+	@keyframes letter-rise {
+		from {
+			transform: translateY(170px);
+		}
+	}
+
+	@keyframes opening-lift {
+		to {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+
+	/* ── Lead: the white top half ── */
+	.HomeLead {
+		position: relative;
+		height: var(--lead-h);
+		padding: 0;
+	}
+
+	.HomeLead__title {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+
+	/* Elio 11px / 1.4, 646px wide, 349px down in the 900px frame — its last
+	   line ~55px above the hero, which is what's kept here. */
+	.HomeLead__text {
+		position: absolute;
+		left: var(--edge);
+		bottom: 55px;
+		width: min(646px, calc(100% - 2 * var(--edge)));
+		margin: 0;
+		font-family: var(--font-elio), sans-serif;
+		font-size: 11px;
+		font-weight: 400;
+		font-variation-settings: 'wght' 400;
+		line-height: 1.4;
+		letter-spacing: 0;
+		color: var(--brand-blue);
+		animation: lead-in var(--lead-dur) ease var(--lead-at) backwards;
+	}
+
+	@keyframes lead-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	/* ── Heroes ── */
+	.HomeHeroes {
+		/* Rises from fully below the fold, growing to full width. */
+		transform-origin: 50% 0;
+		animation: heroes-in var(--hero-dur) var(--ease-out-quint) var(--hero-at) backwards;
+	}
+
+	@keyframes heroes-in {
+		from {
+			transform: translateY(var(--lead-h)) scale(0.8);
+		}
+	}
+
+	.HomeHero {
+		position: relative;
+		display: block;
+		height: var(--hero-h);
+		background: var(--brand-hero);
+		text-decoration: none;
+	}
+
+	.HomeHero + .HomeHero {
+		margin-top: 4px;
+	}
+
+	.HomeHero__tagline,
+	.HomeHero__name {
+		position: absolute;
+		left: var(--edge);
+		margin: 0;
+		line-height: 1;
+		letter-spacing: 0;
+		color: var(--brand-paper);
+		white-space: nowrap;
+	}
+
+	.HomeHero__tagline {
+		top: 20px;
+		font-family: var(--font-norma);
+		font-size: 16px;
+		font-variation-settings: 'wght' 400;
+	}
+
+	.HomeHero__name {
+		bottom: 20px;
+		font-size: 100px;
+	}
+
+	/* Settled (opening over or skipped): no overlay, everything at rest. */
+	.HomeTop.is-settled .Opening {
+		display: none;
+	}
+
+	.HomeTop.is-settled .HomeHeroes,
+	.HomeTop.is-settled .HomeLead__text {
+		animation: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.Opening {
+			display: none;
+		}
+
+		.HomeHeroes,
+		.HomeLead__text {
+			animation: none;
+		}
+	}
+
+	@media (max-width: 767.98px) {
+		.HomeTop {
+			--hero-h: 90vh;
+			/* Small viewport: the hero's top lands at the middle of what is
+			   actually visible, URL bar and all. */
+			--lead-h: 50svh;
+			--edge: 20px;
+		}
+
+		.HomeLead__text {
+			bottom: 32px;
+		}
+
+		.HomeHero__tagline {
+			top: 16px;
+			font-size: 14px;
+		}
+
+		.HomeHero__name {
+			bottom: 16px;
+			font-size: 64px;
+		}
+	}
+</style>

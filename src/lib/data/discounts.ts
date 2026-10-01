@@ -1,4 +1,4 @@
-// Discount rules for Ōgast
+// Discount rules for Apres Guerre
 //
 // Discount stacking rules:
 //   - Package discount (built into base price, displayed as anchoring vs gross)

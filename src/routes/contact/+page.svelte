@@ -20,10 +20,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact — Ōgast</title>
+	<title>Contact — Apres Guerre</title>
 	<meta
 		name="description"
-		content="Contact Ōgast — licensing questions, enterprise scale, custom typefaces, and general enquiries."
+		content="Contact Apres Guerre — licensing questions, enterprise scale, custom typefaces, and general enquiries."
 	/>
 </svelte:head>
 
@@ -37,31 +37,7 @@
 			or anything else — please get in touch. We will respond within five business days.
 		</p>
 
-		<ContactForm result={form} tone="dark" />
+		<ContactForm result={form} />
 	</PageSection>
 </main>
 
-<style>
-	/* Fixed dark grey, white text (2026-09, at the user's request — About and
-	   Contact reading as the exact same colour was the problem, not the
-	   colour itself, so this no longer shares the debug-switchable
-	   --summer-color with About). --color-text is PageSection's own text
-	   colour variable — overriding it here reaches every descendant PageSection
-	   paints, without touching PageSection.svelte itself. */
-	.Contact {
-		background: #333333;
-		--color-text: #ffffff;
-	}
-
-	/* PageSection defaults to min-height:100vh, vertically centring/filling
-	   the viewport regardless of content — with no subtitle here (see the
-	   note above) that left a long stretch of empty grey below the form on a
-	   normal-height screen. Cut to about half (2026-09, at the user's
-	   request, "Contactのpadding bottomが少し長いので、半分くらいに削って"),
-	   scoped to this page rather than PageSection itself, which several
-	   other pages still rely on being a full screen. */
-	.Contact :global(.PageSection) {
-		min-height: 50vh;
-		min-height: 50svh;
-	}
-</style>

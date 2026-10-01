@@ -102,6 +102,13 @@ a {
      with black text (--color-text), not white. */
   --color-amber:     #ffbb32;
 
+  /* Apres Guerre brand palette (2026-10 rebrand, Figma "II-ii"). */
+  --brand-blue:   #263399;  /* wordmark, header, page text */
+  --brand-peach:  #f3d6bc;  /* page background (every page but the home) */
+  --brand-orange: #da6930;  /* the home page's opening screen */
+  --brand-hero:   #3e3e3e;  /* home page typeface heroes */
+  --brand-paper:  #f1f0ef;  /* text on the heroes */
+
   /* --- Color aliases (general-purpose) --- */
   --background: var(--color-bg);
   --white:      #ffffff;
@@ -191,6 +198,42 @@ a {
 
   /* --- Misc reusable height for animation slots --- */
   --shuffle-height: 15vh;
+}
+
+/* Page theme — every page but the home is blue on peach (Figma 3:671).
+   The attribute is set server-side by hooks.server.ts (so the first paint is
+   already right) and kept in sync on client navigation by +layout.svelte.
+   The home page keeps the white/black defaults above. Declared on the same
+   element as :root, so the aliases that read these (--background, --black)
+   pick the themed values up. */
+html[data-theme='page'] {
+  --color-bg:        var(--brand-peach);
+  --color-text:      var(--brand-blue);
+  --color-text-mute: rgba(38, 51, 153, 0.6);
+  --color-line:      rgba(38, 51, 153, 0.2);
+  /* Raised panels (cards, order summary): the peach lifted toward white. */
+  --color-bg-gray:   #f8e6d7;
+}
+
+/* Masthead: the space the Header's large top-of-page wordmark takes, which
+   every page but the home reserves above its own content (+layout.svelte).
+   Mirrors Logo.svelte's geometry — PC one line 35px down at
+   (100vw - 80px) wide (156/1360 tall); SP two lines 28px down, 341.4
+   viewBox units tall at 87.34vw / 747.08 per unit — plus a gap below. */
+:root {
+  --masthead-gap: 60px;
+  --masthead-h: calc(
+    35px + (100vw - 80px) * 156 / 1360 + var(--masthead-gap) + env(safe-area-inset-top, 0px)
+  );
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --masthead-gap: 40px;
+    --masthead-h: calc(
+      28px + 87.34vw * 341.4 / 747.08 + var(--masthead-gap) + env(safe-area-inset-top, 0px)
+    );
+  }
 }
 
 /* ------------------------------------------------------------

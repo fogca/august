@@ -1,4 +1,4 @@
-// Typeface data definitions for Ōgast
+// Typeface data definitions for Apres Guerre
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
@@ -144,6 +144,12 @@ export interface Typeface {
 		 *  Hair master at 150, per Figma, deliberately delicate despite the
 		 *  headline's large size). */
 		headlineWeight: number;
+		/** Home page hero (2026-10 redesign, Figma 175:178 / 7:874): the name
+		 *  as set bottom-left on the panel, when it differs from `name`. The
+		 *  tagline top-left is `headline`. */
+		heroName?: string;
+		/** wght the hero name is set at — a real instance of the face's axis. */
+		heroWeight: number;
 	};
 }
 
@@ -272,7 +278,10 @@ export const TYPEFACES: Typeface[] = [
 			blockFg: '#F1F0EF',
 			glyph: 'a',
 			headline: 'Natural Humanist Sans',
-			headlineWeight: 500
+			headlineWeight: 500,
+			// Home hero: "NORMA" in Norma Regular, as drawn (Figma 175:178).
+			heroName: 'NORMA',
+			heroWeight: 400
 		}
 	},
 	{
@@ -288,11 +297,11 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Mokuseki Sans',
 		tagline: 'The latest cut of Mokuseki Sans.',
 		description:
-			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Ōgast. ' +
+			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Apres Guerre. ' +
 			'Details on weights and axis range will be published as the design reaches maturity. ' +
 			'Debuting 2026.',
 		descriptionFr:
-			'gQ est la dernière évolution de Mokuseki Sans — un sans-serif néo-humaniste dessiné chez Ōgast. ' +
+			'gQ est la dernière évolution de Mokuseki Sans — un sans-serif néo-humaniste dessiné chez Apres Guerre. ' +
 			"Les détails sur les graisses et l'étendue de l'axe seront publiés à mesure que le dessin arrive à maturité. " +
 			'Sortie prévue en 2026.',
 		classification: 'Neo Humanist Sans · 12 weights',
@@ -358,14 +367,14 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Elio',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'Elio is a sibling to Norma, in development at Ōgast. ' +
+			'Elio is a sibling to Norma, in development at Apres Guerre. ' +
 			'Where Norma runs wide and even across twenty weights, Elio narrows its focus to nine — an axis built from two hand-drawn extremes, Hair and Ultra, with the seven named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Ultra — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'Elio est une police sœur de Norma, en cours de développement chez Ōgast. ' +
+			'Elio est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development · 9 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -452,7 +461,9 @@ export const TYPEFACES: Typeface[] = [
 			// Elio's own Hair master (150) — deliberately its most delicate
 			// weight at the page's single largest moment, per Figma (and a
 			// nice match for its "Reticent and Ravenous" tagline).
-			headlineWeight: 150
+			headlineWeight: 150,
+			// Home hero: "Elio" in Elio Light, as drawn (Figma 175:178).
+			heroWeight: 300
 		}
 	},
 	{
@@ -470,10 +481,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'Alfred is a Neo Classic typeface in development at Ōgast. ' +
+			'Alfred is a Neo Classic typeface in development at Apres Guerre. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'Alfred est un caractère Neo Classic en cours de développement chez Ōgast. ' +
+			'Alfred est un caractère Neo Classic en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised

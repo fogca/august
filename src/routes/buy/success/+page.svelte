@@ -13,8 +13,8 @@
 </script>
 
 <svelte:head>
-	<title>Order Received — Ōgast</title>
-	<meta name="description" content="Order confirmation — Ōgast." />
+	<title>Order Received — Apres Guerre</title>
+	<meta name="description" content="Order confirmation — Apres Guerre." />
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -63,7 +63,7 @@
 				order reference{/if}.
 		</p>
 
-		<a href="/" class="Success__home">← Back to Ōgast</a>
+		<a href="/" class="Success__home">← Back to Apres Guerre</a>
 	</div>
 </main>
 

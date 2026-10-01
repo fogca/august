@@ -23,9 +23,9 @@ export default defineConfig({
 				type: 'module'
 			},
 			manifest: {
-				name: 'Ōgast',
-				short_name: 'Ōgast',
-				description: 'An independent type foundry from Tokyo.',
+				name: 'Apres Guerre',
+				short_name: 'Apres Guerre',
+				description: 'An independent type foundry.',
 				theme_color: '#ffffff',
 				background_color: '#ffffff',
 				display: 'standalone',

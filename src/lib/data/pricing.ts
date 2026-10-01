@@ -1,4 +1,4 @@
-// Pricing data for Ōgast
+// Pricing data for Apres Guerre
 // Architecture: typeface → package → tier × selected style count.
 // EUR only — the foundry's single sale currency. No JPY/USD conversion.
 

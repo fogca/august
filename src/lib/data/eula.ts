@@ -1,4 +1,4 @@
-// End User Licence Agreement content — Ōgast.
+// End User Licence Agreement content — Apres Guerre.
 // Structured as one Article-numbered mini-agreement per licence sold on
 // /buy: Individual, Organisation (Team through Global, bundling full
 // commercial use into one tier priced by company size), and Project
@@ -15,7 +15,7 @@
 // typeface" restriction, the Organisation-Size definition, the Project
 // License's Purchaser/Brand mechanic) were added by standard font-industry
 // convention or from the business logic discussed rather than confirmed
-// against Ōgast's actual policy — flagged inline below each section as
+// against Apres Guerre's actual policy — flagged inline below each section as
 // `flagsForReview`. Recommend a lawyer's pass before treating this as
 // final, especially the liability/warranty articles and anything touching
 // Japan's Consumer Contract Act / APPI.
@@ -41,7 +41,7 @@ export const EULA_SECTIONS: EulaSection[] = [
 		navLabel: 'Individual',
 		heading: 'End User Licence Agreement (Individual License)',
 		intro:
-			"This section covers the Individual License for Ōgast's fonts — the " +
+			"This section covers the Individual License for Apres Guerre's fonts — the " +
 			'smallest tier, for one person using the OpenType and TrueType files on their own ' +
 			'computers to design and produce static work: posters, packaging, brand identities, ' +
 			'PDFs, presentations, print, and exported images. It does not cover self-hosting ' +
@@ -53,9 +53,9 @@ export const EULA_SECTIONS: EulaSection[] = [
 				number: 1,
 				title: 'Definitions',
 				clauses: [
-					'"Licensor", "we", "us", or "Ōgast" means Mirai Service Co., Ltd., a company registered in Japan and trading as Ōgast.',
+					'"Licensor", "we", "us", or "Apres Guerre" means Mirai Service Co., Ltd., a company registered in Japan and trading as Apres Guerre.',
 					'"Licensee" or "you" means the individual named on the Sales Receipt.',
-					'"Fonts" means the Ōgast font software covered by your Sales Receipt, supplied as OpenType (.otf) or TrueType (.ttf) files for installation on desktop devices — currently Norma, across its full range of weights.',
+					'"Fonts" means the Apres Guerre font software covered by your Sales Receipt, supplied as OpenType (.otf) or TrueType (.ttf) files for installation on desktop devices — currently Norma, across its full range of weights.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording the licence tier, price paid, and date — it is the master record of what you are licensed for.'
 				]
 			},
@@ -115,14 +115,14 @@ export const EULA_SECTIONS: EulaSection[] = [
 				title: 'Governing Law & Contact',
 				clauses: [
 					'This Agreement is governed by the laws of Japan.',
-					'Licensor is Mirai Service Co., Ltd. (trading as Ōgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
+					'Licensor is Mirai Service Co., Ltd. (trading as Apres Guerre), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
 					'For licensing questions, contact us through our contact form at august.tf/contact.',
 					'We may update this Agreement from time to time; the version in effect on the date of your Sales Receipt governs your licence.'
 				]
 			}
 		],
 		flagsForReview: [
-			'Article 4.4/4.5 (no derivative typeface, no logo-resale-as-font) carried over from the original Desktop-licence draft by convention — confirm they match how Ōgast wants client logo work treated.',
+			'Article 4.4/4.5 (no derivative typeface, no logo-resale-as-font) carried over from the original Desktop-licence draft by convention — confirm they match how Apres Guerre wants client logo work treated.',
 			"Article 6 (warranty/liability cap) and Article 5 (termination/cure) are substantive legal clauses — recommend a lawyer's review before publishing, particularly the liability cap and the undefined 'reasonable time to cure'.",
 			'No specific court/venue is named for disputes (only "governed by the laws of Japan") — add one (e.g. Nagoya District Court) if a named jurisdiction is wanted.'
 		]
@@ -144,9 +144,9 @@ export const EULA_SECTIONS: EulaSection[] = [
 				number: 1,
 				title: 'Definitions',
 				clauses: [
-					'"Licensor", "we", "us", or "Ōgast" means Mirai Service Co., Ltd., a company registered in Japan and trading as Ōgast.',
+					'"Licensor", "we", "us", or "Apres Guerre" means Mirai Service Co., Ltd., a company registered in Japan and trading as Apres Guerre.',
 					'"Licensee" or "you" means the organisation named on the Sales Receipt.',
-					'"Fonts" means the Ōgast font software covered by your Sales Receipt — OpenType, TrueType, and WOFF2 files as applicable to desktop, web, and app use — currently Norma, across its full range of weights.',
+					'"Fonts" means the Apres Guerre font software covered by your Sales Receipt — OpenType, TrueType, and WOFF2 files as applicable to desktop, web, and app use — currently Norma, across its full range of weights.',
 					'"Organisation Size" means the total number of people at Licensee — full-time and part-time — authorised to use the Fonts under this licence, including staff, contractors, and freelancers working on Licensee\'s behalf.',
 					'"Licensed Tier" means the tier named on your Sales Receipt (Team, Studio, Agency, Brand, or Firm) and its associated Organisation Size ceiling.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording your Licensed Tier, price paid, and date — it is the master record of what you are licensed for.'
@@ -213,14 +213,14 @@ export const EULA_SECTIONS: EulaSection[] = [
 				title: 'Governing Law & Contact',
 				clauses: [
 					'This Agreement is governed by the laws of Japan.',
-					'Licensor is Mirai Service Co., Ltd. (trading as Ōgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
+					'Licensor is Mirai Service Co., Ltd. (trading as Apres Guerre), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
 					'For licensing questions, including upgrades or a Global quote, contact us through our contact form at august.tf/contact.',
 					'We may update this Agreement from time to time; the version in effect on the date of your Sales Receipt governs your licence.'
 				]
 			}
 		],
 		flagsForReview: [
-			"Article 2.5's 30-day upgrade grace period is a convention (matching common industry practice, including the reference EULA reviewed during pricing research), not confirmed as Ōgast's official policy — decide and state a number explicitly.",
+			"Article 2.5's 30-day upgrade grace period is a convention (matching common industry practice, including the reference EULA reviewed during pricing research), not confirmed as Apres Guerre's official policy — decide and state a number explicitly.",
 			"Article 4.3 (can't use an Organisation License to cover a client's separate entity) is the key clause connecting this section to the Project License section below — worth double-checking the two sections don't contradict each other as both evolve.",
 			'"Organisation Size" (Article 1.4) counting contractors/freelancers alongside staff is a judgment call, not a stated fact — confirm this is the intended measurement.',
 			"Liability cap and termination clauses (Articles 5–6) are real legal disclaimers — recommend a lawyer's review pass, same Consumer Contract Act / APPI considerations as the other sections.",
@@ -244,10 +244,10 @@ export const EULA_SECTIONS: EulaSection[] = [
 				number: 1,
 				title: 'Definitions',
 				clauses: [
-					'"Licensor", "we", "us", or "Ōgast" means Mirai Service Co., Ltd., a company registered in Japan and trading as Ōgast.',
+					'"Licensor", "we", "us", or "Apres Guerre" means Mirai Service Co., Ltd., a company registered in Japan and trading as Apres Guerre.',
 					'"Purchaser" means the person or company named on the Sales Receipt as having bought this licence — often a design studio or agency buying on behalf of a client.',
 					'"Brand" means the single named business, brand identity, or client project stated on the Sales Receipt, which this licence is scoped to.',
-					'"Fonts" means the Ōgast font software covered by your Sales Receipt — currently Norma, across its full range of weights.',
+					'"Fonts" means the Apres Guerre font software covered by your Sales Receipt — currently Norma, across its full range of weights.',
 					'"Sales Receipt" means the order confirmation we issue at checkout, recording the named Brand, price paid, and date — it is the master record of what this licence covers.'
 				]
 			},
@@ -308,14 +308,14 @@ export const EULA_SECTIONS: EulaSection[] = [
 				title: 'Governing Law & Contact',
 				clauses: [
 					'This Agreement is governed by the laws of Japan.',
-					'Licensor is Mirai Service Co., Ltd. (trading as Ōgast), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
+					'Licensor is Mirai Service Co., Ltd. (trading as Apres Guerre), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan.',
 					'For licensing questions — including extending a Project License to a company-wide Organisation License — contact us through our contact form at august.tf/contact.',
 					'We may update this Agreement from time to time; the version in effect on the date of your Sales Receipt governs your licence.'
 				]
 			}
 		],
 		flagsForReview: [
-			"Article 2.5 (both Purchaser and Brand can independently rely on the licence, surviving the end of their engagement) is the core mechanic of this licence and was drafted from the business logic discussed, not from a supplied legal fact — worth a careful read to confirm it says what Ōgast intends, especially the 'survives the engagement ending' part.",
+			"Article 2.5 (both Purchaser and Brand can independently rely on the licence, surviving the end of their engagement) is the core mechanic of this licence and was drafted from the business logic discussed, not from a supplied legal fact — worth a careful read to confirm it says what Apres Guerre intends, especially the 'survives the engagement ending' part.",
 			'There is no stated mechanism for verifying who the named Brand actually is, or for resolving a dispute between Purchaser and Brand over the Fonts (e.g. if the relationship between them turns adversarial) — worth deciding whether this needs its own clause.',
 			'No formal upgrade-credit path to an Organisation License is stated (Article 7.3 only offers to discuss it) — if a specific credit or discount is intended, it should be written here explicitly rather than handled ad hoc.',
 			"Liability cap and termination clauses (Articles 5–6) are real legal disclaimers — recommend a lawyer's review pass, same Consumer Contract Act / APPI considerations as the other sections.",

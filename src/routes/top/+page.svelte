@@ -187,7 +187,7 @@
 </script>
 
 <svelte:head>
-	<title>Shape Study — Ōgast</title>
+	<title>Shape Study — Apres Guerre</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

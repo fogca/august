@@ -18,7 +18,7 @@ import { dev } from '$app/environment';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 const TO_ADDRESS = 'hi@august.tf';
-const FROM_ADDRESS = 'Ōgast website <hi@august.tf>';
+const FROM_ADDRESS = 'Apres Guerre website <hi@august.tf>';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import PageTransition from '$lib/stock/PageTransition.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
@@ -26,6 +27,25 @@
 	$effect(() => {
 		if (browser) document.documentElement.dataset.lang = lang.current;
 	});
+
+	// Page theme (2026-10 redesign): white for the home page, blue on peach
+	// everywhere else — see base.css's html[data-theme] rule. The server sets
+	// it for the first paint (hooks.server.ts); this keeps it in step on
+	// client-side navigation. Runs once the new page has rendered, by which
+	// time the transition panel already covers the old one.
+	const themeFor = (path: string) => (path === '/' ? 'home' : 'page');
+	$effect(() => {
+		if (browser) document.documentElement.dataset.theme = themeFor(page.url.pathname);
+	});
+
+	// The transition panel the new page fades in over — matched to that
+	// page's own background so the hand-off doesn't flash a third colour.
+	// Read from base.css's own tokens rather than repeated here.
+	const PANEL_TOKENS = { home: '--white', page: '--brand-peach' } as const;
+	const panelColorFor = (path: string) =>
+		getComputedStyle(document.documentElement)
+			.getPropertyValue(PANEL_TOKENS[themeFor(path)])
+			.trim();
 
 	onMount(() => destroyScroll);
 
@@ -65,7 +85,22 @@
 
 <Header />
 
-<PageTransition onPanelUp={() => getLenis()?.stop()} onComplete={() => getLenis()?.start()}>
+<PageTransition
+	panelColor={panelColorFor}
+	onPanelUp={() => getLenis()?.stop()}
+	onComplete={() => getLenis()?.start()}
+>
+	<!-- Room for the Header's large top-of-page wordmark (base.css
+	     --masthead-h). The home page lays out its own top around it. -->
+	{#if page.url.pathname !== '/'}
+		<div class="Masthead" aria-hidden="true"></div>
+	{/if}
 	{@render children()}
 	<Footer />
 </PageTransition>
+
+<style>
+	.Masthead {
+		height: var(--masthead-h);
+	}
+</style>

@@ -7,8 +7,8 @@
 </script>
 
 <svelte:head>
-	<title>Legal Notice — Ōgast</title>
-	<meta name="description" content="Specified Commercial Transactions Act disclosure for Ōgast." />
+	<title>Legal Notice — Apres Guerre</title>
+	<meta name="description" content="Specified Commercial Transactions Act disclosure for Apres Guerre." />
 </svelte:head>
 
 <main class="Legal">
@@ -19,14 +19,14 @@
 		flow
 	>
 		<p>
-			This notice discloses information about Ōgast's font sales as required under Japan's Act on
+			This notice discloses information about Apres Guerre's font sales as required under Japan's Act on
 			Specified Commercial Transactions (特定商取引法).
 		</p>
 
 		<dl class="Legal__facts">
 			<div class="Legal__fact">
 				<dt>Seller</dt>
-				<dd>Mirai Service Co., Ltd. (trading as Ōgast)</dd>
+				<dd>Mirai Service Co., Ltd. (trading as Apres Guerre)</dd>
 			</div>
 			<div class="Legal__fact">
 				<dt>Person in charge of operations</dt>
@@ -90,7 +90,7 @@
 
 <style>
 	.Legal {
-		background: #f1f0ef;
+		background: var(--color-bg);
 	}
 
 	.Legal__facts {

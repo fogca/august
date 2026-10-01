@@ -8,12 +8,11 @@
      ようにして") — this is the complete version of that same layout, not a
      differently-styled page that happens to share its copy.
 
-     Both blocks now carry the summer colour (2026-09, "その下も全体的に
-     背景色ありにして") rather than the Norma introduction sitting on plain
-     white — the whole page reads as one continuous coloured page. Driven by
-     the shared, debug-switchable state so About/Contact/this page can never
-     disagree while the colour is still being picked ("一旦黄色で進めて" —
-     amber for now). Text stays black throughout.
+     Both blocks share one ground (2026-09, "その下も全体的に背景色ありに
+     して") so the whole page reads as one continuous coloured page — the
+     page theme's own blue on peach since the 2026-10 Apres Guerre redesign
+     (was the summer amber with black text), so the Header's compact bar,
+     painted in the page colour, sits on it seamlessly.
 
      No arrow-icon link here any more (2026-09, at the user's request —
      "▶︎のリンクはなるべく使わないようにして、角丸なしのボックスリンクに
@@ -21,35 +20,32 @@
      link now, matching the Home page's own Contact CTA rather than the
      Arrow.svelte pattern used elsewhere.
 
-     Copy for the Ōgast rename is unchanged; still no "why Ōgast" story
-     invented unilaterally (see the standing note in typefaces.ts). "Tokyo"
+     Copy for the Apres Guerre rename is unchanged apart from the name; still
+     no naming story invented unilaterally (see the standing note in
+     typefaces.ts). "Tokyo"
      stays out of the copy (2026-09, "Tokyo Japanという情報はなるべく
      控えて"). -->
-<script lang="ts">
-	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
-</script>
-
 <svelte:head>
-	<title>About — Ōgast</title>
+	<title>About — Apres Guerre</title>
 	<meta
 		name="description"
-		content="Ōgast — an independent type foundry. Studio statement and philosophy."
+		content="Apres Guerre — an independent type foundry. Studio statement and philosophy."
 	/>
 </svelte:head>
 
-<main class="About" style="--summer-color: {summerColorHex(summerColor.current)};">
+<main class="About">
 	<section class="About__statement">
 		<div class="About__inner">
 			<h1 class="About__label">About</h1>
 
 			<div class="About__body">
 				<p class="en" lang="en">
-					Ōgast is an independent type foundry, founded in 2026. We cross histories, cultures, and
+					Apres Guerre is an independent type foundry, founded in 2026. We cross histories, cultures, and
 					eras, reinterpret their context, and draw type through a contemporary eye. Anchored in
 					retail families and bespoke commissions, we keep searching for forms not yet seen.
 				</p>
 				<p class="fr" lang="fr">
-					Ōgast est une fonderie de caractères indépendante, fondée en 2026. Nous traversons les
+					Apres Guerre est une fonderie de caractères indépendante, fondée en 2026. Nous traversons les
 					histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
 					caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
 					commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
@@ -136,13 +132,9 @@
 		min-height: 100svh;
 		display: flex;
 		align-items: center;
-		background: var(--summer-color, var(--color-amber, #ffbb32));
+		background: var(--color-bg);
 		padding-inline: var(--padding);
 		padding-block: clamp(96px, 12vh, 160px);
-	}
-
-	.About__statement :global(*) {
-		color: #000000;
 	}
 
 	.About__statement .About__inner {
@@ -200,11 +192,10 @@
 		margin: 0;
 	}
 
-	/* --- Norma block: same summer colour as the statement above, not white
-	   (2026-09, "その下も全体的に背景色ありにして") — the whole page reads
-	   as one continuous coloured page rather than half-coloured/half-white. --- */
+	/* --- Norma block: same ground as the statement above (2026-09, "その下
+	   も全体的に背景色ありにして"). --- */
 	.About__norma {
-		background: var(--summer-color, var(--color-amber, #ffbb32));
+		background: var(--color-bg);
 		padding-inline: var(--padding);
 		padding-block: clamp(96px, 14vh, 160px);
 	}
@@ -247,7 +238,7 @@
 		font-size: 15px;
 		font-weight: var(--fw-ui);
 		color: #ffffff;
-		background: #000000;
+		background: var(--color-text);
 		border: 0;
 		border-radius: 0;
 		text-decoration: none;

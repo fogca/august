@@ -84,7 +84,7 @@
 				class="LicenseIntake__input"
 				type="text"
 				bind:value={companyName}
-				placeholder="Ōgast Inc."
+				placeholder="Apres Guerre Inc."
 				required
 				aria-required="true"
 			/>

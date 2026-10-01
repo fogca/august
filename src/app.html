@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-lang="en">
+<html lang="en" data-lang="en" data-theme="page">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -29,7 +29,7 @@
 		</script>
 		<!-- Per-page <meta name="description"> comes from each route's svelte:head -->
 		<!-- Global design tokens and reset (bump ?v= whenever base.css changes) -->
-		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20260908a" />
+		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20261002a" />
 		<!-- Norma VF — latest export (version in the filename). Renamed from
 		     "Steiner"/"Asger", then "Atom", 2026-08-30/31 (product renames);
 		     filename/version scheme unchanged. Declared under two family names
@@ -126,10 +126,10 @@
 			}
 		</style>
 
-		<!-- Icons — the Ō (macron O) from the wordmark (Logo.svelte's own first
-		     path), on the same dark square the old "A" favicon used. SVG first
-		     (scalable, and what modern browsers pick), PNG as the fallback for
-		     browsers that don't support SVG favicons. -->
+		<!-- Icons — the A of the Apres Guerre wordmark ($lib/data/logo.ts) in
+		     the brand blue on the home page's opening orange (2026-10). SVG
+		     first (scalable, and what modern browsers pick), PNG as the
+		     fallback for browsers that don't support SVG favicons. -->
 		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<link rel="icon" type="image/png" href="%sveltekit.assets%/favicon.png" />
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
@@ -138,15 +138,15 @@
 		<!-- Open Graph / Twitter (site-wide defaults; pages set their own <title>).
 		     No og:url here — crawlers fall back to each page's own URL. -->
 		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="Ōgast" />
-		<meta property="og:title" content="Ōgast — Norma" />
+		<meta property="og:site_name" content="Apres Guerre" />
+		<meta property="og:title" content="Apres Guerre — Norma" />
 		<meta
 			property="og:description"
 			content="An independent type foundry. Norma — a 20-weight neo-humanist variable typeface."
 		/>
 		<meta property="og:image" content="https://august.tf/og.png" />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="Ōgast — Norma" />
+		<meta name="twitter:title" content="Apres Guerre — Norma" />
 		<meta
 			name="twitter:description"
 			content="An independent type foundry. Norma — a 20-weight neo-humanist variable typeface."

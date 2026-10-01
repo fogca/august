@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>{page.status} — Ōgast</title>
+	<title>{page.status} — Apres Guerre</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -26,7 +26,7 @@
 			{/if}
 		</p>
 		<div class="ErrorPage__links">
-			<a href="/">← Ōgast</a>
+			<a href="/">← Apres Guerre</a>
 			<a href="/contact">Contact</a>
 		</div>
 	</div>

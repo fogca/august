@@ -1,5 +1,5 @@
 <script lang="ts">
-	// /buy — Ōgast license purchase page.
+	// /buy — Apres Guerre license purchase page.
 	// Entry point is a font's own detail page: /buy?font=<TypefaceSlug>
 	// (see fonts/[slug]/+page.svelte's Buy CTA), so the typeface itself is
 	// never chosen here -- it arrives pre-decided from wherever the buyer
@@ -196,7 +196,7 @@
 </script>
 
 <svelte:head>
-	<title>{pageTitle} — Ōgast</title>
+	<title>{pageTitle} — Apres Guerre</title>
 	<meta
 		name="description"
 		content="Purchase {selectedPackage?.label ??
@@ -321,7 +321,7 @@
 	/* ── Page shell ── insets, title and min-height all come from PageSection
 	   now (see the markup comment); this only sets the page ground. */
 	.BuyPage {
-		background: #f1f0ef;
+		background: var(--color-bg);
 	}
 
 	/* ── Two-column split (PC only) ── referenced from Klim Type Foundry's

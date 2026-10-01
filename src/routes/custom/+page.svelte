@@ -12,10 +12,10 @@
 </script>
 
 <svelte:head>
-	<title>Custom type — Ōgast</title>
+	<title>Custom type — Apres Guerre</title>
 	<meta
 		name="description"
-		content="Ōgast draws bespoke typefaces for brands and institutions — a proprietary voice, from first sketch to a fully realised family."
+		content="Apres Guerre draws bespoke typefaces for brands and institutions — a proprietary voice, from first sketch to a fully realised family."
 	/>
 </svelte:head>
 
@@ -35,13 +35,13 @@
 
 {#snippet introBody()}
 	<p class="en" lang="en">
-		Beyond our retail library, Ōgast draws bespoke typefaces for brands and institutions — a
+		Beyond our retail library, Apres Guerre draws bespoke typefaces for brands and institutions — a
 		proprietary voice, from the first sketch to a fully realised family. A custom typeface is the
 		most enduring asset a brand can own: it travels across every screen, surface and language while
 		remaining unmistakably yours, and it does not expire when a licence does.
 	</p>
 	<p class="fr" lang="fr">
-		Au-delà de notre catalogue de caractères de vente, Ōgast dessine des caractères sur mesure pour
+		Au-delà de notre catalogue de caractères de vente, Apres Guerre dessine des caractères sur mesure pour
 		des marques et des institutions — une voix qui vous est propre, du premier croquis jusqu'à une
 		famille complète. Un caractère sur mesure est l'actif le plus durable qu'une marque puisse
 		posséder : il traverse tous les écrans, tous les supports et toutes les langues tout en restant
@@ -137,7 +137,7 @@
 
 <style>
 	.Custom {
-		background: #ffffff;
+		background: var(--color-bg);
 	}
 
 	/* One language at a time — see About's own note on the selector shape. */

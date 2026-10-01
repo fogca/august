@@ -1,32 +1,22 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import IntroHero from '$lib/components/home/IntroHero.svelte';
-	import TypefaceStage from '$lib/components/home/TypefaceStage.svelte';
-	import TypefaceFooterBar from '$lib/components/home/TypefaceFooterBar.svelte';
+	import HomeTop from '$lib/components/home/HomeTop.svelte';
 	import GlyphFill from '$lib/components/home/GlyphFill.svelte';
 	import AboutSection from '$lib/components/home/AboutSection.svelte';
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
-	import { headerSolid } from '$lib/state/headerSolid.svelte';
-	import { initScroll, getLenis } from '$lib/scroll';
+	import { headerYield } from '$lib/state/headerYield.svelte';
+	import { initScroll, getLenis, onScroll } from '$lib/scroll';
 	import { onMount } from 'svelte';
 
-	// Top page v4 (2026-09, at the user's request):
-	//   OP logo  →  typeface showcase  →  Custom for business  →  About  →  Contact  →  Footer
-	// The v3 Buy (red) and Office (white) bands are gone; the typeface sections
-	// collapsed into ONE pinned stage (see TypefaceStage.svelte) whose contents
-	// swap in place instead of scrolling past one another.
+	// Top page (2026-10 Apres Guerre redesign, Figma "II-ii"):
+	//   opening + typeface heroes (HomeTop)  →  Custom  →  About  →  Contact  →  Footer
 
-	// homeIntro is a module singleton and nothing ever writes false back to it,
-	// so on an in-app navigation BACK to '/' the OP replays while both flags are
-	// still true from last time — which would arm the snap instantly, mid-OP,
-	// the exact thing introComplete exists to prevent. A parent's instance
-	// script runs before its children's, so IntroHero still gets the last word
-	// and stays untouched.
-	if (browser) {
-		homeIntro.headerReady = false;
-		homeIntro.introComplete = false;
-	}
+	// homeIntro is a module singleton, so an in-app navigation BACK to '/'
+	// would otherwise still read last visit's `true` — arming the snap
+	// mid-opening, the exact thing introComplete exists to prevent. HomeTop
+	// sets it again once this visit's opening is done.
+	if (browser) homeIntro.introComplete = false;
 
 	const homeTypefaces = TYPEFACES.filter((tf) => !tf.hidden && tf.homeSection).sort(
 		(a, b) => a.order - b.order
@@ -39,9 +29,9 @@
 	// wheel gesture past a ~20 deltaY threshold slides it away over 1.2s on a
 	// cubic-bezier(.165,.84,.44,1); the page scrolls normally underneath.)
 	//
-	// Steps here are: intro → each typeface inside the pinned stage → the
-	// Custom section. Below that (About / Contact / Footer) scrolling is
-	// completely normal.
+	// Steps here are: the top of the page → each typeface hero → the Custom
+	// section. Below that (About / Contact / Footer) scrolling is completely
+	// normal.
 	//
 	// This drives lenis.scrollTo() from a first-party wheel/touch detector
 	// rather than lenis/snap. That companion was used before and dropped: none
@@ -73,50 +63,19 @@
 			const lenis = getLenis();
 			if (!lenis) return;
 
-			const introEl = document.querySelector<HTMLElement>('.IntroHero');
-			const introContentEl = document.querySelector<HTMLElement>('.IntroHero__content');
-			const stageEl = document.querySelector<HTMLElement>('.TypefaceStage');
-			const pinEl = document.querySelector<HTMLElement>('.TypefaceStage__pin');
+			const heroEls = Array.from(document.querySelectorAll<HTMLElement>('.HomeHero'));
 			const customEl = document.querySelector<HTMLElement>('.Home__custom');
-			if (!introEl || !stageEl || !customEl) return;
+			if (!heroEls.length || !customEl) return;
 
-			// Absolute document offsets, not elements: the stage is ONE element
-			// holding N steps, so the old "each section is one viewport tall"
-			// element walk cannot express them.
+			// Absolute document offsets, measured rather than derived from
+			// viewport units (the heroes are vh, the lead svh on SP).
 			let targets: number[] = [];
 
 			function measure() {
-				if (!introEl || !stageEl || !customEl) return;
+				if (!customEl) return;
 				const y = window.scrollY;
 				const top = (el: HTMLElement) => Math.round(el.getBoundingClientRect().top + y);
-				const stageTop = top(stageEl);
-				// The PIN's height, never window.innerHeight: the pin is sized in
-				// svh (stable) while innerHeight is the dynamic viewport, and on
-				// iOS the two differ by exactly the URL bar.
-				const stepH = Math.round(
-					(pinEl ?? stageEl).getBoundingClientRect().height || window.innerHeight
-				);
-				const inner = homeTypefaces.map((_, k) => stageTop + k * stepH);
-				// The intro is two screens tall on PC now (its content pins for
-				// the first one while the letters fall onto the wordmark — see
-				// IntroHero's own .has-fall note), so it owns a second stop of
-				// its own. Derived from the measured gap between the section and
-				// its pinned content rather than assumed: that gap is exactly 0
-				// wherever the fall isn't running (SP, reduced motion), which
-				// collapses this back to the single stop it used to be.
-				const introTop = top(introEl);
-				const introTravel = introContentEl
-					? Math.round(
-							introEl.getBoundingClientRect().height -
-								introContentEl.getBoundingClientRect().height
-						)
-					: 0;
-				const introSteps =
-					introTravel > 8 ? [introTop, introTop + introTravel] : [introTop];
-				// customTop is MEASURED rather than computed as stageTop + N*stepH
-				// so svh/px rounding can't drift, and it doubles as the release
-				// point — the stage has fully un-stuck by then.
-				targets = [...introSteps, ...inner, top(customEl)];
+				targets = [0, ...heroEls.map(top), top(customEl)];
 			}
 
 			measure();
@@ -176,7 +135,7 @@
 				const l = getLenis();
 				// Paired with the stop() in onComplete below. start() is a no-op
 				// unless it was actually stopped, so this cannot resume a lock
-				// that belongs to someone else (IntroHero's OP).
+				// that belongs to someone else (HomeTop's opening).
 				if (l?.isStopped && quietStopped) l.start();
 				quietStopped = false;
 				clearBusy();
@@ -185,19 +144,18 @@
 			function step(direction: 1 | -1) {
 				if (busy) return;
 				const l = getLenis();
-				// lenis.scrollTo() returns immediately while stopped (IntroHero's
-				// own OP lock), so without this the guard would be burned on a
+				// lenis.scrollTo() returns immediately while stopped (HomeTop's
+				// opening lock), so without this the guard would be burned on a
 				// no-op and swallow the reader's next real gesture.
 				if (!l || l.isStopped) return;
 
-				// Measured per gesture, not cached for the session. The page above
-				// this region is sized in dvh (IntroHero) while the stage's own
-				// steps are svh, so on iOS every one of these offsets shifts by the
-				// URL bar's height the first time the reader scrolls — and the
-				// resize filter below deliberately ignores exactly that change.
-				// Three getBoundingClientRect reads per committed gesture is
-				// cheaper than any scheme that tries to predict when they moved,
-				// and it can't run mid-animation (busy already returned above).
+				// Measured per gesture, not cached for the session: on iOS the
+				// vh/svh-sized blocks above shift by the URL bar's height the
+				// first time the reader scrolls, and the resize filter below
+				// deliberately ignores exactly that change. A few
+				// getBoundingClientRect reads per committed gesture is cheaper
+				// than predicting when they moved, and it can't run
+				// mid-animation (busy already returned above).
 				measure();
 
 				const target = Math.max(0, Math.min(currentIndex() + direction, targets.length - 1));
@@ -322,51 +280,43 @@
 		};
 	});
 
-	// The Custom section's glyph field is the one backdrop on this page the
-	// Header's mix-blend-mode:difference cannot cope with — it changes per pixel
-	// as the glyphs move, so the wordmark tears into fragments. Ask the Header
-	// to paint solid for exactly as long as that section is in view.
+	// The typeface heroes are full-bleed screens with their own tagline in
+	// the top-left corner, right where the compact Header's nav would sit —
+	// so the Header steps aside (headerYield) for as long as a hero is under
+	// its bar, and comes back over the white sections either side.
 	onMount(() => {
-		const customEl = document.querySelector<HTMLElement>('.Home__custom');
-		if (!customEl) return;
-		const io = new IntersectionObserver(
-			([entry]) => {
-				headerSolid.active = entry.isIntersecting;
-			},
-			// Only once it actually reaches the header's own band at the top.
-			{ rootMargin: '-64px 0px -85% 0px', threshold: 0 }
-		);
-		io.observe(customEl);
+		const heroesEl = document.querySelector<HTMLElement>('.HomeHeroes');
+		const barEl = document.querySelector<HTMLElement>('.Header__bar');
+		if (!heroesEl) return;
+		const update = () => {
+			const line = barEl?.offsetHeight ?? 0;
+			const r = heroesEl.getBoundingClientRect();
+			headerYield.active = r.top < line && r.bottom > line;
+		};
+		update();
+		const off = onScroll(update);
 		return () => {
-			io.disconnect();
-			headerSolid.active = false;
+			off();
+			headerYield.active = false;
 		};
 	});
 </script>
 
 <svelte:head>
-	<title>Ōgast — Norma</title>
+	<title>Apres Guerre — Norma</title>
 	<meta
 		name="description"
-		content="Ōgast — an independent type foundry. Norma, a 20-weight neo-humanist variable typeface."
+		content="Apres Guerre — an independent type foundry. Norma, a 20-weight neo-humanist variable typeface."
 	/>
 </svelte:head>
 
 <main class="Home">
-	<!-- 1. Entrance animation — small wordmark stagger-in, grows large with a
-	     dark->light crossfade, Header reveals at the same beat. -->
-	<IntroHero />
+	<!-- 1. Opening, then the typeface heroes (see HomeTop.svelte). -->
+	<HomeTop typefaces={homeTypefaces} />
 
-	<!-- 2. Typeface showcase — ONE pinned stage; the layout holds still and only
-	     its contents swap (see TypefaceStage.svelte). -->
-	<TypefaceStage typefaces={homeTypefaces} />
-
-	<!-- Mobile-only persistent footer bar for the stage above. Fixed-position,
-	     so its place in the DOM here is just for readability. -->
-	<TypefaceFooterBar />
-
-	<!-- 3. Custom type for business — the copy over a full-screen field of
-	     Ōgast's own O and G raining down and packing the screen (GlyphFill). -->
+	<!-- 2. Custom type for business — the copy over a full-screen field of
+	     the wordmark's own letters raining down and packing the screen
+	     (GlyphFill). -->
 	<section class="Home__custom" id="custom">
 		<GlyphFill />
 		<div class="Custom__inner">
@@ -377,7 +327,7 @@
 				<span>Custom Type</span> <span>for Corporate</span> <span>Identity</span>
 			</h2>
 			<p class="Custom__body">
-				Beyond our retail library, Ōgast designs bespoke typefaces for brands and institutions — a
+				Beyond our retail library, Apres Guerre designs bespoke typefaces for brands and institutions — a
 				proprietary voice, drawn from the first sketch to a fully realised family. A custom typeface
 				is the most enduring asset a brand can own: it travels across every screen, surface, and
 				language while remaining unmistakably yours.
@@ -386,10 +336,10 @@
 		</div>
 	</section>
 
-	<!-- 4. About — one screen of running text, set well above body size. -->
+	<!-- 3. About — one screen of running text, set well above body size. -->
 	<AboutSection />
 
-	<!-- 5. Contact — no in-page form (2026-09, at the user's request, "トップに
+	<!-- 4. Contact — no in-page form (2026-09, at the user's request, "トップに
 	     問い合わせフォームを設置する必要はない"); a plain button in the form's old
 	     spot hands off to /contact instead. -->
 	<section class="Home__contact" id="contact">
@@ -414,7 +364,7 @@
 		--display-fs: clamp(40px, min(7vw, 9.5vh), 88px);
 	}
 
-	/* --- 3. Custom type for business (glyph field) --- */
+	/* --- 2. Custom type for business (glyph field) --- */
 	.Home__custom {
 		/* Header clearance for the glyph pile now lives inside GlyphFill.svelte
 		   itself (topClearance) rather than as a CSS crop here — see that
@@ -516,7 +466,7 @@
 		opacity: 0.8;
 	}
 
-	/* --- 5. Contact --- */
+	/* --- 4. Contact --- */
 	.Home__contact {
 		/* Not a full screen (2026-09, at the user's request — "トップの
 		   Contactセクションは100vhではなくて良いのでもう少し低く適切な

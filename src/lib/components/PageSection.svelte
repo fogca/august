@@ -1,29 +1,27 @@
-<!-- Full-viewport editorial section for the site's own pages — About,
-     Custom, Licensing, Contact, the legal pages, Fonts and Buy — per Figma
-     node 3:671 ("ogast", file UEy0lKKtgP8jN4x2DWZUOB): a large title on the
-     left (Elio 350, 100px at the 1440 design width, left edge at 50), the
-     body copy in a right-hand column (from x=599 to the header's own 20px
-     right margin), and a small sub-heading (32px). Per the user's own
-     framing of that frame: "大見出しがあって、左下のテキストがそれぞれの
-     セクションの小見出し" — a page is a stack of these, one per section.
+<!-- Editorial page shell for the site's own pages — Contact, the legal
+     pages, Fonts and Buy — per Figma 3:671 (file UEy0lKKtgP8jN4x2DWZUOB, the
+     2026-10 Apres Guerre redesign): blue on peach, the page title set large
+     (Elio Regular, 120px at the 1440 width) and pinned to the bottom-left of
+     the screen, the copy running down a right-hand column from x=584 (28px
+     headings, 16px/1.4 text).
 
-     Three layouts:
-     - default: one viewport, vertically centred, sub-heading pinned to the
-       bottom-left (the frame as drawn).
-     - `flow`: long-form — the title and sub-heading stay put (sticky) in the
-       left column while the body runs on down the right one, as long as it
-       needs to. For the legal pages ("本文はそのままスクロールで続けて良い").
-     - `full`: long-form with the body running the full width BELOW the
-       title row (an optional `intro` snippet sits beside the title), for
-       layouts with their own internal grid — the catalogue, the checkout.
+     Two layouts:
+     - default (`flow` is accepted and means the same): the title, any
+       sub-heading and the `head` snippet stay pinned bottom-left while the
+       body scrolls on in the right column, as long as it needs to.
+     - `full`: the title row sits at the top (an optional `intro` snippet
+       beside it) and the body runs the full width below — for layouts with
+       their own internal grid, the catalogue and the checkout.
 
-     Set in Elio: the frame's own type is Elio at weight 350 throughout, and
-     Elio is the site's brand typeface (see app.html's --font-en note). Pass
-     `nativeBody` to leave the body entirely alone — its own components keep
-     their fonts and colours (the checkout keeps Norma for prices, since
+     The page's top clears the Header's large wordmark through the layout's
+     own masthead spacer (base.css --masthead-h); the pinned column reaches
+     back up over that spacer so its bottom edge lines up with the screen's.
+
+     Pass `nativeBody` to leave the body entirely alone — its own components
+     keep their fonts and colours (the checkout keeps Norma for prices, since
      Elio's currency glyphs aren't finished; the catalogue's cards set their
      specimens in each typeface's own face). Body copy is passed as children
-     so each page keeps its own EN/FR/DA paragraphs and language toggles.
+     so each page keeps its own EN/FR paragraphs and language toggles.
 
      --ps-inset-left/right are exposed so a body can bleed to the section's
      edges (the catalogue's hairline grid) without repeating these values. -->
@@ -33,14 +31,13 @@
 
 	interface Props {
 		title: string;
-		/** Small line — bottom-left in the default layout, under the title in
-		 *  the long-form ones. The section's own sub-heading. */
+		/** Small line beside the title — the section's own sub-heading. */
 		subtitle?: string;
 		/** First section on a page gets the h1. */
 		as?: 'h1' | 'h2';
 		id?: string;
-		/** Long-form: no vertical centring; title/sub-heading stick while the
-		 *  body scrolls on in the right column. */
+		/** Accepted for compatibility: every non-`full` section is long-form
+		 *  now (title pinned, body scrolling on). */
 		flow?: boolean;
 		/** Long-form with the body spanning full width below the title row.
 		 *  Implies `flow`. */
@@ -60,7 +57,6 @@
 		subtitle,
 		as = 'h2',
 		id,
-		flow = false,
 		full = false,
 		nativeBody = false,
 		head,
@@ -68,28 +64,22 @@
 		children
 	}: Props = $props();
 
-	const isFlow = $derived(flow || full);
-
 	/** Flips once the title's weight sweep lands — everything but the title
 	 *  fades in after it (2026-09, at the user's request — "wghtアニメーション
 	 *  終わってから、本文や小見出しfade-inするようにして"). */
 	let revealed = $state(false);
 </script>
 
-<section
-	class="PageSection"
-	class:is-flow={isFlow}
-	class:is-full={full}
-	class:is-revealed={revealed}
-	{id}
->
+<section class="PageSection" class:is-full={full} class:is-revealed={revealed} {id}>
+	<!-- DOM order title → sub-heading → extra, for reading order; the pinned
+	     PC layout stacks them the other way up (see .PageSection__head). -->
 	<div class="PageSection__head">
 		<!-- `to` tracks --brand-weight, which is what this title rests at. -->
 		<svelte:element this={as} class="PageSection__title">
-			<WeightReveal text={title} to={350} onDone={() => (revealed = true)} />
+			<WeightReveal text={title} to={400} onDone={() => (revealed = true)} />
 		</svelte:element>
-		{#if subtitle && isFlow}
-			<p class="PageSection__sub PageSection__sub--inline">{subtitle}</p>
+		{#if subtitle}
+			<p class="PageSection__sub">{subtitle}</p>
 		{/if}
 		{#if head}
 			<div class="PageSection__head-extra">{@render head()}</div>
@@ -101,25 +91,22 @@
 	<div class="PageSection__body" class:is-native={nativeBody}>
 		{@render children()}
 	</div>
-	{#if subtitle && !isFlow}
-		<p class="PageSection__sub">{subtitle}</p>
-	{/if}
 </section>
 
 <style>
 	.PageSection {
-		--brand-weight: 350;
+		--brand-weight: 400;
 		--ps-inset-left: 20px;
 		--ps-inset-right: 20px;
+		/* Bottom gap under the pinned title (11px in the 900px frame). */
+		--ps-title-bottom: 11px;
 		position: relative;
-		min-height: 100vh;
-		min-height: 100svh;
 		display: flex;
 		flex-direction: column;
 		/* Overrides base.css's global `section { padding-inline: var(--padding) }`
-		   — this layout carries its own, Figma-derived insets. */
-		padding: calc(96px + env(safe-area-inset-top, 0px)) var(--ps-inset-right) 40px
-			var(--ps-inset-left);
+		   — this layout carries its own, Figma-derived insets. Top: the
+		   layout's masthead spacer already clears the Header. */
+		padding: 0 var(--ps-inset-right) 64px var(--ps-inset-left);
 		font-family: var(--font-elio), sans-serif;
 		font-weight: var(--brand-weight);
 		color: var(--color-text);
@@ -135,27 +122,43 @@
 		font-family: var(--font-elio), sans-serif;
 	}
 
+	.PageSection__head {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 32px;
+	}
+
 	.PageSection__title {
-		font-size: clamp(56px, 6.94vw, 100px);
+		/* 120px at the 1440 design width. */
+		font-size: clamp(48px, 8.33vw, 120px);
 		line-height: 1.25;
 		font-weight: var(--brand-weight);
 		font-variation-settings: 'wght' var(--brand-weight);
 		letter-spacing: 0;
-		margin: 0 0 32px;
+		margin: 0;
 		overflow-wrap: anywhere;
+	}
+
+	.PageSection__sub {
+		font-size: 16px;
+		line-height: 1.4;
+		font-weight: var(--brand-weight);
+		font-variation-settings: 'wght' var(--brand-weight);
+		letter-spacing: 0;
+		opacity: 0.6;
+		margin: 8px 0 0;
+	}
+
+	.PageSection__head-extra {
+		margin-top: 24px;
 	}
 
 	.PageSection__body,
 	.PageSection__intro {
-		font-size: 14px;
-		line-height: 1.5;
+		font-size: 16px;
+		line-height: 1.4;
 		font-weight: var(--brand-weight);
 		font-variation-settings: 'wght' var(--brand-weight);
-		max-width: 60ch;
-	}
-
-	.PageSection__body.is-native {
-		max-width: none;
 	}
 
 	.PageSection__body:not(.is-native) :global(p),
@@ -173,6 +176,16 @@
 		margin-bottom: 0;
 	}
 
+	/* Section headings — 28px in the frame. */
+	.PageSection__body:not(.is-native) :global(h2) {
+		font-size: 28px;
+		line-height: 1.25;
+		font-weight: var(--brand-weight);
+		font-variation-settings: 'wght' var(--brand-weight);
+		letter-spacing: 0;
+		margin: 2em 0 10px;
+	}
+
 	.PageSection__body:not(.is-native) :global(h3) {
 		font-size: inherit;
 		line-height: inherit;
@@ -182,6 +195,7 @@
 		margin: 1.75em 0 0.35em;
 	}
 
+	.PageSection__body:not(.is-native) :global(h2:first-child),
 	.PageSection__body:not(.is-native) :global(h3:first-child) {
 		margin-top: 0;
 	}
@@ -196,35 +210,12 @@
 		margin-bottom: 40px;
 	}
 
-	/* Mobile: flex child pushed to the bottom of the 100svh section by
-	   margin-top:auto (PC pins it absolutely, below). */
-	.PageSection__sub {
-		font-size: clamp(22px, 2.22vw, 32px);
-		line-height: 1.25;
-		font-weight: var(--brand-weight);
-		font-variation-settings: 'wght' var(--brand-weight);
-		letter-spacing: 0;
-		margin: auto 0 0;
-		padding-top: 48px;
-	}
-
-	/* Long-form: the sub-heading sits right under the title instead. */
-	.PageSection__sub--inline {
-		margin: -12px 0 32px;
-		padding-top: 0;
-		opacity: 0.6;
-	}
-
-	.PageSection__head-extra {
-		margin-bottom: 32px;
-	}
-
 	/* Everything but the title is held back until the title's weight sweep
 	   lands, then faded in (see `revealed`). Same mechanism as PageStack's —
 	   see its own note for the reasoning: a `from`-only keyframe animates to
-	   each element's OWN opacity (the inline subtitle rests at 0.6) rather
-	   than overwriting it; `backwards` so it stops holding the property once
-	   it ends; and the hold is itself a 5s animation, present from the
+	   each element's OWN opacity (the subtitle rests at 0.6) rather than
+	   overwriting it; `backwards` so it stops holding the property once it
+	   ends; and the hold is itself a 5s animation, present from the
 	   server-rendered first paint but self-releasing if JS never arrives. */
 	.PageSection:not(.is-revealed) .PageSection__sub,
 	.PageSection:not(.is-revealed) .PageSection__head-extra,
@@ -257,83 +248,101 @@
 
 	@media (min-width: 768px) {
 		.PageSection {
-			--ps-inset-left: clamp(24px, 3.47vw, 50px);
+			--ps-inset-left: 40px;
+			--ps-inset-right: 40px;
 			display: grid;
-			/* 50 -> 599 for the title, 599 -> 1420 for the copy, at the 1440
-			   design width; the header's own 20px right margin closes it. */
-			grid-template-columns: 549fr 821fr;
-			align-content: center;
-			padding: calc(64px + env(safe-area-inset-top, 0px)) var(--ps-inset-right) 96px
-				var(--ps-inset-left);
+			/* Title column 40 → 584, copy 584 → 1400, at the 1440 width. */
+			grid-template-columns: 544fr 816fr;
+			grid-template-rows: auto 1fr;
+			align-items: start;
+			padding-bottom: 120px;
 		}
 
+		/* Pinned bottom-left: a full-screen-tall sticky box with its content
+		   pushed to the bottom. It reaches back up over the masthead spacer
+		   (negative margin), so its box starts at the top of the document
+		   and its bottom edge — the title's baseline area — sits on the
+		   screen's bottom from the very first frame. */
 		.PageSection__head {
 			grid-column: 1;
-			padding-right: 24px;
+			grid-row: 1 / -1;
+			position: sticky;
+			top: 0;
+			height: 100vh;
+			height: 100svh;
+			margin: calc(-1 * var(--masthead-h)) 0 0;
+			padding: 0 24px var(--ps-title-bottom) 0;
+			justify-content: flex-end;
+			/* Transparent box over the masthead's own area — never in the way
+			   of the page beneath (the Header sits above it anyway). */
+			pointer-events: none;
+		}
+
+		.PageSection__head > * {
+			pointer-events: auto;
+		}
+
+		/* Bottom up: extra, sub-heading, then the title on the baseline. */
+		.PageSection__head-extra {
+			order: 0;
+			margin: 0 0 24px;
+		}
+
+		.PageSection__sub {
+			order: 1;
+			margin: 0 0 8px;
 		}
 
 		.PageSection__title {
-			margin: 0;
+			order: 2;
 		}
 
 		.PageSection__body,
 		.PageSection__intro {
 			grid-column: 2;
-			font-size: 16px;
-			line-height: 1.4;
-			/* The frame's copy starts 96px below the title's own top edge. */
-			padding-top: clamp(24px, 10.7vh, 96px);
-			max-width: none;
+			min-width: 0;
 		}
 
-		.PageSection__sub {
-			position: absolute;
-			left: var(--ps-inset-left);
-			bottom: 36px;
-			margin: 0;
-			padding-top: 0;
-		}
-
-		.PageSection__sub--inline {
-			position: static;
-			margin: 20px 0 0;
-		}
-
-		.PageSection__head-extra {
-			margin: 40px 0 0;
-		}
-
-		/* ── flow: title/sub-heading stay put while the body scrolls on ── */
-		.PageSection.is-flow {
-			align-content: start;
-			padding-top: calc(96px + env(safe-area-inset-top, 0px));
-		}
-
-		.PageSection.is-flow .PageSection__head {
-			position: sticky;
-			top: calc(96px + env(safe-area-inset-top, 0px));
-			align-self: start;
-		}
-
-		/* ── full: title row, then the body across both columns ── */
-		.PageSection.is-full {
-			grid-template-rows: auto 1fr;
-		}
-
-		.PageSection.is-full .PageSection__head {
-			position: static;
+		.PageSection__intro {
 			grid-row: 1;
+		}
+
+		.PageSection__body {
+			grid-row: 2;
+		}
+
+		/* ── full: title row on top, then the body across both columns ── */
+		.PageSection.is-full .PageSection__head {
+			grid-row: 1;
+			position: static;
+			height: auto;
+			margin: 0;
+			padding-bottom: 0;
+			justify-content: flex-start;
+		}
+
+		.PageSection.is-full .PageSection__title {
+			order: 0;
+		}
+
+		.PageSection.is-full .PageSection__sub {
+			order: 1;
+			margin: 8px 0 0;
+		}
+
+		.PageSection.is-full .PageSection__head-extra {
+			order: 2;
+			margin: 24px 0 0;
 		}
 
 		.PageSection.is-full .PageSection__intro {
-			grid-row: 1;
+			align-self: end;
 			margin-bottom: 0;
 		}
 
 		.PageSection.is-full .PageSection__body {
 			grid-column: 1 / -1;
 			grid-row: 2;
-			padding-top: 0;
 			margin-top: clamp(48px, 8vh, 96px);
 		}
 	}

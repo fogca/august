@@ -1,5 +1,5 @@
 <script lang="ts">
-	// Ōgast site footer.
+	// Apres Guerre site footer.
 	// Holds site nav and legal links.
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
 	import { SITE_NAV } from '$lib/data/nav';
@@ -35,7 +35,7 @@
 </script>
 
 <footer class="Footer" aria-labelledby="footer-heading">
-	<h2 id="footer-heading" class="Footer__sr">Ōgast</h2>
+	<h2 id="footer-heading" class="Footer__sr">Apres Guerre</h2>
 
 	<!-- Site nav — shared verbatim with the Header's own desktop nav (see
 	     $lib/data/nav.ts) so the two can't drift out of sync. Rendered twice
@@ -83,7 +83,7 @@
 					<li><a href={item.href}>{item.label}</a></li>
 				{/each}
 			</ul>
-			<p class="Footer__copy">© {YEAR} Ōgast</p>
+			<p class="Footer__copy">© {YEAR} Apres Guerre</p>
 		</div>
 	</div>
 </footer>
@@ -92,9 +92,10 @@
 	.Footer {
 		font-family: var(--font-en), sans-serif;
 		font-weight: var(--fw-ui);
-		/* No background (was the same red as the Buy/licence section) and
-		   black text, per the user's request. */
-		color: #000;
+		/* No background (was the same red as the Buy/licence section); text
+		   in the page theme's colour — black on the home page, the brand blue
+		   everywhere else (2026-10 redesign). */
+		color: var(--color-text);
 		padding: 64px 0 24px;
 		margin-top: 0;
 		/* sit above the cover-reveal sections (z-index:1) above it */
@@ -102,13 +103,10 @@
 		z-index: 2;
 	}
 
-	/* Force all child elements to inherit black text color, overriding base.css tokens */
+	/* base.css re-asserts its own colour on each element — keep every child
+	   on the footer's. */
 	.Footer :global(*) {
-		color: #000;
-	}
-
-	.Footer :global(a) {
-		color: #000;
+		color: inherit;
 	}
 
 	.Footer__sr {
@@ -273,9 +271,13 @@
 
 	/* Sits at the right end of .Footer__row via that row's own
 	   justify-content:space-between (see above), at the user's request
-	   ("© 2026 Ōgastが一番下で、右端に"). */
+	   ("© 2026 Ōgastが一番下で、右端に" — the name since changed). */
 	.Footer__copy {
 		margin: 0;
 		font-size: 12px;
+		/* "© 2026 Apres Guerre" stays one line; the legal links beside it
+		   wrap instead, and this sits on their last line. */
+		white-space: nowrap;
+		align-self: flex-end;
 	}
 </style>

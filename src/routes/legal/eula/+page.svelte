@@ -41,10 +41,10 @@
 </script>
 
 <svelte:head>
-	<title>Licence (EULA) — Ōgast</title>
+	<title>Licence (EULA) — Apres Guerre</title>
 	<meta
 		name="description"
-		content="End User Licence Agreement for Ōgast fonts — Individual, Organisation, and Project licenses."
+		content="End User Licence Agreement for Apres Guerre fonts — Individual, Organisation, and Project licenses."
 	/>
 </svelte:head>
 
@@ -77,7 +77,7 @@
 
 		<div class="Eula__lead">
 			<p>
-				Ōgast fonts are licensed, not sold. Each licence below — Individual, Organisation, and
+				Apres Guerre fonts are licensed, not sold. Each licence below — Individual, Organisation, and
 				Project License — is its own standalone agreement; your Sales Receipt records which one you
 				have bought and at what tier.
 			</p>
@@ -108,7 +108,7 @@
 
 <style>
 	.Eula {
-		background: #f1f0ef;
+		background: var(--color-bg);
 	}
 
 	/* Section nav — a wrapping pill row on phones, a plain stacked list in
