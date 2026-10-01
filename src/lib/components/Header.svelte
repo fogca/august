@@ -388,8 +388,9 @@
 		top: calc(var(--sub-top) + var(--safe-top));
 		left: 50%;
 		transform: translateX(-50%);
-		font-family: 'FOT-TsukuGo Pro', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
-			'Meiryo', sans-serif;
+		font-family:
+			'FOT-TsukuGo Pro', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo',
+			sans-serif;
 		font-size: var(--sub-fs);
 		font-weight: 600;
 		line-height: 1.25;

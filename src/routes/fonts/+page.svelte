@@ -27,7 +27,10 @@
 
 <svelte:head>
 	<title>Fonts — Apres Guerre</title>
-	<meta name="description" content="Apres Guerre typeface catalogue — Norma and upcoming releases." />
+	<meta
+		name="description"
+		content="Apres Guerre typeface catalogue — Norma and upcoming releases."
+	/>
 </svelte:head>
 
 <main class="Fonts">

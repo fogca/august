@@ -41,11 +41,11 @@
 		remaining unmistakably yours, and it does not expire when a licence does.
 	</p>
 	<p class="fr" lang="fr">
-		Au-delà de notre catalogue de caractères de vente, Apres Guerre dessine des caractères sur mesure pour
-		des marques et des institutions — une voix qui vous est propre, du premier croquis jusqu'à une
-		famille complète. Un caractère sur mesure est l'actif le plus durable qu'une marque puisse
-		posséder : il traverse tous les écrans, tous les supports et toutes les langues tout en restant
-		indéniablement le vôtre, et il n'expire pas quand une licence expire.
+		Au-delà de notre catalogue de caractères de vente, Apres Guerre dessine des caractères sur
+		mesure pour des marques et des institutions — une voix qui vous est propre, du premier croquis
+		jusqu'à une famille complète. Un caractère sur mesure est l'actif le plus durable qu'une marque
+		puisse posséder : il traverse tous les écrans, tous les supports et toutes les langues tout en
+		restant indéniablement le vôtre, et il n'expire pas quand une licence expire.
 	</p>
 {/snippet}
 

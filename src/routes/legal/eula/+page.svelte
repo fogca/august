@@ -77,9 +77,9 @@
 
 		<div class="Eula__lead">
 			<p>
-				Apres Guerre fonts are licensed, not sold. Each licence below — Individual, Organisation, and
-				Project License — is its own standalone agreement; your Sales Receipt records which one you
-				have bought and at what tier.
+				Apres Guerre fonts are licensed, not sold. Each licence below — Individual, Organisation,
+				and Project License — is its own standalone agreement; your Sales Receipt records which one
+				you have bought and at what tier.
 			</p>
 		</div>
 

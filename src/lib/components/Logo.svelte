@@ -39,11 +39,7 @@
 			>
 				<!-- --i: the letter's left-to-right index, for callers that stagger. -->
 				{#each LOGO_LETTERS.slice(word.from, word.to) as letter, i (i)}
-					<path
-						bind:this={letterEls[word.from + i]}
-						d={letter.d}
-						style="--i: {word.from + i}"
-					/>
+					<path bind:this={letterEls[word.from + i]} d={letter.d} style="--i: {word.from + i}" />
 				{/each}
 			</svg>
 		</span>

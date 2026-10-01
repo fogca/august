@@ -30,13 +30,13 @@
 
 		<div class="HomeAbout__statement">
 			<p class="en" lang="en">
-				Apres Guerre is an independent type foundry, founded in 2026. We cross histories, cultures, and
-				eras, reinterpret their context, and draw type through a contemporary eye. Anchored in
+				Apres Guerre is an independent type foundry, founded in 2026. We cross histories, cultures,
+				and eras, reinterpret their context, and draw type through a contemporary eye. Anchored in
 				retail families and bespoke commissions, we keep searching for forms not yet seen.
 			</p>
 			<p class="fr" lang="fr">
-				Apres Guerre est une fonderie de caractères indépendante, fondée en 2026. Nous traversons les
-				histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
+				Apres Guerre est une fonderie de caractères indépendante, fondée en 2026. Nous traversons
+				les histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
 				caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
 				commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
 			</p>

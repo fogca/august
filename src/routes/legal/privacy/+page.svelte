@@ -16,13 +16,13 @@
 <main class="Legal">
 	<PageSection title="Privacy" as="h1" subtitle="Privacy Policy — last updated August 2026" flow>
 		<p>
-			This Privacy Policy describes how Mirai Service Co., Ltd., trading as Apres Guerre ("Apres Guerre," "we,"
-			"us," or "our"), handles personal information collected through august.tf and through the
-			purchase, delivery, and support of our font licences — currently Norma, in 20 weights, and any
-			other typefaces we release under the Apres Guerre name. It applies whenever you browse the site, buy
-			a Desktop, Web, App, or Books licence, or write to us about an existing licence. It does not
-			apply to the websites, apps, or publications you build using our fonts — those are covered by
-			your own privacy practices, not ours.
+			This Privacy Policy describes how Mirai Service Co., Ltd., trading as Apres Guerre ("Apres
+			Guerre," "we," "us," or "our"), handles personal information collected through august.tf and
+			through the purchase, delivery, and support of our font licences — currently Norma, in 20
+			weights, and any other typefaces we release under the Apres Guerre name. It applies whenever
+			you browse the site, buy a Desktop, Web, App, or Books licence, or write to us about an
+			existing licence. It does not apply to the websites, apps, or publications you build using our
+			fonts — those are covered by your own privacy practices, not ours.
 		</p>
 
 		<h3>Information We Collect</h3>
@@ -127,9 +127,9 @@
 
 		<h3>Children's Privacy</h3>
 		<p>
-			Apres Guerre isn't directed at children, and we don't knowingly collect personal information from
-			anyone under 16. If you believe a minor has given us personal information, contact us through
-			our <a href="/contact">contact form</a> and we'll delete it.
+			Apres Guerre isn't directed at children, and we don't knowingly collect personal information
+			from anyone under 16. If you believe a minor has given us personal information, contact us
+			through our <a href="/contact">contact form</a> and we'll delete it.
 		</p>
 
 		<h3>Changes to This Policy</h3>
@@ -143,8 +143,8 @@
 		<p>
 			Questions about this policy, or about your own information, go to our
 			<a href="/contact">contact form</a>. You can also write to us at Mirai Service Co., Ltd.
-			(trading as Apres Guerre), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan. This policy
-			is governed by the laws of Japan.
+			(trading as Apres Guerre), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan. This
+			policy is governed by the laws of Japan.
 		</p>
 	</PageSection>
 </main>

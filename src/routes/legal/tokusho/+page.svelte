@@ -8,7 +8,10 @@
 
 <svelte:head>
 	<title>Legal Notice — Apres Guerre</title>
-	<meta name="description" content="Specified Commercial Transactions Act disclosure for Apres Guerre." />
+	<meta
+		name="description"
+		content="Specified Commercial Transactions Act disclosure for Apres Guerre."
+	/>
 </svelte:head>
 
 <main class="Legal">
@@ -19,8 +22,8 @@
 		flow
 	>
 		<p>
-			This notice discloses information about Apres Guerre's font sales as required under Japan's Act on
-			Specified Commercial Transactions (特定商取引法).
+			This notice discloses information about Apres Guerre's font sales as required under Japan's
+			Act on Specified Commercial Transactions (特定商取引法).
 		</p>
 
 		<dl class="Legal__facts">
