@@ -90,20 +90,18 @@
 			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 950,
 			   full wght range interpolated between them). Used on the Elio
 			   typeface page's Type Tester and the top-page A-Z specimen.
-			   Early history (VF14-16, 2026-09-22/29): Ultra's axis moved
-			   850→950 for a full 9-stop named scale; N/M/S/dollar outline
-			   touch-ups and new kerning pairs. VF17 (2026-09-30): "yen" now
-			   ships — Ultra's layer was missing its "Y" component reference
-			   entirely; restored by re-referencing Ultra's own "Y" the same
-			   way dollar/cent/euro already do. VF18 (same day): outline
-			   refinement on G/K/R/f/g/t + a yen touch-up. VF19 (same day):
-			   "endash" now ships too, plus outline refinement on e/eacute/
-			   egrave/ecircumflex/edieresis/d/A/emdash/b/w/r/g/two/three.
-			   **VF20** (2026-10-01): `s` refined further — no compatibility
-			   change. Full history: static/fonts/README.md. */
+			   Early history (VF14-19, 2026-09-22/30): Ultra's axis moved
+			   850→950 for a full 9-stop named scale; "yen"/"endash" shipped;
+			   ongoing outline touch-ups across G/K/R/f/g/t/e-family/d/A/
+			   emdash/b/w/r/two/three. VF20 (2026-10-01): `s` refined further.
+			   **VF21** (same day): every glyph's advance width widened by 5
+			   units (UPM 1000) in both masters — the font's own default
+			   spacing now reads roughly like `letter-spacing: 0.005em`
+			   baked in, at the user's request. Outlines unchanged; no
+			   compatibility change. Full history: static/fonts/README.md. */
 			@font-face {
 				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF20.woff2?v=20261001a') format('woff2-variations');
+				src: url('%sveltekit.assets%/fonts/Elio-VF21.woff2?v=20261002a') format('woff2-variations');
 				font-weight: 150 950;
 				font-style: normal;
 				font-display: swap;
