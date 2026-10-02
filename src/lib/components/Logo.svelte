@@ -67,7 +67,9 @@
 		top: var(--logo-top);
 		display: block;
 		height: calc(156 * var(--u));
-		color: var(--brand-blue);
+		/* Callers recolour via --logo-color (the Header follows its own text
+		   colour); the brand blue otherwise. */
+		color: var(--logo-color, var(--brand-blue));
 		transform-origin: 0 0;
 	}
 

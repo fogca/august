@@ -25,13 +25,14 @@
 //    reused, but only after a cheap revalidation round-trip, never blindly.
 //
 // Also: the page theme (2026-10 Apres Guerre redesign). app.html ships
-// data-theme="page" (blue on peach); the home page alone is "home" (white),
-// swapped in here so the very first paint is already the right colour.
-// +layout.svelte keeps the attribute in sync on client-side navigation.
+// data-theme="page" (blue on peach); the home page is "home" and the
+// typeface detail pages "white" (see $lib/theme.ts), swapped in here so the
+// very first paint is already the right colour. +layout.svelte keeps the
+// attribute in sync on client-side navigation.
 import type { Handle } from '@sveltejs/kit';
+import { themeFor } from '$lib/theme';
 
 const PAGE_THEME_ATTR = 'data-theme="page"';
-const HOME_THEME_ATTR = 'data-theme="home"';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/_app/')) {
@@ -41,11 +42,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 
-	const isHome = event.url.pathname === '/';
+	const theme = themeFor(event.url.pathname);
 	const response = await resolve(event, {
-		transformPageChunk: isHome
-			? ({ html }) => html.replace(PAGE_THEME_ATTR, HOME_THEME_ATTR)
-			: undefined
+		transformPageChunk:
+			theme === 'page'
+				? undefined
+				: ({ html }) => html.replace(PAGE_THEME_ATTR, `data-theme="${theme}"`)
 	});
 
 	if (response.headers.get('content-type')?.includes('text/html')) {

@@ -9,6 +9,7 @@
 	import { initScroll, destroyScroll, getLenis, refreshTriggers } from '$lib/scroll';
 	import { lang } from '$lib/state/lang.svelte';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
+	import { themeFor, THEME_BG_TOKEN } from '$lib/theme';
 
 	let { children } = $props();
 
@@ -29,12 +30,11 @@
 		if (browser) document.documentElement.dataset.lang = lang.current;
 	});
 
-	// Page theme (2026-10 redesign): white for the home page, blue on peach
-	// everywhere else — see base.css's html[data-theme] rule. The server sets
-	// it for the first paint (hooks.server.ts); this keeps it in step on
-	// client-side navigation. Runs once the new page has rendered, by which
-	// time the transition panel already covers the old one.
-	const themeFor = (path: string) => (path === '/' ? 'home' : 'page');
+	// Page theme (2026-10 redesign) — see $lib/theme.ts and base.css's
+	// html[data-theme] rules. The server sets it for the first paint
+	// (hooks.server.ts); this keeps it in step on client-side navigation.
+	// Runs once the new page has rendered, by which time the transition panel
+	// already covers the old one.
 	$effect(() => {
 		if (browser) document.documentElement.dataset.theme = themeFor(page.url.pathname);
 	});
@@ -42,10 +42,9 @@
 	// The transition panel the new page fades in over — matched to that
 	// page's own background so the hand-off doesn't flash a third colour.
 	// Read from base.css's own tokens rather than repeated here.
-	const PANEL_TOKENS = { home: '--white', page: '--brand-peach' } as const;
 	const panelColorFor = (path: string) =>
 		getComputedStyle(document.documentElement)
-			.getPropertyValue(PANEL_TOKENS[themeFor(path)])
+			.getPropertyValue(THEME_BG_TOKEN[themeFor(path)])
 			.trim();
 
 	onMount(() => destroyScroll);

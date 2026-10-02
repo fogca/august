@@ -21,17 +21,21 @@
 // English). Header and Footer show the exact same four codes now — EN, FR,
 // DE, ES — rather than Header showing a smaller subset of Footer's list;
 // there's a single list (LANG_OPTIONS) for both to share, not two.
-export type Lang = 'en' | 'fr' | 'de' | 'es';
+// Extended again 2026-09 to DE/ES/CH (buttons only, at the user's explicit
+// choice — no site copy had been translated into these). DA and CH were
+// both dropped again shortly after (2026-09, at the user's request,
+// "言語DA CHは削除で"). 2026-10 (at the user's request, "言語はEN FR JAの3つに
+// 絞っていい"): DE and ES dropped too, and JA added — a button only, like DE
+// and ES were: no site copy is translated into Japanese yet, so choosing it
+// shows the English. Header and Footer share the one list (LANG_OPTIONS).
+export type Lang = 'en' | 'fr' | 'ja';
 export type LangOption = { code: Lang; label: string; name: string };
 
-// The full set — Header and Footer both show all four now (previously
-// Header showed a smaller subset of this list; not needed once the list
-// itself only has four options left in it).
+// The full set — Header and Footer both show all of it.
 export const LANG_OPTIONS: LangOption[] = [
 	{ code: 'en', label: 'EN', name: 'English' },
 	{ code: 'fr', label: 'FR', name: 'Français' },
-	{ code: 'de', label: 'DE', name: 'Deutsch' },
-	{ code: 'es', label: 'ES', name: 'Español' }
+	{ code: 'ja', label: 'JA', name: '日本語' }
 ];
 
 const ALL_LANGS: readonly Lang[] = LANG_OPTIONS.map((l) => l.code);
@@ -54,13 +58,9 @@ class LangState {
 		// sessionStorage, so a later change in the browser's own language still
 		// takes effect. Only for codes with a real translation behind them.
 		const browserLang = typeof navigator !== 'undefined' ? navigator.language?.toLowerCase() : '';
-		if (browserLang?.startsWith('fr')) {
-			this.current = 'fr';
-		} else if (browserLang?.startsWith('de')) {
-			this.current = 'de';
-		} else if (browserLang?.startsWith('es')) {
-			this.current = 'es';
-		}
+		if (browserLang?.startsWith('fr')) this.current = 'fr';
+		// No 'ja' here until there is Japanese copy: detecting it now would
+		// show JA as the active language over an English page.
 	}
 
 	set(next: Lang) {

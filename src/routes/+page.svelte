@@ -5,7 +5,8 @@
 	import AboutSection from '$lib/components/home/AboutSection.svelte';
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
-	import { headerYield } from '$lib/state/headerYield.svelte';
+	import { headerTone } from '$lib/state/headerTone.svelte';
+	import { LOGO_LETTERS } from '$lib/data/logo';
 	import { initScroll, getLenis, onScroll } from '$lib/scroll';
 	import { onMount } from 'svelte';
 
@@ -21,6 +22,30 @@
 	const homeTypefaces = TYPEFACES.filter((tf) => !tf.hidden && tf.homeSection).sort(
 		(a, b) => a.order - b.order
 	);
+
+	// The Custom section's pile: the wordmark's own A, P, G and R (2026-10, at
+	// the user's request — "ロゴのsvgから抽出したもの…グリフはAPGRの4つ"),
+	// as outlines at the logo's own proportions. Indices into LOGO_LETTERS
+	// (A P R E S G U E R R E): A=0, P=1, R=2, G=5. Smaller on phones, like the
+	// typeset pour is.
+	const PILE_LETTERS = [0, 1, 5, 2];
+	const PILE_SCALE = 1;
+	const PILE_SCALE_SMALL = 0.62;
+	const SMALL_SCREEN = 768;
+	function pileShapes() {
+		const scale = window.innerWidth < SMALL_SCREEN ? PILE_SCALE_SMALL : PILE_SCALE;
+		return PILE_LETTERS.map((i) => {
+			const l = LOGO_LETTERS[i];
+			return {
+				d: l.d,
+				ox: l.x0,
+				oy: l.y0,
+				w: (l.x1 - l.x0) * scale,
+				h: (l.y1 - l.y0) * scale,
+				scale
+			};
+		});
+	}
 
 	// ── Section-to-section snap ────────────────────────────────────────────
 	// Referencing yadohouse.jp's own first-view feel at the user's request:
@@ -280,28 +305,30 @@
 		};
 	});
 
-	// The typeface heroes are full-bleed screens with their own tagline in
-	// the top-left corner, right where the compact Header's nav would sit —
-	// so the Header steps aside (headerYield) for as long as a hero is under
-	// its bar, and comes back over the white sections either side.
+	// The Header is a transparent overlay here, so over the dark full-bleed
+	// sections (the typeface heroes, Contact) it switches to the light paper
+	// colour for as long as one is under it (headerTone). Sections opt in with
+	// data-header-dark; the probe line is the middle of the header's own row.
 	onMount(() => {
-		const heroesEl = document.querySelector<HTMLElement>('.HomeHeroes');
+		const darkEls = Array.from(document.querySelectorAll<HTMLElement>('[data-header-dark]'));
 		const barEl = document.querySelector<HTMLElement>('.Header__bar');
-		if (!heroesEl) return;
+		if (!darkEls.length) return;
 		// Layout offsets, not getBoundingClientRect: the heroes may still carry
 		// their entrance transform when this first runs (a reload that lands
 		// on a hero), which would put them ~half a screen too low.
-		const docTop = () => {
+		const docTop = (el: HTMLElement) => {
 			let y = 0;
-			for (let el: HTMLElement | null = heroesEl; el; el = el.offsetParent as HTMLElement | null) {
-				y += el.offsetTop;
+			for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) {
+				y += n.offsetTop;
 			}
 			return y;
 		};
 		const update = () => {
-			const line = barEl?.offsetHeight ?? 0;
-			const top = docTop() - window.scrollY;
-			headerYield.active = top < line && top + heroesEl.offsetHeight > line;
+			const line = (barEl?.offsetHeight ?? 0) / 2 + window.scrollY;
+			headerTone.onDark = darkEls.some((el) => {
+				const top = docTop(el);
+				return top <= line && top + el.offsetHeight > line;
+			});
 		};
 		update();
 		const off = onScroll(update);
@@ -309,7 +336,7 @@
 		return () => {
 			off();
 			window.removeEventListener('resize', update);
-			headerYield.active = false;
+			headerTone.onDark = false;
 		};
 	});
 </script>
@@ -327,10 +354,11 @@
 	<HomeTop typefaces={homeTypefaces} />
 
 	<!-- 2. Custom type for business — the copy over a full-screen field of
-	     the wordmark's own letters raining down and packing the screen
-	     (GlyphFill). -->
+	     the wordmark's own A P G R raining down and packing the screen
+	     (GlyphFill, in `shapes` mode; without that prop it pours the typeset
+	     version). -->
 	<section class="Home__custom" id="custom">
-		<GlyphFill />
+		<GlyphFill shapes={pileShapes} color="var(--brand-blue)" />
 		<div class="Custom__inner">
 			<p class="Custom__eyebrow">Bespoke</p>
 			<!-- Spans, not <br>: they stay inline on desktop and become the three
@@ -339,10 +367,10 @@
 				<span>Custom Type</span> <span>for Corporate</span> <span>Identity</span>
 			</h2>
 			<p class="Custom__body">
-				Beyond our retail library, Apres Guerre designs bespoke typefaces for brands and institutions — a
-				proprietary voice, drawn from the first sketch to a fully realised family. A custom typeface
-				is the most enduring asset a brand can own: it travels across every screen, surface, and
-				language while remaining unmistakably yours.
+				Beyond our retail library, Apres Guerre designs bespoke typefaces for brands and
+				institutions — a proprietary voice, drawn from the first sketch to a fully realised family.
+				A custom typeface is the most enduring asset a brand can own: it travels across every
+				screen, surface, and language while remaining unmistakably yours.
 			</p>
 			<a class="Custom__cta" href="/custom">Explore custom type</a>
 		</div>
@@ -354,7 +382,7 @@
 	<!-- 4. Contact — no in-page form (2026-09, at the user's request, "トップに
 	     問い合わせフォームを設置する必要はない"); a plain button in the form's old
 	     spot hands off to /contact instead. -->
-	<section class="Home__contact" id="contact">
+	<section class="Home__contact" id="contact" data-header-dark>
 		<div class="Contact__inner">
 			<p class="Contact__eyebrow">Contact</p>
 			<h2 class="Contact__heading">Licensing, custom type, general enquiries.</h2>
@@ -369,7 +397,6 @@
 
 <style>
 	.Home {
-		--red: var(--color-signal);
 		/* One display size shared by every section title. Bounded by viewport
 		   HEIGHT as well as width, so a long statement still wraps inside its
 		   own screen on a short laptop instead of pushing the section taller. */
@@ -407,7 +434,7 @@
 		z-index: 1;
 		max-width: min(640px, calc(100% - 2 * var(--padding)));
 		background: #ffffff;
-		border: 1px solid #000000;
+		border: 1px solid var(--brand-blue);
 		padding: clamp(24px, 4vw, 44px);
 		text-align: center;
 	}
@@ -455,8 +482,8 @@
 
 	/* Solid, square-cornered box link (2026-09, at the user's request —
 	   "Top AboutとCustomセクションのボタンもContact同様ボックスリンクに変更")
-	   — replaces the Arrow.svelte + text pattern. Keeps the brand red this
-	   CTA already had, now as the box's own fill rather than the text colour. */
+	   — replaces the Arrow.svelte + text pattern. Brand blue on the brand
+	   orange (2026-10, at the user's request — was white on the signal red). */
 	.Custom__cta {
 		display: inline-flex;
 		align-items: center;
@@ -466,8 +493,8 @@
 		font-size: 15px;
 		font-weight: 500;
 		font-variation-settings: 'wght' 500;
-		color: #ffffff;
-		background: var(--red);
+		color: var(--brand-blue);
+		background: var(--brand-orange);
 		border: 0;
 		border-radius: 0;
 		text-decoration: none;
@@ -553,7 +580,7 @@
 		font-size: 15px;
 		font-weight: 500;
 		font-variation-settings: 'wght' 500;
-		color: #000000;
+		color: var(--brand-blue);
 		background: #ffffff;
 		border: 0;
 		border-radius: 0;

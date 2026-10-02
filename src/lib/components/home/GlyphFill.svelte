@@ -12,6 +12,13 @@
      is the only way to instance a real weight off a variable font, which on a
      foundry's own site is the whole point.
 
+     Two ways to draw the pieces, both kept:
+       - `characters` (the default): letters typeset in `fontFamily` at
+         `fontWeight` — the original look, from the study.
+       - `shapes`: drawn outlines handed in as path data (the 2026-10 Custom
+         section pours the Apres Guerre wordmark's own A P G R this way).
+     The home page uses `shapes`; drop the prop to get the typeset version.
+
      THE TRICK (unchanged from the study): every glyph is really a CIRCLE rigid
      body whose radius is measureText(char)/2. Canvas2D paints the letterform on
      top of that circle at its position and angle each frame — so what you see is
@@ -25,7 +32,8 @@
 	interface Props {
 		/** Characters poured in. */
 		characters?: string[];
-		/** Painted glyph colour. */
+		/** Painted glyph colour — a CSS colour, or a `var(--token)` reference
+		 *  (a canvas can't take var() itself, so it is resolved here). */
 		color?: string;
 		fontFamily?: string;
 		/** wght instance — a real variable-font axis value, not synthetic bold. */
@@ -115,6 +123,13 @@
 		const section = sectionEl;
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
+
+		/** `color` with any var(--token) resolved against the document. */
+		const ink = (() => {
+			const m = color.match(/^var\((--[\w-]+)\)$/);
+			if (!m) return color;
+			return getComputedStyle(document.documentElement).getPropertyValue(m[1]).trim() || '#000000';
+		})();
 
 		let disposed = false;
 		let frame = 0;
@@ -231,7 +246,7 @@
 				if (!bctx) continue;
 				bctx.scale(dpr, dpr);
 				bctx.font = `${fontWeight} ${glyphPx}px "${fontFamily}", sans-serif`;
-				bctx.fillStyle = color;
+				bctx.fillStyle = ink;
 				bctx.textAlign = 'center';
 				bctx.textBaseline = 'middle';
 				bctx.fillText(ch, box / 2, box / 2);
@@ -402,7 +417,7 @@
 			ctx.beginPath();
 			ctx.rect(0, clip, cssW, cssH + topClearance - clip);
 			ctx.clip();
-			ctx.fillStyle = color;
+			ctx.fillStyle = ink;
 			for (const { body, char } of bodies) {
 				const vec = vectors.get(char);
 				const sprite = vec ? undefined : sprites.get(char);
@@ -487,11 +502,15 @@
 			const rect = section.getBoundingClientRect();
 			const nextW = Math.round(rect.width);
 			const nextFullH = Math.round(rect.height);
-			// Same clamp(52px, 7vh, 72px) the old CSS `--glyph-top` encoded,
-			// against this section's own height rather than the CSS `vh` unit
-			// — equivalent since .Home__custom is exactly one viewport tall.
+			// The Header's own compact band (base.css --header-bar-h): the
+			// header has no fill of its own over this section, so the pile has
+			// to stay clear of everything it draws, subline included. Falls
+			// back to the old clamp(52px, 7vh, 72px) if the token is missing.
+			const barH = parseFloat(
+				getComputedStyle(document.documentElement).getPropertyValue('--header-bar-h')
+			);
 			const nextTopClearance = headerClearance
-				? Math.round(Math.min(72, Math.max(52, nextFullH * 0.07)))
+				? Math.round(barH || Math.min(72, Math.max(52, nextFullH * 0.07)))
 				: 0;
 			const nextH = nextFullH - nextTopClearance;
 			if (nextW === cssW && nextH === cssH && nextTopClearance === topClearance) return;

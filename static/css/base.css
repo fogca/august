@@ -200,18 +200,32 @@ a {
   --shuffle-height: 15vh;
 }
 
-/* Page theme — every page but the home is blue on peach (Figma 3:671).
-   The attribute is set server-side by hooks.server.ts (so the first paint is
-   already right) and kept in sync on client navigation by +layout.svelte.
-   The home page keeps the white/black defaults above. Declared on the same
-   element as :root, so the aliases that read these (--background, --black)
-   pick the themed values up. */
+/* Page themes (see $lib/theme.ts). The attribute is set server-side by
+   hooks.server.ts (so the first paint is already right) and kept in sync on
+   client navigation by +layout.svelte. Declared on the same element as
+   :root, so the aliases that read these (--background, --black) pick the
+   themed values up.
+
+   Brand blue is the text colour everywhere now (2026-10, at the user's
+   request — "黒の部分は青に変更"); only the ground differs:
+     home  — white (the defaults above)
+     white — white, the typeface detail pages
+     page  — peach (Figma 3:671), every other page */
+html[data-theme='home'],
+html[data-theme='white'],
+html[data-theme='page'] {
+  --color-text:      var(--brand-blue);
+  /* 0.8: ≥4.5:1 (WCAG AA) on white, the peach and the raised panels below. */
+  --color-text-mute: rgba(38, 51, 153, 0.8);
+}
+
+html[data-theme='white'],
+html[data-theme='page'] {
+  --color-line:      rgba(38, 51, 153, 0.2);
+}
+
 html[data-theme='page'] {
   --color-bg:        var(--brand-peach);
-  --color-text:      var(--brand-blue);
-  /* 0.8: ≥4.5:1 (WCAG AA) on both the peach and the raised panels below. */
-  --color-text-mute: rgba(38, 51, 153, 0.8);
-  --color-line:      rgba(38, 51, 153, 0.2);
   /* Raised panels (cards, order summary): the peach lifted toward white. */
   --color-bg-gray:   #f8e6d7;
 }

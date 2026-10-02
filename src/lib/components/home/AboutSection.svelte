@@ -72,11 +72,12 @@
 
 	/* base.css §7 re-asserts `color: var(--color-text)` on div/p/a/dt/dd
 	   INDIVIDUALLY, so a plain `color` on this section would never reach them.
-	   Black is what the amber is documented to pair with, so this restates it
-	   rather than fighting it — the rule exists so the section owns its own
-	   colour instead of inheriting whatever the token happens to be. */
+	   Brand blue now (2026-10, at the user's request — "黒の部分は青に変更";
+	   was black, which is what the amber was documented to pair with) — the
+	   rule exists so the section owns its own colour instead of inheriting
+	   whatever the token happens to be. */
 	.HomeAbout :global(*) {
-		color: #000000;
+		color: var(--brand-blue);
 	}
 
 	.HomeAbout__inner {
@@ -177,7 +178,7 @@
 		font-weight: 500;
 		font-variation-settings: 'wght' 500;
 		color: #ffffff;
-		background: #000000;
+		background: var(--brand-blue);
 		border: 0;
 		border-radius: 0;
 		text-decoration: none;

@@ -13,15 +13,11 @@
 				var savedLang = sessionStorage.getItem('august-lang');
 				var browserLang = (navigator.language || '').toLowerCase();
 				var displayLang =
-					savedLang === 'en' || savedLang === 'fr' || savedLang === 'de' || savedLang === 'es'
+					savedLang === 'en' || savedLang === 'fr' || savedLang === 'ja'
 						? savedLang
 						: browserLang.startsWith('fr')
 							? 'fr'
-							: browserLang.startsWith('de')
-								? 'de'
-								: browserLang.startsWith('es')
-									? 'es'
-									: 'en';
+							: 'en';
 				if (displayLang !== 'en') {
 					document.documentElement.dataset.lang = displayLang;
 				}
@@ -42,7 +38,7 @@
 		</script>
 		<!-- Per-page <meta name="description"> comes from each route's svelte:head -->
 		<!-- Global design tokens and reset (bump ?v= whenever base.css changes) -->
-		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20261002b" />
+		<link rel="stylesheet" href="%sveltekit.assets%/css/base.css?v=20261003a" />
 		<!-- Norma VF — latest export (version in the filename). Renamed from
 		     "Steiner"/"Asger", then "Atom", 2026-08-30/31 (product renames);
 		     filename/version scheme unchanged. Declared under two family names

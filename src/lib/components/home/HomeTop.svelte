@@ -1,17 +1,21 @@
 <!-- Home page top (2026-10 redesign, Figma "II-ii"): the opening (1:635 PC,
      7:782 SP), then the resting top (175:178 PC, 7:874 SP).
 
-     Opening: the wordmark's letters rise into place, left to right, on the
-     orange ground. Then the ground lifts away to the white page underneath
+     Opening: the wordmark's letters, in the brand orange, rise into place
+     left to right on the brand-blue ground (Figma 1:635; colours swapped
+     from the first cut, 2026-10, at the user's request — so the logo turns
+     blue at the very moment the ground turns white). Then the ground lifts
+     away to the white page underneath, the letters turning blue as it goes,
      while the first typeface hero comes up from below, growing as it rises,
      until its top edge rests at half the screen height ("OPから背景が白に
      なり、下から大きくなりながら書体Hero100vhがinして、50vh分見える感じ").
 
      The opening is a fixed overlay carrying its own copy of the wordmark
      (Logo.svelte, the same component and position as the Header's), above
-     the Header. When the overlay fades, the Header's own mark is already
-     sitting on exactly the same pixels underneath, so the hand-over is
-     invisible and nothing has to be told to "show" the Header.
+     the Header. By the time the overlay's ground has faded the letters have
+     become the same blue as the Header's own mark, which is already sitting
+     on exactly the same pixels underneath — so the hand-over is invisible
+     and nothing has to be told to "show" the Header.
 
      The whole sequence is CSS animation, so it runs from the server-rendered
      first paint without waiting on hydration, and a page that never gets its
@@ -165,7 +169,7 @@
 		</p>
 	</section>
 
-	<div class="HomeHeroes" bind:this={heroesEl}>
+	<div class="HomeHeroes" bind:this={heroesEl} data-header-dark>
 		{#each typefaces as tf (tf.slug)}
 			<a class="HomeHero" href="/fonts/{tf.slug}">
 				<p class="HomeHero__tagline">{tf.homeSection?.headline}</p>
@@ -208,7 +212,7 @@
 		inset: 0;
 		/* Above the Header (100), whose own mark it hands over to. */
 		z-index: 200;
-		background: var(--brand-orange);
+		background: var(--brand-blue);
 		pointer-events: none;
 		animation: opening-lift var(--lift-dur) ease var(--lift-at) forwards;
 	}
@@ -235,10 +239,24 @@
 		}
 	}
 
+	/* Only the ground fades (to transparent, so the page and the rising hero
+	   show through); the letters are not faded but recoloured, orange to the
+	   Header's blue, over the same beat. */
 	@keyframes opening-lift {
 		to {
-			opacity: 0;
+			background-color: rgba(255, 255, 255, 0);
 			visibility: hidden;
+		}
+	}
+
+	.Opening :global(.Logo__word) {
+		color: var(--brand-orange);
+		animation: logo-to-blue var(--lift-dur) ease var(--lift-at) forwards;
+	}
+
+	@keyframes logo-to-blue {
+		to {
+			color: var(--brand-blue);
 		}
 	}
 
@@ -318,8 +336,10 @@
 		white-space: nowrap;
 	}
 
+	/* 60px, not the frame's 20px: the Header stays over the heroes now, and
+	   its nav row (PC) sits at y=33-48 on the same left edge. */
 	.HomeHero__tagline {
-		top: 20px;
+		top: 60px;
 		font-family: var(--font-norma);
 		font-size: 16px;
 		font-variation-settings: 'wght' 400;
@@ -364,8 +384,9 @@
 			bottom: 32px;
 		}
 
+		/* Clears the menu toggle (y=10-42) the same way. */
 		.HomeHero__tagline {
-			top: 16px;
+			top: 58px;
 			font-size: 14px;
 		}
 

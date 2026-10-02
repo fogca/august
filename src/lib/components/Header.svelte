@@ -23,7 +23,7 @@
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { SITE_NAV } from '$lib/data/nav';
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
-	import { headerYield } from '$lib/state/headerYield.svelte';
+	import { headerTone } from '$lib/state/headerTone.svelte';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import Logo from '$lib/components/Logo.svelte';
@@ -162,7 +162,7 @@
 	class:is-open={open}
 	class:is-ready={ready}
 	class:is-hydrated={hydrated}
-	class:is-yielded={headerYield.active && !open && !focusInside}
+	class:is-on-dark={headerTone.onDark && !open}
 	bind:this={headerEl}
 	onfocusin={onFocusIn}
 	onfocusout={onFocusOut}
@@ -287,20 +287,23 @@
 		height: 0;
 		z-index: 100;
 		color: var(--brand-blue);
-		transition: transform 0.6s var(--ease);
+		/* The Logo's words follow whatever colour the header has (see
+		   Logo.svelte --logo-color). */
+		--logo-color: currentColor;
+		transition: color 0.3s ease;
 	}
 
 	/* base.css re-asserts its own colour on div/span/a/button/p — keep the
-	   whole header on the brand blue. */
+	   whole header on one colour. */
 	.Header :global(*) {
 		color: inherit;
 	}
 
-	/* A full-bleed section (the home page's typeface heroes) asked for the
-	   header to step aside — see headerYield.svelte.ts. */
-	.Header.is-yielded {
-		transform: translateY(calc(-1 * (var(--bar-h) + var(--safe-top) + 12px)));
-		pointer-events: none;
+	/* Over a dark full-bleed section (the home page's typeface heroes,
+	   Contact) the header turns light instead of leaving — see
+	   headerTone.svelte.ts. */
+	.Header.is-on-dark {
+		color: var(--brand-paper);
 	}
 
 	.Header__bar {
@@ -312,6 +315,14 @@
 		background: var(--color-bg);
 		opacity: 0;
 		pointer-events: none;
+	}
+
+	/* No fill on the home page (2026-10, at the user's request — "Headerの
+	   背景白塗りは不要"): it overlays the sections as they scroll by. Every
+	   other page keeps the bar, in the page's own colour, so body text
+	   doesn't run under the nav. */
+	:global(html[data-theme='home']) .Header__bar {
+		background: transparent;
 	}
 
 	.Header__logo {

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-	<!-- The A of the Apres Guerre wordmark (src/lib/data/logo.ts), on the
-	     home page's opening orange. -->
-	<rect width="512" height="512" fill="#da6930" />
+	<!-- The A of the Apres Guerre wordmark (src/lib/data/logo.ts), as the
+	     home page's opening shows it: orange on brand blue. -->
+	<rect width="512" height="512" fill="#263399" />
 	<g transform="translate(116.029 86.074) scale(2.200977)">
-		<path fill="#263399" d="M68.2 4.51 127.19 149.9H108.4L87.03 96.16H39.47L18.7 149.9H0L49.04 19.67L38.43 4.51H68.2ZM44.92 79.63H80.41L61.68 33.06L44.92 79.63Z" />
+		<path fill="#da6930" d="M68.2 4.51 127.19 149.9H108.4L87.03 96.16H39.47L18.7 149.9H0L49.04 19.67L38.43 4.51H68.2ZM44.92 79.63H80.41L61.68 33.06L44.92 79.63Z" />
 	</g>
 </svg>
