@@ -349,9 +349,11 @@
 	}
 
 	/* ── Intro: eyebrow, name, description + spec, gallery ── */
+	/* Side padding is the page's own inset — the wordmark's margin (base.css
+	   --padding) — rather than Figma 12:127's 67px / 49px (2026-10, at the
+	   user's request: 余白はロゴのside paddingに合わせる). */
 	.FontIntro {
-		padding: clamp(48px, 9.3vh, 84px) clamp(20px, 3.4vw, 49px) clamp(56px, 8.4vh, 76px)
-			clamp(20px, 4.65vw, 67px);
+		padding: clamp(48px, 9.3vh, 84px) var(--padding) clamp(56px, 8.4vh, 76px);
 	}
 
 	.FontIntro__eyebrow {

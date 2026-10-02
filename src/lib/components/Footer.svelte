@@ -121,13 +121,15 @@
 		border: 0;
 	}
 
+	/* Side inset: the page's own (base.css --padding), the wordmark's margin
+	   — SP carries it on the nav/bottom rows, PC on the footer itself. */
 	.Footer__nav {
-		padding-inline: 16px;
+		padding-inline: var(--padding);
 	}
 
 	@media (min-width: 768px) {
 		.Footer {
-			padding: 60px 30px 20px;
+			padding: 60px var(--padding) 20px;
 		}
 
 		.Footer__nav {
@@ -192,7 +194,7 @@
 	   the smaller size. */
 	.Footer__bottom {
 		margin-top: 28px;
-		padding: 24px 16px 0;
+		padding: 24px var(--padding) 0;
 		border-top: 1px solid rgba(255, 255, 255, 0.15);
 		display: flex;
 		flex-direction: column;

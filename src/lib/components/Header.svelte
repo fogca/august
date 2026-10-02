@@ -271,7 +271,8 @@
 		--lockup-top: 28px;
 		--sub-top: 71px;
 		--sub-fs: 12px;
-		--edge: 40px;
+		/* The page's side inset (base.css --padding) — the wordmark's margin. */
+		--edge: var(--padding);
 		--row-top: 33px;
 		/* Vertical centre of the lockup's wordmark (the toggle's row). */
 		--row-mid: calc(var(--lockup-top) + var(--lockup-w) * 156 / 1360 / 2);
@@ -522,7 +523,6 @@
 			--lockup-top: 16px;
 			--sub-top: 42px;
 			--sub-fs: 9px;
-			--edge: 20px;
 		}
 	}
 

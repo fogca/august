@@ -82,8 +82,6 @@
 
 	.HomeAbout__inner {
 		width: 100%;
-		max-width: 1440px;
-		margin-inline: auto;
 		display: flex;
 		flex-direction: column;
 		gap: clamp(28px, 4vh, 48px);

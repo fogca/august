@@ -129,7 +129,7 @@
 		/* Bottom gap under the pinned title (11px in the 900px frame). */
 		--title-bottom: 11px;
 		/* Top: the layout's masthead spacer already clears the Header. */
-		padding: 0 20px 64px;
+		padding: 0 var(--padding) 64px;
 		font-family: var(--font-elio), sans-serif;
 		font-weight: var(--brand-weight);
 	}
@@ -257,7 +257,7 @@
 			/* Title column 40 → 584, copy 584 → 1400, at the 1440 width. */
 			grid-template-columns: 544fr 816fr;
 			align-items: start;
-			padding: 0 40px 120px;
+			padding: 0 var(--padding) 120px;
 		}
 
 		/* Pinned bottom-left — see PageSection.svelte's .PageSection__head for

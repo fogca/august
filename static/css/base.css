@@ -172,9 +172,12 @@ a {
   --space-10: 80px;
   --space-11: 120px;
 
-  /* --- Layout (vw-based padding for sections) --- */
-  --padding:    5vw;     /* Mobile section padding */
-  --pcPadding:  5vw;     /* Used in PC override below */
+  /* --- Layout --- */
+  /* The page's left/right inset: the wordmark's own side margin (2026-10, at
+     the user's request — "基本的には40px", "ロゴのside paddingと合わせて").
+     40px on PC, 6.33vw on SP (Figma 7:782); everything that insets from the
+     screen edge reads this one token, so it all lines up with the logo. */
+  --padding:    6.33vw;
   --gutter:     20px;    /* Fixed-px alt for image-bleed pages */
   --gutter-alt: 25px;    /* Fixed-px alt for nav/Office (Mobile) */
   --header-offset: 30px;
@@ -232,9 +235,10 @@ html[data-theme='page'] {
 
 /* Masthead: the space the Header's large top-of-page wordmark takes, which
    every page but the home reserves above its own content (+layout.svelte).
-   Mirrors Logo.svelte's geometry — PC one line 35px down at
-   (100vw - 80px) wide (156/1360 tall); SP two lines 28px down, 341.4
-   viewBox units tall at 87.34vw / 747.08 per unit — plus a gap below. */
+   Mirrors Logo.svelte's geometry — PC one line 35px down, the width inside
+   the side margins (156/1360 tall); SP two lines 28px down, 341.4 viewBox
+   units tall at (width inside the margins) / 747.08 per unit — plus a gap
+   below. */
 /* The Header's compact bar (Header.svelte) — opaque, so anything pinned to
    the top of the screen (sticky panels, jump targets) has to clear it. */
 :root {
@@ -250,7 +254,8 @@ html[data-theme='page'] {
 :root {
   --masthead-gap: 60px;
   --masthead-h: calc(
-    35px + (100vw - 80px) * 156 / 1360 + var(--masthead-gap) + env(safe-area-inset-top, 0px)
+    35px + (100vw - 2 * var(--padding)) * 156 / 1360 + var(--masthead-gap) +
+      env(safe-area-inset-top, 0px)
   );
 }
 
@@ -258,7 +263,8 @@ html[data-theme='page'] {
   :root {
     --masthead-gap: 40px;
     --masthead-h: calc(
-      28px + 87.34vw * 341.4 / 747.08 + var(--masthead-gap) + env(safe-area-inset-top, 0px)
+      28px + (100vw - 2 * var(--padding)) * 341.4 / 747.08 + var(--masthead-gap) +
+        env(safe-area-inset-top, 0px)
     );
   }
 }
@@ -271,7 +277,7 @@ html[data-theme='page'] {
   :root {
     --fs-h1: 28px;
     --fs-h2: 24px;
-    --padding:       7.5vw;
+    --padding:       40px;
     --gutter:        32px;
     --gutter-alt:    40px;
     --header-offset: 32px;
@@ -282,7 +288,6 @@ html[data-theme='page'] {
   :root {
     --fs-h1: 40px;
     --fs-h2: 28px;
-    --padding:       5vw;
     --gutter:        40px;
     --gutter-alt:    40px;
     --header-offset: 28px;
@@ -293,7 +298,6 @@ html[data-theme='page'] {
   :root {
     --fs-h1: 48px;
     --fs-h2: 32px;
-    --padding:    5vw;
     --gutter:     48px;
     --gutter-alt: 48px;
   }

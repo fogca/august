@@ -96,8 +96,9 @@
 <style>
 	.PageSection {
 		--brand-weight: 400;
-		--ps-inset-left: 20px;
-		--ps-inset-right: 20px;
+		/* The page's side inset — the wordmark's own margin (base.css --padding). */
+		--ps-inset-left: var(--padding);
+		--ps-inset-right: var(--padding);
 		/* Bottom gap under the pinned title (11px in the 900px frame). */
 		--ps-title-bottom: 11px;
 		position: relative;
@@ -248,8 +249,6 @@
 
 	@media (min-width: 768px) {
 		.PageSection {
-			--ps-inset-left: 40px;
-			--ps-inset-right: 40px;
 			display: grid;
 			/* Title column 40 → 584, copy 584 → 1400, at the 1440 width. */
 			grid-template-columns: 544fr 816fr;

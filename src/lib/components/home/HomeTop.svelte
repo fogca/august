@@ -203,7 +203,8 @@
 		/* Heroes: full screen PC, 90vh SP; the lead holds the top half. */
 		--hero-h: 100vh;
 		--lead-h: 50vh;
-		--edge: 40px;
+		/* The page's side inset (base.css --padding). */
+		--edge: var(--padding);
 	}
 
 	/* ── Opening overlay ── */
@@ -377,7 +378,6 @@
 			/* Small viewport: the hero's top lands at the middle of what is
 			   actually visible, URL bar and all. */
 			--lead-h: 50svh;
-			--edge: 20px;
 		}
 
 		.HomeLead__text {

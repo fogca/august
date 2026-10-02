@@ -55,8 +55,10 @@
 		width: 100%;
 		container-type: inline-size;
 
-		/* PC: one line, 40px side margins, 35px from the top. */
-		--logo-side: 40px;
+		/* PC: one line, 40px side margins, 35px from the top. The side margin
+		   is the page's own inset (base.css --padding: 40px PC, 6.33vw SP), so
+		   the rest of the page lines up with the wordmark. */
+		--logo-side: var(--padding);
 		--logo-top: calc(35px + env(safe-area-inset-top, 0px));
 		/* One viewBox unit, in px: the line runs 1360 units edge to edge. */
 		--u: calc((100cqw - 2 * var(--logo-side)) / 1360);
@@ -96,7 +98,6 @@
 	   All measured off Figma 7:782 at its 395px frame width. */
 	@media (max-width: 767.98px) {
 		.Logo {
-			--logo-side: 6.33cqw;
 			--logo-top: calc(28px + env(safe-area-inset-top, 0px));
 			--u: calc((100cqw - 2 * var(--logo-side)) / 747.08);
 		}

@@ -121,8 +121,6 @@
 
 	.About__inner {
 		width: 100%;
-		max-width: 1440px;
-		margin-inline: auto;
 	}
 
 	/* --- Statement block: same layout as the home page's About teaser

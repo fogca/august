@@ -531,8 +531,6 @@
 
 	.Contact__inner {
 		width: 100%;
-		max-width: 1440px;
-		margin-inline: auto;
 	}
 
 	.Contact__eyebrow {

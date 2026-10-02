@@ -76,7 +76,7 @@
 		display: flex;
 		align-items: center;
 		padding-block: 0 48px;
-		padding-inline: 24px;
+		padding-inline: var(--padding);
 	}
 
 	.Success__inner {
