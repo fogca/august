@@ -23,7 +23,7 @@
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { SITE_NAV } from '$lib/data/nav';
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
-	import { headerTone } from '$lib/state/headerTone.svelte';
+	import { afterNavigate } from '$app/navigation';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import Logo from '$lib/components/Logo.svelte';
@@ -41,6 +41,9 @@
 	let ready = $state(false);
 	/** Set once on mount (see .is-prescrolled in the styles). */
 	let hydrated = $state(false);
+	/** True while the surface under the header is dark enough that the light
+	 *  paper colour reads better than the brand blue (see probeSurface). */
+	let onDark = $state(false);
 	const compact = $derived(scrolled || open || focusInside);
 
 	let wordEls: HTMLElement[] = $state([]);
@@ -88,9 +91,86 @@
 		});
 	}
 
+	// ── Colour follows the surface under it ───────────────────────────────────
+	// The header has no fill on any page (2026-10, at the user's request —
+	// "Headerはその他ページなどでも背景色なしで"), so it sits straight on
+	// whatever scrolls beneath it. Over a dark surface — the typeface heroes,
+	// a pinned black glyph panel, Contact — the brand blue would disappear,
+	// so it turns the light paper colour instead. It reads what is actually
+	// painted under the middle of its own row, rather than relying on every
+	// section to declare its tone.
+
+	/** WCAG relative luminance of an sRGB colour (0-255 channels). */
+	function relLuminance(r: number, g: number, b: number) {
+		const lin = (v: number) => {
+			const c = v / 255;
+			return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+		};
+		return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+	}
+	const contrast = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+	const BLUE_LUM = relLuminance(38, 51, 153); // --brand-blue  #263399
+	const PAPER_LUM = relLuminance(241, 240, 239); // --brand-paper #f1f0ef
+	/** Colours below this opacity are looked through. */
+	const OPAQUE_ENOUGH = 0.5;
+
+	/** Luminance of the first mostly-opaque background found at a point, going
+	 *  down through the page from the top and skipping the header itself.
+	 *  Elements that ignore the pointer (the transition panels, the canvas)
+	 *  are skipped by the hit test, which is what is wanted here. */
+	function surfaceLuminance(x: number, y: number): number | null {
+		for (const el of document.elementsFromPoint(x, y)) {
+			if (headerEl?.contains(el)) continue;
+			const m = getComputedStyle(el).backgroundColor.match(
+				/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,/\s]+([\d.]+))?\s*\)$/
+			);
+			if (!m) continue;
+			if (m[4] !== undefined && parseFloat(m[4]) < OPAQUE_ENOUGH) continue;
+			return relLuminance(+m[1], +m[2], +m[3]);
+		}
+		return null;
+	}
+
+	function probeSurface() {
+		// Open, the menu panel (light) is what is under it.
+		if (open) {
+			onDark = false;
+			return;
+		}
+		const barH = parseFloat(
+			getComputedStyle(document.documentElement).getPropertyValue('--header-bar-h')
+		);
+		const lum = surfaceLuminance(window.innerWidth / 2, (barH || 100) / 2);
+		if (lum !== null) onDark = contrast(PAPER_LUM, lum) > contrast(BLUE_LUM, lum);
+	}
+
+	let probeRaf = 0;
+	/** Coalesces scroll/resize/navigation bursts into one probe per frame. */
+	function scheduleProbe() {
+		if (probeRaf) return;
+		probeRaf = requestAnimationFrame(() => {
+			probeRaf = 0;
+			probeSurface();
+		});
+	}
+
+	// A new page has new surfaces; some of it lands a beat after the route
+	// changes (the transition fade, lazy sections), so look again shortly too.
+	afterNavigate(() => {
+		scheduleProbe();
+		setTimeout(scheduleProbe, 600);
+		setTimeout(scheduleProbe, 1600);
+	});
+
+	$effect(() => {
+		void open;
+		scheduleProbe();
+	});
+
 	onMount(() => {
 		const update = () => {
 			scrolled = window.scrollY > COMPACT_AFTER;
+			scheduleProbe();
 			// Back at the top, a focus left behind in the header (a keyboard
 			// user who has tabbed on into the page) no longer holds it compact.
 			if (!scrolled && !headerHasFocus()) focusInside = false;
@@ -104,6 +184,7 @@
 		const onResize = () => {
 			cancelAnimationFrame(raf);
 			raf = requestAnimationFrame(measureThenArm);
+			scheduleProbe();
 		};
 		window.addEventListener('resize', onResize, { passive: true });
 		const offScroll = onScroll(update);
@@ -112,6 +193,7 @@
 			window.removeEventListener('resize', onResize);
 			cancelAnimationFrame(raf);
 			cancelAnimationFrame(armRaf);
+			cancelAnimationFrame(probeRaf);
 		};
 	});
 
@@ -162,13 +244,11 @@
 	class:is-open={open}
 	class:is-ready={ready}
 	class:is-hydrated={hydrated}
-	class:is-on-dark={headerTone.onDark && !open}
+	class:is-on-dark={onDark}
 	bind:this={headerEl}
 	onfocusin={onFocusIn}
 	onfocusout={onFocusOut}
 >
-	<div class="Header__bar" aria-hidden="true"></div>
-
 	<a class="Header__logo" href="/" onclick={close} aria-label="Apres Guerre — home">
 		<Logo bind:wordEls />
 		<!-- Where the two words land in the compact state (see measure()). -->
@@ -264,9 +344,9 @@
 
 <style>
 	.Header {
-		/* Compact lockup geometry — PC per Figma 3:671 (1440 frame). The bar
-		   height is the shared base.css token, so sticky page UI can clear it. */
-		--bar-h: var(--header-bar-h);
+		/* Compact lockup geometry — PC per Figma 3:671 (1440 frame). The
+		   header's overall height is the shared base.css --header-bar-h token,
+		   which sticky page UI clears. */
 		--lockup-w: 273.3px;
 		--lockup-top: 28px;
 		--sub-top: 71px;
@@ -286,7 +366,12 @@
 		/* Zero-height: every part is absolutely placed, so the header never
 		   blocks clicks on the page beyond what it actually draws. */
 		height: 0;
-		z-index: 100;
+		/* Above the page transition's own layers (PageTransition: the darken
+		   veil 998, the panel 1000, the fading-in page 1100), so the wordmark
+		   stays on screen for the whole of a navigation instead of vanishing
+		   under them for ~2s (2026-10, at the user's request — "ページ遷移時に
+		   ロゴが表示されるの遅い"). The home opening (1300) sits above it. */
+		z-index: 1200;
 		color: var(--brand-blue);
 		/* The Logo's words follow whatever colour the header has (see
 		   Logo.svelte --logo-color). */
@@ -300,30 +385,9 @@
 		color: inherit;
 	}
 
-	/* Over a dark full-bleed section (the home page's typeface heroes,
-	   Contact) the header turns light instead of leaving — see
-	   headerTone.svelte.ts. */
+	/* Over a dark surface the header turns light — see probeSurface(). */
 	.Header.is-on-dark {
 		color: var(--brand-paper);
-	}
-
-	.Header__bar {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		height: calc(var(--bar-h) + var(--safe-top));
-		background: var(--color-bg);
-		opacity: 0;
-		pointer-events: none;
-	}
-
-	/* No fill on the home page (2026-10, at the user's request — "Headerの
-	   背景白塗りは不要"): it overlays the sections as they scroll by. Every
-	   other page keeps the bar, in the page's own colour, so body text
-	   doesn't run under the nav. */
-	:global(html[data-theme='home']) .Header__bar {
-		background: transparent;
 	}
 
 	.Header__logo {
@@ -473,7 +537,6 @@
 		pointer-events: none;
 	}
 
-	.Header.is-compact .Header__bar,
 	.Header.is-compact .Header__sub,
 	.Header.is-compact .Header__nav,
 	.Header.is-compact .Header__cart,
@@ -481,7 +544,6 @@
 		opacity: 1;
 	}
 
-	.Header.is-compact .Header__bar,
 	.Header.is-compact .Header__nav,
 	.Header.is-compact .Header__cart,
 	.Header.is-compact .Header__toggle {
@@ -490,10 +552,6 @@
 
 	.Header.is-ready .Header__logo :global(.Logo__word) {
 		transition: transform 0.8s var(--ease);
-	}
-
-	.Header.is-ready .Header__bar {
-		transition: opacity 0.5s ease;
 	}
 
 	/* Out quickly, in after the words have mostly arrived. */
@@ -586,7 +644,7 @@
 	.MenuBackdrop {
 		position: fixed;
 		inset: 0;
-		z-index: 90;
+		z-index: 1190;
 		border: 0;
 		padding: 0;
 		background: rgba(0, 0, 0, 0.2);
@@ -602,8 +660,8 @@
 		   for a short landscape phone. */
 		height: 50vh;
 		overflow-y: auto;
-		/* Under the header (z 100), whose compact bar sits on top. */
-		z-index: 95;
+		/* Under the header (z 1200), which sits on top of it. */
+		z-index: 1195;
 		background: var(--color-bg);
 		padding: calc(var(--header-bar-h) + 18px + env(safe-area-inset-top, 0px)) 20px 16px;
 	}

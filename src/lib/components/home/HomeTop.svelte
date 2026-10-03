@@ -169,7 +169,7 @@
 		</p>
 	</section>
 
-	<div class="HomeHeroes" bind:this={heroesEl} data-header-dark>
+	<div class="HomeHeroes" bind:this={heroesEl}>
 		{#each typefaces as tf (tf.slug)}
 			<a class="HomeHero" href="/fonts/{tf.slug}">
 				<p class="HomeHero__tagline">{tf.homeSection?.headline}</p>
@@ -211,8 +211,8 @@
 	.Opening {
 		position: fixed;
 		inset: 0;
-		/* Above the Header (100), whose own mark it hands over to. */
-		z-index: 200;
+		/* Above the Header (1200), whose own mark it hands over to. */
+		z-index: 1300;
 		background: var(--brand-blue);
 		pointer-events: none;
 		animation: opening-lift var(--lift-dur) ease var(--lift-at) forwards;

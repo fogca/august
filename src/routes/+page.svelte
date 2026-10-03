@@ -5,10 +5,8 @@
 	import AboutSection from '$lib/components/home/AboutSection.svelte';
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
-	import { headerTone } from '$lib/state/headerTone.svelte';
 	import { LOGO_LETTERS } from '$lib/data/logo';
-	import { initScroll, getLenis, onScroll } from '$lib/scroll';
-	import { onMount } from 'svelte';
+	import { initScroll, getLenis } from '$lib/scroll';
 
 	// Top page (2026-10 Apres Guerre redesign, Figma "II-ii"):
 	//   opening + typeface heroes (HomeTop)  →  Custom  →  About  →  Contact  →  Footer
@@ -304,41 +302,6 @@
 			detach?.();
 		};
 	});
-
-	// The Header is a transparent overlay here, so over the dark full-bleed
-	// sections (the typeface heroes, Contact) it switches to the light paper
-	// colour for as long as one is under it (headerTone). Sections opt in with
-	// data-header-dark; the probe line is the middle of the header's own row.
-	onMount(() => {
-		const darkEls = Array.from(document.querySelectorAll<HTMLElement>('[data-header-dark]'));
-		const barEl = document.querySelector<HTMLElement>('.Header__bar');
-		if (!darkEls.length) return;
-		// Layout offsets, not getBoundingClientRect: the heroes may still carry
-		// their entrance transform when this first runs (a reload that lands
-		// on a hero), which would put them ~half a screen too low.
-		const docTop = (el: HTMLElement) => {
-			let y = 0;
-			for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) {
-				y += n.offsetTop;
-			}
-			return y;
-		};
-		const update = () => {
-			const line = (barEl?.offsetHeight ?? 0) / 2 + window.scrollY;
-			headerTone.onDark = darkEls.some((el) => {
-				const top = docTop(el);
-				return top <= line && top + el.offsetHeight > line;
-			});
-		};
-		update();
-		const off = onScroll(update);
-		window.addEventListener('resize', update, { passive: true });
-		return () => {
-			off();
-			window.removeEventListener('resize', update);
-			headerTone.onDark = false;
-		};
-	});
 </script>
 
 <svelte:head>
@@ -382,7 +345,7 @@
 	<!-- 4. Contact — no in-page form (2026-09, at the user's request, "トップに
 	     問い合わせフォームを設置する必要はない"); a plain button in the form's old
 	     spot hands off to /contact instead. -->
-	<section class="Home__contact" id="contact" data-header-dark>
+	<section class="Home__contact" id="contact">
 		<div class="Contact__inner">
 			<p class="Contact__eyebrow">Contact</p>
 			<h2 class="Contact__heading">Licensing, custom type, general enquiries.</h2>
