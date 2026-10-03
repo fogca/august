@@ -20,13 +20,13 @@
 	const tf = $derived(getTypeface(selectedSlug) ?? typefaceOptions[0]);
 
 	// Weight range comes from each typeface's own axis (Norma/gQ/Alfred
-	// 1-950, Elio 150-850) rather than a fixed slider range.
+	// 1-950, Ango 150-850) rather than a fixed slider range.
 	const weightMin = $derived(Math.min(...tf.weights.map((w) => w.axisValue)));
 	const weightMax = $derived(Math.max(...tf.weights.map((w) => w.axisValue)));
 
 	// Default 400 at the user's request (valid on every typeface's axis —
 	// it's Norma's own "Regular" stop exactly, and sits between two named
-	// stops on Elio's narrower 150-850 range, which is fine for a variable
+	// stops on Ango's narrower 150-850 range, which is fine for a variable
 	// font). Only clamped, not reset, on typeface switch — once there's a
 	// slider the user is deliberately controlling, silently overwriting
 	// their choice on an unrelated control (typeface/sample/transform)

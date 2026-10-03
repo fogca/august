@@ -44,7 +44,7 @@ export const WEIGHTS: WeightDef[] = [
 	axisValue: n === 1 ? 1 : n * 10
 }));
 
-// Elio's own 9-stop axis (150/250/.../950 — matches its Glyphs instance
+// Ango's own 9-stop axis (150/250/.../950 — matches its Glyphs instance
 // names directly, unlike Norma's compressed 1-95 naming). Both masters
 // (Hair 150 / Ultra 950) are drawn and exported as a real variable font;
 // the other 7 stops are genuine interpolation between them.
@@ -52,14 +52,14 @@ export const WEIGHTS: WeightDef[] = [
 // id/axisValue stay the real wght values (150-950); only the displayed
 // name is scaled down to match Norma's own numbering.
 // Revised 2026-09-22, at the user's request: the Ultra master's own axis
-// position moved from wght 850 to 950, so Elio's scale now reaches 950
+// position moved from wght 850 to 950, so Ango's scale now reaches 950
 // and genuinely earns the "Ultra" label — matching Norma's own top stop
 // instead of standing in with "Heavy" as the earlier revision's note
 // explained. 850 becomes "Black" (Heavy < Black < Ultra, the conventional
 // order once a scale has all three), and every intermediate stop's
 // rendered weight shifted slightly since it now interpolates across the
 // wider 150-950 span.
-export const ELIO_WEIGHTS: WeightDef[] = [
+export const ANGO_WEIGHTS: WeightDef[] = [
 	{ id: 150, name: '15', label: 'Hair', axisValue: 150 },
 	{ id: 250, name: '25', label: 'Thin', axisValue: 250 },
 	{ id: 350, name: '35', label: 'Light', axisValue: 350 },
@@ -67,7 +67,7 @@ export const ELIO_WEIGHTS: WeightDef[] = [
 	// previously unnoticed side effect in GlyphSet.svelte: its default-weight
 	// lookup matches on label === 'Regular', so with no label saying exactly
 	// that, it fell through to weights[weights.length-1] (the heaviest stop)
-	// as Elio's default inspected weight instead of this one.
+	// as Ango's default inspected weight instead of this one.
 	{ id: 450, name: '45', label: 'Regular', axisValue: 450 },
 	{ id: 550, name: '55', label: 'Medium', axisValue: 550 },
 	{ id: 650, name: '65', label: 'Bold', axisValue: 650 },

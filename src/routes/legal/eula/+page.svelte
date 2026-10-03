@@ -112,7 +112,7 @@
 	}
 
 	/* Section nav — a wrapping pill row on phones, a plain stacked list in
-	   the sticky left column on PC. Type (Elio, black) comes from
+	   the sticky left column on PC. Type (Ango, black) comes from
 	   PageSection's head rules; only the geometry is set here. */
 	.Eula__nav ul {
 		display: flex;

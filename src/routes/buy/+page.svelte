@@ -14,7 +14,7 @@
 	// styles has a selection either -- this page is what joins the two.
 	// No fallback picker yet for a cold /buy visit (no ?font) -- see the
 	// August/Marketing session's 2026-08-29 note for the planned Phase 2
-	// (multi-typeface picker once Alfred/Elio go on sale); today there's
+	// (multi-typeface picker once Alfred/Ango go on sale); today there's
 	// only one real product, so falling back to it is enough.
 
 	import { onMount } from 'svelte';
@@ -209,7 +209,7 @@
 	     name as the page title, the one-line instruction beside it, and the
 	     existing two-column checkout (steps 65% / sticky cart 35%) running
 	     full width underneath. nativeBody: the checkout keeps its own Norma
-	     type and colours — Elio's currency glyphs aren't finished, and the
+	     type and colours — Ango's currency glyphs aren't finished, and the
 	     cart's inverted button must not be flattened to black text. -->
 	<PageSection title={heroHeading} as="h1" subtitle="Pay once, yours to keep." full nativeBody>
 		{#snippet intro()}

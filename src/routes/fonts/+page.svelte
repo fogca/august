@@ -3,8 +3,8 @@
      grid running full width underneath, bleeding to the section's edges so
      its hairlines cross the whole page. nativeBody: each card's specimen is
      set in that typeface's own face (inline font-family below), which
-     PageSection's brand-font rule would otherwise flatten to Elio. The card
-     chrome itself is in Elio (--font-en), bar the price — Elio's currency
+     PageSection's brand-font rule would otherwise flatten to Ango. The card
+     chrome itself is in Ango (--font-en), bar the price — Ango's currency
      glyphs aren't finished, so "From €…" stays in Norma. -->
 <script lang="ts">
 	import PageSection from '$lib/components/PageSection.svelte';
@@ -232,7 +232,7 @@
 		margin-top: auto;
 	}
 
-	/* Norma, not Elio — the € sign (see the header comment). */
+	/* Norma, not Ango — the € sign (see the header comment). */
 	.FontCard__price {
 		font-family: var(--font-norma), sans-serif;
 		font-size: 13px;

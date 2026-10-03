@@ -1,9 +1,9 @@
-// Auto-generated from static/fonts/Elio-VF01.woff2's actual cmap (fontTools
+// Auto-generated from static/fonts/Elio-VF01.woff2 (since renamed Ango)'s actual cmap (fontTools
 // getBestCmap()), same method as normaGlyphs.ts. Letters only (uppercase +
-// lowercase) — Elio also covers digits and a handful of punctuation marks,
+// lowercase) — Ango also covers digits and a handful of punctuation marks,
 // but the Type Tester shows just these 52 for now, since that's the whole
 // "normal" alphabet a reader would expect to browse.
-// Regenerate whenever Elio's export changes:
+// Regenerate whenever Ango's export changes:
 //   fontTools.ttLib.TTFont(path).getBestCmap() + unicodedata category, kept
 //   to Lu -> uppercase / Ll -> lowercase only.
 
@@ -19,7 +19,7 @@ export const GLYPH_CATEGORY_LABELS: Record<GlyphCategory, string> = {
 	symbol: 'Symbols'
 };
 
-export const ELIO_GLYPHS: GlyphEntry[] = [
+export const ANGO_GLYPHS: GlyphEntry[] = [
 	{ char: 'A', codepoint: 0x0041, name: 'LATIN CAPITAL LETTER A', category: 'uppercase' },
 	{ char: 'B', codepoint: 0x0042, name: 'LATIN CAPITAL LETTER B', category: 'uppercase' },
 	{ char: 'C', codepoint: 0x0043, name: 'LATIN CAPITAL LETTER C', category: 'uppercase' },

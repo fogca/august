@@ -87,29 +87,30 @@
 				font-display: swap;
 			}
 
-			/* Elio — now a real variable font (2 masters: Hair 150 / Ultra 950,
-			   full wght range interpolated between them). Used on the Elio
-			   typeface page's Type Tester and the top-page A-Z specimen.
+			/* Ango (formerly Elio — renamed 2026-10-03) — now a real variable font
+			   (2 masters: Hair 150 / Ultra 950, full wght range interpolated
+			   between them). Used on the Ango typeface page's Type Tester and
+			   the top-page A-Z specimen.
 			   Early history (VF14-19, 2026-09-22/30): Ultra's axis moved
 			   850→950 for a full 9-stop named scale; "yen"/"endash" shipped;
-			   ongoing outline touch-ups across G/K/R/f/g/t/e-family/d/A/
-			   emdash/b/w/r/two/three. VF20 (2026-10-01): `s` refined further.
-			   **VF21** (same day): every glyph's advance width widened by 5
-			   units (UPM 1000) in both masters — the font's own default
-			   spacing now reads roughly like `letter-spacing: 0.005em`
-			   baked in, at the user's request. Outlines unchanged; no
-			   compatibility change. Full history: static/fonts/README.md. */
+			   ongoing outline touch-ups. VF20 (2026-10-01): `s` refined further.
+			   VF21 (same day): every glyph's advance width widened by 5 units
+			   (UPM 1000) — default spacing now reads like `letter-spacing:
+			   0.005em` baked in. VF22-23 (2026-10-02/03): `u`/`q` refinements.
+			   **VF23** is the first build carrying the new name — the binary's
+			   own family/PostScript name now say "Ango", and the file was
+			   Elio-VF##.woff2 until VF21. Full history: static/fonts/README.md. */
 			@font-face {
-				font-family: 'Elio';
-				src: url('%sveltekit.assets%/fonts/Elio-VF21.woff2?v=20261002a') format('woff2-variations');
+				font-family: 'Ango';
+				src: url('%sveltekit.assets%/fonts/Ango-VF23.woff2?v=20261003a') format('woff2-variations');
 				font-weight: 150 950;
 				font-style: normal;
 				font-display: swap;
 			}
 
-			/* Site-wide brand font: Elio (2026-09, at the user's request —
-			   "基本はElioがブランド書体"), falling back per glyph to Norma for
-			   anything Elio hasn't drawn yet (its shipped VF is a subset while
+			/* Site-wide brand font: Ango (2026-09, at the user's request —
+			   "基本はAngoがブランド書体"), falling back per glyph to Norma for
+			   anything Ango hasn't drawn yet (its shipped VF is a subset while
 			   Ultra catches up — see static/fonts/README.md). Norma is a sibling
 			   face with near-identical proportions, so the per-glyph fallback
 			   reads as one voice. Typeface pages still set themselves in their
@@ -117,19 +118,19 @@
 			   per the Figma frames. The versioned Norma name goes first in the
 			   fallback chain — see the @font-face comment above. */
 			:root {
-				--font-en: 'Elio', 'Norma VF09', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				--font-en: 'Ango', 'Norma VF09', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 				--font-ja:
-					'Elio', 'Norma VF09', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
-				--font-elio: 'Elio', 'Norma VF09', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+					'Ango', 'Norma VF09', 'Norma', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+				--font-ango: 'Ango', 'Norma VF09', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 				/* Norma on its own, for the places that deliberately keep it
-				   (Header chrome, the buy flow — Elio's currency glyphs aren't
+				   (Header chrome, the buy flow — Ango's currency glyphs aren't
 				   finished, and prices are the one place that would show). */
 				--font-norma: 'Norma VF09', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 			}
 
 			html,
 			body {
-				font-family: 'Elio', 'Norma', 'Helvetica Neue', Arial, sans-serif;
+				font-family: 'Ango', 'Norma', 'Helvetica Neue', Arial, sans-serif;
 			}
 		</style>
 

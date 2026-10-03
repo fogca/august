@@ -2,7 +2,7 @@
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
-import { WEIGHTS, ELIO_WEIGHTS } from '$lib/components/TypeTester/presets.js';
+import { WEIGHTS, ANGO_WEIGHTS } from '$lib/components/TypeTester/presets.js';
 
 export type { WeightDef as TypefaceWeight };
 
@@ -11,7 +11,7 @@ export type TypefaceStatus = 'available' | 'in-development';
 export interface Typeface {
 	slug: string;
 	name: string;
-	/** Display order (ascending): 1 = Norma, 2 = gQ (Mokuseki Sans), 3 = Elio, 4 = Alfred */
+	/** Display order (ascending): 1 = Norma, 2 = gQ (Mokuseki Sans), 3 = Ango, 4 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
@@ -54,7 +54,7 @@ export interface Typeface {
 	/** Renders the specimen at this wght instead of the family's own default —
 	 *  for typefaces with no drawings of their own yet (Alfred), so their
 	 *  placeholder card at least reads as a different cut of the borrowed font
-	 *  rather than an identical copy of Norma's own card. Elio doesn't need
+	 *  rather than an identical copy of Norma's own card. Ango doesn't need
 	 *  this any more — its own font renders the specimen directly. */
 	specimenWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
@@ -77,7 +77,7 @@ export interface Typeface {
 	/** "In Use" row on the typeface page — 4-5 real-world application photos
 	 *  shown side by side. Optional: when absent, the section still renders
 	 *  (same convention as the rest of this in-development-friendly page —
-	 *  see Alfred/Elio's placeholder hero etc.) as four empty labelled
+	 *  see Alfred/Ango's placeholder hero etc.) as four empty labelled
 	 *  slots, so the page's structure doesn't change once photos exist. */
 	inUseImages?: { src: string; alt: string }[];
 	/** Inspiration section — reference imagery plus a short passage on a
@@ -140,7 +140,7 @@ export interface Typeface {
 		 *  typeface's own font inside the accent panel. */
 		headline: string;
 		/** wght axis value for the headline (a real instance of this
-		 *  typeface's own axis, not a generic CSS keyword — e.g. Elio's own
+		 *  typeface's own axis, not a generic CSS keyword — e.g. Ango's own
 		 *  Hair master at 150, per Figma, deliberately delicate despite the
 		 *  headline's large size). */
 		headlineWeight: number;
@@ -190,8 +190,8 @@ export const TYPEFACES: Typeface[] = [
 			languages: '93'
 		},
 		weights: WEIGHTS,
-		// Continues Elio's A-H wine/terroir word list (2026-09, at the user's
-		// request) — Elio's own 8 rows are single words per letter; Norma's 20
+		// Continues Ango's A-H wine/terroir word list (2026-09, at the user's
+		// request) — Ango's own 8 rows are single words per letter; Norma's 20
 		// rows push further, one full French definition-style sentence per
 		// row, roughly alphabetical from I onward. 18 letters remain (I-Z);
 		// U/W/X/Y have no natural single-word French wine term, so those are
@@ -357,34 +357,34 @@ export const TYPEFACES: Typeface[] = [
 		// are drawn and exported; the other 7 of the 9 named stops are
 		// interpolated between them, same as Norma. Ultra's own axis
 		// position moved from wght 850 to 950 on 2026-09-22, at the user's
-		// request, so Elio's scale now reaches Norma's own top stop.
+		// request, so Ango's scale now reaches Norma's own top stop.
 		// Re-shown 2026-08-29 at the user's request (temporary).
-		slug: 'elio',
-		name: 'Elio',
+		slug: 'ango',
+		name: 'Ango',
 		order: 3,
 		status: 'in-development',
 		hidden: false,
-		fontFamily: 'Elio',
+		fontFamily: 'Ango',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'Elio is a sibling to Norma, in development at Apres Guerre. ' +
-			'Where Norma runs wide and even across twenty weights, Elio narrows its focus to nine — an axis built from two hand-drawn extremes, Hair and Ultra, with the seven named stops between them genuinely interpolated rather than invented. ' +
+			'Ango is a sibling to Norma, in development at Apres Guerre. ' +
+			'Where Norma runs wide and even across twenty weights, Ango narrows its focus to nine — an axis built from two hand-drawn extremes, Hair and Ultra, with the seven named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Ultra — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'Elio est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
+			'Ango est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development · 9 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
 		// (Asta.glyphs' own glyph box), not the shipped VF's cmap — unlike
 		// Norma's info, where those two numbers are nearly the same since
-		// Norma is finished across all masters. For Elio, mid-development,
+		// Norma is finished across all masters. For Ango, mid-development,
 		// they diverge a lot: a variable font can only ship a glyph once
 		// BOTH masters are shape-compatible, so ~28 of the 177 encoded
 		// characters that already have real ink in Hair are still hard-
-		// excluded from Elio-VF13.woff2 while Ultra catches up (147 ship
+		// excluded from Elio-VF13.woff2 (now Ango) while Ultra catches up (147 ship
 		// today — a big jump from VF10's 107, since all 4 remaining
 		// Hair-only combining marks got drawn in Ultra — see
 		// static/fonts/README.md). Quoting that 147 as "the" glyph count
@@ -397,7 +397,7 @@ export const TYPEFACES: Typeface[] = [
 		// asciicircum are still blank) — +3 vs the 2026-09-05 count for
 		// Ōmacron/ōmacron/macroncomb, added this round. Shape set hasn't
 		// grown since, so these two numbers are still accurate as of
-		// Elio-VF19.woff2 (2026-09-30) — 151 of the 175 currently ship
+		// Elio-VF19.woff2 (now Ango, 2026-09-30) — 151 of the 175 currently ship
 		// (up from 147 in VF13, 149 in VF15/16, 150 in VF17/18; `endash`
 		// became compatible at VF19), the rest still hard-excluded pending
 		// Ultra.
@@ -416,7 +416,7 @@ export const TYPEFACES: Typeface[] = [
 		},
 		// Now a real variable font — all 9 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
-		weights: ELIO_WEIGHTS,
+		weights: ANGO_WEIGHTS,
 		// One word per weight row (150 -> 850, lightest to heaviest), A-H —
 		// wine/terroir vocabulary, per the user's own list.
 		defaultTexts: [
@@ -430,10 +430,10 @@ export const TYPEFACES: Typeface[] = [
 			'Héritage'
 		],
 		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
-		// now that Elio's own font (Hair) actually renders here. No hover
+		// now that Ango's own font (Hair) actually renders here. No hover
 		// swatch either (catalogBg omitted), matching Norma.
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
-		// Borrowed from gQ (2026-08-31, at the user's request) — Elio has no
+		// Borrowed from gQ (2026-08-31, at the user's request) — Ango has no
 		// hero image of its own yet, so its page top reuses gQ's for now.
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#d59514', fg: '#000000' },
@@ -448,9 +448,9 @@ export const TYPEFACES: Typeface[] = [
 			statement: 'Coming soon.'
 		},
 		// Home page typeface section (Figma 3:733/7:906, 2026-09). New
-		// lime/blue pairing, distinct from the ochre used by Elio's own
+		// lime/blue pairing, distinct from the ochre used by Ango's own
 		// /fonts page hero (theme, above) and catalogue swatch — contained to
-		// this one section rather than changing Elio's colour everywhere.
+		// this one section rather than changing Ango's colour everywhere.
 		homeSection: {
 			panelBg: '#DAE06B',
 			panelFg: '#0059FF',
@@ -458,18 +458,18 @@ export const TYPEFACES: Typeface[] = [
 			blockFg: '#DAE06B',
 			glyph: 'a',
 			headline: 'Geometric Humanist',
-			// Elio's own Hair master (150) — deliberately its most delicate
+			// Ango's own Hair master (150) — deliberately its most delicate
 			// weight at the page's single largest moment, per Figma (and a
 			// nice match for its "Reticent and Ravenous" tagline).
 			headlineWeight: 150,
-			// Home hero: "Elio" in Elio Light, as drawn (Figma 175:178).
+			// Home hero: "Ango" in Ango Light, as drawn (Figma 175:178).
 			heroWeight: 300
 		}
 	},
 	{
 		// Announced on the home page (ochre section, own logotype) and in the
 		// mobile menu's UPCOMING list. Registered here with a catalogue
-		// specimen; everything below is still fully provisional (unlike Elio,
+		// specimen; everything below is still fully provisional (unlike Ango,
 		// no drawings at all yet). Re-shown 2026-08-29, re-hidden 2026-08-31,
 		// both at the user's request.
 		slug: 'alfred',
@@ -492,15 +492,15 @@ export const TYPEFACES: Typeface[] = [
 		defaultTexts: ['Alfred'],
 		// Placeholder catalogue specimen — set at a lighter cut (wght 250)
 		// than Norma's own card, so the two don't read as the same font
-		// twice (Elio no longer needs this distinction — its own font
+		// twice (Ango no longer needs this distinction — its own font
 		// renders its card now). Replace once Alfred has its own metal.
 		specimen: ['VOL. II', 'ALFRED', 'Neo Classic'],
 		specimenWeight: 250,
 		// Matches the home page's ochre Alfred section exactly (#d59514 / black).
 		theme: { bg: '#d59514', fg: '#000000' },
 		// A paler tint of the same ochre used for the hero theme above.
-		// Elio (also ochre) no longer has its own catalogBg — see the note
-		// where Elio is defined above.
+		// Ango (also ochre) no longer has its own catalogBg — see the note
+		// where Ango is defined above.
 		catalogBg: '#F6E9C9',
 		hero: {
 			label: 'In development',

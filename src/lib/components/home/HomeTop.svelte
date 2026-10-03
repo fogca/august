@@ -277,7 +277,7 @@
 		white-space: nowrap;
 	}
 
-	/* Elio 11px / 1.4, 646px wide, 349px down in the 900px frame — its last
+	/* Ango 11px / 1.4, 646px wide, 349px down in the 900px frame — its last
 	   line ~55px above the hero, which is what's kept here. */
 	.HomeLead__text {
 		position: absolute;
@@ -285,7 +285,7 @@
 		bottom: 55px;
 		width: min(646px, calc(100% - 2 * var(--edge)));
 		margin: 0;
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-size: 11px;
 		font-weight: 400;
 		font-variation-settings: 'wght' 400;

@@ -51,10 +51,10 @@
 	const fromPriceEur = $derived(
 		getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`)?.baseEur ?? null
 	);
-	// Elio only has 52 letters and no OpenType features drawn yet — Glyph
+	// Ango only has 52 letters and no OpenType features drawn yet — Glyph
 	// set / Beyond A-Z / OpenType below are swapped for a plain sample-text
-	// block on its page (see the {#if isElio} further down).
-	const isElio = $derived(tf.slug === 'elio');
+	// block on its page (see the {#if isAngo} further down).
+	const isAngo = $derived(tf.slug === 'ango');
 
 	// Every visible typeface defines homeSection today; the fallback keeps a
 	// typeface without one rendering sensibly rather than throwing.
@@ -200,7 +200,7 @@
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
-		defaultSizeDesktop={isElio ? 120 : tf.slug === 'norma' ? 36 : undefined}
+		defaultSizeDesktop={isAngo ? 120 : tf.slug === 'norma' ? 36 : undefined}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 	/>
 
@@ -217,10 +217,10 @@
 				>
 					<!-- Norma's own weights are named by number (1-95, name x 10 =
 					     wght) — that number is the name, not a word standing in for
-					     it, so it's the only thing shown. Elio's smaller, newer axis
+					     it, so it's the only thing shown. Ango's smaller, newer axis
 					     doesn't carry that convention, so it gets the more familiar
 					     "number word" pairing instead. -->
-					{#if isElio}
+					{#if isAngo}
 						<span class="FontWeights__label">{w.name} {w.label}</span>
 					{:else}
 						<span class="FontWeights__label">{w.name}</span>
@@ -254,15 +254,15 @@
 		</section>
 	{/if}
 
-	{#if isElio}
-		<!-- Elio only has 52 letters and no OpenType features yet — the Glyph
+	{#if isAngo}
+		<!-- Ango only has 52 letters and no OpenType features yet — the Glyph
 		     set / specimen / OpenType sections below would mostly show
 		     .notdef/tofu or empty demos. A plain sample-text block instead,
-		     using only characters actually in Elio's cmap. -->
-		<section class="ElioSample" aria-label="Sample text">
-			<p class="ElioSample__label">Sample text</p>
-			<p class="ElioSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
-				Elio is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
+		     using only characters actually in Ango's cmap. -->
+		<section class="AngoSample" aria-label="Sample text">
+			<p class="AngoSample__label">Sample text</p>
+			<p class="AngoSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
+				Ango is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
 				dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
 				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
 				ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
@@ -452,7 +452,7 @@
 		margin: 0;
 	}
 
-	/* Small caveat under the grid — e.g. Elio's "still in development" note. */
+	/* Small caveat under the grid — e.g. Ango's "still in development" note. */
 	.FontIntro__spec-note {
 		grid-column: 1 / -1;
 		font-size: 11px;
@@ -478,7 +478,7 @@
 
 	/* A / B / A colour rhythm: the outer two blocks take the band's own
 	   colour pair, the middle one the block pair (or the video's own black)
-	   — Norma reads red / black / red, Elio lime / blue / lime. */
+	   — Norma reads red / black / red, Ango lime / blue / lime. */
 	.FontGallery__block {
 		display: flex;
 		align-items: center;
@@ -683,13 +683,13 @@
 		font-size: 15px;
 	}
 
-	/* ── Elio: sample text in place of Glyph set / Beyond A-Z / OpenType ── */
-	.ElioSample {
+	/* ── Ango: sample text in place of Glyph set / Beyond A-Z / OpenType ── */
+	.AngoSample {
 		padding: 40px var(--padding) 48px;
 		border-top: 1px solid var(--color-line);
 	}
 
-	.ElioSample__label {
+	.AngoSample__label {
 		font-family: 'Norma', sans-serif;
 		font-size: var(--fs-h5);
 		color: var(--color-text-mute);
@@ -697,7 +697,7 @@
 		margin: 0 0 20px;
 	}
 
-	.ElioSample__text {
+	.AngoSample__text {
 		font-size: clamp(20px, 3vw, 32px);
 		line-height: 1.4;
 		letter-spacing: 0;

@@ -8,7 +8,7 @@
 
      Laid out per Figma 3:671 (2026-10 Apres Guerre redesign), the same as
      PageSection.svelte's pinned layout: blue on peach, the title set large
-     (Elio Regular, 120px at 1440) pinned to the bottom-left of the screen,
+     (Ango Regular, 120px at 1440) pinned to the bottom-left of the screen,
      the body running down the right-hand column from x=584 (28px headings,
      16px/1.4 text). SP stacks title, sub-heading and body and pins nothing.
      Falls back to a plain text swap under prefers-reduced-motion or before
@@ -130,13 +130,13 @@
 		--title-bottom: 11px;
 		/* Top: the layout's masthead spacer already clears the Header. */
 		padding: 0 var(--padding) 64px;
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-weight: var(--brand-weight);
 	}
 
 	.PageStack :global(*) {
 		color: var(--color-text);
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 	}
 
 	.PageStack__head {

@@ -4,7 +4,7 @@
      weight and thickens to the resting one, one after another.
 
      `from` defaults to 150 rather than the 0 asked for because 150 IS this
-     face's zero — Elio's wght axis runs 150-850 (Norma's runs 1-950), and a
+     face's zero — Ango's wght axis runs 150-850 (Norma's runs 1-950), and a
      browser clamps anything below an axis floor. Animating from 0 would
      spend the first 43% of the run on 0-150, where nothing visibly changes,
      and only then start moving. Passing the real floor keeps every

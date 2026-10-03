@@ -420,7 +420,7 @@
 
 	.Header__nav {
 		left: var(--edge);
-		/* Five spaces between items in the frame (Elio 12px). */
+		/* Five spaces between items in the frame (Ango 12px). */
 		gap: 14px;
 		font-size: 12px;
 	}
@@ -431,7 +431,7 @@
 	}
 
 	.Header__link {
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-size: inherit;
 		font-weight: 400;
 		font-variation-settings: 'wght' 400;
@@ -641,7 +641,7 @@
 
 	.MenuPanel__list a,
 	.MenuPanel__pages a {
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-size: 16px;
 		line-height: 1.5;
 		letter-spacing: 0;
@@ -656,7 +656,7 @@
 	}
 
 	.MenuPanel__lang {
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-size: 13px;
 		background: none;
 		border: 0;

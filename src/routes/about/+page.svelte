@@ -205,14 +205,14 @@
 	}
 
 	.About__normaTitle {
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-size: clamp(28px, 3.6vw, 44px);
 		font-weight: 400;
 		margin: 0 0 24px;
 	}
 
 	.About__body--norma p {
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-size: 15px;
 		line-height: 1.55;
 		font-variation-settings: 'wght' 350;
@@ -234,7 +234,7 @@
 		justify-content: center;
 		margin-top: 28px;
 		padding: 16px 32px;
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-size: 15px;
 		font-weight: var(--fw-ui);
 		color: #ffffff;

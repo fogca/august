@@ -22,7 +22,7 @@
 		title?: string;
 		// Defaults to Norma's own full roster (523 glyphs) — pass a narrower
 		// set for a typeface that doesn't ship that full a cmap yet (see
-		// elioGlyphs.ts), so nothing here can render as a .notdef/tofu box.
+		// angoGlyphs.ts), so nothing here can render as a .notdef/tofu box.
 		glyphs?: GlyphEntry[];
 		categoryOrder?: GlyphCategory[];
 		categoryLabels?: Record<GlyphCategory, string>;

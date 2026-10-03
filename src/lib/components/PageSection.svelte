@@ -1,7 +1,7 @@
 <!-- Editorial page shell for the site's own pages — Contact, the legal
      pages, Fonts and Buy — per Figma 3:671 (file UEy0lKKtgP8jN4x2DWZUOB, the
      2026-10 Apres Guerre redesign): blue on peach, the page title set large
-     (Elio Regular, 120px at the 1440 width) and pinned to the bottom-left of
+     (Ango Regular, 120px at the 1440 width) and pinned to the bottom-left of
      the screen, the copy running down a right-hand column from x=584 (28px
      headings, 16px/1.4 text).
 
@@ -19,7 +19,7 @@
 
      Pass `nativeBody` to leave the body entirely alone — its own components
      keep their fonts and colours (the checkout keeps Norma for prices, since
-     Elio's currency glyphs aren't finished; the catalogue's cards set their
+     Ango's currency glyphs aren't finished; the catalogue's cards set their
      specimens in each typeface's own face). Body copy is passed as children
      so each page keeps its own EN/FR paragraphs and language toggles.
 
@@ -108,7 +108,7 @@
 		   — this layout carries its own, Figma-derived insets. Top: the
 		   layout's masthead spacer already clears the Header. */
 		padding: 0 var(--ps-inset-right) 64px var(--ps-inset-left);
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 		font-weight: var(--brand-weight);
 		color: var(--color-text);
 	}
@@ -120,7 +120,7 @@
 	.PageSection__intro :global(*),
 	.PageSection__body:not(.is-native) :global(*) {
 		color: var(--color-text);
-		font-family: var(--font-elio), sans-serif;
+		font-family: var(--font-ango), sans-serif;
 	}
 
 	.PageSection__head {
