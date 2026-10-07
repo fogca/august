@@ -61,19 +61,39 @@
 		 *  than on the viewBox); `scale` converts to CSS px; `w`/`h` are the
 		 *  already-scaled on-screen size. Re-read whenever the walls are, so a
 		 *  caller measuring live DOM gets it at rest. */
-		shapes?: () => { d: string; ox: number; oy: number; w: number; h: number; scale: number }[];
+		shapes?: () => {
+			d: string;
+			ox: number;
+			oy: number;
+			w: number;
+			h: number;
+			scale: number;
+			/** Deepest point inside the ink and its distance to the nearest
+			 *  edge, viewBox units (see LogoLetter.core) — what `zoom` dives
+			 *  into. Shapes without one are never a zoom target. */
+			core?: { x: number; y: number; r: number };
+		}[];
 		/** False holds the pour back even once the section is on screen — for
 		 *  a caller that wants to start it on its own signal (scroll phase,
 		 *  say) rather than on first intersection. Default true keeps the
 		 *  original "pour as soon as it's visible" behaviour. */
 		armed?: boolean;
-		/** Keep the fixed Header's band clear (see topClearance). The Custom
-		 *  section needs it: a packed field of black glyphs moving behind the
-		 *  header tears its wordmark apart. Off is for a pile that has to
-		 *  visibly fall IN from the true top edge of the screen (the old intro
-		 *  fall, removed in the 2026-10 redesign), not appear out of a hard cut
-		 *  60-70px below it. */
+		/** Keep the fixed Header's band clear (see topClearance). Off by default
+		 *  since the 2026-10 redesign: the header has no fill of its own any
+		 *  more and recolours itself against what is under it, so a cleared
+		 *  band only read as the pile being masked off — a white strip growing
+		 *  down from the top as the section scrolled up to it (the user's
+		 *  report, "上の部分がスクロールすると描画されない"). */
 		headerClearance?: boolean;
+		/** 0..1 — dive into the pile: the view zooms in on the deepest point of
+		 *  the shape nearest the middle of the screen (its `core`) and carries
+		 *  it to the centre, until at 1 that letter's own ink fills the whole
+		 *  canvas. Driven by the caller from scroll. While the ink covers the
+		 *  header's row the HOST element (this one's parent — this layer
+		 *  ignores the pointer, so the Header's hit test never lands on it)
+		 *  carries data-surface="dark", which the Header reads to switch to
+		 *  its light colour. */
+		zoom?: number;
 	}
 	let {
 		characters = ['A', 'P', 'R', 'E', 'S', 'G', 'U'],
@@ -85,7 +105,8 @@
 		obstacles = undefined,
 		shapes = undefined,
 		armed = true,
-		headerClearance = true
+		headerClearance = false,
+		zoom = 0
 	}: Props = $props();
 
 	// Physics feel — carried over from the study, where these were tuned by eye.
@@ -103,10 +124,31 @@
 	const DESPAWN_MARGIN = 400;
 	const REDUCED_MOTION_STEPS = 320; // headless settle, then paint one frame
 
+	// Zoom (see the `zoom` prop).
+	/** Final scale overshoots exact full-screen coverage by this much, so the
+	 *  ink disc clears the corners with room to spare. */
+	const ZOOM_COVER_MARGIN = 1.1;
+	/** Share of the zoom over which the focal point travels to the centre. */
+	const ZOOM_CENTRE_SPAN = 0.55;
+	/** With no shape to dive into (an empty pile), the ink fades in over this
+	 *  last stretch of the zoom instead, so 1 is always fully covered. */
+	const ZOOM_FALLBACK_FROM = 0.8;
+	/** Where the Header samples its background (see Header.svelte): the
+	 *  middle of its row, this far down. */
+	const HEADER_PROBE_Y = 50;
+
 	let sectionEl: HTMLElement | undefined = $state();
 	let canvasEl: HTMLCanvasElement | undefined = $state();
 	/** Set by onMount; see its own comment where it's assigned. */
 	let arm: (() => void) | undefined;
+	/** Set by onMount: redraws one frame (the zoom changes on scroll even
+	 *  when the physics loop has stopped). */
+	let repaint: (() => void) | undefined;
+
+	$effect(() => {
+		void zoom;
+		repaint?.();
+	});
 
 	// Re-measures the obstacles and releases the pour when the caller arms it.
 	// The IntersectionObserver path also calls start(), which checks `armed`
@@ -156,7 +198,15 @@
 		 *  this size reads as soft edges. */
 		let vectors = new Map<
 			string,
-			{ path: Path2D; ox: number; oy: number; w: number; h: number; scale: number }
+			{
+				path: Path2D;
+				ox: number;
+				oy: number;
+				w: number;
+				h: number;
+				scale: number;
+				core?: { x: number; y: number; r: number };
+			}
 		>();
 		let radii = new Map<string, number>();
 		let cssW = 0;
@@ -221,7 +271,8 @@
 						oy: s.oy,
 						w: s.w,
 						h: s.h,
-						scale: s.scale
+						scale: s.scale,
+						core: s.core
 					});
 				});
 				return;
@@ -395,9 +446,68 @@
 			return Math.max(0, topClearance - Math.max(0, top));
 		}
 
+		// ── Zoom ─────────────────────────────────────────────────────────────
+		type Entry = (typeof bodies)[number];
+		/** The body the zoom dives into, held for as long as the zoom is on so
+		 *  the target doesn't switch mid-dive. */
+		let focus: Entry | null = null;
+
+		/** A shape's `core` in canvas px, at the body's current pose. Mirrors
+		 *  the transform paint() draws each shape with. */
+		function corePoint(entry: Entry) {
+			const vec = vectors.get(entry.char);
+			if (!vec?.core) return null;
+			const lx = (vec.core.x - vec.ox) * vec.scale - vec.w / 2;
+			const ly = (vec.core.y - vec.oy) * vec.scale - vec.h / 2;
+			const a = entry.body.angle;
+			const cos = Math.cos(a);
+			const sin = Math.sin(a);
+			return {
+				x: entry.body.position.x + lx * cos - ly * sin,
+				y: entry.body.position.y + topClearance + lx * sin + ly * cos,
+				r: vec.core.r * vec.scale
+			};
+		}
+
+		/** The body whose core sits nearest the middle of the canvas. */
+		function pickFocus(): Entry | null {
+			const cx = cssW / 2;
+			const cy = (cssH + topClearance) / 2;
+			let best: Entry | null = null;
+			let bestD = Infinity;
+			for (const entry of bodies) {
+				const p = corePoint(entry);
+				if (!p) continue;
+				const d = Math.hypot(p.x - cx, p.y - cy);
+				if (d < bestD) {
+					bestD = d;
+					best = entry;
+				}
+			}
+			return best;
+		}
+
+		const smoothstep = (a: number, b: number, v: number) => {
+			const t = Math.min(1, Math.max(0, (v - a) / (b - a)));
+			return t * t * (3 - 2 * t);
+		};
+
+		/** Tells the Header (which samples what is under its row) whether the
+		 *  zoom's ink now covers it — see the `zoom` prop for why the host. */
+		let surfaceDark = false;
+		function setSurface(dark: boolean) {
+			const host = section.parentElement;
+			if (dark === surfaceDark || !host) return;
+			surfaceDark = dark;
+			if (dark) host.dataset.surface = 'dark';
+			else delete host.dataset.surface;
+			window.dispatchEvent(new Event('surfacechange'));
+		}
+
 		function paint() {
 			if (!ctx) return;
 			const clip = currentClearance();
+			const fullH = cssH + topClearance;
 			ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 			// clearRect, never an opaque repaint — the section paints its own
 			// background and the canvas sits on top of it. Clears the FULL
@@ -418,6 +528,35 @@
 			ctx.rect(0, clip, cssW, cssH + topClearance - clip);
 			ctx.clip();
 			ctx.fillStyle = ink;
+
+			// The zoom's view transform: scale about the focus's core while
+			// carrying it to the centre — at zoom 1 the core's ink disc
+			// (radius r) is ZOOM_COVER_MARGIN past the canvas's half-diagonal,
+			// i.e. the letter's stroke fills the whole canvas.
+			let inkDisc: { x: number; y: number; r: number } | null = null;
+			if (zoom > 0) {
+				if (!focus || !bodies.includes(focus)) focus = pickFocus();
+				const core = focus ? corePoint(focus) : null;
+				if (core && core.r > 0) {
+					const halfDiag = Math.hypot(cssW, fullH) / 2;
+					const sMax = (halfDiag * ZOOM_COVER_MARGIN) / core.r;
+					// Accelerating (quadratic in log-scale): the letters grow
+					// gently at first, then the dive rushes in — and the screen
+					// only goes solid right at the end, not with a stretch of
+					// plain blue still to scroll through.
+					const s = Math.pow(sMax, zoom * zoom);
+					const t = smoothstep(0, ZOOM_CENTRE_SPAN, zoom);
+					const vx = core.x + (cssW / 2 - core.x) * t;
+					const vy = core.y + (fullH / 2 - core.y) * t;
+					ctx.translate(vx, vy);
+					ctx.scale(s, s);
+					ctx.translate(-core.x, -core.y);
+					inkDisc = { x: vx, y: vy, r: core.r * s };
+				}
+			} else {
+				focus = null;
+			}
+
 			for (const { body, char } of bodies) {
 				const vec = vectors.get(char);
 				const sprite = vec ? undefined : sprites.get(char);
@@ -449,7 +588,32 @@
 				ctx.restore();
 			}
 			ctx.restore();
+
+			// Nothing to dive into: fade the ink in instead, so the end of the
+			// zoom is always the same solid colour.
+			let fallback = 0;
+			if (zoom > 0 && !inkDisc) {
+				fallback = smoothstep(ZOOM_FALLBACK_FROM, 1, zoom);
+				ctx.save();
+				ctx.globalAlpha = fallback;
+				ctx.fillStyle = ink;
+				ctx.fillRect(0, 0, cssW, fullH);
+				ctx.restore();
+			}
+
+			// Header row covered? It sits at the top of the viewport, which is
+			// the top of this canvas while the zoom runs (the caller pins it).
+			const probeY = HEADER_PROBE_Y - section.getBoundingClientRect().top;
+			setSurface(
+				inkDisc
+					? Math.hypot(cssW / 2 - inkDisc.x, probeY - inkDisc.y) <= inkDisc.r
+					: fallback >= 0.5
+			);
 		}
+
+		repaint = () => {
+			if (!disposed) paint();
+		};
 
 		/** True once nothing is moving and nothing is left to pour. */
 		function isSettled() {
@@ -649,6 +813,7 @@
 		return () => {
 			disposed = true;
 			arm = undefined;
+			repaint = undefined;
 			if (frame) cancelAnimationFrame(frame);
 			io?.disconnect();
 			document.removeEventListener('visibilitychange', onVisibility);

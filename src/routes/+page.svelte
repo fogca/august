@@ -6,10 +6,12 @@
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { LOGO_LETTERS } from '$lib/data/logo';
-	import { initScroll, getLenis } from '$lib/scroll';
+	import { initScroll, getLenis, onScroll } from '$lib/scroll';
+	import { onMount } from 'svelte';
 
 	// Top page (2026-10 Apres Guerre redesign, Figma "II-ii"):
-	//   opening + typeface heroes (HomeTop)  →  Custom  →  About  →  Contact  →  Footer
+	//   opening + typeface heroes (HomeTop)  →  Custom (zoom)  →  Custom copy
+	//   →  About  →  Contact  →  Footer
 
 	// homeIntro is a module singleton, so an in-app navigation BACK to '/'
 	// would otherwise still read last visit's `true` — arming the snap
@@ -24,14 +26,23 @@
 	// The Custom section's pile: the wordmark's own A, P, G and R (2026-10, at
 	// the user's request — "ロゴのsvgから抽出したもの…グリフはAPGRの4つ"),
 	// as outlines at the logo's own proportions. Indices into LOGO_LETTERS
-	// (A P R E S G U E R R E): A=0, P=1, R=2, G=5. Smaller on phones, like the
-	// typeset pour is.
+	// (A P R E S G U E R R E): A=0, P=1, R=2, G=5.
+	//
+	// Sized off the screen rather than fixed px (2026-10, "それぞれの文字もっと
+	// 大きくして"): letter height is a share of the viewport height on PC, of
+	// its width on phones (where height would make them too wide to tumble).
 	const PILE_LETTERS = [0, 1, 5, 2];
-	const PILE_SCALE = 1;
-	const PILE_SCALE_SMALL = 0.62;
+	const PILE_HEIGHT_OF_VH = 0.4;
+	const PILE_HEIGHT_OF_VW_SMALL = 0.5;
 	const SMALL_SCREEN = 768;
+	/** Cap height of the wordmark's letters, viewBox units. */
+	const LETTER_UNITS = 146;
 	function pileShapes() {
-		const scale = window.innerWidth < SMALL_SCREEN ? PILE_SCALE_SMALL : PILE_SCALE;
+		const target =
+			window.innerWidth < SMALL_SCREEN
+				? window.innerWidth * PILE_HEIGHT_OF_VW_SMALL
+				: window.innerHeight * PILE_HEIGHT_OF_VH;
+		const scale = target / LETTER_UNITS;
 		return PILE_LETTERS.map((i) => {
 			const l = LOGO_LETTERS[i];
 			return {
@@ -40,10 +51,50 @@
 				oy: l.y0,
 				w: (l.x1 - l.x0) * scale,
 				h: (l.y1 - l.y0) * scale,
-				scale
+				scale,
+				core: l.core
 			};
 		});
 	}
+
+	// ── Custom: scroll zooms into the pile ─────────────────────────────────
+	// (2026-10, at the user's request — "スクロールしていくと下に行かずに、どん
+	// どんZoomしていってほしい…Zoomしてまた別のセクションになる"). The section
+	// is a tall track with the glyph field pinned (sticky) inside it; scrolling
+	// through the track zooms the field in (GlyphFill's `zoom`) instead of
+	// moving it, until one letter's own stroke fills the screen with the brand
+	// blue — which is the ground of the next section, so the zoom lands in it.
+	let customTrackEl: HTMLElement | undefined = $state();
+	let customStageEl: HTMLElement | undefined = $state();
+	/** 0 when the stage pins, 1 when it lets go. */
+	let customZoom = $state(0);
+
+	onMount(() => {
+		if (!customTrackEl || !customStageEl) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		const track = customTrackEl;
+		const stage = customStageEl;
+		// Layout offsets, so nothing transformed (the heroes' entrance) skews it.
+		const docTop = (el: HTMLElement) => {
+			let y = 0;
+			for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) {
+				y += n.offsetTop;
+			}
+			return y;
+		};
+		const update = () => {
+			const span = track.offsetHeight - stage.offsetHeight;
+			const p = span > 0 ? (window.scrollY - docTop(track)) / span : 0;
+			customZoom = Math.min(1, Math.max(0, p));
+		};
+		update();
+		const off = onScroll(update);
+		window.addEventListener('resize', update, { passive: true });
+		return () => {
+			off();
+			window.removeEventListener('resize', update);
+		};
+	});
 
 	// ── Section-to-section snap ────────────────────────────────────────────
 	// Referencing yadohouse.jp's own first-view feel at the user's request:
@@ -316,17 +367,26 @@
 	<!-- 1. Opening, then the typeface heroes (see HomeTop.svelte). -->
 	<HomeTop typefaces={homeTypefaces} />
 
-	<!-- 2. Custom type for business — the copy over a full-screen field of
-	     the wordmark's own A P G R raining down and packing the screen
-	     (GlyphFill, in `shapes` mode; without that prop it pours the typeset
-	     version). -->
-	<section class="Home__custom" id="custom">
-		<GlyphFill shapes={pileShapes} color="var(--brand-blue)" />
+	<!-- 2. Custom type for business — a full-screen field of the wordmark's
+	     own A P G R raining down and packing the screen (GlyphFill, in `shapes`
+	     mode; without that prop it pours the typeset version), pinned while
+	     scrolling zooms into it (see "Custom: scroll zooms into the pile"). -->
+	<section class="Home__custom" id="custom" bind:this={customTrackEl}>
+		<div class="Custom__stage" bind:this={customStageEl}>
+			<GlyphFill shapes={pileShapes} color="var(--brand-blue)" zoom={customZoom} />
+		</div>
+	</section>
+
+	<!-- 2b. Where the zoom lands: the same blue the stroke filled the screen
+	     with. Carries the Custom copy that used to sit in a white card over
+	     the field (2026-10, at the user's request, the card is gone from the
+	     field — "白背景・テキストエリア削除"). -->
+	<section class="Home__customCopy" aria-labelledby="custom-heading">
 		<div class="Custom__inner">
 			<p class="Custom__eyebrow">Bespoke</p>
 			<!-- Spans, not <br>: they stay inline on desktop and become the three
 			     designed lines on phones. -->
-			<h2 class="Custom__heading">
+			<h2 class="Custom__heading" id="custom-heading">
 				<span>Custom Type</span> <span>for Corporate</span> <span>Identity</span>
 			</h2>
 			<p class="Custom__body">
@@ -367,39 +427,61 @@
 	}
 
 	/* --- 2. Custom type for business (glyph field) --- */
+	/* A tall track: one screen for the pinned stage plus --zoom-span of
+	   scroll that drives the zoom. No overflow clipping here — a clipping
+	   ancestor is exactly what kills position:sticky. */
 	.Home__custom {
-		/* Header clearance for the glyph pile now lives inside GlyphFill.svelte
-		   itself (topClearance) rather than as a CSS crop here — see that
-		   file's own comment. */
+		--zoom-span: 180vh;
 		position: relative;
-		/* Fixed, not min-height (2026-09, at the user's request, "100vhで",
-		   then refined to "100lvhで" — the large viewport unit, so this
-		   doesn't shrink when the mobile URL bar is showing) — the card's own
-		   content used to be able to push this taller than one screen;
-		   overflow:hidden below now clips it back to exactly one screen. */
+		height: calc(100vh + var(--zoom-span));
+		height: calc(100lvh + var(--zoom-span));
+		background: #ffffff;
+		/* Full-bleed: base.css's global `section { padding-inline }` would
+		   otherwise inset the canvas from both edges. */
+		padding: 0;
+	}
+
+	.Custom__stage {
+		position: sticky;
+		top: 0;
 		height: 100vh;
 		height: 100lvh;
+		overflow: hidden;
+		background: #ffffff;
+	}
+
+	@media (max-width: 767.98px) {
+		.Home__custom {
+			--zoom-span: 150vh;
+		}
+	}
+
+	/* No zoom without motion: just the one screen of the field. */
+	@media (prefers-reduced-motion: reduce) {
+		.Home__custom {
+			--zoom-span: 0px;
+		}
+	}
+
+	/* --- 2b. Where the zoom lands --- */
+	.Home__customCopy {
+		min-height: 100vh;
+		min-height: 100lvh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #ffffff;
-		/* Full-bleed: base.css's global `section { padding-inline: var(--padding) }`
-		   would otherwise inset the canvas from both edges. */
-		padding-inline: 0;
+		background: var(--brand-blue);
 		padding-block: clamp(96px, 12vh, 140px);
-		overflow: hidden;
+		text-align: center;
 	}
 
-	/* The copy sits in its own card over the glyph field — the field is the
-	   section's image, so the text needs its own ground to stay readable. */
+	/* base.css re-asserts a colour on each text element individually. */
+	.Home__customCopy :global(*) {
+		color: var(--brand-paper);
+	}
+
 	.Custom__inner {
-		position: relative;
-		z-index: 1;
-		max-width: min(640px, calc(100% - 2 * var(--padding)));
-		background: #ffffff;
-		border: 1px solid var(--brand-blue);
-		padding: clamp(24px, 4vw, 44px);
-		text-align: center;
+		max-width: 760px;
 	}
 
 	.Custom__eyebrow {
@@ -408,19 +490,19 @@
 		font-weight: var(--fw-ui);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		opacity: 0.6;
+		opacity: 0.7;
 		margin: 0 0 20px;
 	}
 
 	.Custom__heading {
 		font-family: var(--font-en), sans-serif;
-		font-size: clamp(32px, min(5.2vw, 7vh), 64px);
+		font-size: clamp(36px, min(6vw, 8vh), 80px);
 		line-height: 1.02;
 		/* Title case in the copy itself now, not CSS text-transform (2026-09,
 		   at the user's request — "uppercase外して、Custom Type for
 		   Corporate Identityに変更"). */
 		letter-spacing: 0.025em;
-		margin: 0 0 24px;
+		margin: 0 0 28px;
 	}
 
 	/* Phones: break to the designed three lines instead of wrapping freely. */
@@ -432,22 +514,22 @@
 
 	.Custom__body {
 		font-family: var(--font-en), sans-serif;
-		font-size: 14px;
+		font-size: 15px;
 		font-variation-settings: 'wght' 360;
 		line-height: 1.7;
 		letter-spacing: 0.02em;
-		opacity: 0.85;
 		/* Centred, not justified (2026-09, at the user's request —
 		   "Custom文章justifyからcenterへ"). */
 		text-align: center;
-		margin: 0 auto 28px;
+		max-width: 56ch;
+		margin: 0 auto 32px;
 	}
 
 	/* Solid, square-cornered box link (2026-09, at the user's request —
 	   "Top AboutとCustomセクションのボタンもContact同様ボックスリンクに変更")
 	   — replaces the Arrow.svelte + text pattern. Brand blue on the brand
 	   orange (2026-10, at the user's request — was white on the signal red). */
-	.Custom__cta {
+	.Home__customCopy .Custom__cta {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;

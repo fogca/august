@@ -117,10 +117,15 @@
 	/** Luminance of the first mostly-opaque background found at a point, going
 	 *  down through the page from the top and skipping the header itself.
 	 *  Elements that ignore the pointer (the transition panels, the canvas)
-	 *  are skipped by the hit test, which is what is wanted here. */
+	 *  are skipped by the hit test, which is what is wanted here. A
+	 *  [data-surface] element (a canvas drawing, which has no CSS background
+	 *  to read — GlyphFill's zoom) states its own tone instead. */
 	function surfaceLuminance(x: number, y: number): number | null {
 		for (const el of document.elementsFromPoint(x, y)) {
 			if (headerEl?.contains(el)) continue;
+			const declared = el.closest<HTMLElement>('[data-surface]')?.dataset.surface;
+			if (declared === 'dark') return BLUE_LUM;
+			if (declared === 'light') return PAPER_LUM;
 			const m = getComputedStyle(el).backgroundColor.match(
 				/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,/\s]+([\d.]+))?\s*\)$/
 			);
@@ -187,10 +192,12 @@
 			scheduleProbe();
 		};
 		window.addEventListener('resize', onResize, { passive: true });
+		window.addEventListener('surfacechange', scheduleProbe);
 		const offScroll = onScroll(update);
 		return () => {
 			offScroll();
 			window.removeEventListener('resize', onResize);
+			window.removeEventListener('surfacechange', scheduleProbe);
 			cancelAnimationFrame(raf);
 			cancelAnimationFrame(armRaf);
 			cancelAnimationFrame(probeRaf);
