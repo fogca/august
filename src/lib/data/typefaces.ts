@@ -446,14 +446,17 @@ export const TYPEFACES: Typeface[] = [
 			intro: 'A sibling to Norma.',
 			statement: 'Coming soon.'
 		},
-		// Home page typeface section (Figma 3:733/7:906, 2026-09). New
-		// lime/blue pairing, distinct from the ochre used by Ango's own
-		// /fonts page hero (theme, above) and catalogue swatch — contained to
-		// this one section rather than changing Ango's colour everywhere.
+		// Colours of Ango's own page (Figma 3:733/7:906, 2026-09). Black-based
+		// since 2026-10 (at the user's request — "FontHeroと下の画像3つのカラー
+		// リングを黒背景基調に"): the band and all three gallery tiles sit on
+		// black. It was lime/blue/lime with blue type. Type is paper on the
+		// band and the outer tiles (the old blue is too weak on black at the
+		// Hair weight); the middle tile's tagline keeps the lime as the one
+		// accent.
 		homeSection: {
-			panelBg: '#DAE06B',
-			panelFg: '#0059FF',
-			blockBg: '#0059FF',
+			panelBg: '#000000',
+			panelFg: '#F1F0EF',
+			blockBg: '#000000',
 			blockFg: '#DAE06B',
 			glyph: 'a',
 			headline: 'Geometric Humanist',

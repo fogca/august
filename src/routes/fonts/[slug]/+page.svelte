@@ -320,6 +320,15 @@
 		/* The colour band starts at the very top; the fixed header overlays
 		   it (and auto-inverts against it). */
 		padding: 0 0 40px;
+		/* Black text on this page (2026-10, at the user's request — "各書体の
+		   ページ情報やタイプテスターなどは、ブラックテキストに"). The site
+		   chrome (Header, Footer, the masthead wordmark) stays brand blue; the
+		   About and Licensing pages keep their playful blue-on-peach. These
+		   are the tokens the page and its components read, so one scope
+		   covers the intro, the Type Tester, the glyph set and the rest. */
+		--color-text: #000000;
+		--color-text-mute: rgba(0, 0, 0, 0.55);
+		--color-line: rgba(0, 0, 0, 0.15);
 	}
 
 	/* ── Colour band + classification headline (Figma 12:127: 460/900) ── */
