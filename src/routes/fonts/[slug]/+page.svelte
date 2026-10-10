@@ -32,7 +32,10 @@
 	// this is a generic showcase of the face's caps, not tied to any
 	// per-typeface data.
 	const ALPHABET = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
-	const GALLERY_LETTER_INTERVAL = 900;
+	// A hard, fast cut (2026-10, at the user's request — "ふわっとfadeをかける
+	// のではなく、無骨に早めに切り替わる"): 160ms a letter, the whole alphabet
+	// in about 4s. It was 900ms with a 0.3s fade-in.
+	const GALLERY_LETTER_INTERVAL = 160;
 	let galleryLetterIndex = $state(0);
 
 	onMount(() => {
@@ -147,11 +150,9 @@
 				<!-- .FontDetail :global(*) already forces --type-font onto every
 				     descendant (see this file's own font-family rule) — no need to
 				     restate it here. -->
-				{#key galleryLetterIndex}
-					<span class="FontGallery__glyph FontGallery__glyph--cycle"
-						>{ALPHABET[galleryLetterIndex]}</span
-					>
-				{/key}
+				<span class="FontGallery__glyph FontGallery__glyph--cycle"
+					>{ALPHABET[galleryLetterIndex]}</span
+				>
 			</div>
 			<div class="FontGallery__block FontGallery__block--b" class:has-video={!!tf.heroVideo}>
 				{#if tf.heroVideo}
@@ -544,21 +545,10 @@
 	}
 
 	/* Block A cycles A-Z instead of one fixed glyph (2026-09, at the user's
-	   request). {#key} re-mounts this span on every letter change, which is
-	   what re-triggers the animation each time — same idiom as the home
-	   page's own TypefaceFooterBar__lines fade. */
-	@keyframes gallery-glyph-fade {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
+	   request). The letter is swapped in place with no transition at all —
+	   a hard cut, on purpose (see GALLERY_LETTER_INTERVAL). */
 	.FontGallery__glyph--cycle {
 		display: inline-block;
-		animation: gallery-glyph-fade 0.3s ease both;
 	}
 
 	.FontGallery__tagline {

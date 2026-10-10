@@ -153,6 +153,45 @@ export interface Typeface {
 	};
 }
 
+/** Ango's Type Tester default text sets, kept by name so either can be the
+ *  default (see Ango's `defaultTexts` below).
+ *
+ *  - `wine`: the original defaults — wine/terroir vocabulary, A-H, one word
+ *    or short phrase per weight row, from the user's own list. Kept exactly
+ *    as it was ("今のAngoのデフォテキストはワインとして記憶しておいて").
+ *    There are eight, for nine weights, so the Ultra row used to wrap back
+ *    round to 'Appellation'.
+ *  - `cheese`: the default since 2026-10 (at the user's request — "チーズの
+ *    名前で少し長めの…Aから順に"). One row per weight, A through I, three
+ *    cheeses a row in alphabetical order, each line chosen to fit on one line
+ *    at the 100px desktop default (about 80-90% of a 1440px screen at its own
+ *    weight — checked against the font's advance widths). Only glyphs the
+ *    shipped VF has (the typographic apostrophe, for one, is not among them,
+ *    so none is used). */
+const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese', string[]> = {
+	wine: [
+		'Appellation',
+		'Blanc de Blancs',
+		'Cuvée Cépage',
+		'Dégustation',
+		'Effeuillage',
+		'Franc de pied',
+		'Goût de terroir',
+		'Héritage'
+	],
+	cheese: [
+		'Abondance Asiago Azeitão',
+		'Bleu de Gex Brie Burrata',
+		'Camembert Cheddar Comté',
+		'Danablu Dolcelatte Dubliner',
+		'Edam Emmental Époisses',
+		'Feta Fiore Sardo Fontina',
+		'Gorgonzola Gouda Gruyère',
+		'Halloumi Harzer Havarti',
+		'Ibores Idiazabal Isle of Mull'
+	]
+};
+
 export const TYPEFACES: Typeface[] = [
 	{
 		slug: 'norma',
@@ -416,18 +455,10 @@ export const TYPEFACES: Typeface[] = [
 		// Now a real variable font — all 9 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
 		weights: ANGO_WEIGHTS,
-		// One word per weight row (150 -> 850, lightest to heaviest), A-H —
-		// wine/terroir vocabulary, per the user's own list.
-		defaultTexts: [
-			'Appellation',
-			'Blanc de Blancs',
-			'Cuvée Cépage',
-			'Dégustation',
-			'Effeuillage',
-			'Franc de pied',
-			'Goût de terroir',
-			'Héritage'
-		],
+		// One line per weight row (150 -> 950, lightest to heaviest). Cheeses
+		// now (see ANGO_TESTER_TEXTS above) — to bring the wine set back, point
+		// this at ANGO_TESTER_TEXTS.wine.
+		defaultTexts: ANGO_TESTER_TEXTS.cheese,
 		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
 		// now that Ango's own font (Hair) actually renders here. No hover
 		// swatch either (catalogBg omitted), matching Norma.
