@@ -424,7 +424,9 @@
 		letter-spacing: 0;
 		font-weight: var(--fw-light);
 		color: var(--color-text);
-		max-width: 64ch;
+		/* No measure cap (2026-10, the user's own value): the copy fills its
+		   grid column. */
+		max-width: none;
 		margin: 0;
 	}
 
