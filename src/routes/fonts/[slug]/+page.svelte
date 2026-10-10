@@ -200,7 +200,7 @@
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
-		defaultSizeDesktop={isAngo ? 120 : tf.slug === 'norma' ? 36 : undefined}
+		defaultSizeDesktop={isAngo ? 100 : tf.slug === 'norma' ? 36 : undefined}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 	/>
 
@@ -389,9 +389,9 @@
 
 	@media (min-width: 768px) {
 		.FontIntro__cols {
-			/* 67->685 copy, 913->1391 spec, at the 1440 design width. */
-			grid-template-columns: 618fr 228fr 478fr;
-			gap: 0;
+			/* Copy / gap / spec at 4 : 1 : 3 (2026-10, the user's own values). */
+			grid-template-columns: 4fr 1fr 3fr;
+			gap: 10px;
 			align-items: start;
 		}
 
@@ -463,16 +463,16 @@
 	}
 
 	/* ── Gallery — three blocks standing in for specimen photography ── */
+	/* 10px gaps and 80px above (2026-10, the user's own values). */
 	.FontGallery {
 		display: grid;
-		gap: 16px;
-		margin-top: clamp(40px, 7vh, 64px);
+		gap: 10px;
+		margin-top: 80px;
 	}
 
 	@media (min-width: 768px) {
 		.FontGallery {
 			grid-template-columns: 306.5fr 488.75fr 488.75fr;
-			gap: 20px;
 		}
 	}
 

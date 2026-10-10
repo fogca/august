@@ -248,6 +248,9 @@
 		align-items: center;
 		gap: 12px;
 		margin-bottom: 15px;
+		/* A hairline under each row's label (2026-10, the user's own values). */
+		padding-bottom: 12px;
+		border-bottom: 0.5px solid var(--color-line);
 		color: var(--color-text-mute);
 		font-family: var(--font-en), sans-serif;
 		font-size: 10px;
@@ -290,7 +293,7 @@
 		}
 
 		.WeightRow__meta {
-			margin-bottom: 40px;
+			margin-bottom: 25px;
 		}
 
 		.WeightRow__size-range {

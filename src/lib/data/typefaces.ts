@@ -411,8 +411,7 @@ export const TYPEFACES: Typeface[] = [
 			collection: '9 weights',
 			formats: 'OTF, TTF, WOFF2',
 			glyphs: '175',
-			languages: '79',
-			note: 'Reflects the drawn design repertoire (Hair). The live variable font currently ships a smaller, interpolation-compatible subset while Ultra catches up — see the specimen below.'
+			languages: '79'
 		},
 		// Now a real variable font — all 9 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
