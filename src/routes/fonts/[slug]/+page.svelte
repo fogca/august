@@ -342,6 +342,15 @@
 		overflow: hidden;
 	}
 
+	/* PC: 72.5vh (2026-10, the user's own value) — no clamp, whose 560px
+	   ceiling would otherwise hold it under that on any tall screen. */
+	@media (min-width: 768px) {
+		.FontHero {
+			height: 72.5vh;
+			height: 72.5svh;
+		}
+	}
+
 	.FontHero__headline {
 		font-size: clamp(40px, 6.1vw, 88px);
 		line-height: 1.25;
