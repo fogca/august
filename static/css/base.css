@@ -253,8 +253,10 @@ html[data-theme='page'] {
 
 :root {
   --masthead-gap: 60px;
+  /* Leads with 10px, not the wordmark's own 35px top offset (2026-10, the
+     user's own value) — page content starts 25px higher on PC. */
   --masthead-h: calc(
-    35px + (100vw - 2 * var(--padding)) * 156 / 1360 + var(--masthead-gap) +
+    10px + (100vw - 2 * var(--padding)) * 156 / 1360 + var(--masthead-gap) +
       env(safe-area-inset-top, 0px)
   );
 }
