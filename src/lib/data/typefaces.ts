@@ -540,10 +540,13 @@ export const TYPEFACES: Typeface[] = [
 		// The two typographic gallery tiles — the cycling glyph and the
 		// specimen — then went white with brand-blue type (2026-10-11, "graphic
 		// は、白背景に青文字で。アニメーションも同様で"): see galleryBg/Fg.
+		// #f6f6f6 rather than pure white (the same day, "白いタイルの枠が見えな
+		// くなっている件=>f6f6f6で"): the page is white, so a white tile had no
+		// visible edge, and the specimen text read as cut off by nothing.
 		homeSection: {
 			panelBg: '#000000',
 			panelFg: '#F1F0EF',
-			galleryBg: '#ffffff',
+			galleryBg: '#f6f6f6',
 			galleryFg: 'var(--brand-blue)',
 			blockBg: '#000000',
 			blockFg: '#DAE06B',
