@@ -520,6 +520,22 @@
 		opacity: 0.6;
 	}
 
+	/* PC: 16px at wght 350 (2026-10, the user's own values — "PCのheaderの
+	   テキストサイズを16pxにして、wght350に"); 12px / 400 as drawn in
+	   Figma 3:671 stays below 768px. The Japanese subline under the
+	   wordmark is a different face and size, and is left alone. */
+	@media (min-width: 768px) {
+		.Header__nav,
+		.Header__cart {
+			font-size: 16px;
+		}
+
+		.Header__link {
+			font-weight: 350;
+			font-variation-settings: 'wght' 350;
+		}
+	}
+
 	.Header__cart-note {
 		position: absolute;
 		top: 100%;
@@ -576,7 +592,7 @@
 		transition: opacity 0.5s ease 0.35s;
 	}
 
-	/* Menu toggle — below 960px only. */
+	/* Menu toggle — below 1060px only (see the media query further down). */
 	.Header__toggle {
 		display: none;
 	}
@@ -591,10 +607,12 @@
 		}
 	}
 
-	/* ── Below 960px: menu toggle instead of the inline nav ── the PC nav
-	   (≈239px from x=40) runs into the centred 273px lockup under ~830px,
-	   and is tight until ~910px, so tablets in portrait get the SP menu. */
-	@media (max-width: 959.98px) {
+	/* ── Below 1060px: menu toggle instead of the inline nav ── the PC nav
+	   is ≈299px wide from x=40 at 16px (it was ≈239px at 12px, when this
+	   was 960px), and the lockup's left edge is at half the width less 137px:
+	   at 1060px that leaves ≈55px clear, at 960px only 5px. Tablets in
+	   portrait, and landscape iPads (1024px), get the SP menu. */
+	@media (max-width: 1059.98px) {
 		.Header__nav {
 			display: none;
 		}
