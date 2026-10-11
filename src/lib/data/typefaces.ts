@@ -153,22 +153,23 @@ export interface Typeface {
 	};
 }
 
-/** Ango's Type Tester default text sets, kept by name so either can be the
- *  default (see Ango's `defaultTexts` below).
+/** Ango's Type Tester default text sets, kept by name so any of them can be
+ *  the default (see Ango's `defaultTexts` below).
  *
  *  - `wine`: the original defaults — wine/terroir vocabulary, A-H, one word
  *    or short phrase per weight row, from the user's own list. Kept exactly
  *    as it was ("今のAngoのデフォテキストはワインとして記憶しておいて").
  *    There are eight, for nine weights, so the Ultra row used to wrap back
  *    round to 'Appellation'.
- *  - `cheese`: the default since 2026-10 (at the user's request — "チーズの
- *    名前で少し長めの…Aから順に"). One row per weight, A through I, three
+ *  - `cheese`: the default from 2026-10 until 2026-10-11 (at the user's
+ *    request — "チーズの名前で少し長めの…Aから順に"). One row per weight, A through I, three
  *    cheeses a row in alphabetical order, each line chosen to fit on one line
  *    at the 100px desktop default (about 80-90% of a 1440px screen at its own
  *    weight — checked against the font's advance widths). Only glyphs the
  *    shipped VF has (the typographic apostrophe, for one, is not among them,
- *    so none is used). */
-const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese', string[]> = {
+ *    so none is used).
+ *  - `mozzarellaBrie`: the current default — see its own note. */
+const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> = {
 	wine: [
 		'Appellation',
 		'Blanc de Blancs',
@@ -179,6 +180,13 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese', string[]> = {
 		'Goût de terroir',
 		'Héritage'
 	],
+	/** The default since 2026-10-11 (at the user's request — "全てのweightで
+	 *  Mozzarella & Brie de Meauxにして"): one line, repeated on every row
+	 *  (a single-entry set — rows read defaultTexts[i % length]). About 90% of
+	 *  a 1440px screen at 100px at any weight. The ampersand isn't in
+	 *  Ango-VF26 yet, so Norma's draws it as the per-glyph fallback until the
+	 *  next font release adds it. */
+	mozzarellaBrie: ['Mozzarella & Brie de Meaux'],
 	cheese: [
 		'Abondance Asiago Azeitão',
 		'Bleu de Gex Brie Burrata',
@@ -455,10 +463,11 @@ export const TYPEFACES: Typeface[] = [
 		// Now a real variable font — all 9 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
 		weights: ANGO_WEIGHTS,
-		// One line per weight row (150 -> 950, lightest to heaviest). Cheeses
-		// now (see ANGO_TESTER_TEXTS above) — to bring the wine set back, point
-		// this at ANGO_TESTER_TEXTS.wine.
-		defaultTexts: ANGO_TESTER_TEXTS.cheese,
+		// The same line on every weight row (150 -> 950, lightest to heaviest),
+		// so the rows differ only in weight. The other sets are kept in
+		// ANGO_TESTER_TEXTS above — point this at `.wine` or `.cheese` (the
+		// A-I list) to bring either back.
+		defaultTexts: ANGO_TESTER_TEXTS.mozzarellaBrie,
 		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
 		// now that Ango's own font (Hair) actually renders here. No hover
 		// swatch either (catalogBg omitted), matching Norma.
