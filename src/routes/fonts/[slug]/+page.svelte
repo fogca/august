@@ -22,6 +22,7 @@
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
 	import { getPackage } from '$lib/data/pricing.js';
 	import type { TypefaceSlug } from '$lib/data/pricing.js';
+	import type { GalleryItem } from '$lib/data/typefaces.js';
 	import type { PageData } from './$types.js';
 
 	let { data }: { data: PageData } = $props();
@@ -82,6 +83,17 @@
 		}
 	);
 	const lightestWeight = $derived(tf.weights[0]?.axisValue ?? 300);
+
+	// The gallery, left to right — the typeface's own list, else the default
+	// three (glyphs, then the video or the tagline, then the specimen).
+	const galleryItems = $derived<GalleryItem[]>(
+		tf.gallery ?? [
+			{ kind: 'glyphs' },
+			tf.heroVideo ? { kind: 'video' } : { kind: 'tagline' },
+			{ kind: 'specimen' }
+		]
+	);
+	const firstImageIndex = $derived(galleryItems.findIndex((g) => g.kind === 'image'));
 
 	// Checkout isn't open yet (2026-09, at the user's request — same "10月
 	// より使用開始" note as the Header's Cart). Purchase License stays a
@@ -153,79 +165,80 @@
 			{/if}
 		</div>
 
-		<!-- Three-block gallery (Figma: 306 / 489 / 489 wide, all 391 tall). -->
-		<div class="FontGallery" aria-label="Specimens">
-			<div class="FontGallery__block FontGallery__block--a">
-				<!-- .FontDetail :global(*) already forces --type-font onto every
-				     descendant (see this file's own font-family rule) — no need to
-				     restate it here. -->
-				<span class="FontGallery__glyph FontGallery__glyph--cycle"
-					>{GLYPHS[galleryLetterIndex]}</span
-				>
-			</div>
-			<!-- A sideways-scrolling region has to be reachable from the keyboard
-			     (it is focusable, then arrow keys scroll it) — hence the tabindex
-			     on a non-interactive group. -->
-			<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-			<div
-				class="FontGallery__block FontGallery__block--b"
-				class:has-video={!!tf.heroVideo}
-				class:has-images={!tf.heroVideo && !!tf.galleryImages?.length}
-				role={!tf.heroVideo && tf.galleryImages?.length ? 'group' : undefined}
-				aria-label={!tf.heroVideo && tf.galleryImages?.length
-					? `${tf.name} case studies — scroll sideways`
-					: undefined}
-				tabindex={!tf.heroVideo && tf.galleryImages?.length ? 0 : undefined}
-			>
-				{#if tf.heroVideo}
-					<video
-						class="FontGallery__video"
-						src={tf.heroVideo}
-						muted
-						loop
-						autoplay
-						playsinline
-						preload="auto"
-						disablepictureinpicture
-						aria-label="{tf.name} variable weight axis specimen"
-					></video>
-				{:else if tf.galleryImages?.length}
+		<!-- The gallery: one strip, scrolling sideways when its items don't fit
+		     (Figma: three tiles, 306 / 489 / 489 wide, all 391 tall — that is
+		     what an untouched typeface still gets). It has to be reachable from
+		     the keyboard (focusable, then arrow keys scroll it), hence the
+		     tabindex on a non-interactive group. -->
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+		<div
+			class="FontGallery"
+			role="group"
+			aria-label="{tf.name} — scroll sideways for more"
+			tabindex="0"
+		>
+			{#each galleryItems as item, i (i)}
+				{#if item.kind === 'glyphs'}
+					<div class="FontGallery__block FontGallery__block--glyphs">
+						<!-- .FontDetail :global(*) already forces --type-font onto every
+						     descendant (see this file's own font-family rule) — no need to
+						     restate it here. -->
+						<span class="FontGallery__glyph FontGallery__glyph--cycle"
+							>{GLYPHS[galleryLetterIndex]}</span
+						>
+					</div>
+				{:else if item.kind === 'image'}
 					<!-- Only the first picture is lazy: one clipped by the sideways
-					     scroller never counts as near the viewport, so a lazy
-					     second would stay blank until it was already swiped into
-					     view. The rest load up front at low priority. -->
-					{#each tf.galleryImages as image, i (image.src)}
-						<img
-							class="FontGallery__image"
-							src={image.src}
-							alt={image.alt}
-							width={image.width}
-							height={image.height}
-							loading={i === 0 ? 'lazy' : 'eager'}
-							fetchpriority={i === 0 ? undefined : 'low'}
-							decoding="async"
-						/>
-					{/each}
-				{:else}
-					<p
-						class="FontGallery__tagline"
-						style="font-variation-settings: 'wght' {lightestWeight}; font-weight: {lightestWeight};"
-					>
-						{tf.tagline}
-					</p>
+					     scroller never counts as near the viewport, so a lazy later
+					     one would stay blank until it was already swiped into view.
+					     The rest load up front at low priority. -->
+					<img
+						class="FontGallery__image"
+						src={item.src}
+						alt={item.alt}
+						width={item.width}
+						height={item.height}
+						loading={i === firstImageIndex ? 'lazy' : 'eager'}
+						fetchpriority={i === firstImageIndex ? undefined : 'low'}
+						decoding="async"
+					/>
+				{:else if item.kind === 'video' && tf.heroVideo}
+					<div class="FontGallery__block FontGallery__block--wide FontGallery__block--b has-video">
+						<video
+							class="FontGallery__video"
+							src={tf.heroVideo}
+							muted
+							loop
+							autoplay
+							playsinline
+							preload="auto"
+							disablepictureinpicture
+							aria-label="{tf.name} variable weight axis specimen"
+						></video>
+					</div>
+				{:else if item.kind === 'tagline'}
+					<div class="FontGallery__block FontGallery__block--wide FontGallery__block--b">
+						<p
+							class="FontGallery__tagline"
+							style="font-variation-settings: 'wght' {lightestWeight}; font-weight: {lightestWeight};"
+						>
+							{tf.tagline}
+						</p>
+					</div>
+				{:else if item.kind === 'specimen'}
+					<div class="FontGallery__block FontGallery__block--wide FontGallery__block--c">
+						{#if tf.specimen}
+							<p class="FontGallery__specimen">
+								{#each tf.specimen as line (line)}
+									<span class="FontGallery__specimen-line">{line}</span>
+								{/each}
+							</p>
+						{:else}
+							<span class="FontGallery__glyph">{tf.name}</span>
+						{/if}
+					</div>
 				{/if}
-			</div>
-			<div class="FontGallery__block FontGallery__block--c">
-				{#if tf.specimen}
-					<p class="FontGallery__specimen">
-						{#each tf.specimen as line (line)}
-							<span class="FontGallery__specimen-line">{line}</span>
-						{/each}
-					</p>
-				{:else}
-					<span class="FontGallery__glyph">{tf.name}</span>
-				{/if}
-			</div>
+			{/each}
 		</div>
 	</section>
 
@@ -522,42 +535,73 @@
 		margin: -16px 0 0;
 	}
 
-	/* ── Gallery — three blocks standing in for specimen photography ── */
-	/* 10px gaps and 80px above (2026-10, the user's own values). */
+	/* ── Gallery — one strip of tiles and pictures, scrolling sideways ── */
+	/* 10px gaps and 80px above (2026-10, the user's own values).
+	   The whole gallery is the scroller (2026-10-11, at the user's request —
+	   "全体でスクロールできるように"): every item is --gallery-h tall, the tiles
+	   keep their own proportions, a picture's width follows its own (never
+	   cropped), and what doesn't fit scrolls sideways.
+	   --gallery-h is the height the Figma three-tile row has at this width
+	   (391 tall for 306.5 + 488.75 + 488.75 wide, less the two gaps), so a
+	   typeface with just those three tiles fills the row exactly, as before.
+	   It is a container-query length, resolved on the items against this
+	   element (see container-type). */
 	.FontGallery {
-		display: grid;
-		gap: 10px;
+		--gallery-gap: 10px;
+		--gallery-h: calc((100cqw - 2 * var(--gallery-gap)) * 391 / 1284);
+		container-type: inline-size;
+		display: flex;
+		align-items: flex-start;
+		gap: var(--gallery-gap);
 		margin-top: 80px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		/* A trackpad swipe past either end stays in the strip rather than
+		   turning into a browser back/forward. */
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x proximity;
+		/* Thin and in the page's ink, so that a mouse user, who has no
+		   sideways wheel, can see that there is more and drag it. */
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-text) transparent;
 	}
 
-	@media (min-width: 768px) {
+	/* On a phone one wide tile fills the width, and the glyph tile is a
+	   square — so the next item always peeks in from the right. */
+	@media (max-width: 767.98px) {
 		.FontGallery {
-			grid-template-columns: 306.5fr 488.75fr 488.75fr;
+			--gallery-h: calc(100cqw * 391 / 488.75);
 		}
 	}
 
-	/* A / B / A colour rhythm: the outer two blocks take the band's own
-	   colour pair, the middle one the block pair (or the video's own black)
-	   — Norma reads red / black / red, Ango lime / blue / lime. */
+	.FontGallery > * {
+		flex: none;
+		height: var(--gallery-h);
+		scroll-snap-align: start;
+	}
+
+	/* The typographic tiles. Colour rhythm: the glyph and specimen take the
+	   tile pair (--tile-*; the panel's unless the typeface sets
+	   galleryBg/galleryFg), the video/tagline tile the block pair (or the
+	   video's own black) — Norma reads red / black / red, Ango white /
+	   pictures / white. */
 	.FontGallery__block {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		overflow: hidden;
-		/* The typographic tiles' own colours (--tile-*; the panel's unless the
-		   typeface sets galleryBg/galleryFg). */
 		background: var(--tile-bg);
 		color: var(--tile-fg);
 		aspect-ratio: 488.75 / 391;
 	}
 
-	.FontGallery__block--a {
+	.FontGallery__block--glyphs {
 		aspect-ratio: 306.5 / 391;
 	}
 
 	@media (max-width: 767.98px) {
-		.FontGallery__block--a {
-			aspect-ratio: 4 / 3;
+		.FontGallery__block--glyphs {
+			aspect-ratio: 1 / 1;
 		}
 	}
 
@@ -577,36 +621,13 @@
 		object-fit: cover;
 	}
 
-	/* Pictures in place of the video (2026-10-11, the user's own rule — "高さ
-	   それぞれ固定でwidthはautoでcropしないように。はみ出したらスクロールで横
-	   に行ける"): each at the tile's height, its width following its own
-	   proportions, never cropped, side by side; what doesn't fit scrolls
-	   sideways. The tile itself is the scroller. */
-	.FontGallery__block--b.has-images {
-		justify-content: flex-start;
-		align-items: stretch;
-		overflow-x: auto;
-		overflow-y: hidden;
-		background: var(--tile-bg);
-		/* A trackpad swipe past either end stays in the strip rather than
-		   turning into a browser back/forward. */
-		overscroll-behavior-x: contain;
-		scroll-snap-type: x proximity;
-		/* Thin and in the tile's own ink, so that a mouse user, who has no
-		   sideways wheel, can see that there is more and drag it. */
-		scrollbar-width: thin;
-		scrollbar-color: var(--tile-fg) transparent;
-	}
-
+	/* A picture: the strip's height, its own width, never cropped. */
 	.FontGallery__image {
 		display: block;
-		flex: none;
 		/* base.css gives every img width:100% + cover — both undone here. */
 		width: auto;
 		max-width: none;
-		height: 100%;
 		object-fit: contain;
-		scroll-snap-align: start;
 	}
 
 	/* base.css sets color directly on span/p, which beats inheriting from the

@@ -8,6 +8,21 @@ export type { WeightDef as TypefaceWeight };
 
 export type TypefaceStatus = 'available' | 'in-development';
 
+/** One item of a typeface page's gallery. Every item is as tall as the
+ *  others; the typographic tiles keep their own proportions and a picture's
+ *  width follows its own — never cropped. What does not fit scrolls sideways.
+ *  - `glyphs`: the tile cycling through A-Z, a-z, 0-9.
+ *  - `specimen`: the typographic proof (`specimen` lines, else the name).
+ *  - `video`: the weight-axis video (`heroVideo`).
+ *  - `tagline`: the tagline, set at the lightest weight.
+ *  - `image`: a picture; `width`/`height` are the file's pixel size. */
+export type GalleryItem =
+	| { kind: 'glyphs' }
+	| { kind: 'specimen' }
+	| { kind: 'video' }
+	| { kind: 'tagline' }
+	| { kind: 'image'; src: string; alt: string; width: number; height: number };
+
 export interface Typeface {
 	slug: string;
 	name: string;
@@ -62,16 +77,12 @@ export interface Typeface {
 	thumbnail?: string;
 	/** Optional hero video (used in preference to thumbnail when present). */
 	heroVideo?: string;
-	/** Optional pictures for the typeface page's second gallery tile (the one
-	 *  Norma gives its weight-axis video). Shown when there is no `heroVideo`;
-	 *  with neither, the tile falls back to the tagline.
-	 *
-	 *  The rule for pictures here (2026-10-11, the user's own): each one is set
-	 *  at the tile's height with its width following its own proportions
-	 *  (`width`/`height` are the file's pixel size, which is all that is used
-	 *  of them), never cropped. They sit side by side in the tile, and what
-	 *  does not fit scrolls sideways. */
-	galleryImages?: { src: string; alt: string; width: number; height: number }[];
+	/** The typeface page's gallery, in order, left to right (2026-10-11, at the
+	 *  user's request — the whole gallery is one sideways-scrolling strip, to
+	 *  which more pictures will be added). Omit for the default three: the
+	 *  cycling glyph, then the weight-axis video (or, with none, the tagline),
+	 *  then the specimen. See GalleryItem. */
+	gallery?: GalleryItem[];
 	/** Optional credit line for the hero image (photographer / source / licence). */
 	imageCredit?: string;
 	/** When true the typeface page hero flips through the alphabet (white on
@@ -491,23 +502,27 @@ export const TYPEFACES: Typeface[] = [
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#d59514', fg: '#000000' },
 		// No catalogBg — no hover swatch (2026-08-31).
-		// Second gallery tile: mockups from the "ANGO CASE STUDIES" set
-		// (2026-10-11, supplied by the user) — the fire extinguisher, then the
-		// Apres Guerre cream jar and box. Side by side at the tile's height,
-		// uncropped; the rest scrolls sideways.
-		galleryImages: [
+		// The gallery, left to right (2026-10-11, the user's order): the cycling
+		// glyph, the Apres Guerre cream jar and box, the fire extinguisher —
+		// both mockups from the "ANGO CASE STUDIES" set the user supplied — and
+		// the specimen. More pictures are to come; they go in this list.
+		gallery: [
+			{ kind: 'glyphs' },
 			{
+				kind: 'image',
+				src: '/images/fonts/ango-case-study-cream.jpg',
+				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in Ango — an Ango case study mockup',
+				width: 2000,
+				height: 1125
+			},
+			{
+				kind: 'image',
 				src: '/images/fonts/ango-case-study-extinguisher.jpg',
 				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in Ango — an Ango case study mockup',
 				width: 2000,
 				height: 1333
 			},
-			{
-				src: '/images/fonts/ango-case-study-cream.jpg',
-				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in Ango — an Ango case study mockup',
-				width: 2000,
-				height: 1125
-			}
+			{ kind: 'specimen' }
 		],
 		hero: {
 			label: 'In development',
