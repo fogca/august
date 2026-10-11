@@ -503,9 +503,11 @@ export const TYPEFACES: Typeface[] = [
 		theme: { bg: '#d59514', fg: '#000000' },
 		// No catalogBg — no hover swatch (2026-08-31).
 		// The gallery, left to right (2026-10-11, the user's order): the cycling
-		// glyph, the Apres Guerre cream jar and box, the fire extinguisher —
-		// both mockups from the "ANGO CASE STUDIES" set the user supplied — and
-		// the specimen. More pictures are to come; they go in this list.
+		// glyph, the Apres Guerre cream jar and box, the "Mozzarella & Brie de
+		// Meaux" weight pairing (added after the second, same day), the fire
+		// extinguisher — the mockups are from the "ANGO CASE STUDIES" set the
+		// user supplied — and the specimen. More pictures are to come; they go
+		// in this list.
 		gallery: [
 			{ kind: 'glyphs' },
 			{
@@ -514,6 +516,13 @@ export const TYPEFACES: Typeface[] = [
 				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in Ango — an Ango case study mockup',
 				width: 2000,
 				height: 1125
+			},
+			{
+				kind: 'image',
+				src: '/images/fonts/ango-case-study-mozzarella-brie.webp',
+				alt: '“Mozzarella &” in a light weight of Ango above “Brie de Meaux” in a heavy one, white on blue',
+				width: 2000,
+				height: 720
 			},
 			{
 				kind: 'image',

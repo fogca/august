@@ -17,6 +17,7 @@
      slots when it exists. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { dragScroll } from '$lib/actions/dragScroll';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
@@ -176,6 +177,7 @@
 			role="group"
 			aria-label="{tf.name} — scroll sideways for more"
 			tabindex="0"
+			use:dragScroll
 		>
 			{#each galleryItems as item, i (i)}
 				{#if item.kind === 'glyphs'}
@@ -198,6 +200,7 @@
 						alt={item.alt}
 						width={item.width}
 						height={item.height}
+						draggable="false"
 						loading={i === firstImageIndex ? 'lazy' : 'eager'}
 						fetchpriority={i === firstImageIndex ? undefined : 'low'}
 						decoding="async"
@@ -558,7 +561,7 @@
 		   — "画像の右端が切れちゃってるので、右端までしっかり表示して"): cut off
 		   at the 40px page margin, a picture partway through the strip read as
 		   chopped short. The margin comes back as padding, so the first item
-		   still starts on it, snaps back to it, and the last item stops short
+		   still starts on it, and the last item stops short
 		   of the edge by it. (cqw below is the container's content box, so the
 		   padding does not change --gallery-h.) FontIntro's side padding is
 		   the same --padding, which is what the negative margin undoes. */
@@ -570,7 +573,9 @@
 		/* A trackpad swipe past either end stays in the strip rather than
 		   turning into a browser back/forward. */
 		overscroll-behavior-x: contain;
-		scroll-snap-type: x proximity;
+		/* No scroll-snap: it pulled a mouse drag back to the nearest item the
+		   moment it was released, and the strip is free scrolling by design
+		   (items of every width, dragged anywhere). */
 		/* Thin and in the page's ink, so that a mouse user, who has no
 		   sideways wheel, can see that there is more and drag it. */
 		scrollbar-width: thin;
@@ -588,7 +593,25 @@
 	.FontGallery > * {
 		flex: none;
 		height: var(--gallery-h);
-		scroll-snap-align: start;
+	}
+
+	/* Dragging with the mouse (see dragScroll): a grab cursor while there is
+	   something to pull, and no text selection or ghost image to get in the
+	   way of it. The attribute and the class are set at runtime by the
+	   action, which Svelte can't see — hence :global on those parts. */
+	.FontGallery:global([data-scrollable]),
+	.FontGallery:global([data-scrollable]) :global(*) {
+		cursor: grab;
+	}
+
+	.FontGallery:global(.is-dragging),
+	.FontGallery:global(.is-dragging) :global(*) {
+		cursor: grabbing;
+	}
+
+	.FontGallery:global([data-scrollable]) {
+		user-select: none;
+		-webkit-user-select: none;
 	}
 
 	/* The typographic tiles. Colour rhythm: the glyph and specimen take the
@@ -639,6 +662,7 @@
 		width: auto;
 		max-width: none;
 		object-fit: contain;
+		-webkit-user-drag: none;
 	}
 
 	/* base.css sets color directly on span/p, which beats inheriting from the
