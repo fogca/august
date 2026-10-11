@@ -32,8 +32,8 @@
      position) both land straight on the resting state.
 
      Heroes (175:178): one per typeface, a full screen tall (90vh on SP, at
-     the user's request), dark, with a tagline top-left and the face's name
-     set in itself bottom-left; 4px of page between them. -->
+     the user's request), dark, with the face's name set in itself
+     bottom-left; 4px of page between them. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Typeface } from '$lib/data/typefaces';
@@ -181,8 +181,7 @@
 				data-surface={image?.tone}
 			>
 				{#if image}
-					<!-- Decorative: the link's own text (the tagline and the name) says
-					     what it is. Portrait art on phones and on any portrait-shaped
+					<!-- Decorative: the link's own text (the name) says what it is. Portrait art on phones and on any portrait-shaped
 					     screen (a tablet held upright), landscape otherwise — the
 					     landscape one would cut the product off at a hero that tall
 					     and narrow. -->
@@ -193,7 +192,6 @@
 						<img class="HomeHero__image" src={image.src} alt="" decoding="async" />
 					</picture>
 				{/if}
-				<p class="HomeHero__tagline">{tf.homeSection?.headline}</p>
 				<p
 					class="HomeHero__name"
 					style="font-family: '{tf.fontFamily}', var(--font-norma); font-variation-settings: 'wght' {tf
@@ -369,7 +367,6 @@
 		margin-top: 4px;
 	}
 
-	.HomeHero__tagline,
 	.HomeHero__name {
 		position: absolute;
 		left: var(--edge);
@@ -378,15 +375,6 @@
 		letter-spacing: 0;
 		color: var(--hero-fg, var(--brand-paper));
 		white-space: nowrap;
-	}
-
-	/* 60px, not the frame's 20px: the Header stays over the heroes now, and
-	   its nav row (PC) sits at y=33-48 on the same left edge. */
-	.HomeHero__tagline {
-		top: 60px;
-		font-family: var(--font-norma);
-		font-size: 16px;
-		font-variation-settings: 'wght' 400;
 	}
 
 	.HomeHero__name {
@@ -426,12 +414,6 @@
 
 		.HomeLead__text {
 			bottom: 32px;
-		}
-
-		/* Clears the menu toggle (y=10-42) the same way. */
-		.HomeHero__tagline {
-			top: 58px;
-			font-size: 14px;
 		}
 
 		.HomeHero__name {

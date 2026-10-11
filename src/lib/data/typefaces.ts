@@ -171,8 +171,7 @@ export interface Typeface {
 		 *  headline's large size). */
 		headlineWeight: number;
 		/** Home page hero (2026-10 redesign, Figma 175:178 / 7:874): the name
-		 *  as set bottom-left on the panel, when it differs from `name`. The
-		 *  tagline top-left is `headline`. */
+		 *  as set bottom-left on the panel, when it differs from `name`. */
 		heroName?: string;
 		/** wght the hero name is set at — a real instance of the face's axis. */
 		heroWeight: number;
