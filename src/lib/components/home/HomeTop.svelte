@@ -225,6 +225,10 @@
 		   the top half on SP. */
 		--hero-h: 100vh;
 		--lead-h: 35vh;
+		/* Where the heroes start their rise: just below the fold, whatever the
+		   lead's height (the hero's top sits at --lead-h, so this is what is
+		   left of the screen under it). */
+		--hero-from: calc(100vh - var(--lead-h));
 		/* The page's side inset (base.css --padding). */
 		--edge: var(--padding);
 	}
@@ -331,7 +335,7 @@
 
 	@keyframes heroes-in {
 		from {
-			transform: translateY(var(--lead-h)) scale(0.8);
+			transform: translateY(var(--hero-from)) scale(0.8);
 		}
 	}
 
@@ -417,6 +421,7 @@
 			/* Small viewport: the hero's top lands at the middle of what is
 			   actually visible, URL bar and all. */
 			--lead-h: 50svh;
+			--hero-from: var(--lead-h);
 		}
 
 		.HomeLead__text {
