@@ -554,6 +554,17 @@
 		align-items: flex-start;
 		gap: var(--gallery-gap);
 		margin-top: 80px;
+		/* Runs out to the screen's own edges (2026-10-11, at the user's request
+		   — "画像の右端が切れちゃってるので、右端までしっかり表示して"): cut off
+		   at the 40px page margin, a picture partway through the strip read as
+		   chopped short. The margin comes back as padding, so the first item
+		   still starts on it, snaps back to it, and the last item stops short
+		   of the edge by it. (cqw below is the container's content box, so the
+		   padding does not change --gallery-h.) FontIntro's side padding is
+		   the same --padding, which is what the negative margin undoes. */
+		margin-inline: calc(-1 * var(--padding));
+		padding-inline: var(--padding);
+		scroll-padding-inline: var(--padding);
 		overflow-x: auto;
 		overflow-y: hidden;
 		/* A trackpad swipe past either end stays in the strip rather than
