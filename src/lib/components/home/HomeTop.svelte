@@ -221,9 +221,10 @@
 		--lead-dur: 0.8s;
 		--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 		--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
-		/* Heroes: full screen PC, 90vh SP; the lead holds the top half. */
+		/* Heroes: full screen PC, 90vh SP; the lead holds the top 35vh on PC,
+		   the top half on SP. */
 		--hero-h: 100vh;
-		--lead-h: 50vh;
+		--lead-h: 35vh;
 		/* The page's side inset (base.css --padding). */
 		--edge: var(--padding);
 	}
@@ -298,12 +299,11 @@
 		white-space: nowrap;
 	}
 
-	/* Ango 11px / 1.4, 646px wide, 349px down in the 900px frame — its last
-	   line ~55px above the hero, which is what's kept here. */
+	/* Ango 11px / 1.4, 646px wide, its last line 30px above the hero. */
 	.HomeLead__text {
 		position: absolute;
 		left: var(--edge);
-		bottom: 55px;
+		bottom: 30px;
 		width: min(646px, calc(100% - 2 * var(--edge)));
 		margin: 0;
 		font-family: var(--font-ango), sans-serif;
