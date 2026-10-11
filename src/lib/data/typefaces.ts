@@ -62,11 +62,16 @@ export interface Typeface {
 	thumbnail?: string;
 	/** Optional hero video (used in preference to thumbnail when present). */
 	heroVideo?: string;
-	/** Optional picture for the typeface page's second gallery tile (the one
+	/** Optional pictures for the typeface page's second gallery tile (the one
 	 *  Norma gives its weight-axis video). Shown when there is no `heroVideo`;
-	 *  with neither, the tile falls back to the tagline. Cropped to fill the
-	 *  tile (object-fit: cover), centred. */
-	galleryImage?: { src: string; alt: string };
+	 *  with neither, the tile falls back to the tagline.
+	 *
+	 *  The rule for pictures here (2026-10-11, the user's own): each one is set
+	 *  at the tile's height with its width following its own proportions
+	 *  (`width`/`height` are the file's pixel size, which is all that is used
+	 *  of them), never cropped. They sit side by side in the tile, and what
+	 *  does not fit scrolls sideways. */
+	galleryImages?: { src: string; alt: string; width: number; height: number }[];
 	/** Optional credit line for the hero image (photographer / source / licence). */
 	imageCredit?: string;
 	/** When true the typeface page hero flips through the alphabet (white on
@@ -138,6 +143,11 @@ export interface Typeface {
 		 *  content instead of a placeholder photo. */
 		blockBg: string;
 		blockFg: string;
+		/** Colours of the two typographic tiles (the cycling glyph and the
+		 *  specimen), where they should differ from the panel's. Any CSS
+		 *  colour, `var(--token)` included. Default: the panel's. */
+		galleryBg?: string;
+		galleryFg?: string;
 		/** Large single diagnostic glyph shown in the first block when there's
 		 *  no `heroVideo` to show there instead. */
 		glyph: string;
@@ -481,12 +491,24 @@ export const TYPEFACES: Typeface[] = [
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#d59514', fg: '#000000' },
 		// No catalogBg — no hover swatch (2026-08-31).
-		// Second gallery tile: the fire-extinguisher mockup, from the "ANGO
-		// CASE STUDIES" set (2026-10-11, supplied by the user).
-		galleryImage: {
-			src: '/images/fonts/ango-case-study.jpg',
-			alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in Ango — an Ango case study mockup'
-		},
+		// Second gallery tile: mockups from the "ANGO CASE STUDIES" set
+		// (2026-10-11, supplied by the user) — the fire extinguisher, then the
+		// Apres Guerre cream jar and box. Side by side at the tile's height,
+		// uncropped; the rest scrolls sideways.
+		galleryImages: [
+			{
+				src: '/images/fonts/ango-case-study-extinguisher.jpg',
+				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in Ango — an Ango case study mockup',
+				width: 2000,
+				height: 1333
+			},
+			{
+				src: '/images/fonts/ango-case-study-cream.jpg',
+				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in Ango — an Ango case study mockup',
+				width: 2000,
+				height: 1125
+			}
+		],
 		hero: {
 			label: 'In development',
 			vol: 'vol.03',
@@ -498,14 +520,16 @@ export const TYPEFACES: Typeface[] = [
 		},
 		// Colours of Ango's own page (Figma 3:733/7:906, 2026-09). Black-based
 		// since 2026-10 (at the user's request — "FontHeroと下の画像3つのカラー
-		// リングを黒背景基調に"): the band and all three gallery tiles sit on
-		// black. It was lime/blue/lime with blue type. Type is paper on the
-		// band and the outer tiles (the old blue is too weak on black at the
-		// Hair weight); the middle tile's tagline keeps the lime as the one
-		// accent.
+		// リングを黒背景基調に"): the band is black with paper type (the old
+		// blue is too weak on black at the Hair weight). It was lime/blue/lime.
+		// The two typographic gallery tiles — the cycling glyph and the
+		// specimen — then went white with brand-blue type (2026-10-11, "graphic
+		// は、白背景に青文字で。アニメーションも同様で"): see galleryBg/Fg.
 		homeSection: {
 			panelBg: '#000000',
 			panelFg: '#F1F0EF',
+			galleryBg: '#ffffff',
+			galleryFg: 'var(--brand-blue)',
 			blockBg: '#000000',
 			blockFg: '#DAE06B',
 			glyph: 'a',
