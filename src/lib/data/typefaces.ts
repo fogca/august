@@ -184,8 +184,7 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> 
 	 *  Mozzarella & Brie de Meauxにして"): one line, repeated on every row
 	 *  (a single-entry set — rows read defaultTexts[i % length]). About 90% of
 	 *  a 1440px screen at 100px at any weight. The ampersand isn't in
-	 *  Ango-VF26 yet, so Norma's draws it as the per-glyph fallback until the
-	 *  next font release adds it. */
+	 *  Ango-VF26; VF27 (2026-10-11) added it, so Ango draws it itself now. */
 	mozzarellaBrie: ['Mozzarella & Brie de Meaux'],
 	cheese: [
 		'Abondance Asiago Azeitão',
@@ -444,10 +443,10 @@ export const TYPEFACES: Typeface[] = [
 		// asciicircum are still blank) — +3 vs the 2026-09-05 count for
 		// Ōmacron/ōmacron/macroncomb, added this round. Shape set hasn't
 		// grown since, so these two numbers are still accurate as of
-		// Elio-VF19.woff2 (now Ango, 2026-09-30) — 151 of the 175 currently ship
-		// (up from 147 in VF13, 149 in VF15/16, 150 in VF17/18; `endash`
-		// became compatible at VF19), the rest still hard-excluded pending
-		// Ultra.
+		// Ango-VF27.woff2 (2026-10-11) — 175 characters ship (up from 147 in
+		// VF13, 151 in VF19-26; VF27 added 24 punctuation/symbols whose
+		// Ultra layers were derived). Still out: `sterling`, and `^ ~ %`,
+		// which are empty in both masters and now fall back to Norma.
 		// Languages: Hyperglot 0.7.3, base support, validity=verified
 		// (same method/thresholds as Norma's "93") against those 175
 		// chars — unchanged at 79; Ō/ō alone didn't clear any additional
