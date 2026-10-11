@@ -62,6 +62,11 @@ export interface Typeface {
 	thumbnail?: string;
 	/** Optional hero video (used in preference to thumbnail when present). */
 	heroVideo?: string;
+	/** Optional picture for the typeface page's second gallery tile (the one
+	 *  Norma gives its weight-axis video). Shown when there is no `heroVideo`;
+	 *  with neither, the tile falls back to the tagline. Cropped to fill the
+	 *  tile (object-fit: cover), centred. */
+	galleryImage?: { src: string; alt: string };
 	/** Optional credit line for the hero image (photographer / source / licence). */
 	imageCredit?: string;
 	/** When true the typeface page hero flips through the alphabet (white on
@@ -476,6 +481,12 @@ export const TYPEFACES: Typeface[] = [
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#d59514', fg: '#000000' },
 		// No catalogBg — no hover swatch (2026-08-31).
+		// Second gallery tile: the fire-extinguisher mockup, from the "ANGO
+		// CASE STUDIES" set (2026-10-11, supplied by the user).
+		galleryImage: {
+			src: '/images/fonts/ango-case-study.jpg',
+			alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in Ango — an Ango case study mockup'
+		},
 		hero: {
 			label: 'In development',
 			vol: 'vol.03',

@@ -161,7 +161,11 @@
 					>{GLYPHS[galleryLetterIndex]}</span
 				>
 			</div>
-			<div class="FontGallery__block FontGallery__block--b" class:has-video={!!tf.heroVideo}>
+			<div
+				class="FontGallery__block FontGallery__block--b"
+				class:has-video={!!tf.heroVideo}
+				class:has-image={!tf.heroVideo && !!tf.galleryImage}
+			>
 				{#if tf.heroVideo}
 					<video
 						class="FontGallery__video"
@@ -174,6 +178,16 @@
 						disablepictureinpicture
 						aria-label="{tf.name} variable weight axis specimen"
 					></video>
+				{:else if tf.galleryImage}
+					<img
+						class="FontGallery__image"
+						src={tf.galleryImage.src}
+						alt={tf.galleryImage.alt}
+						width="2000"
+						height="1333"
+						loading="lazy"
+						decoding="async"
+					/>
 				{:else}
 					<p
 						class="FontGallery__tagline"
@@ -541,6 +555,21 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	/* A picture in place of the video: fills the tile, centred (the
+	   subject sits in the middle of the frame, so cropping the sides of the
+	   landscape original to the tile's ratio loses only background). */
+	.FontGallery__block--b.has-image {
+		background: #000;
+	}
+
+	.FontGallery__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 50% 50%;
 	}
 
 	/* base.css sets color directly on span/p, which beats inheriting from the
