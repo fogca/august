@@ -14,6 +14,9 @@
 
 	// Sort by order (ascending) to guarantee display sequence
 	const typefaces = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
+	// "Norma and upcoming releases" while Norma is public, "Ango and upcoming
+	// releases" while it is hidden (2026-10-11).
+	const lead = typefaces[0]?.name ?? 'Typefaces';
 
 	// "From €X" for the ones that have a package priced — Tier-1 Desktop.
 	// tf.slug is a plain string (typefaces.ts predates the narrower pricing
@@ -29,12 +32,12 @@
 	<title>Fonts — Apres Guerre</title>
 	<meta
 		name="description"
-		content="Apres Guerre typeface catalogue — Norma and upcoming releases."
+		content="Apres Guerre typeface catalogue — {lead} and upcoming releases."
 	/>
 </svelte:head>
 
 <main class="Fonts">
-	<PageSection title="Fonts" as="h1" subtitle="Norma and upcoming releases" full nativeBody>
+	<PageSection title="Fonts" as="h1" subtitle="{lead} and upcoming releases" full nativeBody>
 		<!-- Grid referenced from increments.cc/fonts: two equal columns on
 		     desktop, one on mobile, hairlines standing in for gaps (no real
 		     gutter — the border is the gap). Each card carries its own

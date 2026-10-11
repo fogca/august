@@ -176,6 +176,19 @@ export interface Typeface {
 		heroName?: string;
 		/** wght the hero name is set at — a real instance of the face's axis. */
 		heroWeight: number;
+		/** A picture for the home page hero in place of the plain dark panel
+		 *  (2026-10-11): fills the hero, cropped to it (object-fit: cover).
+		 *  `srcSm` is the portrait version for phones. `bg` is the colour
+		 *  behind it while it loads, `fg` the colour of the type over it, and
+		 *  `tone` whether the picture is light or dark — what the Header reads
+		 *  to pick its own colour. */
+		heroImage?: {
+			src: string;
+			srcSm?: string;
+			bg: string;
+			fg: string;
+			tone: 'light' | 'dark';
+		};
 	};
 }
 
@@ -231,6 +244,12 @@ export const TYPEFACES: Typeface[] = [
 		name: 'Norma',
 		order: 1,
 		status: 'available',
+		// Hidden for now (2026-10-11, at the user's request — "一旦Norma非表示
+		// にして、Angoをメインに"): out of the home page, /fonts, the menu, and
+		// its own URL (404). Take this line out to bring it all back. The
+		// About page's Norma block, /opentype's back link and the catalogue's
+		// subtitle follow it automatically.
+		hidden: true,
 		fontFamily: 'Norma',
 		tagline: 'The formative forces of the word, made visible.',
 		// TODO: the naming rationale below used to explain the old name
@@ -566,7 +585,22 @@ export const TYPEFACES: Typeface[] = [
 			// nice match for its "Reticent and Ravenous" tagline).
 			headlineWeight: 150,
 			// Home hero: "Ango" in Ango Light, as drawn (Figma 175:178).
-			heroWeight: 300
+			heroWeight: 300,
+			// The Apres Guerre moisturiser mockup in place of the grey panel
+			// (2026-10-11, supplied by the user): landscape for PC, portrait
+			// for phones. It is a light picture, so the type over it is the
+			// brand blue and the Header stays blue. The portrait file is the
+			// supplied 1500x2000 with studio grey (the picture's own top and
+			// bottom edge colours, with its grain) added above and below to
+			// 1500x3261, so that at any phone's hero shape the cover crop only
+			// ever trims grey, never the product at the sides.
+			heroImage: {
+				src: '/images/fonts/ango-hero.jpg',
+				srcSm: '/images/fonts/ango-hero-portrait.jpg',
+				bg: '#d9d9d9',
+				fg: 'var(--brand-blue)',
+				tone: 'light'
+			}
 		}
 	},
 	{

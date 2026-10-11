@@ -356,10 +356,10 @@
 </script>
 
 <svelte:head>
-	<title>Apres Guerre — Norma</title>
+	<title>Apres Guerre — Ango</title>
 	<meta
 		name="description"
-		content="Apres Guerre — an independent type foundry. Norma, a 20-weight neo-humanist variable typeface."
+		content="Apres Guerre — an independent type foundry. Ango, a nine-weight geometric humanist variable typeface, in development."
 	/>
 </svelte:head>
 

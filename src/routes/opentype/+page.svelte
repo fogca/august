@@ -3,6 +3,11 @@
 	// recommended OpenType features, with live demos. Kept out of the Norma
 	// product page on purpose (the demos use Inter / EB Garamond). noindex.
 	import OpenTypeReference from '$lib/components/fonts/OpenTypeReference.svelte';
+	import { TYPEFACES } from '$lib/data/typefaces';
+
+	// The back link goes to the first public typeface (Norma while it is
+	// shown; Ango while Norma is hidden — its own page 404s).
+	const backTo = TYPEFACES.filter((tf) => !tf.hidden).sort((a, b) => a.order - b.order)[0];
 </script>
 
 <svelte:head>
@@ -27,7 +32,9 @@
 	<OpenTypeReference />
 
 	<nav class="OTPage__foot">
-		<a href="/fonts/norma">← Norma</a>
+		{#if backTo}
+			<a href="/fonts/{backTo.slug}">← {backTo.name}</a>
+		{/if}
 	</nav>
 </main>
 

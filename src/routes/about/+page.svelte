@@ -25,6 +25,14 @@
      typefaces.ts). "Tokyo"
      stays out of the copy (2026-09, "Tokyo Japanという情報はなるべく
      控えて"). -->
+<script lang="ts">
+	import { getTypeface } from '$lib/data/typefaces';
+
+	// The Norma block, with its link to Norma's page, only shows while Norma
+	// is public (it is hidden for now, and its page 404s — 2026-10-11).
+	const normaShown = !(getTypeface('norma')?.hidden ?? true);
+</script>
+
 <svelte:head>
 	<title>About — Apres Guerre</title>
 	<meta
@@ -40,14 +48,15 @@
 
 			<div class="About__body">
 				<p class="en" lang="en">
-					Apres Guerre is an independent type foundry, founded in 2026. We cross histories, cultures, and
-					eras, reinterpret their context, and draw type through a contemporary eye. Anchored in
-					retail families and bespoke commissions, we keep searching for forms not yet seen.
+					Apres Guerre is an independent type foundry, founded in 2026. We cross histories,
+					cultures, and eras, reinterpret their context, and draw type through a contemporary eye.
+					Anchored in retail families and bespoke commissions, we keep searching for forms not yet
+					seen.
 				</p>
 				<p class="fr" lang="fr">
-					Apres Guerre est une fonderie de caractères indépendante, fondée en 2026. Nous traversons les
-					histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons des
-					caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
+					Apres Guerre est une fonderie de caractères indépendante, fondée en 2026. Nous traversons
+					les histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons
+					des caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
 					commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
 				</p>
 			</div>
@@ -72,36 +81,39 @@
 		</div>
 	</section>
 
-	<section class="About__norma">
-		<div class="About__inner">
-			<h2 class="About__normaTitle">Norma</h2>
-			<div class="About__body About__body--norma">
-				<p class="en" lang="en">
-					Our first release, Norma, is a twenty-weight neo-humanist sans-serif variable font. The
-					letters are made to feel grown rather than constructed — organic in their curves, human in
-					their proportion. Its humanist lineage runs quietly beneath — Johnston's 1916 Underground
-					alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only the soil.
-				</p>
-				<p class="fr" lang="fr">
-					Notre première sortie, Norma, est une police variable sans-serif néo-humaniste en vingt
-					graisses. Les lettres sont pensées pour paraître nées plutôt que construites — organiques
-					dans leurs courbes, humaines dans leurs proportions. Sa filiation humaniste affleure
-					discrètement — l'alphabet du métro londonien de Johnston (1916), le Gill Sans, le Neuzeit,
-					le Rotis d'Otl Aicher — jamais en surface, seulement dans le terreau.
-				</p>
-				<p class="en" lang="en">
-					A typeface is never the meaning itself. It is the medium meaning passes through — doing
-					the quiet work of carrying a thought from one mind to another.
-				</p>
-				<p class="fr" lang="fr">
-					Un caractère typographique n'est jamais le sens lui-même. Il est le medium à travers
-					lequel le sens circule — accomplissant le travail discret de porter une pensée d'un
-					esprit à un autre.
-				</p>
+	{#if normaShown}
+		<section class="About__norma">
+			<div class="About__inner">
+				<h2 class="About__normaTitle">Norma</h2>
+				<div class="About__body About__body--norma">
+					<p class="en" lang="en">
+						Our first release, Norma, is a twenty-weight neo-humanist sans-serif variable font. The
+						letters are made to feel grown rather than constructed — organic in their curves, human
+						in their proportion. Its humanist lineage runs quietly beneath — Johnston's 1916
+						Underground alphabet, Gill Sans, Neuzeit, Otl Aicher's Rotis — never the surface, only
+						the soil.
+					</p>
+					<p class="fr" lang="fr">
+						Notre première sortie, Norma, est une police variable sans-serif néo-humaniste en vingt
+						graisses. Les lettres sont pensées pour paraître nées plutôt que construites —
+						organiques dans leurs courbes, humaines dans leurs proportions. Sa filiation humaniste
+						affleure discrètement — l'alphabet du métro londonien de Johnston (1916), le Gill Sans,
+						le Neuzeit, le Rotis d'Otl Aicher — jamais en surface, seulement dans le terreau.
+					</p>
+					<p class="en" lang="en">
+						A typeface is never the meaning itself. It is the medium meaning passes through — doing
+						the quiet work of carrying a thought from one mind to another.
+					</p>
+					<p class="fr" lang="fr">
+						Un caractère typographique n'est jamais le sens lui-même. Il est le medium à travers
+						lequel le sens circule — accomplissant le travail discret de porter une pensée d'un
+						esprit à un autre.
+					</p>
+				</div>
+				<a class="About__cta" href="/fonts/norma">Discover Norma</a>
 			</div>
-			<a class="About__cta" href="/fonts/norma">Discover Norma</a>
-		</div>
-	</section>
+		</section>
+	{/if}
 </main>
 
 <style>

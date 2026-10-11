@@ -171,7 +171,31 @@
 
 	<div class="HomeHeroes" bind:this={heroesEl}>
 		{#each typefaces as tf (tf.slug)}
-			<a class="HomeHero" href="/fonts/{tf.slug}">
+			{@const image = tf.homeSection?.heroImage}
+			<!-- data-surface: the Header reads it (a picture has no CSS background
+			     to sample) to pick its colour — see Header.svelte. -->
+			<a
+				class="HomeHero"
+				href="/fonts/{tf.slug}"
+				style={image ? `--hero-bg: ${image.bg}; --hero-fg: ${image.fg};` : undefined}
+				data-surface={image?.tone}
+			>
+				{#if image}
+					<!-- Decorative: the link's own text (the tagline and the name) says
+					     what it is. Portrait art on phones and on any portrait-shaped
+					     screen (a tablet held upright), landscape otherwise — the
+					     landscape one would cut the product off at a hero that tall
+					     and narrow. -->
+					<picture class="HomeHero__picture">
+						{#if image.srcSm}
+							<source
+								media="(max-width: 767.98px), (max-aspect-ratio: 1/1)"
+								srcset={image.srcSm}
+							/>
+						{/if}
+						<img class="HomeHero__image" src={image.src} alt="" decoding="async" />
+					</picture>
+				{/if}
 				<p class="HomeHero__tagline">{tf.homeSection?.headline}</p>
 				<p
 					class="HomeHero__name"
@@ -318,8 +342,26 @@
 		position: relative;
 		display: block;
 		height: var(--hero-h);
-		background: var(--brand-hero);
+		/* --hero-bg / --hero-fg come from a hero's picture, when it has one;
+		   otherwise the plain dark panel with paper type. */
+		background: var(--hero-bg, var(--brand-hero));
 		text-decoration: none;
+		overflow: hidden;
+	}
+
+	/* The picture fills the hero, cropped to it — behind the type. */
+	.HomeHero__picture {
+		position: absolute;
+		inset: 0;
+		display: block;
+	}
+
+	.HomeHero__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 50% 50%;
 	}
 
 	.HomeHero + .HomeHero {
@@ -333,7 +375,7 @@
 		margin: 0;
 		line-height: 1;
 		letter-spacing: 0;
-		color: var(--brand-paper);
+		color: var(--hero-fg, var(--brand-paper));
 		white-space: nowrap;
 	}
 
