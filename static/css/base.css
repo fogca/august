@@ -103,7 +103,12 @@ a {
   --color-amber:     #ffbb32;
 
   /* Apres Guerre brand palette (2026-10 rebrand, Figma "II-ii"). */
-  --brand-blue:   #263399;  /* wordmark, header, page text */
+  /* rgb(25 40 153): the user's own value (2026-10-12, "--currentColorを
+     rgb(25 40 153)に変えて") — the colour the wordmark, the header and the
+     page text all paint with. The translucent tints below (and Header.svelte's
+     BLUE_LUM, which mirrors it for its contrast test) are built from the same
+     three numbers. Was #263399. */
+  --brand-blue:   rgb(25 40 153);
   --brand-peach:  #f3d6bc;  /* page background (every page but the home) */
   --brand-orange: #da6930;  /* the home page's opening screen */
   --brand-hero:   #3e3e3e;  /* home page typeface heroes */
@@ -219,12 +224,12 @@ html[data-theme='white'],
 html[data-theme='page'] {
   --color-text:      var(--brand-blue);
   /* 0.8: ≥4.5:1 (WCAG AA) on white, the peach and the raised panels below. */
-  --color-text-mute: rgba(38, 51, 153, 0.8);
+  --color-text-mute: rgb(25 40 153 / 0.8);
 }
 
 html[data-theme='white'],
 html[data-theme='page'] {
-  --color-line:      rgba(38, 51, 153, 0.2);
+  --color-line:      rgb(25 40 153 / 0.2);
 }
 
 html[data-theme='page'] {
@@ -236,9 +241,10 @@ html[data-theme='page'] {
 /* Masthead: the space the Header's large top-of-page wordmark takes, which
    every page but the home reserves above its own content (+layout.svelte).
    Mirrors Logo.svelte's geometry — PC one line 35px down, the width inside
-   the side margins (156/1360 tall); SP two lines 28px down, 341.4 viewBox
-   units tall at (width inside the margins) / 747.08 per unit — plus a gap
-   below. */
+   the side margins (--logo-h / --logo-w tall); SP two lines 28px down,
+   --logo-stack-h viewBox units tall at (width inside the margins) /
+   --logo-guerre-w per unit — plus a gap below. The --logo-* proportions come
+   from $lib/data/logo.ts, emitted on :root by +layout.svelte. */
 /* The Header's compact bar (Header.svelte) — opaque, so anything pinned to
    the top of the screen (sticky panels, jump targets) has to clear it. */
 :root {
@@ -256,7 +262,8 @@ html[data-theme='page'] {
   /* Leads with 10px, not the wordmark's own 35px top offset (2026-10, the
      user's own value) — page content starts 25px higher on PC. */
   --masthead-h: calc(
-    10px + (100vw - 2 * var(--padding)) * 156 / 1360 + var(--masthead-gap) +
+    10px + (100vw - 2 * var(--padding)) * var(--logo-h) / var(--logo-w) +
+      var(--masthead-gap) +
       env(safe-area-inset-top, 0px)
   );
 }
@@ -265,7 +272,8 @@ html[data-theme='page'] {
   :root {
     --masthead-gap: 40px;
     --masthead-h: calc(
-      28px + (100vw - 2 * var(--padding)) * 341.4 / 747.08 + var(--masthead-gap) +
+      28px + (100vw - 2 * var(--padding)) * var(--logo-stack-h) / var(--logo-guerre-w) +
+        var(--masthead-gap) +
         env(safe-area-inset-top, 0px)
     );
   }

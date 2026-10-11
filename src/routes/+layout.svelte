@@ -10,6 +10,7 @@
 	import { lang } from '$lib/state/lang.svelte';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { themeFor, THEME_BG_TOKEN } from '$lib/theme';
+	import { LOGO_CSS_VARS } from '$lib/data/logo';
 
 	let { children } = $props();
 
@@ -85,6 +86,8 @@
 </script>
 
 <svelte:head>
+	<!-- The wordmark's proportions for every CSS rule that sizes against it. -->
+	{@html `<style>:root{${LOGO_CSS_VARS}}</style>`}
 	<!-- Empty until onMount resolves virtual:pwa-info (SSR-safe: see PWA wiring above). -->
 	{@html webManifestLink}
 </svelte:head>

@@ -109,7 +109,7 @@
 		return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 	}
 	const contrast = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-	const BLUE_LUM = relLuminance(38, 51, 153); // --brand-blue  #263399
+	const BLUE_LUM = relLuminance(25, 40, 153); // --brand-blue  rgb(25 40 153)
 	const PAPER_LUM = relLuminance(241, 240, 239); // --brand-paper #f1f0ef
 	/** Colours below this opacity are looked through. */
 	const OPAQUE_ENOUGH = 0.5;
@@ -362,7 +362,7 @@
 		--edge: var(--padding);
 		--row-top: 33px;
 		/* Vertical centre of the lockup's wordmark (the toggle's row). */
-		--row-mid: calc(var(--lockup-top) + var(--lockup-w) * 156 / 1360 / 2);
+		--row-mid: calc(var(--lockup-top) + var(--lockup-w) * var(--logo-h) / var(--logo-w) / 2);
 		--safe-top: env(safe-area-inset-top, 0px);
 		--ease: cubic-bezier(0.65, 0, 0.35, 1);
 
@@ -428,7 +428,7 @@
 		top: calc(var(--lockup-top) + var(--safe-top) - 6px);
 		left: calc(50% - var(--lockup-w) / 2 - 8px);
 		width: calc(var(--lockup-w) + 16px);
-		height: calc(var(--lockup-w) * 156 / 1360 + 12px);
+		height: calc(var(--lockup-w) * var(--logo-h) / var(--logo-w) + 12px);
 		outline: 1px solid currentColor;
 		opacity: 0;
 		pointer-events: none;
@@ -448,7 +448,7 @@
 	.Header__slot {
 		position: absolute;
 		top: calc(var(--lockup-top) + var(--safe-top));
-		height: calc(var(--lockup-w) * 156 / 1360);
+		height: calc(var(--lockup-w) * var(--logo-h) / var(--logo-w));
 		visibility: hidden;
 		pointer-events: none;
 	}
@@ -456,12 +456,12 @@
 	/* Same x ranges as Logo.svelte's words, at the lockup's width. */
 	.Header__slot--apres {
 		left: calc(50% - var(--lockup-w) / 2);
-		width: calc(var(--lockup-w) * 564.78 / 1360);
+		width: calc(var(--lockup-w) * var(--logo-apres-w) / var(--logo-w));
 	}
 
 	.Header__slot--guerre {
-		left: calc(50% - var(--lockup-w) / 2 + var(--lockup-w) * 612.92 / 1360);
-		width: calc(var(--lockup-w) * 747.08 / 1360);
+		left: calc(50% - var(--lockup-w) / 2 + var(--lockup-w) * var(--logo-guerre-x) / var(--logo-w));
+		width: calc(var(--lockup-w) * var(--logo-guerre-w) / var(--logo-w));
 	}
 
 	/* FOT-TsukuGo Pro B in the frame — not available as a webfont, so the

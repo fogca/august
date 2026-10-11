@@ -188,10 +188,7 @@
 					     and narrow. -->
 					<picture class="HomeHero__picture">
 						{#if image.srcSm}
-							<source
-								media="(max-width: 767.98px), (max-aspect-ratio: 1/1)"
-								srcset={image.srcSm}
-							/>
+							<source media="(max-width: 767.98px), (max-aspect-ratio: 1/1)" srcset={image.srcSm} />
 						{/if}
 						<img class="HomeHero__image" src={image.src} alt="" decoding="async" />
 					</picture>
@@ -252,7 +249,7 @@
 
 	/* Each letter rises out of its word's own box (the <svg> clips to its
 	   viewBox), staggered left to right. translateY is in viewBox units here
-	   — 170 clears the 156-unit-tall box entirely. */
+	   — 1.1 line heights clears the box entirely. */
 	.Opening :global(.Logo__word path) {
 		animation: letter-rise var(--rise-dur) var(--ease-out-expo) backwards;
 		animation-delay: calc(var(--rise-at) + var(--i) * var(--rise-step));
@@ -260,7 +257,7 @@
 
 	@keyframes letter-rise {
 		from {
-			transform: translateY(170px);
+			transform: translateY(calc(var(--logo-h) * 1.1 * 1px));
 		}
 	}
 

@@ -4,8 +4,9 @@
      words, GUERRE spanning the width with a 6.33% margin each side and APRES
      centred above it at the same scale.
 
-     Each word is its own <svg> — a horizontal crop of the one 1360x156
-     artwork (see $lib/data/logo.ts) — so the two can be moved independently:
+     Each word is its own <svg> — a horizontal crop of the one 9:1 artwork
+     (see $lib/data/logo.ts, whose dimensions reach the CSS below as the
+     --logo-* custom properties on :root) — so the two can be moved independently:
      the Header shrinks them into its compact one-line lockup, which on SP
      means pulling the stacked words back onto one line.
 
@@ -60,15 +61,15 @@
 		   the rest of the page lines up with the wordmark. */
 		--logo-side: var(--padding);
 		--logo-top: calc(35px + env(safe-area-inset-top, 0px));
-		/* One viewBox unit, in px: the line runs 1360 units edge to edge. */
-		--u: calc((100cqw - 2 * var(--logo-side)) / 1360);
+		/* One viewBox unit, in px: the line runs --logo-w units edge to edge. */
+		--u: calc((100cqw - 2 * var(--logo-side)) / var(--logo-w));
 	}
 
 	.Logo__word {
 		position: absolute;
 		top: var(--logo-top);
 		display: block;
-		height: calc(156 * var(--u));
+		height: calc(var(--logo-h) * var(--u));
 		/* Callers recolour via --logo-color (the Header follows its own text
 		   colour); the brand blue otherwise. */
 		color: var(--logo-color, var(--brand-blue));
@@ -82,33 +83,33 @@
 		fill: currentColor;
 	}
 
-	/* x ranges from LOGO_WORDS (0–564.78, 612.92–1360). */
+	/* x ranges from LOGO_WORDS (the --logo-apres-* / --logo-guerre-* vars). */
 	.Logo__word--apres {
 		left: var(--logo-side);
-		width: calc(564.78 * var(--u));
+		width: calc(var(--logo-apres-w) * var(--u));
 	}
 
 	.Logo__word--guerre {
-		left: calc(var(--logo-side) + 612.92 * var(--u));
-		width: calc(747.08 * var(--u));
+		left: calc(var(--logo-side) + var(--logo-guerre-x) * var(--u));
+		width: calc(var(--logo-guerre-w) * var(--u));
 	}
 
-	/* SP: two lines. GUERRE (747.08 units) spans the width inside a 6.33%
-	   margin; APRES (564.78) centred above it; 29.4 units between the lines.
-	   All measured off Figma 7:782 at its 395px frame width. */
+	/* SP: two lines. GUERRE spans the width inside a 6.33% margin; APRES is
+	   centred above it at the same scale, --logo-stack-gap units between
+	   the lines (the Figma 7:782 share of the line height). */
 	@media (max-width: 767.98px) {
 		.Logo {
 			--logo-top: calc(28px + env(safe-area-inset-top, 0px));
-			--u: calc((100cqw - 2 * var(--logo-side)) / 747.08);
+			--u: calc((100cqw - 2 * var(--logo-side)) / var(--logo-guerre-w));
 		}
 
 		.Logo__word--apres {
-			left: calc(var(--logo-side) + (747.08 - 564.78) / 2 * var(--u));
+			left: calc(var(--logo-side) + (var(--logo-guerre-w) - var(--logo-apres-w)) / 2 * var(--u));
 		}
 
 		.Logo__word--guerre {
 			left: var(--logo-side);
-			top: calc(var(--logo-top) + (156 + 29.4) * var(--u));
+			top: calc(var(--logo-top) + (var(--logo-h) + var(--logo-stack-gap)) * var(--u));
 		}
 	}
 </style>

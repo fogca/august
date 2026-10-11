@@ -35,8 +35,8 @@
 	const PILE_HEIGHT_OF_VH = 0.4;
 	const PILE_HEIGHT_OF_VW_SMALL = 0.5;
 	const SMALL_SCREEN = 768;
-	/** Cap height of the wordmark's letters, viewBox units. */
-	const LETTER_UNITS = 146;
+	/** Cap height of the wordmark's letters (the A's), viewBox units. */
+	const LETTER_UNITS = LOGO_LETTERS[0].y1 - LOGO_LETTERS[0].y0;
 	function pileShapes() {
 		const target =
 			window.innerWidth < SMALL_SCREEN
