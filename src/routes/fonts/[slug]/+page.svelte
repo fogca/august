@@ -26,22 +26,29 @@
 
 	let { data }: { data: PageData } = $props();
 
-	// Gallery block A cycles A-Z instead of showing one fixed glyph (2026-09,
-	// at the user's request — "1つ目のaとなってるのは、A-zまで切り替わる
-	// アニメーションにして"). ALPHABET rather than tf.glyphOrder or similar:
-	// this is a generic showcase of the face's caps, not tied to any
-	// per-typeface data.
-	const ALPHABET = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+	// Gallery block A cycles through the glyphs instead of showing one fixed
+	// one (2026-09, at the user's request — "1つ目のaとなってるのは、A-zまで
+	// 切り替わるアニメーションにして"), and since 2026-10 runs on past the caps
+	// into lowercase and then the figures ("大文字のあと小文字・数字と続いて
+	// ほしい"): A-Z, a-z, 0-9, then round again. GLYPHS rather than
+	// tf.glyphOrder or similar: this is a generic showcase of the basic
+	// Latin set, not tied to any per-typeface data (every face here ships all
+	// 62).
+	const range = (from: string, to: string) =>
+		Array.from({ length: to.charCodeAt(0) - from.charCodeAt(0) + 1 }, (_, i) =>
+			String.fromCharCode(from.charCodeAt(0) + i)
+		);
+	const GLYPHS = [...range('A', 'Z'), ...range('a', 'z'), ...range('0', '9')];
 	// A hard, fast cut (2026-10, at the user's request — "ふわっとfadeをかける
-	// のではなく、無骨に早めに切り替わる"): 160ms a letter, the whole alphabet
-	// in about 4s. It was 900ms with a 0.3s fade-in.
+	// のではなく、無骨に早めに切り替わる"): 160ms a glyph, so the full 62 take
+	// about 10s. It was 900ms with a 0.3s fade-in.
 	const GALLERY_LETTER_INTERVAL = 160;
 	let galleryLetterIndex = $state(0);
 
 	onMount(() => {
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 		const id = setInterval(() => {
-			galleryLetterIndex = (galleryLetterIndex + 1) % ALPHABET.length;
+			galleryLetterIndex = (galleryLetterIndex + 1) % GLYPHS.length;
 		}, GALLERY_LETTER_INTERVAL);
 		return () => clearInterval(id);
 	});
@@ -151,7 +158,7 @@
 				     descendant (see this file's own font-family rule) — no need to
 				     restate it here. -->
 				<span class="FontGallery__glyph FontGallery__glyph--cycle"
-					>{ALPHABET[galleryLetterIndex]}</span
+					>{GLYPHS[galleryLetterIndex]}</span
 				>
 			</div>
 			<div class="FontGallery__block FontGallery__block--b" class:has-video={!!tf.heroVideo}>
