@@ -123,6 +123,12 @@
 	const SUBSTEPS = 5;
 	const DESPAWN_MARGIN = 400;
 	const REDUCED_MOTION_STEPS = 320; // headless settle, then paint one frame
+	/** The pour starts once this share of the largest view the section can
+	 *  have is on screen — the section is in view, not just touching it — so
+	 *  the letters visibly come down on arrival instead of already lying in a
+	 *  heap (2026-10, at the user's request: "スクロールで見えるタイミングで開始
+	 *  して降り出す"). */
+	const POUR_VISIBLE_SHARE = 0.8;
 
 	// Zoom (see the `zoom` prop).
 	/** Final scale overshoots exact full-screen coverage by this much, so the
@@ -793,17 +799,26 @@
 				return;
 			}
 
-			// Pour when the section actually comes into view, not on mount.
+			// Pour when the section is actually in view, not on mount and not at
+			// its first visible pixel. The section is as tall as the large
+			// viewport (lvh), so on a phone with its toolbar showing the visible
+			// share can never reach 1 — the threshold is a share of what the
+			// window can show, never a bare 0.8 that might not be reachable (and
+			// 0.8 itself leaves room for the toolbar showing up later).
+			const reachable = Math.min(1, window.innerHeight / Math.max(1, section.offsetHeight));
+			const pourAt = POUR_VISIBLE_SHARE * reachable;
 			io = new IntersectionObserver(
 				([entry]) => {
-					onScreen = entry.isIntersecting;
+					// isIntersecting alone is true from the first pixel on; the
+					// ratio is what says the pour threshold was crossed.
+					onScreen = entry.isIntersecting && entry.intersectionRatio >= pourAt;
 					if (onScreen) start();
 					else if (frame) {
 						cancelAnimationFrame(frame);
 						frame = 0;
 					}
 				},
-				{ threshold: 0 }
+				{ threshold: pourAt }
 			);
 			io.observe(section);
 
