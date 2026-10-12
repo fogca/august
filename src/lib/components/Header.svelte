@@ -5,8 +5,9 @@
 	// - Top of the page: the large wordmark alone (Logo.svelte — PC one line,
 	//   SP two), the same artwork and position as the home page's opening.
 	// - Scrolled (Figma 3:671): the wordmark shrinks into a small centred
-	//   lockup over a Japanese subline, nav on the left, Cart on the right,
-	//   on a bar in the page's own background colour.
+	//   lockup (the Japanese subline under it was removed, 2026-10, at the
+	//   user's request), nav on the left, Cart on the right, on a bar in the
+	//   page's own background colour.
 	//
 	// The shrink moves the large wordmark's two words themselves (one
 	// transform each, scale about their top-left) onto two invisible "slot"
@@ -261,7 +262,6 @@
 		<!-- Where the two words land in the compact state (see measure()). -->
 		<span class="Header__slot Header__slot--apres" bind:this={slotEls[0]}></span>
 		<span class="Header__slot Header__slot--guerre" bind:this={slotEls[1]}></span>
-		<span class="Header__sub" lang="ja">アプレゲール タイプファウンダリ ジャパン</span>
 		<!-- Focus ring around the compact lockup — the link's own box is
 		     zero-height, and an outline on the scaled words would shrink too. -->
 		<span class="Header__ring" aria-hidden="true"></span>
@@ -356,8 +356,6 @@
 		   which sticky page UI clears. */
 		--lockup-w: 273.3px;
 		--lockup-top: 28px;
-		--sub-top: 71px;
-		--sub-fs: 12px;
 		/* The page's side inset (base.css --padding) — the wordmark's margin. */
 		--edge: var(--padding);
 		--row-top: 33px;
@@ -464,23 +462,6 @@
 		width: calc(var(--lockup-w) * var(--logo-guerre-w) / var(--logo-w));
 	}
 
-	/* FOT-TsukuGo Pro B in the frame — not available as a webfont, so the
-	   nearest system gothic at a matching bold stands in. */
-	.Header__sub {
-		position: absolute;
-		top: calc(var(--sub-top) + var(--safe-top));
-		left: 50%;
-		transform: translateX(-50%);
-		font-family:
-			'FOT-TsukuGo Pro', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo',
-			sans-serif;
-		font-size: var(--sub-fs);
-		font-weight: 600;
-		line-height: 1.25;
-		letter-spacing: 0;
-		white-space: nowrap;
-	}
-
 	.Header__nav,
 	.Header__cart {
 		position: absolute;
@@ -522,8 +503,7 @@
 
 	/* PC: 16px at wght 350 (2026-10, the user's own values — "PCのheaderの
 	   テキストサイズを16pxにして、wght350に"); 12px / 400 as drawn in
-	   Figma 3:671 stays below 768px. The Japanese subline under the
-	   wordmark is a different face and size, and is left alone. */
+	   Figma 3:671 stays below 768px. */
 	@media (min-width: 768px) {
 		.Header__nav,
 		.Header__cart {
@@ -552,7 +532,6 @@
 	/* Everything but the wordmark only exists in the compact state. Faded
 	   rather than display:none so keyboard focus can still reach it — and
 	   focus inside the header is itself one of the things that compacts it. */
-	.Header__sub,
 	.Header__nav,
 	.Header__cart,
 	.Header__toggle {
@@ -560,7 +539,6 @@
 		pointer-events: none;
 	}
 
-	.Header.is-compact .Header__sub,
 	.Header.is-compact .Header__nav,
 	.Header.is-compact .Header__cart,
 	.Header.is-compact .Header__toggle {
@@ -578,14 +556,12 @@
 	}
 
 	/* Out quickly, in after the words have mostly arrived. */
-	.Header.is-ready .Header__sub,
 	.Header.is-ready .Header__nav,
 	.Header.is-ready .Header__cart,
 	.Header.is-ready .Header__toggle {
 		transition: opacity 0.25s ease;
 	}
 
-	.Header.is-ready.is-compact .Header__sub,
 	.Header.is-ready.is-compact .Header__nav,
 	.Header.is-ready.is-compact .Header__cart,
 	.Header.is-ready.is-compact .Header__toggle {
@@ -602,8 +578,6 @@
 		.Header {
 			--lockup-w: 180px;
 			--lockup-top: 16px;
-			--sub-top: 42px;
-			--sub-fs: 9px;
 		}
 	}
 
