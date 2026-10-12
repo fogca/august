@@ -32,8 +32,9 @@
      position) both land straight on the resting state.
 
      Heroes (175:178): one per typeface, a full screen tall (90vh on SP, at
-     the user's request), dark, with the face's name set in itself
-     bottom-left; 4px of page between them. -->
+     the user's request); a hero with a picture carries no label on it
+     (2026-10, the user's request), one without sits on a dark panel with the
+     face's name set in itself bottom-left; 4px of page between them. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Typeface } from '$lib/data/typefaces';
@@ -179,26 +180,28 @@
 				href="/fonts/{tf.slug}"
 				style={image ? `--hero-bg: ${image.bg}; --hero-fg: ${image.fg};` : undefined}
 				data-surface={image?.tone}
+				aria-label={image ? tf.name : undefined}
 			>
 				{#if image}
-					<!-- Decorative: the link's own text (the name) says what it is. Portrait art on phones and on any portrait-shaped
-					     screen (a tablet held upright), landscape otherwise — the
-					     landscape one would cut the product off at a hero that tall
-					     and narrow. -->
+					<!-- Decorative: the link's aria-label says what it is. Portrait
+					     art on phones and on any portrait-shaped screen (a tablet
+					     held upright), landscape otherwise — the landscape one
+					     would cut the product off at a hero that tall and narrow. -->
 					<picture class="HomeHero__picture">
 						{#if image.srcSm}
 							<source media="(max-width: 767.98px), (max-aspect-ratio: 1/1)" srcset={image.srcSm} />
 						{/if}
 						<img class="HomeHero__image" src={image.src} alt="" decoding="async" />
 					</picture>
+				{:else}
+					<p
+						class="HomeHero__name"
+						style="font-family: '{tf.fontFamily}', var(--font-norma); font-variation-settings: 'wght' {tf
+							.homeSection?.heroWeight ?? 400};"
+					>
+						{tf.homeSection?.heroName ?? tf.name}
+					</p>
 				{/if}
-				<p
-					class="HomeHero__name"
-					style="font-family: '{tf.fontFamily}', var(--font-norma); font-variation-settings: 'wght' {tf
-						.homeSection?.heroWeight ?? 400};"
-				>
-					{tf.homeSection?.heroName ?? tf.name}
-				</p>
 			</a>
 		{/each}
 	</div>
