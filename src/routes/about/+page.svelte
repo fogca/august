@@ -24,7 +24,11 @@
 
      Copy for the Apres Guerre rename is unchanged apart from the name; still
      no naming story invented unilaterally (see the standing note in
-     typefaces.ts). "Tokyo"
+     typefaces.ts). The statement was doubled in length (2026-10, at the user's
+     request — "文章量も倍にして", draft approved in chat): the two added
+     sentences are the site's own existing copy — the Norma block's "A typeface
+     is never the meaning itself…" and the Custom section's bespoke line —
+     nothing new is asserted. "Tokyo"
      stays out of the copy (2026-09, "Tokyo Japanという情報はなるべく
      控えて"). -->
 <script lang="ts">
@@ -53,13 +57,20 @@
 					Apres Guerre is an independent type foundry, founded in 2026. We cross histories,
 					cultures, and eras, reinterpret their context, and draw type through a contemporary eye.
 					Anchored in retail families and bespoke commissions, we keep searching for forms not yet
-					seen.
+					seen. A typeface is never the meaning itself. It is the medium meaning passes through,
+					doing the quiet work of carrying a thought from one mind to another. For brands and
+					institutions, we design bespoke typefaces: a proprietary voice, drawn from the first
+					sketch to a fully realised family.
 				</p>
 				<p class="fr" lang="fr">
 					Apres Guerre est une fonderie de caractères indépendante, fondée en 2026. Nous traversons
 					les histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons
 					des caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
-					commandes sur mesure, nous continuons de chercher des formes encore jamais vues.
+					commandes sur mesure, nous continuons de chercher des formes encore jamais vues. Un
+					caractère typographique n'est jamais le sens lui-même. Il est le medium à travers lequel
+					le sens circule — accomplissant le travail discret de porter une pensée d'un esprit à un
+					autre. Pour les marques et les institutions, nous dessinons des caractères sur mesure :
+					une voix propre, tracée du premier croquis à une famille pleinement aboutie.
 				</p>
 			</div>
 
