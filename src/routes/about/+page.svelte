@@ -186,6 +186,20 @@
 		margin: 0;
 	}
 
+	/* The statement's own settings (2026-10, at the user's request — the
+	   values he gave: wght 450, line-height 1.1, letter-spacing 0.01em,
+	   hyphens auto, width 102%, no first-line indent). Scoped to the statement
+	   so the Norma block below, which shares .About__body p, is left as it
+	   was; font-size is SP only (see the media query). */
+	.About__statement .About__body p {
+		font-variation-settings: 'wght' 450;
+		line-height: 1.1;
+		letter-spacing: 0.01em;
+		hyphens: auto;
+		width: 102%;
+		text-indent: 0;
+	}
+
 	.About__facts {
 		display: flex;
 		flex-wrap: wrap;
@@ -276,6 +290,10 @@
 
 		.About__body p {
 			text-indent: 1.6em;
+		}
+
+		.About__statement .About__body p {
+			font-size: 24.5px;
 		}
 
 		.About__cta {
