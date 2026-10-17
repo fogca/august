@@ -6,14 +6,20 @@
 //   white — the typeface detail pages (/fonts/<slug>): the same, but a page
 //           of their own rather than the home page's (2026-10, at the
 //           user's request — "白背景で問題ない").
+//   about — /about, in the home opening's own colours: brand orange text on
+//           the brand blue ground (2026-10, at the user's request — "Aboutペ
+//           ージのカラーリングを、OPのカラーリングで青背景・オレンジテキスト
+//           にして").
 //   page  — everything else: brand blue on peach.
-export type Theme = 'home' | 'white' | 'page';
+export type Theme = 'home' | 'white' | 'about' | 'page';
 
 const TYPEFACE_PAGE = /^\/fonts\/[^/]+\/?$/;
+const ABOUT_PAGE = /^\/about\/?$/;
 
 export function themeFor(path: string): Theme {
 	if (path === '/') return 'home';
 	if (TYPEFACE_PAGE.test(path)) return 'white';
+	if (ABOUT_PAGE.test(path)) return 'about';
 	return 'page';
 }
 
@@ -22,5 +28,6 @@ export function themeFor(path: string): Theme {
 export const THEME_BG_TOKEN: Record<Theme, string> = {
 	home: '--white',
 	white: '--white',
+	about: '--brand-blue',
 	page: '--brand-peach'
 };

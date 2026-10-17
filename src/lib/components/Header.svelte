@@ -395,6 +395,15 @@
 		color: var(--brand-paper);
 	}
 
+	/* /about runs in the opening's colours (base.css, html[data-theme='about']):
+	   its ground is the brand blue, which the probe reads as dark — but the
+	   wordmark and nav there are the brand orange, as the opening's letters
+	   are, not the paper white a dark surface would give them. */
+	:global(html[data-theme='about']) .Header,
+	:global(html[data-theme='about']) .Header.is-on-dark {
+		color: var(--brand-orange);
+	}
+
 	.Header__logo {
 		position: absolute;
 		top: 0;

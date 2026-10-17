@@ -10,9 +10,11 @@
 
      Both blocks share one ground (2026-09, "その下も全体的に背景色ありに
      して") so the whole page reads as one continuous coloured page — the
-     page theme's own blue on peach since the 2026-10 Apres Guerre redesign
-     (was the summer amber with black text), so the Header's compact bar,
-     painted in the page colour, sits on it seamlessly.
+     "about" page theme's own orange on blue since 2026-10 (the home
+     opening's colours, at the user's request — "Aboutページのカラーリング
+     を、OPのカラーリングで青背景・オレンジテキストにして"; it was blue on
+     peach, and the summer amber with black text before that), so the
+     Header, painted in the page colour, sits on it seamlessly.
 
      No arrow-icon link here any more (2026-09, at the user's request —
      "▶︎のリンクはなるべく使わないようにして、角丸なしのボックスリンクに
@@ -259,6 +261,12 @@
 
 	.About__cta:hover {
 		opacity: 0.8;
+	}
+
+	/* The box is the text colour (orange here), so its label can't be white:
+	   it takes the ground's blue. */
+	:global(html[data-theme='about']) .About__cta {
+		color: var(--color-bg);
 	}
 
 	@media (max-width: 767.98px) {

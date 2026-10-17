@@ -218,6 +218,7 @@ a {
    request — "黒の部分は青に変更"); only the ground differs:
      home  — white (the defaults above)
      white — white, the typeface detail pages
+     about — brand blue, /about (below; its text is orange, not blue)
      page  — peach (Figma 3:671), every other page */
 html[data-theme='home'],
 html[data-theme='white'],
@@ -236,6 +237,20 @@ html[data-theme='page'] {
   --color-bg:        var(--brand-peach);
   /* Raised panels (cards, order summary): the peach lifted toward white. */
   --color-bg-gray:   #f8e6d7;
+}
+
+/* about — the home opening's colours (2026-10, at the user's request —
+   "Aboutページのカラーリングを、OPのカラーリングで青背景・オレンジテキスト
+   にして"): the brand orange on the brand blue, as the opening's letters sit
+   on its ground. The translucent tints are built from the orange's own
+   numbers (rgb 218 105 48), as the blue ones are from the blue's. Orange on
+   this blue is ~3.3:1 — fine for the page's large statement text, and what
+   the small labels have to live with. */
+html[data-theme='about'] {
+  --color-text:      var(--brand-orange);
+  --color-text-mute: rgb(218 105 48 / 0.8);
+  --color-line:      rgb(218 105 48 / 0.3);
+  --color-bg:        var(--brand-blue);
 }
 
 /* Masthead: the space the Header's large top-of-page wordmark takes, which
