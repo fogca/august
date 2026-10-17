@@ -180,9 +180,11 @@ a {
   /* --- Layout --- */
   /* The page's left/right inset: the wordmark's own side margin (2026-10, at
      the user's request — "基本的には40px", "ロゴのside paddingと合わせて").
-     40px on PC, 6.33vw on SP (Figma 7:782); everything that insets from the
-     screen edge reads this one token, so it all lines up with the logo. */
-  --padding:    6.33vw;
+     40px on PC, 15px on SP (2026-10, at the user's request — "SPの横幅15px
+     … 本文のside paddingや、var(--edgeとかheaderのright:とかも統一で横を15px";
+     it was 6.33vw, Figma 7:782); everything that insets from the screen edge
+     reads this one token, so it all lines up with the logo. */
+  --padding:    15px;
   --gutter:     20px;    /* Fixed-px alt for image-bleed pages */
   --gutter-alt: 25px;    /* Fixed-px alt for nav/Office (Mobile) */
   --header-offset: 30px;

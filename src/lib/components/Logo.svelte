@@ -1,7 +1,7 @@
 <!-- The Apres Guerre wordmark at its large, top-of-page size (2026-10
      redesign, Figma "II-ii" 1:635 / 175:178 PC, 7:782 / 7:874 SP): PC sets it
      on one line, 40px in from each side and 35px down; SP stacks the two
-     words, GUERRE spanning the width with a 6.33% margin each side and APRES
+     words, GUERRE spanning the width with a 15px margin each side and APRES
      centred above it at the same scale.
 
      Each word is its own <svg> — a horizontal crop of the one 9:1 artwork
@@ -57,7 +57,7 @@
 		container-type: inline-size;
 
 		/* PC: one line, 40px side margins, 35px from the top. The side margin
-		   is the page's own inset (base.css --padding: 40px PC, 6.33vw SP), so
+		   is the page's own inset (base.css --padding: 40px PC, 15px SP), so
 		   the rest of the page lines up with the wordmark. */
 		--logo-side: var(--padding);
 		--logo-top: calc(35px + env(safe-area-inset-top, 0px));
@@ -94,7 +94,7 @@
 		width: calc(var(--logo-guerre-w) * var(--u));
 	}
 
-	/* SP: two lines. GUERRE spans the width inside a 6.33% margin; APRES is
+	/* SP: two lines. GUERRE spans the width inside the 15px margin; APRES is
 	   centred above it at the same scale, --logo-stack-gap units between
 	   the lines (the Figma 7:782 share of the line height). */
 	@media (max-width: 767.98px) {

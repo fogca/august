@@ -407,6 +407,14 @@
 		}
 	}
 
+	/* SP: the band's side inset is the page's own (15px, 2026-10, at the
+	   user's request — every side inset the same), not a 20px of its own. */
+	@media (max-width: 767.98px) {
+		.FontHero {
+			padding-inline: var(--padding);
+		}
+	}
+
 	.FontHero__headline {
 		font-size: clamp(40px, 6.1vw, 88px);
 		line-height: 1.25;
