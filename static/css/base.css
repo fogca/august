@@ -241,17 +241,17 @@ html[data-theme='page'] {
   --color-bg-gray:   #f8e6d7;
 }
 
-/* about — the home opening's colours (2026-10, at the user's request —
-   "Aboutページのカラーリングを、OPのカラーリングで青背景・オレンジテキスト
-   にして"): the brand orange on the brand blue, as the opening's letters sit
-   on its ground. The translucent tints are built from the orange's own
-   numbers (rgb 218 105 48), as the blue ones are from the blue's. Orange on
-   this blue is ~3.3:1 — fine for the page's large statement text, and what
-   the small labels have to live with. */
+/* about — the brand blue ground (the home opening's) with the peach the other
+   pages use for their ground as its text colour (2026-10, at the user's
+   request — first "OPのカラーリングで青背景・オレンジテキスト", then "Aboutのテ
+   キストカラーをピンク系の明るめの色、その他ページでつかってるものにして").
+   The translucent tints are built from the peach's own numbers (rgb 243 214
+   188), as the blue ones are from the blue's. Peach on this blue is ~8.4:1
+   (WCAG AA); the wordmark stays the opening's orange (Header.svelte). */
 html[data-theme='about'] {
-  --color-text:      var(--brand-orange);
-  --color-text-mute: rgb(218 105 48 / 0.8);
-  --color-line:      rgb(218 105 48 / 0.3);
+  --color-text:      var(--brand-peach);
+  --color-text-mute: rgb(243 214 188 / 0.8);
+  --color-line:      rgb(243 214 188 / 0.3);
   --color-bg:        var(--brand-blue);
 }
 

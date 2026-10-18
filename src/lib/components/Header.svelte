@@ -395,12 +395,19 @@
 		color: var(--brand-paper);
 	}
 
-	/* /about runs in the opening's colours (base.css, html[data-theme='about']):
-	   its ground is the brand blue, which the probe reads as dark — but the
-	   wordmark and nav there are the brand orange, as the opening's letters
-	   are, not the paper white a dark surface would give them. */
+	/* /about (base.css, html[data-theme='about']): its ground is the brand
+	   blue, which the probe reads as dark — but the nav and Cart there take
+	   the page's own text colour (the peach), not the paper white a dark
+	   surface would give them, and the wordmark keeps the brand orange it has
+	   in the opening. */
 	:global(html[data-theme='about']) .Header,
 	:global(html[data-theme='about']) .Header.is-on-dark {
+		color: var(--color-text);
+	}
+
+	/* The wordmark's words inherit their colour (the .Header * { color:
+	   inherit } above), so it is the link around them that carries the orange. */
+	:global(html[data-theme='about']) .Header__logo {
 		color: var(--brand-orange);
 	}
 
