@@ -137,6 +137,9 @@
 		}
 	}
 
+	/* The footer nav: 28px at wght 450 (2026-10, the user's own values —
+	   `.Footer__list { font-size: 28px; font-weight: 450 }`), on both the SP
+	   column and the PC row. The links inherit both from here. */
 	.Footer__list {
 		list-style: none;
 		padding: 0;
@@ -144,6 +147,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		font-size: 28px;
+		font-weight: 450;
 	}
 
 	/* Mobile shows the full five-item nav as a column; desktop swaps it for
@@ -162,13 +167,19 @@
 			flex-direction: row;
 			gap: 24px;
 		}
-
-		.Footer__nav .Footer__list a {
-			font-weight: 650;
-		}
 	}
 
-	.Footer__list a,
+	/* The nav links take the list's size and weight; the legal links stay
+	   small. */
+	.Footer__list a {
+		color: inherit;
+		text-decoration: none;
+		font-size: inherit;
+		font-weight: inherit;
+		opacity: 0.85;
+		transition: opacity 0.15s ease;
+	}
+
 	.Footer__legal a {
 		color: inherit;
 		text-decoration: none;
