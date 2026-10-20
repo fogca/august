@@ -74,23 +74,143 @@
 				</p>
 			</div>
 
-			<!-- Every value here already appears elsewhere on the site — nothing
-			     new is asserted. Location was dropped (2026-09) to keep the
-			     studio's city out of the copy as far as reasonably possible. -->
-			<dl class="About__facts">
-				<div class="About__fact">
-					<dt>Founded</dt>
-					<dd>2026</dd>
-				</div>
-				<div class="About__fact">
-					<dt>Focus</dt>
-					<dd>Retail typefaces, custom type</dd>
-				</div>
-				<div class="About__fact">
-					<dt>Contact</dt>
-					<dd><a href="/contact">Contact form</a></dd>
-				</div>
-			</dl>
+			<!-- The information, gathered under titles (2026-10, at the user's
+			     request — a reference site's About: a large statement, then short
+			     titled groups of small lines): Services, Information, Contact.
+			     Every line is the site's own existing copy — the Custom page's
+			     bespoke / modified-family sentences, the Licensing page's scope,
+			     the Contact page and Footer — nothing new is asserted; the French
+			     is the site's where it exists, otherwise translated. Location is
+			     still left out (2026-09, to keep the studio's city out of the
+			     copy). -->
+			<div class="About__groups">
+				<section class="About__group" aria-labelledby="about-services">
+					<h2 class="About__groupTitle" id="about-services">Services</h2>
+					<div class="About__items">
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Custom Type</span>
+								<span class="fr" lang="fr">Caractères sur mesure</span>
+							</h3>
+							<p class="en" lang="en">
+								We draw bespoke typefaces for brands and institutions — a proprietary voice, from
+								the first sketch to a fully realised family.
+							</p>
+							<p class="fr" lang="fr">
+								Nous dessinons des caractères sur mesure pour des marques et des institutions — une
+								voix qui vous est propre, du premier croquis jusqu'à une famille complète.
+							</p>
+						</div>
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Modified Retail Families</span>
+								<span class="fr" lang="fr">Familles de vente modifiées</span>
+							</h3>
+							<p class="en" lang="en">
+								A retail family can be modified — a redrawn letter, a custom ligature, an alternate
+								figure set, a weight that sits between two of ours — and licensed exclusively to
+								you.
+							</p>
+							<p class="fr" lang="fr">
+								Une famille de vente peut être modifiée — une lettre redessinée, une ligature sur
+								mesure, un jeu de chiffres alternatif, une graisse intermédiaire entre deux des
+								nôtres — puis licenciée en exclusivité pour vous.
+							</p>
+						</div>
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Retail Typefaces</span>
+								<span class="fr" lang="fr">Caractères de vente</span>
+							</h3>
+							<p class="en" lang="en">Ango, a nine-weight variable typeface, in development.</p>
+							<p class="fr" lang="fr">
+								Ango, une police variable en neuf graisses, en cours de développement.
+							</p>
+						</div>
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Licensing</span>
+								<span class="fr" lang="fr">Licences</span>
+							</h3>
+							<p class="en" lang="en">
+								Sold per company size, not per platform: from the Team tier upward, one licence
+								covers Desktop, Web, and App use.
+							</p>
+							<p class="fr" lang="fr">
+								Vendues selon la taille de l'entreprise et non par plateforme : à partir du niveau
+								Team, une seule licence couvre l'usage Desktop, Web et App.
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<section class="About__group" aria-labelledby="about-information">
+					<h2 class="About__groupTitle" id="about-information">
+						<span class="en" lang="en">Information</span>
+						<span class="fr" lang="fr">Informations</span>
+					</h2>
+					<div class="About__items">
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Founded</span>
+								<span class="fr" lang="fr">Fondation</span>
+							</h3>
+							<p>2026</p>
+						</div>
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Focus</span>
+								<span class="fr" lang="fr">Orientation</span>
+							</h3>
+							<p class="en" lang="en">Retail typefaces, custom type</p>
+							<p class="fr" lang="fr">Caractères de vente, caractères sur mesure</p>
+						</div>
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Documents</span>
+								<span class="fr" lang="fr">Documents</span>
+							</h3>
+							<p class="About__links">
+								<a href="/licensing">Licensing</a>
+								<a href="/legal/eula">EULA</a>
+								<a href="/legal/privacy">Privacy</a>
+								<a href="/legal/tokusho">Legal Notice</a>
+							</p>
+						</div>
+					</div>
+				</section>
+
+				<section class="About__group" aria-labelledby="about-contact">
+					<h2 class="About__groupTitle" id="about-contact">Contact</h2>
+					<div class="About__items">
+						<div class="About__item">
+							<h3 class="About__itemTitle">
+								<span class="en" lang="en">Licensing, custom type, general enquiries</span>
+								<span class="fr" lang="fr">Licences, caractères sur mesure, demandes générales</span
+								>
+							</h3>
+							<p class="en" lang="en">
+								For license questions, enterprise requirements (1,000+ users / 100M+ PV), bespoke
+								typefaces, or anything else — please get in touch. We will respond within five
+								business days.
+							</p>
+							<p class="fr" lang="fr">
+								Pour toute question de licence, tout besoin d'entreprise (1 000+ utilisateurs / 100
+								M+ de pages vues), tout caractère sur mesure ou toute autre demande, écrivez-nous.
+								Nous répondons sous cinq jours ouvrés.
+							</p>
+						</div>
+						<div class="About__item">
+							<p class="About__links">
+								<a href="/contact">
+									<span class="en" lang="en">Contact form</span>
+									<span class="fr" lang="fr">Formulaire de contact</span>
+								</a>
+							</p>
+						</div>
+					</div>
+				</section>
+			</div>
 		</div>
 	</section>
 
@@ -148,6 +268,15 @@
 		width: 100%;
 	}
 
+	/* One size for the large type: the statement and the group titles below it
+	   (2026-10, at the user's request — the titles are "大きめの本文と同じサイズ"
+	   as the statement). SP is the user's own 24.5px. */
+	.About {
+		--about-fs: clamp(26px, max(3.4vw, 4.6vh), 50px);
+		/* The small lines under the titles. */
+		--about-item-fs: 15px;
+	}
+
 	/* --- Statement block: same layout as the home page's About teaser
 	   (AboutSection.svelte's .HomeAbout) — small label, oversized indented
 	   statement, facts row — ported rather than just referenced. --- */
@@ -187,7 +316,7 @@
 	   align調整して"). */
 	.About__body p {
 		font-family: var(--font-en), sans-serif;
-		font-size: clamp(26px, max(3.4vw, 4.6vh), 50px);
+		font-size: var(--about-fs);
 		line-height: 1.16;
 		/* 2026-09, at the user's request — "Aboutセクションの文章はwght250にして". */
 		font-variation-settings: 'wght' 250;
@@ -201,7 +330,7 @@
 	   values he gave: wght 450, line-height 1.1, letter-spacing 0.01em,
 	   hyphens auto, width 102%, no first-line indent). Scoped to the statement
 	   so the Norma block below, which shares .About__body p, is left as it
-	   was; font-size is SP only (see the media query). */
+	   was; font-size is SP only (--about-fs in the media query). */
 	.About__statement .About__body p {
 		font-variation-settings: 'wght' 450;
 		line-height: 1.1;
@@ -211,24 +340,85 @@
 		text-indent: 0;
 	}
 
-	.About__facts {
+	/* --- The groups (Services / Information / Contact): a title at the
+	   statement's own size, then short lines — each a small title and its text
+	   — as in the reference. Stacked on SP; on PC the title sits in a column
+	   of its own with the lines beside it. --- */
+	.About__groups {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(56px, 9vh, 96px);
+		margin-top: clamp(24px, 6vh, 72px);
+	}
+
+	.About__group {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+		/* base.css gives every <section> the page's side padding; these sit
+		   inside the statement's own already-padded block, so none again. */
+		padding-inline: 0;
+	}
+
+	.About__groupTitle {
+		font-family: var(--font-en), sans-serif;
+		font-size: var(--about-fs);
+		font-weight: 400;
+		font-variation-settings: 'wght' 450;
+		line-height: 1.1;
+		letter-spacing: 0.01em;
+		margin: 0;
+	}
+
+	.About__items {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	.About__itemTitle,
+	.About__item p {
+		font-family: var(--font-en), sans-serif;
+		font-size: var(--about-item-fs);
+		font-weight: 400;
+		font-variation-settings: 'wght' 400;
+		line-height: 1.35;
+		letter-spacing: 0.005em;
+		margin: 0;
+	}
+
+	.About__links {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 16px 48px;
-		margin: 0;
+		gap: 4px 20px;
 	}
 
-	.About__fact dt {
-		font-family: var(--font-en), sans-serif;
-		font-size: 11px;
-		opacity: 0.6;
-		margin: 0 0 6px;
+	.About__links a {
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+		text-decoration-thickness: 1px;
+		transition: opacity 0.15s ease;
 	}
 
-	.About__fact dd {
-		font-family: var(--font-en), sans-serif;
-		font-size: 15px;
-		margin: 0;
+	.About__links a:hover {
+		opacity: 0.7;
+	}
+
+	@media (min-width: 768px) {
+		.About {
+			--about-item-fs: clamp(16px, 1.35vw, 22px);
+		}
+
+		.About__group {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+			column-gap: 32px;
+			align-items: start;
+		}
+
+		.About__items {
+			max-width: 62ch;
+		}
 	}
 
 	/* --- Norma block: same ground as the statement above (2026-09, "その下
@@ -303,8 +493,8 @@
 			text-indent: 1.6em;
 		}
 
-		.About__statement .About__body p {
-			font-size: 24.5px;
+		.About {
+			--about-fs: 24.5px;
 		}
 
 		.About__cta {
