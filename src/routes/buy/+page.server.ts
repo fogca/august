@@ -22,6 +22,7 @@ import {
 } from '$lib/data/pricing';
 import { computeTotal } from '$lib/data/discounts';
 import type { CartItem, CartItemKind } from '$lib/data/discounts';
+import { checkoutFeatureParams, priceTaxBehavior } from '$lib/server/stripe-options';
 
 const STEINER = TYPEFACE_PRICING[0].packages[0];
 
@@ -162,6 +163,7 @@ export const actions: Actions = {
 						price_data: {
 							currency: 'eur',
 							unit_amount: toStripeAmount(total),
+							...priceTaxBehavior(env),
 							product_data: {
 								name: `${STEINER.label} — ${STEINER.detail}`,
 								description:
@@ -185,7 +187,9 @@ export const actions: Actions = {
 					selected_styles: selectedStyles.join(',').slice(0, 490)
 				},
 				success_url: `${url.origin}/buy/success?session_id={CHECKOUT_SESSION_ID}`,
-				cancel_url: `${url.origin}/buy`
+				cancel_url: `${url.origin}/buy`,
+				// Stripe Tax / invoices — each behind an env flag, see stripe-options.ts
+				...checkoutFeatureParams(env)
 			});
 		} catch (err) {
 			// Fails safe: no session, no charge. Keep the buyer on /buy with a message

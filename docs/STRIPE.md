@@ -20,8 +20,35 @@ EUR / USD は minor units（×100）、JPY は zero-decimal（そのまま）。
 - Cloudflare Pages では dashboard の env vars に設定（adapter-cloudflare、
   SDK は `Stripe.createFetchHttpClient()` で Workers 互換）
 
-## TODO（フェーズ2）
-- [ ] Webhook (`checkout.session.completed`) でフォント zip のダウンロードリンク発行・メール送付
-- [ ] 領収書（Stripe の receipt_email を有効化）
+## フェーズ2の実装状況（2026-10-29）
+Stripe アカウントは販売主体 Mirai Service Co., Ltd.（Apres Guerre）で1つ。価格は**税込**表示。
+コードは先に入れてあり、各機能は環境変数フラグで有効化する（ダッシュボード設定前に有効にしないこと）。
+
+| 機能 | 実装 | 有効化 |
+|---|---|---|
+| Webhook（注文通知メール） | `src/routes/api/stripe/webhook` → `$lib/server/stripe-webhook.ts` | `STRIPE_WEBHOOK_SECRET` と `RESEND_API_KEY` を設定し、Stripe にエンドポイントを登録 |
+| Stripe Tax | `$lib/server/stripe-options.ts`（`automatic_tax`・住所必須・税ID収集・`tax_behavior: inclusive`） | `STRIPE_AUTOMATIC_TAX=1` |
+| 請求書PDF | 同上（`invoice_creation`） | `STRIPE_INVOICE_CREATION=1`（Stripe 側の請求書手数料を要確認） |
+
+### Webhook の登録手順
+1. 先にコードをデプロイする（エンドポイントが存在してから登録）
+2. Stripe ダッシュボード → Developers → Webhooks → `https://<本番ドメイン>/api/stripe/webhook`
+3. イベント: `checkout.session.completed`, `checkout.session.async_payment_succeeded`
+4. 表示される署名シークレット（`whsec_…`）を `STRIPE_WEBHOOK_SECRET` に設定（Cloudflare の環境変数）
+5. テストモードと本番モードでエンドポイント・シークレットは別。それぞれ登録する
+
+### Stripe Tax を有効にする前に（ダッシュボード側）
+- Tax の事業所住所と登録（日本の適格請求書発行事業者番号、EU VAT など）を設定
+- 既定の商品税区分（tax code）をデジタルコンテンツ向けに設定（税理士に確認）
+- 上記が済んでから `STRIPE_AUTOMATIC_TAX=1`。未設定で有効にすると Checkout の作成が失敗する
+
+### 未実装
+- 納品リンクの自動発行（フォント zip を R2 等に置き、署名付きURLをメール送付）。現状は通知メールを受けて手動送付（特商法ページの「24時間以内」）
+- Webhook の冪等化（Stripe の再送で通知メールが重複しうる。保存先が無いため未対応）
+- EULA への同意チェックボックス
+
+## TODO（旧メモ・参考）
+- [x] Webhook — 注文通知まで（納品リンク発行は未）
+- [x] 領収書/請求書 — `STRIPE_INVOICE_CREATION` フラグ
 - [ ] EULA への同意チェックボックス
-- [ ] VAT / 税設定（Stripe Tax の導入検討）
+- [x] VAT / 税設定 — `STRIPE_AUTOMATIC_TAX` フラグ（税込表示）
