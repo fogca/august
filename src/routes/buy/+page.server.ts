@@ -10,7 +10,7 @@ import { redirect, fail } from '@sveltejs/kit';
 import Stripe from 'stripe';
 import { env } from '$env/dynamic/private';
 import { dev } from '$app/environment';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import {
 	TYPEFACE_PRICING,
 	getPrice,
@@ -22,7 +22,11 @@ import {
 } from '$lib/data/pricing';
 import { computeTotal } from '$lib/data/discounts';
 import type { CartItem, CartItemKind } from '$lib/data/discounts';
-import { checkoutFeatureParams, priceTaxBehavior } from '$lib/server/stripe-options';
+import {
+	checkoutFeatureParams,
+	isCheckoutOpen,
+	priceTaxBehavior
+} from '$lib/server/stripe-options';
 
 const STEINER = TYPEFACE_PRICING[0].packages[0];
 
@@ -30,6 +34,12 @@ const STEINER = TYPEFACE_PRICING[0].packages[0];
 function toStripeAmount(amount: number): number {
 	return Math.round(amount * 100);
 }
+
+// Closed until a Stripe key is configured (see isCheckoutOpen): the page then
+// shows COMING SOON rather than a flow that could only end in a 503 at checkout.
+export const load: PageServerLoad = () => ({
+	checkoutOpen: isCheckoutOpen(env, dev)
+});
 
 export const actions: Actions = {
 	checkout: async ({ request, url }) => {

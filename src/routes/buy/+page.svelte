@@ -19,6 +19,7 @@
 
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import {
 		getFlatPackages,
 		getPrice,
@@ -34,10 +35,11 @@
 	import EducationalToggle from '$lib/components/Buy/EducationalToggle.svelte';
 	import CartSummary from '$lib/components/Buy/CartSummary.svelte';
 	import StyleList from '$lib/components/Buy/StyleList.svelte';
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
 	// Checkout action result — carries the error message when the action fails.
-	let { form }: { form: ActionData } = $props();
+	// `data.checkoutOpen` is false until a Stripe key is configured (COMING SOON).
+	let { form, data }: { form: ActionData; data: PageData } = $props();
 
 	// ── Step 1: About you (intake) ───────────────────────────────
 	// LicenseIntake owns its own field state internally and reports the
@@ -196,12 +198,19 @@
 </script>
 
 <svelte:head>
-	<title>{pageTitle} — Apres Guerre</title>
-	<meta
-		name="description"
-		content="Purchase {selectedPackage?.label ??
-			'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
-	/>
+	{#if data.checkoutOpen}
+		<title>{pageTitle} — Apres Guerre</title>
+		<meta
+			name="description"
+			content="Purchase {selectedPackage?.label ??
+				'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
+		/>
+	{:else}
+		<!-- Generic while closed: the default package here is a typeface that isn't
+		     shown on the site, so its name stays off the COMING SOON page. -->
+		<title>Buy — Apres Guerre</title>
+		<meta name="description" content="Licences go on sale soon." />
+	{/if}
 </svelte:head>
 
 <main class="BuyPage">
@@ -211,25 +220,26 @@
 	     full width underneath. nativeBody: the checkout keeps its own Norma
 	     type and colours — Ango's currency glyphs aren't finished, and the
 	     cart's inverted button must not be flattened to black text. -->
-	<PageSection title={heroHeading} as="h1" subtitle="Pay once, yours to keep." full nativeBody>
-		{#snippet intro()}
-			<p>Tell us who it's for, then pick your weights.</p>
-		{/snippet}
-		<div class="BuyPage__grid">
-			<!-- Left column (PC: 65%) — everything that isn't the running order. -->
-			<div class="BuyPage__main">
-				<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
+	{#if data.checkoutOpen}
+		<PageSection title={heroHeading} as="h1" subtitle="Pay once, yours to keep." full nativeBody>
+			{#snippet intro()}
+				<p>Tell us who it's for, then pick your weights.</p>
+			{/snippet}
+			<div class="BuyPage__grid">
+				<!-- Left column (PC: 65%) — everything that isn't the running order. -->
+				<div class="BuyPage__main">
+					<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
 			     the script header comment. Required fields are marked (*) inside
 			     LicenseIntake itself — Steps 2/3 stay hidden until it resolves. -->
-				<div class="BuyStep" id="step-1">
-					<p class="BuyStep__eyebrow">1 — About you</p>
-					<LicenseIntake
-						packages={selectedPackage ? [selectedPackage] : []}
-						onresolve={handleIntakeResolve}
-					/>
-				</div>
+					<div class="BuyStep" id="step-1">
+						<p class="BuyStep__eyebrow">1 — About you</p>
+						<LicenseIntake
+							packages={selectedPackage ? [selectedPackage] : []}
+							onresolve={handleIntakeResolve}
+						/>
+					</div>
 
-				<!-- Select styles only appears once Step 1 has actually resolved a
+					<!-- Select styles only appears once Step 1 has actually resolved a
 			     tier — picking weights before that has nothing to price
 			     against, so there was nothing stopping a buyer from filling it
 			     in "out of order" and only discovering Step 1 was required at
@@ -237,84 +247,97 @@
 			     enforced. (No Typeface step: the typeface arrives fixed from
 			     the referring font page's ?font= — see the script header
 			     comment.) -->
-				{#if resolvedTierIndex !== null}
-					<!-- Select styles (informational: Complete always ships every
+					{#if resolvedTierIndex !== null}
+						<!-- Select styles (informational: Complete always ships every
 				     weight shown here at one price — this just lets a buyer mark the
 				     ones they'll reach for first). -->
-					{#if selectedPackage?.styles?.length}
-						<div class="BuyStep">
-							<p class="BuyStep__eyebrow">2 — Select styles</p>
-							<div class="WeightPanel">
-								<!-- Complete Collection — same round-radio card as Typeface
+						{#if selectedPackage?.styles?.length}
+							<div class="BuyStep">
+								<p class="BuyStep__eyebrow">2 — Select styles</p>
+								<div class="WeightPanel">
+									<!-- Complete Collection — same round-radio card as Typeface
 							     selection, formatted identically to it: name, "N weights"
 							     detail, price at the right (struck-through gross → the
 							     discounted final, once Step 1 has resolved a rate). -->
-								<button
-									type="button"
-									class="WeightPanel__collection"
-									class:is-active={isCompleteActive}
-									onclick={toggleComplete}
-									aria-pressed={isCompleteActive}
-								>
-									<span class="TypefaceCard__radio" aria-hidden="true">
-										{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
-									</span>
-									<span class="TypefaceCard__body">
-										<span class="TypefaceCard__name">Complete Collection</span>
-										<span class="TypefaceCard__detail">{selectedPackage.styles.length} weights</span
-										>
-									</span>
-									{#if completePrice !== null}
-										<span class="TypefaceCard__price">
-											{#if completeGross !== null && completeGross > completePrice}
-												<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span>
-											{/if}
-											<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
+									<button
+										type="button"
+										class="WeightPanel__collection"
+										class:is-active={isCompleteActive}
+										onclick={toggleComplete}
+										aria-pressed={isCompleteActive}
+									>
+										<span class="TypefaceCard__radio" aria-hidden="true">
+											{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
 										</span>
-									{/if}
-								</button>
+										<span class="TypefaceCard__body">
+											<span class="TypefaceCard__name">Complete Collection</span>
+											<span class="TypefaceCard__detail"
+												>{selectedPackage.styles.length} weights</span
+											>
+										</span>
+										{#if completePrice !== null}
+											<span class="TypefaceCard__price">
+												{#if completeGross !== null && completeGross > completePrice}
+													<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span
+													>
+												{/if}
+												<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
+											</span>
+										{/if}
+									</button>
 
-								<StyleList
-									pkg={selectedPackage}
-									selectable
-									selected={selectedWeights}
-									onToggle={toggleWeight}
-								/>
+									<StyleList
+										pkg={selectedPackage}
+										selectable
+										selected={selectedWeights}
+										onToggle={toggleWeight}
+									/>
+								</div>
 							</div>
-						</div>
-					{/if}
+						{/if}
 
-					<!-- Educational discount — left out for now (2026-08-29, at the
+						<!-- Educational discount — left out for now (2026-08-29, at the
 				     user's request); see EDUCATIONAL_ACTIVE in $lib/data/discounts. -->
-					{#if EDUCATIONAL_ACTIVE}
-						<div class="BuyPage__options">
-							<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
-						</div>
+						{#if EDUCATIONAL_ACTIVE}
+							<div class="BuyPage__options">
+								<EducationalToggle checked={isStudent} onchange={(v: boolean) => (isStudent = v)} />
+							</div>
+						{/if}
 					{/if}
-				{/if}
-			</div>
+				</div>
 
-			<!-- Right column (PC: 35%, sticky) — order details. Empty state until a
+				<!-- Right column (PC: 35%, sticky) — order details. Empty state until a
 		     license is chosen. inline={isSmall}: mobile keeps the always-open
 		     block CartSummary has always rendered here; PC switches to its
 		     built-in sticky-sidebar mode (position:sticky, top:80px) — see
 		     isSmall above. -->
-			<div class="BuyPage__cart">
-				<CartSummary
-					inline={isSmall}
-					{isStudent}
-					items={cartItems}
-					{intakeMeta}
-					{subtotal}
-					{discounts}
-					{total}
-					packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
-					selectedStyles={hasLicense ? [...selectedWeights] : []}
-					errorMessage={form?.message ?? null}
-				/>
+				<div class="BuyPage__cart">
+					<CartSummary
+						inline={isSmall}
+						{isStudent}
+						items={cartItems}
+						{intakeMeta}
+						{subtotal}
+						{discounts}
+						{total}
+						packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
+						selectedStyles={hasLicense ? [...selectedWeights] : []}
+						errorMessage={form?.message ?? null}
+					/>
+				</div>
 			</div>
-		</div>
-	</PageSection>
+		</PageSection>
+	{:else}
+		<!-- Checkout closed (no Stripe key on this deployment yet): nothing to fill
+		     in, nothing to submit — the checkout action stays refused server-side
+		     too (it answers 503 without a key). -->
+		<PageSection title="Buy" as="h1" subtitle="Coming soon." full>
+			{#snippet intro()}
+				<p>Licences go on sale soon.</p>
+			{/snippet}
+			<p>For licensing questions, <a href={resolve('/contact')}>contact us</a>.</p>
+		</PageSection>
+	{/if}
 </main>
 
 <style>

@@ -22,6 +22,17 @@ export type StripeFeatureEnv = Record<string, string | undefined>;
 
 const ENABLED_VALUES = new Set(['1', 'true', 'on']);
 
+/**
+ * Whether /buy should show the purchase flow or COMING SOON. Open exactly when
+ * a payment could actually be taken: a Stripe key is configured, or it is local
+ * dev (where the stub / a test key keeps the flow exercisable). So production
+ * stays closed until the live key is added, and a preview deployment opens only
+ * once it is given a key.
+ */
+export function isCheckoutOpen(env: StripeFeatureEnv, dev: boolean): boolean {
+	return dev || Boolean(env.STRIPE_SECRET_KEY?.trim());
+}
+
 /** Shop prices are shown tax-included (Legal Notice: "tax included"). */
 const PRICE_TAX_BEHAVIOR = 'inclusive' as const;
 

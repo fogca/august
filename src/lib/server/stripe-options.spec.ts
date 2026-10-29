@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { checkoutFeatureParams, priceTaxBehavior } from './stripe-options';
+import { checkoutFeatureParams, isCheckoutOpen, priceTaxBehavior } from './stripe-options';
 
 describe('checkoutFeatureParams', () => {
 	it('adds nothing when every flag is off (the default)', () => {
@@ -43,5 +43,22 @@ describe('checkoutFeatureParams', () => {
 		for (const value of ['0', 'false', 'off', 'yes', 'enabled']) {
 			expect(checkoutFeatureParams({ STRIPE_AUTOMATIC_TAX: value })).toEqual({});
 		}
+	});
+});
+
+describe('isCheckoutOpen', () => {
+	it('is closed in production until a Stripe key is configured', () => {
+		expect(isCheckoutOpen({}, false)).toBe(false);
+		expect(isCheckoutOpen({ STRIPE_SECRET_KEY: '' }, false)).toBe(false);
+		expect(isCheckoutOpen({ STRIPE_SECRET_KEY: '   ' }, false)).toBe(false);
+	});
+
+	it('opens once a key is configured, whichever kind it is', () => {
+		expect(isCheckoutOpen({ STRIPE_SECRET_KEY: 'sk_test_dummy' }, false)).toBe(true);
+		expect(isCheckoutOpen({ STRIPE_SECRET_KEY: 'rk_live_dummy' }, false)).toBe(true);
+	});
+
+	it('is always open in local dev, even with no key (the dev stub)', () => {
+		expect(isCheckoutOpen({}, true)).toBe(true);
 	});
 });
