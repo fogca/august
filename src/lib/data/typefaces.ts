@@ -3,6 +3,13 @@
 
 import type { WeightDef } from '$lib/components/TypeTester/presets.js';
 import { WEIGHTS, ANGO_WEIGHTS } from '$lib/components/TypeTester/presets.js';
+import type { GlyphGroup, MetricLine } from './humoristOverview.js';
+import {
+	HUMORIST_GLYPH_GROUPS,
+	HUMORIST_METRICS,
+	HUMORIST_FEATURES,
+	HUMORIST_LANGUAGES
+} from './humoristOverview.js';
 
 export type { WeightDef as TypefaceWeight };
 
@@ -131,6 +138,14 @@ export interface Typeface {
 		 *  slot (same treatment as inUseImages). */
 		images: { src?: string; alt: string }[];
 	};
+	/** Glyph Overview section (after Kontrapunkt Type's): the encoded
+	 *  characters by group, and the vertical metrics ruled over the big glyph —
+	 *  both read off the shipped font (humoristOverview.ts, generated). Omit
+	 *  for no such section. */
+	overview?: { groups: GlyphGroup[]; metrics: MetricLine[] };
+	/** Information section: the font's OpenType feature tags and the languages
+	 *  Hyperglot verifies it for. Omit for no such section. */
+	information?: { features: string[]; languages: string[] };
 	/** Hero slide colour theme — gives each typeface a distinct light/dark tone. */
 	theme: { bg: string; fg: string };
 	/** Catalogue card background on /fonts. Always paired with black text (per
@@ -539,6 +554,8 @@ export const TYPEFACES: Typeface[] = [
 		// Now a real variable font — all 9 named stops are genuine
 		// interpolation between the drawn Hair/Ultra masters.
 		weights: ANGO_WEIGHTS,
+		overview: { groups: HUMORIST_GLYPH_GROUPS, metrics: HUMORIST_METRICS },
+		information: { features: HUMORIST_FEATURES, languages: HUMORIST_LANGUAGES },
 		// The same line on every weight row (150 -> 950, lightest to heaviest),
 		// so the rows differ only in weight. The other sets are kept in
 		// ANGO_TESTER_TEXTS above — point this at `.wine` or `.cheese` (the

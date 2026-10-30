@@ -25,6 +25,8 @@
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
+	import GlyphOverview from '$lib/components/fonts/GlyphOverview.svelte';
+	import FontInformation from '$lib/components/fonts/FontInformation.svelte';
 	import { getPackage } from '$lib/data/pricing.js';
 	import type { TypefaceSlug } from '$lib/data/pricing.js';
 	import { displayName } from '$lib/data/typefaces.js';
@@ -94,6 +96,21 @@
 			b.push(['Languages', tf.info.languages]);
 		}
 		return [a, b];
+	});
+
+	// Information section, first column: label over value. Only what the data
+	// holds (the same facts as the spec lines up top).
+	const informationDetails = $derived.by(() => {
+		const d: [string, string][] = [];
+		if (tf.info) d.push(['Design', tf.info.design]);
+		if (tf.category) d.push(['Classification', tf.category]);
+		d.push(['Weights', String(tf.weights.length)]);
+		if (tf.info) {
+			d.push(['Glyphs', tf.info.glyphs]);
+			d.push(['Formats', tf.info.formats]);
+			d.push(['Release', tf.info.release]);
+		}
+		return d;
 	});
 
 	// The fixed pill hands over to the buy block at the foot of the page once
@@ -399,6 +416,27 @@
 		<!-- OpenType features (live OFF → ON demos) — hidden 2026-08-31 at the
 		     user's request (temporary, "一旦"). Re-add
 		     <OpenTypeFeatures fontFamily={tf.fontFamily} /> here when ready. -->
+	{/if}
+
+	<!-- The lower half after Kontrapunkt Type's typeface pages (2026-10-31, at
+	     the user's request): Glyph Overview, then Information. (Its OpenType
+	     Features cards are not here: the font has no substitution features to
+	     toggle, only kerning and mark positioning.) -->
+	{#if tf.overview}
+		<GlyphOverview
+			name={tf.name}
+			weights={tf.weights}
+			groups={tf.overview.groups}
+			metrics={tf.overview.metrics}
+		/>
+	{/if}
+
+	{#if tf.information}
+		<FontInformation
+			details={informationDetails}
+			features={tf.information.features}
+			languages={tf.information.languages}
+		/>
 	{/if}
 	{/if}
 
