@@ -1,11 +1,14 @@
-<!-- Typeface page. Top of the page redesigned 2026-09 per Figma node 12:127
-     ("ogast", file UEy0lKKtgP8jN4x2DWZUOB): a full-width colour band with the
-     typeface's classification headline set in the face itself, then the
-     name, description and spec grid, then a three-block gallery — and the
-     Type Tester follows straight after, at the user's request. The band's
-     colours, headline and headline weight are the same `homeSection` data
-     the home page's typeface section already uses (typefaces.ts), so the
-     two never disagree.
+<!-- Typeface page. Top of the page redone 2026-10-30, at the user's request, after
+     Kontrapunkt Type's typeface pages (type.kontrapunkt.com): the name, with
+     the "APGR" prefix dropped, as wide as the page; a rule; then the spec lines
+     (two columns) and the description (the wider column); a fixed pill at the
+     bottom of the screen. The colour band with the classification headline
+     that stood here (Figma node 12:127, "ogast", file UEy0lKKtgP8jN4x2DWZUOB)
+     is gone — the classification is a spec line now. What follows (the
+     gallery, Type Tester, weights …) is unchanged. A placeholder (Maxica, GQ
+     Sans: no face to show yet) stops after the description. The gallery
+     tiles still take their colours from the `homeSection` data the home
+     page's typeface section uses (typefaces.ts), so the two never disagree.
 
      Figma's three gallery photos are borrowed mockup shots of unrelated
      type ("Aska"/"Saffron" proof sheets — checked during research) and no
@@ -18,11 +21,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { dragScroll } from '$lib/actions/dragScroll';
+	import { fitText } from '$lib/actions/fitText';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
 	import { getPackage } from '$lib/data/pricing.js';
 	import type { TypefaceSlug } from '$lib/data/pricing.js';
+	import { displayName } from '$lib/data/typefaces.js';
 	import type { GalleryItem } from '$lib/data/typefaces.js';
 	import type { PageData } from './$types.js';
 
@@ -63,10 +68,45 @@
 	const fromPriceEur = $derived(
 		getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`)?.baseEur ?? null
 	);
-	// Ango only has 52 letters and no OpenType features drawn yet — Glyph
-	// set / Beyond A-Z / OpenType below are swapped for a plain sample-text
-	// block on its page (see the {#if isAngo} further down).
-	const isAngo = $derived(tf.slug === 'ango');
+	// Humorist (Ango) only has 52 letters and no OpenType features drawn yet —
+	// Glyph set / Beyond A-Z / OpenType below are swapped for a plain
+	// sample-text block on its page (see the {#if isHumorist} further down).
+	const isHumorist = $derived(tf.slug === 'apgr-humorist');
+
+	// The big name at the top: the prefix dropped, set at the face's own
+	// display weight (400 where it has none).
+	const nameWeight = $derived(tf.specimenWeight ?? 400);
+
+	// The spec lines, in two columns. Only what the data holds: a line with
+	// nothing behind it is left out, never filled in. Styles are upright only
+	// (no italics are drawn).
+	const specColumns = $derived.by(() => {
+		const a: [string, string][] = [['Name', tf.name]];
+		if (tf.category) a.push(['Classification', tf.category]);
+		if (!tf.placeholder) a.push(['Styles', `${tf.weights.length} upright`]);
+		a.push(['Status', isAvailable ? 'Available' : 'In development']);
+		const b: [string, string][] = [];
+		if (tf.info) {
+			b.push(['Designer', tf.info.design]);
+			b.push(['Release', tf.info.release]);
+			b.push(['Formats', tf.info.formats]);
+			b.push(['Glyphs', tf.info.glyphs]);
+			b.push(['Languages', tf.info.languages]);
+		}
+		return [a, b];
+	});
+
+	// The fixed pill hands over to the buy block at the foot of the page once
+	// that is on screen, so the two are never seen together.
+	let buyEl: HTMLElement | undefined = $state();
+	let buyInView = $state(false);
+
+	onMount(() => {
+		if (!buyEl || typeof IntersectionObserver === 'undefined') return;
+		const io = new IntersectionObserver(([entry]) => (buyInView = entry.isIntersecting));
+		io.observe(buyEl);
+		return () => io.disconnect();
+	});
 
 	// Every visible typeface defines homeSection today; the fallback keeps a
 	// typeface without one rendering sensibly rather than throwing.
@@ -117,54 +157,48 @@
 	class="FontDetail"
 	style="--type-font: '{tf.fontFamily}'; --panel-bg: {hero.panelBg}; --panel-fg: {hero.panelFg}; --block-bg: {hero.blockBg}; --block-fg: {hero.blockFg}; --tile-bg: {hero.galleryBg ?? hero.panelBg}; --tile-fg: {hero.galleryFg ?? hero.panelFg};"
 >
-	<!-- Colour band — the classification headline, set in the face itself
-	     (Figma 12:127: 460/900 tall, headline centred). -->
-	<section class="FontHero" aria-label="{tf.name} — {hero.headline}">
-		<p
-			class="FontHero__headline"
-			style="font-variation-settings: 'wght' {hero.headlineWeight}; font-weight: {hero.headlineWeight};"
-		>
-			{hero.headline}
-		</p>
+	<!-- The name, prefix dropped, as wide as the page (see fitText). The h1
+	     says the full name to a screen reader. -->
+	<section class="FontTitle" aria-label="{tf.name}">
+		<h1 class="FontTitle__name" aria-label={tf.name}>
+			<span
+				class="FontTitle__text"
+				use:fitText={tf.slug}
+				style="font-variation-settings: 'wght' {nameWeight}; font-weight: {nameWeight};"
+				>{displayName(tf)}</span
+			>
+		</h1>
 	</section>
 
-	<!-- Name, description (left) and the spec grid (right) -->
+	<!-- Spec lines (two columns) and the description, under a rule -->
 	<section class="FontIntro" aria-label="About {tf.name}">
-		<p class="FontIntro__eyebrow">{tf.tagline}</p>
-		<h1 class="FontIntro__name">{tf.name}</h1>
-
 		<div class="FontIntro__cols">
+			{#each specColumns as column, ci (ci)}
+				<dl class="FontSpec" aria-label="Information">
+					{#each column as [label, value] (label)}
+						<div class="FontSpec__line">
+							<dt>{label}:</dt>
+							<dd>{value}</dd>
+						</div>
+					{/each}
+					{#if ci === 1 && tf.info?.note}
+						<p class="FontSpec__note">{tf.info.note}</p>
+					{/if}
+				</dl>
+			{/each}
+
 			<div class="FontIntro__text">
+				{#if !tf.placeholder}
+					<p class="FontIntro__tagline">{tf.tagline}</p>
+				{/if}
 				<p class="FontIntro__description en">{tf.description}</p>
 				{#if tf.descriptionFr}
 					<p class="FontIntro__description fr" lang="fr">{tf.descriptionFr}</p>
 				{/if}
 			</div>
-
-			{#if tf.info}
-				<dl class="FontIntro__spec" aria-label="Information">
-					<div class="FontIntro__spec-item">
-						<dt>Collection</dt>
-						<dd>{tf.info.collection}</dd>
-					</div>
-					<div class="FontIntro__spec-item">
-						<dt>Formats</dt>
-						<dd>{tf.info.formats}</dd>
-					</div>
-					<div class="FontIntro__spec-item">
-						<dt>Glyphs</dt>
-						<dd>{tf.info.glyphs}</dd>
-					</div>
-					<div class="FontIntro__spec-item">
-						<dt>Supported languages</dt>
-						<dd>{tf.info.languages}</dd>
-					</div>
-					{#if tf.info.note}
-						<p class="FontIntro__spec-note">{tf.info.note}</p>
-					{/if}
-				</dl>
-			{/if}
 		</div>
+
+		{#if !tf.placeholder}
 
 		<!-- The gallery: one strip, scrolling sideways when its items don't fit
 		     (Figma: three tiles, 306 / 489 / 489 wide, all 391 tall — that is
@@ -243,8 +277,10 @@
 				{/if}
 			{/each}
 		</div>
+		{/if}
 	</section>
 
+	{#if !tf.placeholder}
 	<!-- Type Tester — directly after the intro, per the user's 2026-09
 	     request; the remaining sections keep their earlier order below.
 	     (An "In Use" section used to sit directly below this — 4-5
@@ -253,10 +289,11 @@
 	<TypeTester
 		weights={tf.weights}
 		fontFamily={tf.fontFamily}
+		name={tf.name}
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
-		defaultSizeDesktop={isAngo ? 100 : tf.slug === 'norma' ? 36 : undefined}
+		defaultSizeDesktop={isHumorist ? 100 : tf.slug === 'norma' ? 36 : undefined}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 	/>
 
@@ -273,10 +310,10 @@
 				>
 					<!-- Norma's own weights are named by number (1-95, name x 10 =
 					     wght) — that number is the name, not a word standing in for
-					     it, so it's the only thing shown. Ango's smaller, newer axis
+					     it, so it's the only thing shown. Humorist's smaller, newer axis
 					     doesn't carry that convention, so it gets the more familiar
 					     "number word" pairing instead. -->
-					{#if isAngo}
+					{#if isHumorist}
 						<span class="FontWeights__label">{w.name} {w.label}</span>
 					{:else}
 						<span class="FontWeights__label">{w.name}</span>
@@ -310,15 +347,15 @@
 		</section>
 	{/if}
 
-	{#if isAngo}
-		<!-- Ango only has 52 letters and no OpenType features yet — the Glyph
-		     set / specimen / OpenType sections below would mostly show
-		     .notdef/tofu or empty demos. A plain sample-text block instead,
-		     using only characters actually in Ango's cmap. -->
+	{#if isHumorist}
+		<!-- Humorist (Ango) only has 52 letters and no OpenType features yet —
+		     the Glyph set / specimen / OpenType sections below would mostly
+		     show .notdef/tofu or empty demos. A plain sample-text block
+		     instead, using only characters actually in its cmap. -->
 		<section class="AngoSample" aria-label="Sample text">
 			<p class="AngoSample__label">Sample text</p>
 			<p class="AngoSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
-				Ango is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
+				APGR Humorist is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
 				dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
 				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
 				ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
@@ -345,9 +382,10 @@
 		     user's request (temporary, "一旦"). Re-add
 		     <OpenTypeFeatures fontFamily={tf.fontFamily} /> here when ready. -->
 	{/if}
+	{/if}
 
 	<!-- On-page buy block -->
-	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">
+	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}" bind:this={buyEl}>
 		<div class="FontBuy__inner">
 			{#if isAvailable}
 				<p class="FontBuy__eyebrow">License</p>
@@ -369,12 +407,23 @@
 			{/if}
 		</div>
 	</section>
+
+	<!-- Fixed at the foot of the screen, centred (Kontrapunkt Type's "Buy KP Duo
+	     Sans"); it steps aside once the buy block itself is in view. -->
+	<a
+		class="FontPill"
+		class:is-hidden={buyInView}
+		href="#buy"
+		aria-hidden={buyInView}
+		tabindex={buyInView ? -1 : undefined}
+	>
+		{isAvailable ? `Buy ${tf.name}` : 'Coming soon'}
+	</a>
 </main>
 
 <style>
 	.FontDetail {
-		/* The colour band starts at the very top; the fixed header overlays
-		   it (and auto-inverts against it). */
+		/* The name starts at the top, under the fixed header. */
 		padding: 0 0 40px;
 		/* Black text on this page (2026-10, at the user's request — "各書体の
 		   ページ情報やタイプテスターなどは、ブラックテキストに"). The site
@@ -387,109 +436,71 @@
 		--color-line: rgba(0, 0, 0, 0.15);
 	}
 
-	/* ── Colour band + classification headline (Figma 12:127: 460/900) ── */
-	.FontHero {
-		display: grid;
-		place-items: center;
-		height: clamp(300px, 51vh, 560px);
-		height: clamp(300px, 51svh, 560px);
-		background: var(--panel-bg);
-		padding: 80px 20px 24px;
-		overflow: hidden;
+	/* ── The name, as wide as the page (fitText) ──
+	   Kontrapunkt Type's typeface pages open the same way: the name at the
+	   full width, a rule, then the particulars. <main> already starts below
+	   the masthead's wordmark; the side padding is the page's own inset (the
+	   wordmark's margin, base.css --padding). */
+	.FontTitle {
+		padding: 12px var(--padding) 24px;
 	}
 
-	/* PC: 72.5vh (2026-10, the user's own value) — no clamp, whose 560px
-	   ceiling would otherwise hold it under that on any tall screen. */
-	@media (min-width: 768px) {
-		.FontHero {
-			height: 72.5vh;
-			height: 72.5svh;
-		}
-	}
-
-	/* SP: the band's side inset is the page's own (15px, 2026-10, at the
-	   user's request — every side inset the same), not a 20px of its own. */
-	@media (max-width: 767.98px) {
-		.FontHero {
-			padding-inline: var(--padding);
-		}
-	}
-
-	.FontHero__headline {
-		font-size: clamp(40px, 6.1vw, 88px);
-		line-height: 1.25;
-		letter-spacing: 0;
-		color: var(--panel-fg) !important;
-		text-align: center;
+	/* font-size 0 so the heading's own strut adds no space around the line:
+	   the word (an inline-block, which sets its own size) is all that is in it. */
+	.FontTitle__name {
 		margin: 0;
+		font-size: 0;
+		line-height: 0;
+	}
+
+	.FontTitle__text {
+		display: inline-block;
+		white-space: nowrap;
+		/* What shows until fitText has measured (and with no JS): about the
+		   width of a short word at the page's width. */
+		font-size: clamp(72px, 22vw, 360px);
+		line-height: 0.8;
+		letter-spacing: 0;
+	}
+
+	/* ── Intro: spec lines, description, gallery ── */
+	.FontIntro {
+		padding: 0 var(--padding) clamp(56px, 8.4vh, 76px);
+	}
+
+	/* The rule, then two spec columns and the description at 1 : 1 : 2
+	   (Kontrapunkt's own proportions). One column on a phone. */
+	.FontIntro__cols {
+		display: grid;
+		gap: 28px;
+		padding-top: 18px;
+		border-top: 1px solid var(--color-text);
 	}
 
 	@media (min-width: 768px) {
-		.FontHero__headline {
-			white-space: nowrap;
+		.FontIntro__cols {
+			grid-template-columns: 1fr 1fr 2fr;
+			gap: 10px 24px;
+			align-items: start;
 		}
 	}
 
-	/* ── Intro: eyebrow, name, description + spec, gallery ── */
-	/* Side padding is the page's own inset — the wordmark's margin (base.css
-	   --padding) — rather than Figma 12:127's 67px / 49px (2026-10, at the
-	   user's request: 余白はロゴのside paddingに合わせる). */
-	.FontIntro {
-		padding: clamp(48px, 9.3vh, 84px) var(--padding) clamp(56px, 8.4vh, 76px);
-	}
-
-	.FontIntro__eyebrow {
+	.FontIntro__tagline {
 		font-size: 12px;
 		line-height: 1.3;
 		letter-spacing: 0;
 		font-weight: var(--fw-light);
 		color: var(--color-text);
 		opacity: 0.5;
-		margin: 0 0 32px;
-		max-width: 40ch;
-	}
-
-	.FontIntro__name {
-		font-size: clamp(40px, 11vw, 72px);
-		font-weight: 400;
-		line-height: 1;
-		letter-spacing: 0;
-		margin: 0;
-	}
-
-	@media (min-width: 768px) {
-		.FontIntro__name {
-			font-size: 72px;
-		}
-	}
-
-	.FontIntro__cols {
-		display: grid;
-		gap: 40px;
-		margin-top: 34px;
-	}
-
-	@media (min-width: 768px) {
-		.FontIntro__cols {
-			/* Copy / gap / spec at 4 : 1 : 3 (2026-10, the user's own values). */
-			grid-template-columns: 4fr 1fr 3fr;
-			gap: 10px;
-			align-items: start;
-		}
-
-		.FontIntro__spec {
-			grid-column: 3;
-		}
+		margin: 0 0 12px;
 	}
 
 	.FontIntro__description {
-		font-size: 14px;
+		font-size: clamp(16px, 1.4vw, 20px);
 		line-height: 1.4;
 		letter-spacing: 0;
 		font-weight: var(--fw-light);
 		color: var(--color-text);
-		/* No measure cap (2026-10, the user's own value): the copy fills its
-		   grid column. */
 		max-width: none;
 		margin: 0;
 	}
@@ -510,40 +521,65 @@
 		display: block;
 	}
 
-	.FontIntro__spec {
+	/* "Label: value", one line each. */
+	.FontSpec {
 		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 40px 24px;
+		gap: 3px;
+		align-content: start;
 		margin: 0;
 	}
 
-	.FontIntro__spec-item dt {
-		font-size: 12px;
-		line-height: 1.25;
+	.FontSpec__line {
+		display: flex;
+		gap: 0.45em;
+		font-size: 15px;
+		line-height: 1.4;
 		letter-spacing: 0;
+	}
+
+	.FontSpec__line dt,
+	.FontSpec__line dd {
+		margin: 0;
 		font-weight: var(--fw-light);
 		color: var(--color-text);
+	}
+
+	.FontSpec__line dt {
+		flex: none;
 		opacity: 0.5;
-		margin: 0 0 4px;
 	}
 
-	.FontIntro__spec-item dd {
-		font-size: 16px;
-		line-height: 1.25;
-		letter-spacing: 0;
-		font-weight: var(--fw-light);
-		color: var(--color-text);
-		margin: 0;
-	}
-
-	/* Small caveat under the grid — e.g. Ango's "still in development" note. */
-	.FontIntro__spec-note {
-		grid-column: 1 / -1;
+	/* Small caveat under the spec lines — a typeface still in development. */
+	.FontSpec__note {
 		font-size: 11px;
 		line-height: 1.5;
 		letter-spacing: 0;
 		color: var(--color-text-mute);
-		margin: -16px 0 0;
+		margin: 8px 0 0;
+	}
+
+	/* ── The pill, fixed at the foot of the screen ── */
+	.FontPill {
+		position: fixed;
+		left: 50%;
+		bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+		transform: translateX(-50%);
+		z-index: 1000;
+		padding: 8px 16px;
+		border-radius: 999px;
+		background: #000;
+		color: #fff;
+		font-size: 16px;
+		line-height: 1.2;
+		letter-spacing: 0;
+		white-space: nowrap;
+		text-decoration: none;
+		transition: opacity 0.25s ease;
+	}
+
+	.FontPill.is-hidden {
+		opacity: 0;
+		pointer-events: none;
 	}
 
 	/* ── Gallery — one strip of tiles and pictures, scrolling sideways ── */

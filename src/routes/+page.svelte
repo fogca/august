@@ -356,10 +356,10 @@
 </script>
 
 <svelte:head>
-	<title>Apres Guerre — Ango</title>
+	<title>Apres Guerre — APGR Humorist</title>
 	<meta
 		name="description"
-		content="Apres Guerre — an independent type foundry. Ango, a nine-weight geometric humanist variable typeface, in development."
+		content="Apres Guerre — an independent type foundry. APGR Humorist, a nine-weight geometric humanist variable typeface, in development."
 	/>
 </svelte:head>
 

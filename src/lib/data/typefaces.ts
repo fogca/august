@@ -23,14 +23,31 @@ export type GalleryItem =
 	| { kind: 'tagline' }
 	| { kind: 'image'; src: string; alt: string; width: number; height: number };
 
+/** The foundry's initials, the prefix of every public typeface name
+ *  (2026-10-30, at the user's request — "APGRは全てつけるようにして"), the way
+ *  Kontrapunkt Type's are "KP Duo Sans". Slugs follow: lowercase, hyphenated
+ *  (`apgr-humorist`). The big display of a name drops it — see displayName(). */
+export const NAME_PREFIX = 'APGR';
+
 export interface Typeface {
+	/** `apgr-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
+	 *  pricing and checkout tables are keyed by it, and the face is hidden). */
 	slug: string;
+	/** Public name, prefix included (e.g. 'APGR Humorist'). The CSS family
+	 *  (`fontFamily`) and the font/image files keep their old internal names. */
 	name: string;
-	/** Display order (ascending): 1 = Norma, 2 = gQ (Mokuseki Sans), 3 = Ango, 4 = Alfred */
+	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = GQ Sans, 5 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
 	hidden?: boolean;
+	/** A name on the shelf before the face exists (Maxica, GQ Sans). Its page
+	 *  is the hero name, the spec lines, the description and "Coming soon" —
+	 *  no Type Tester, weights or glyphs to show, and none are invented. */
+	placeholder?: boolean;
+	/** What kind of typeface it is, for the spec lines ("Classification:").
+	 *  Only what the foundry has said about it. */
+	category?: string;
 	/** CSS font-family value to use in the Type Tester */
 	fontFamily: string;
 	tagline: string;
@@ -66,11 +83,10 @@ export interface Typeface {
 	 *  a–z split in half). Rendered at one uniform size and weight across all
 	 *  lines (see .FontCard__spec-line in /fonts/+page.svelte). */
 	specimen?: string[];
-	/** Renders the specimen at this wght instead of the family's own default —
-	 *  for typefaces with no drawings of their own yet (Alfred), so their
-	 *  placeholder card at least reads as a different cut of the borrowed font
-	 *  rather than an identical copy of Norma's own card. Ango doesn't need
-	 *  this any more — its own font renders the specimen directly. */
+	/** The wght the big name is set at on /fonts and at the top of the typeface
+	 *  page. Also what lets a typeface with no drawings of its own yet (Maxica,
+	 *  Alfred — both borrow Norma) read as a different cut of the borrowed font
+	 *  rather than an identical copy of Norma's own. */
 	specimenWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
@@ -240,7 +256,11 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> 
 export const TYPEFACES: Typeface[] = [
 	{
 		slug: 'norma',
-		name: 'Norma',
+		// Prefixed with the rest (2026-10-30). Its final name is still open —
+		// Linotype already sells a "Norma" — and the prose below still says
+		// "Norma": settle the name, then rewrite it (see the TODO below).
+		name: 'APGR Norma',
+		category: 'Neo humanist sans-serif',
 		order: 1,
 		status: 'available',
 		// Hidden for now (2026-10-11, at the user's request — "一旦Norma非表示
@@ -375,70 +395,78 @@ export const TYPEFACES: Typeface[] = [
 		}
 	},
 	{
-		slug: 'gq',
-		name: 'gQ',
-		order: 2,
+		// A placeholder (2026-10-30, at the user's request — "プレースホルダーでいい
+		// ので、入れておいて"): the sans half of a Sans + Serif sibling family. The
+		// name is provisional ("GQ" is Condé Nast's — change it before launch).
+		// It carries the drawings formerly shown as "Mokuseki Sans", which the
+		// foundry is moving into this family; that name is a client's and stays
+		// off the public site. The CSS family stays 'Mokuseki Sans' (app.html
+		// @font-face, Regular only) — the one face on the site with these shapes.
+		slug: 'apgr-gq-sans',
+		name: 'APGR GQ Sans',
+		category: 'Sans-serif',
+		order: 4,
 		status: 'in-development',
-		// Re-shown 2026-08-29 at the user's request (temporary — "一旦"),
-		// even though weight count / spec are not yet final. Re-hidden
-		// 2026-08-31 at the user's request.
-		hidden: true,
-		// Latest Mokuseki Sans (v08) webfont
+		placeholder: true,
 		fontFamily: 'Mokuseki Sans',
-		tagline: 'The latest cut of Mokuseki Sans.',
+		tagline: 'In development.',
 		description:
-			'gQ is the latest evolution of Mokuseki Sans — a neo-humanist sans drawn at Apres Guerre. ' +
-			'Details on weights and axis range will be published as the design reaches maturity. ' +
-			'Debuting 2026.',
+			'APGR GQ Sans is a sans-serif in development at Apres Guerre, one half of a family that will pair it with a serif. ' +
+			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'gQ est la dernière évolution de Mokuseki Sans — un sans-serif néo-humaniste dessiné chez Apres Guerre. ' +
-			"Les détails sur les graisses et l'étendue de l'axe seront publiés à mesure que le dessin arrive à maturité. " +
-			'Sortie prévue en 2026.',
-		classification: 'Neo Humanist Sans · 12 weights',
-		// Provisional weights — same 12-stop axis as Norma until spec is finalised
+			'APGR GQ Sans est un sans-serif en cours de développement chez Apres Guerre, une moitié d’une famille qui l’associera à un serif. ' +
+			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
+		classification: 'Sans-serif · In development',
+		// Placeholder: nothing below the spec lines uses these, but the type
+		// asks for them. The cut on the site is a single Regular.
 		weights: WEIGHTS,
-		// One long German word per weight row (20) — aesthetic / philosophical vocabulary
-		defaultTexts: [
-			'Gesamtkunstwerk',
-			'Zeitgeist',
-			'Sprachgefühl',
-			'Augenblick',
-			'Fernweh',
-			'Weltschmerz',
-			'Stimmung',
-			'Sehnsucht',
-			'Einfühlung',
-			'Erscheinung',
-			'Verfremdung',
-			'Lichtung',
-			'Dasein',
-			'Zwischenraum',
-			'Formwille',
-			'Kunstwollen',
-			'Querschnitt',
-			'Wanderlust',
-			'Bildung',
-			'Gestalt'
-		],
-		// No dedicatee of its own — gQ is an in-house evolution, not a
-		// namesake piece — so the label cites a real institution instead:
-		// the Japan Folk Crafts Museum (Nihon Mingeikan), whose collection
-		// of wood- and stoneware is the closest real-world echo of
-		// "Mokuseki" (木石 — wood, stone). Swap for a different venue if
-		// this particular pairing doesn't hold up.
-		specimen: ['TOKYO, 2026', 'JAPAN FOLK CRAFTS MUSEUM', 'Wood and Stone'],
+		defaultTexts: ['APGR GQ Sans'],
+		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
-		catalogBg: '#EDEAE3',
 		hero: {
-			label: 'Neo Humanist Sans',
-			vol: 'vol.02',
-			subtitle: '(Mokuseki Sans)',
+			label: 'In development',
+			vol: 'vol.04',
+			subtitle: '(Coming Soon)',
 			debut: 'Coming Soon',
-			large: true,
 			comingSoon: true,
-			intro: 'The next cut from our foundry.',
-			statement: 'Mokuseki Sans, maturing.'
+			intro: 'A sans-serif in development.',
+			statement: 'Coming soon.'
+		}
+	},
+	{
+		// A placeholder (2026-10-30): the grotesque in progress. "Maxica" =
+		// Maxima + Helvetica, after the way Unica is Univers + Helvetica. No
+		// drawings are on the site yet, so it borrows Norma — set at wght 500
+		// so it does not read as Norma's own.
+		slug: 'apgr-maxica',
+		name: 'APGR Maxica',
+		category: 'Grotesque sans-serif',
+		order: 3,
+		status: 'in-development',
+		placeholder: true,
+		fontFamily: 'Norma',
+		tagline: 'In development.',
+		description:
+			'APGR Maxica is a grotesque in development at Apres Guerre. ' +
+			'Details on its design direction, weights and release schedule will follow.',
+		descriptionFr:
+			'APGR Maxica est une grotesque en cours de développement chez Apres Guerre. ' +
+			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
+		classification: 'Grotesque · In development',
+		weights: WEIGHTS,
+		defaultTexts: ['APGR Maxica'],
+		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
+		specimenWeight: 500,
+		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
+		hero: {
+			label: 'In development',
+			vol: 'vol.03',
+			subtitle: '(Coming Soon)',
+			debut: 'Coming Soon',
+			comingSoon: true,
+			intro: 'A grotesque in development.',
+			statement: 'Coming soon.'
 		}
 	},
 	{
@@ -447,24 +475,29 @@ export const TYPEFACES: Typeface[] = [
 		// are drawn and exported; the other 7 of the 9 named stops are
 		// interpolated between them, same as Norma. Ultra's own axis
 		// position moved from wght 850 to 950 on 2026-09-22, at the user's
-		// request, so Ango's scale now reaches Norma's own top stop.
+		// request, so its scale now reaches Norma's own top stop.
 		// Re-shown 2026-08-29 at the user's request (temporary).
-		slug: 'ango',
-		name: 'Ango',
-		order: 3,
+		// "Ango" until 2026-10-30, then "APGR Humorist" (a pun on the category
+		// Humanist). Only the public name and slug moved: the CSS family stays
+		// 'Ango' (other projects set type in it) and so do the Ango-VF*.woff2
+		// and ango-* image files below.
+		slug: 'apgr-humorist',
+		name: 'APGR Humorist',
+		category: 'Geometric humanist sans-serif',
+		order: 2,
 		status: 'in-development',
 		hidden: false,
 		fontFamily: 'Ango',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'Ango is a sibling to Norma, in development at Apres Guerre. ' +
-			'Where Norma runs wide and even across twenty weights, Ango narrows its focus to nine — an axis built from two hand-drawn extremes, Hair and Ultra, with the seven named stops between them genuinely interpolated rather than invented. ' +
+			'APGR Humorist is a sibling to Norma, in development at Apres Guerre. ' +
+			'Where Norma runs wide and even across twenty weights, APGR Humorist narrows its focus to nine — an axis built from two hand-drawn extremes, Hair and Ultra, with the seven named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Ultra — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'Ango est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
+			'APGR Humorist est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development · 9 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -511,10 +544,11 @@ export const TYPEFACES: Typeface[] = [
 		// ANGO_TESTER_TEXTS above — point this at `.wine` or `.cheese` (the
 		// A-I list) to bring either back.
 		defaultTexts: ANGO_TESTER_TEXTS.mozzarellaBrie,
-		// Catalogue specimen — same A-Z/a-z proof as Norma's card (2026-08-31),
-		// now that Ango's own font (Hair) actually renders here. No hover
-		// swatch either (catalogBg omitted), matching Norma.
+		// The A-Z/a-z proof, for the gallery's specimen tile. The big name on
+		// /fonts and at the top of the page is set at this weight (the home
+		// hero's own, Light).
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
+		specimenWeight: 300,
 		// Borrowed from gQ (2026-08-31, at the user's request) — Ango has no
 		// hero image of its own yet, so its page top reuses gQ's for now.
 		thumbnail: '/images/fonts/gq.png',
@@ -531,21 +565,21 @@ export const TYPEFACES: Typeface[] = [
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-cream.jpg',
-				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in Ango — an Ango case study mockup',
+				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in APGR Humorist — a case study mockup',
 				width: 2000,
 				height: 1125
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-mozzarella-brie.webp',
-				alt: '“Mozzarella &” in a light weight of Ango above “Brie de Meaux” in a heavy one, white on blue',
+				alt: '“Mozzarella &” in a light weight of APGR Humorist above “Brie de Meaux” in a heavy one, white on blue',
 				width: 2000,
 				height: 720
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-extinguisher.jpg',
-				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in Ango — an Ango case study mockup',
+				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in APGR Humorist — a case study mockup',
 				width: 2000,
 				height: 1333
 			},
@@ -583,7 +617,8 @@ export const TYPEFACES: Typeface[] = [
 			// weight at the page's single largest moment, per Figma (and a
 			// nice match for its "Reticent and Ravenous" tagline).
 			headlineWeight: 150,
-			// Home hero: "Ango" in Ango Light, as drawn (Figma 175:178).
+			// Home hero: set in its own Light (Figma 175:178) — only where there
+			// is no heroImage; with one, as below, the picture stands in.
 			heroWeight: 300,
 			// The Apres Guerre moisturiser mockup in place of the grey panel
 			// (2026-10-11, supplied by the user): landscape for PC, portrait
@@ -608,19 +643,21 @@ export const TYPEFACES: Typeface[] = [
 		// specimen; everything below is still fully provisional (unlike Ango,
 		// no drawings at all yet). Re-shown 2026-08-29, re-hidden 2026-08-31,
 		// both at the user's request.
-		slug: 'alfred',
-		name: 'Alfred',
-		order: 4,
+		slug: 'apgr-alfred',
+		name: 'APGR Alfred',
+		category: 'Neo classic',
+		order: 5,
 		status: 'in-development',
 		hidden: true,
+		placeholder: true,
 		// No font files yet — render as Norma for preview purposes
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'Alfred is a Neo Classic typeface in development at Apres Guerre. ' +
+			'APGR Alfred is a Neo Classic typeface in development at Apres Guerre. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'Alfred est un caractère Neo Classic en cours de développement chez Apres Guerre. ' +
+			'APGR Alfred est un caractère Neo Classic en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised
@@ -652,4 +689,21 @@ export const TYPEFACES: Typeface[] = [
 
 export function getTypeface(slug: string): Typeface | undefined {
 	return TYPEFACES.find((tf) => tf.slug === slug);
+}
+
+/** Slugs the pages answered to before the 2026-10-30 rename, to where they
+ *  went (a 301 — see fonts/[slug]/+page.ts). `elio` is Ango's name before
+ *  2026-10-03. `alfred` is left out: it is hidden, so it never had a public
+ *  page to carry over. */
+export const LEGACY_SLUGS: Record<string, string> = {
+	ango: 'apgr-humorist',
+	elio: 'apgr-humorist',
+	gq: 'apgr-gq-sans'
+};
+
+/** The name as the big display sets it: the prefix dropped ("Humorist"), as
+ *  Kontrapunkt Type's "KP Duo Sans" shows as "Duo Sans". The full name is
+ *  still what the page's title, spec lines and buttons say. */
+export function displayName(tf: Pick<Typeface, 'name'>): string {
+	return tf.name.startsWith(`${NAME_PREFIX} `) ? tf.name.slice(NAME_PREFIX.length + 1) : tf.name;
 }

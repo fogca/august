@@ -81,7 +81,7 @@ export function isEnterpriseTier(tierIndex: number): boolean {
 
 // ── Package definitions ──────────────────────────────────────────────────────
 
-export type TypefaceSlug = 'norma' | 'gq';
+export type TypefaceSlug = 'norma' | 'apgr-gq-sans';
 
 export interface PackageDef {
 	id: string;

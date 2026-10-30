@@ -1,30 +1,28 @@
 <!-- Catalogue. Layout: Figma node 3:671 long-form (PageSection `full`) —
-     "Fonts" as the page title with its one-line sub-heading, and the card
-     grid running full width underneath, bleeding to the section's edges so
-     its hairlines cross the whole page. nativeBody: each card's specimen is
-     set in that typeface's own face (inline font-family below), which
-     PageSection's brand-font rule would otherwise flatten to Ango. The card
-     chrome itself is in Ango (--font-en), bar the price — Ango's currency
-     glyphs aren't finished, so "From €…" stays in Norma. -->
+     "Fonts" as the page title with its one-line sub-heading, the list
+     underneath. The list was redone 2026-10-30, at the user's request, after
+     Kontrapunkt Type's shop (type.kontrapunkt.com/en/shop): one row to a
+     typeface, the name set huge in its own face (the "APGR" prefix dropped
+     there), the full name and "1 family, N styles" bottom-left, a pill
+     bottom-right, a rule between rows. It was a two-column card grid.
+     nativeBody: each name is set in that typeface's own face (inline
+     font-family below), which PageSection's brand-font rule would otherwise
+     flatten to Ango. The chrome (names, counts, pills) is in Ango (--font-en). -->
 <script lang="ts">
 	import PageSection from '$lib/components/PageSection.svelte';
-	import { TYPEFACES } from '$lib/data/typefaces.js';
-	import { getPackage } from '$lib/data/pricing.js';
-	import type { TypefaceSlug } from '$lib/data/pricing.js';
+	import { TYPEFACES, displayName } from '$lib/data/typefaces.js';
+	import type { Typeface } from '$lib/data/typefaces.js';
 
 	// Sort by order (ascending) to guarantee display sequence
 	const typefaces = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
-	// "Norma and upcoming releases" while Norma is public, "Ango and upcoming
-	// releases" while it is hidden (2026-10-11).
+	// "APGR Humorist and upcoming releases" — the first of the visible ones
+	// (Norma is hidden; it leads again when it is shown).
 	const lead = typefaces[0]?.name ?? 'Typefaces';
 
-	// "From €X" for the ones that have a package priced — Tier-1 Desktop.
-	// tf.slug is a plain string (typefaces.ts predates the narrower pricing
-	// union); getPackage simply returns undefined for slugs it doesn't know,
-	// so the cast is safe.
-	function fromPrice(slug: string): string | null {
-		const pkg = getPackage(slug as TypefaceSlug, `${slug}-complete`);
-		return pkg ? `From €${pkg.baseEur}` : null;
+	// "1 family, 9 styles" — upright styles, as on the typeface page. A name
+	// with no drawings yet has no count to give, so it says what it is.
+	function caption(tf: Typeface): string {
+		return tf.placeholder ? 'In development' : `1 family, ${tf.weights.length} styles`;
 	}
 </script>
 
@@ -38,57 +36,25 @@
 
 <main class="Fonts">
 	<PageSection title="Fonts" as="h1" subtitle="{lead} and upcoming releases" full nativeBody>
-		<!-- Grid referenced from increments.cc/fonts: two equal columns on
-		     desktop, one on mobile, hairlines standing in for gaps (no real
-		     gutter — the border is the gap). Each card carries its own
-		     catalogBg (§typefaces.ts) so the grid reads as swatches on hover,
-		     not a plain list. -->
-		<div class="Fonts__grid" aria-label="Typeface catalogue">
+		<div class="Fonts__list" aria-label="Typeface catalogue">
 			{#each typefaces as tf (tf.slug)}
-				<a href="/fonts/{tf.slug}" class="FontCard" aria-label="View {tf.name}">
-					<div class="FontCard__meta">
-						<span class="FontCard__name">{tf.name}</span>
-						<span class="FontCard__sep" aria-hidden="true">/</span>
-						<span class="FontCard__classification">{tf.classification}</span>
-					</div>
-
-					<!-- Specimen: a museum-exhibition label set in the face itself,
-					     rather than the typeface's own name (see typefaces.ts —
-					     referenced from increments.cc's Vorkurs card). All lines share
-					     one size and one weight — no headline/caption hierarchy — so the
-					     label reads as a single set piece of type, not a mini-poster.
-					     Text is always black; the card's own colour (catalogBg) only
-					     appears on hover, via --spec-bg below — omitted entirely
-					     (Norma) for a card with no hover swatch at all. Where
-					     specimenWeight is set (Alfred — no drawings yet) it overrides
-					     the family's default weight uniformly across every line, so the
-					     placeholder reads as "one weight of Norma", not an attempt at
-					     Norma's own real specimen. -->
-					<div
-						class="FontCard__specimen"
-						style="{tf.catalogBg
-							? `--spec-bg: ${tf.catalogBg};`
-							: ''} font-family: '{tf.fontFamily}', sans-serif;"
+				<a href="/fonts/{tf.slug}" class="FontRow" aria-label="View {tf.name}">
+					<!-- font-family inline on the element itself: base.css puts its own
+					     on every tag, which beats anything inherited. -->
+					<p
+						class="FontRow__name"
+						style="font-family: '{tf.fontFamily}', sans-serif; font-variation-settings: 'wght' {tf.specimenWeight ??
+							400}; font-weight: {tf.specimenWeight ?? 400};"
 					>
-						{#if tf.specimen}
-							{@const wght = tf.specimenWeight
-								? `font-variation-settings: 'wght' ${tf.specimenWeight};`
-								: ''}
-							{#each tf.specimen as line (line)}
-								<span class="FontCard__spec-line" style={wght}>{line}</span>
-							{/each}
-						{:else}
-							<span class="FontCard__spec-line">{tf.name}</span>
-						{/if}
-					</div>
+						{displayName(tf)}
+					</p>
 
-					<div class="FontCard__foot">
-						{#if tf.status === 'available'}
-							<span class="FontCard__price">{fromPrice(tf.slug)}</span>
-						{:else}
-							<span class="FontCard__price FontCard__price--soon">Coming soon</span>
-						{/if}
-						<span class="FontCard__view">View</span>
+					<div class="FontRow__foot">
+						<div class="FontRow__caption">
+							<span class="FontRow__title">{tf.name}</span>
+							<span class="FontRow__count">{caption(tf)}</span>
+						</div>
+						<span class="FontRow__pill">{tf.status === 'available' ? 'Buy' : 'Coming soon'}</span>
 					</div>
 				</a>
 			{/each}
@@ -101,159 +67,88 @@
 		background: var(--color-bg);
 	}
 
-	/* 1 column on phones, 2 equal columns from tablet up — no grid-gap: the
-	   border on each card stands in for it, same as the reference. Bleeds
-	   out to the section's edges (PageSection exposes its insets) so the
-	   hairlines run the full page width; the cards put the inset back as
-	   their own padding. */
-	.Fonts__grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		border-top: 1px solid var(--color-line);
-		margin-inline: calc(-1 * var(--ps-inset-left)) calc(-1 * var(--ps-inset-right));
+	/* A rule above the first row and under every one, at the page's own inset
+	   (the section's padding) — the rows are not full-bleed. */
+	.Fonts__list {
+		border-top: 1px solid var(--color-text);
 	}
 
-	.FontCard {
+	.FontRow {
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
+		gap: 24px;
+		/* Kontrapunkt's rows are about a third of the page's width tall. */
+		min-height: clamp(300px, 33vw, 480px);
+		padding: 20px 0;
 		text-decoration: none;
 		color: var(--color-text);
-		border-bottom: 1px solid var(--color-line);
-		padding-inline: var(--ps-inset-left) var(--ps-inset-right);
+		border-bottom: 1px solid var(--color-text);
 		transition: opacity 0.15s ease;
 	}
 
-	.FontCard:hover {
+	.FontRow:hover {
 		opacity: 0.75;
 	}
 
-	@media (min-width: 768px) {
-		.Fonts__grid {
-			grid-template-columns: 1fr 1fr;
-		}
-
-		/* Vertical hairline between the two desktop columns: right border on
-		   the left card of every row (odd items in a 2-col grid). Inner edges
-		   get the header's own 20px; outer edges keep the section inset. */
-		.FontCard:nth-child(odd) {
-			border-right: 1px solid var(--color-line);
-			padding-right: 20px;
-		}
-
-		.FontCard:nth-child(even) {
-			padding-left: 20px;
-		}
+	/* The name: huge, centred in the space above the caption. */
+	.FontRow__name {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		font-size: clamp(64px, 12vw, 180px);
+		line-height: 1;
+		letter-spacing: 0;
+		text-align: center;
+		color: var(--color-text);
 	}
 
-	.FontCard__meta {
+	.FontRow__foot {
 		display: flex;
-		align-items: baseline;
-		gap: 8px;
-		padding-block: 20px;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 16px;
+	}
+
+	.FontRow__caption {
+		display: grid;
+		gap: 2px;
 	}
 
 	/* base.css puts its own font-family straight on every span; the brand
 	   face has to be asserted per element, not inherited. */
-	.FontCard__name,
-	.FontCard__classification,
-	.FontCard__sep,
-	.FontCard__view {
+	.FontRow__title,
+	.FontRow__count,
+	.FontRow__pill {
 		font-family: var(--font-en), sans-serif;
 		font-variation-settings: 'wght' 350;
 		letter-spacing: 0;
 		color: var(--color-text);
 	}
 
-	.FontCard__name {
+	.FontRow__title {
 		font-size: 15px;
+		line-height: 1.3;
 	}
 
-	.FontCard__sep {
-		opacity: 0.4;
-	}
-
-	.FontCard__classification {
-		font-size: 13px;
+	.FontRow__count {
+		font-size: 15px;
+		line-height: 1.3;
 		opacity: 0.6;
 	}
 
-	/* Specimen block — fixed aspect so every card in the grid holds the same
-	   proportions regardless of how much its specimen sets. Text is always
-	   black: catalogBg is chosen light enough for that pairing (see
-	   typefaces.ts) for when the hover rule below brings it in. */
-	.FontCard__specimen {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		aspect-ratio: 16 / 10;
-		background: transparent;
-		color: #000;
-		letter-spacing: 0;
-		padding: clamp(20px, 4vw, 40px);
-		font-variant-numeric: tabular-nums slashed-zero;
-		transition: background-color 0.2s ease;
-	}
-
-	/* Swatch only on hover — see --spec-bg set inline above. At rest the
-	   specimen sits directly on the page background (no colour, no border),
-	   so the grid reads as plain type until a card is hovered. */
-	.FontCard:hover .FontCard__specimen {
-		background: var(--spec-bg);
-	}
-
-	/* Uniform museum-label type: every line shares one size and one weight
-	   (2026-08-29 — an earlier pass gave the dedicatee line its own larger,
-	   bolder treatment; this reads instead as one continuous set line,
-	   closer to a gallery wall label than a poster headline). Line count
-	   varies per typeface (3 for the museum-label cards, 4 for Norma's A–Z /
-	   a–z) — the typography doesn't distinguish roles either way, so a
-	   single rule with even spacing between every line covers both. */
-	.FontCard__spec-line {
-		display: block;
-		text-align: center;
-		font-size: clamp(32px, 3.2vw, 36px);
-		line-height: 1.15;
-		/* base.css applies its own font-family to every span/div/etc as a
-		   plain tag-selector rule — that beats inheritance regardless of the
-		   parent's own font-family, so without this the specimen silently
-		   fell back to Norma instead of the typeface's own font (its inline
-		   style is on .FontCard__specimen, the parent, not this span). */
-		font-family: inherit;
-	}
-
-	.FontCard__spec-line + .FontCard__spec-line {
-		margin-top: clamp(4px, 1vw, 10px);
-	}
-
-	.FontCard__foot {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		padding-block: 20px;
-		margin-top: auto;
-	}
-
-	/* Norma, not Ango — the € sign (see the header comment). */
-	.FontCard__price {
-		font-family: var(--font-norma), sans-serif;
-		font-size: 13px;
-		font-variation-settings: 'wght' 350;
-		letter-spacing: 0;
-		color: var(--color-text);
-		opacity: 0.6;
-	}
-
-	.FontCard__price--soon {
-		font-family: var(--font-en), sans-serif;
-	}
-
-	.FontCard__view {
-		font-size: 13px;
-		border: 1px solid var(--color-line);
+	/* A filled pill, as Kontrapunkt's "Buy". The ink and the page colour swap,
+	   so it follows the page's theme. */
+	.FontRow__pill {
+		flex: none;
+		font-size: 16px;
+		line-height: 1.2;
+		color: var(--color-bg);
+		background: var(--color-text);
 		border-radius: 999px;
-		padding: 8px 18px;
+		padding: 8px 16px;
 		white-space: nowrap;
 	}
 </style>

@@ -16,6 +16,10 @@
 	interface Props {
 		weights: WeightDef[];
 		fontFamily: string;
+		/** The typeface's public name, for what the page says about it — the
+		 *  CSS family (`fontFamily`) is an internal name and falls back here
+		 *  only when none is given. */
+		name?: string;
 		/** Per-weight default word — row i uses defaultTexts[i % length]. One
 		 *  word per row: at the default size a sentence would fill the row. */
 		defaultTexts: string[];
@@ -35,6 +39,7 @@
 	let {
 		weights,
 		fontFamily,
+		name,
 		defaultTexts,
 		defaultNotes,
 		available = true,
@@ -57,13 +62,13 @@
 	const initialAlign = isPhone ? WEIGHT_ROW_ALIGN_DEFAULT_MOBILE : WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP;
 </script>
 
-<section class="TypeTester" aria-label="Type Tester — {fontFamily}">
+<section class="TypeTester" aria-label="Type Tester — {name ?? fontFamily}">
 	<div class="TypeTester__header">
 		<h2 class="TypeTester__title">Type Tester</h2>
 		<p class="TypeTester__hint">Click any line to edit · drag A—A to resize</p>
 		{#if !available}
 			<p class="TypeTester__notice">
-				{fontFamily} is in development. Preview shown in Norma.
+				{name ?? fontFamily} is in development. Preview shown in Norma.
 			</p>
 		{/if}
 	</div>
