@@ -173,19 +173,20 @@
 	<!-- Spec lines (two columns) and the description, under a rule -->
 	<section class="FontIntro" aria-label="About {tf.name}">
 		<div class="FontIntro__cols">
-			{#each specColumns as column, ci (ci)}
-				<dl class="FontSpec" aria-label="Information">
-					{#each column as [label, value] (label)}
-						<div class="FontSpec__line">
-							<dt>{label}:</dt>
-							<dd>{value}</dd>
-						</div>
+			{#if !tf.placeholder}
+				<!-- Styles, each set in itself at its own weight (Kontrapunkt Type's
+				     "KP Duo Sans Light, Italic ..." list), top left; upright only. -->
+				<ul class="FontStyles" aria-label="Styles">
+					{#each tf.weights as w (w.id)}
+						<li
+							class="FontStyles__item"
+							style="font-variation-settings: 'wght' {w.axisValue}; font-weight: {w.axisValue};"
+						>
+							{tf.name} {w.label}
+						</li>
 					{/each}
-					{#if ci === 1 && tf.info?.note}
-						<p class="FontSpec__note">{tf.info.note}</p>
-					{/if}
-				</dl>
-			{/each}
+				</ul>
+			{/if}
 
 			<div class="FontIntro__text">
 				{#if !tf.placeholder}
@@ -195,6 +196,23 @@
 				{#if tf.descriptionFr}
 					<p class="FontIntro__description fr" lang="fr">{tf.descriptionFr}</p>
 				{/if}
+
+				<!-- The spec lines, under the description -->
+				<div class="FontSpecs">
+					{#each specColumns as column, ci (ci)}
+						<dl class="FontSpec" aria-label="Information">
+							{#each column as [label, value] (label)}
+								<div class="FontSpec__line">
+									<dt>{label}:</dt>
+									<dd>{value}</dd>
+								</div>
+							{/each}
+							{#if ci === 1 && tf.info?.note}
+								<p class="FontSpec__note">{tf.info.note}</p>
+							{/if}
+						</dl>
+					{/each}
+				</div>
 			</div>
 		</div>
 
@@ -293,7 +311,7 @@
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
-		defaultSizeDesktop={isHumorist ? 100 : tf.slug === 'norma' ? 36 : undefined}
+		defaultSizeDesktop={isHumorist ? 160 : tf.slug === 'norma' ? 36 : undefined}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 	/>
 
@@ -468,7 +486,8 @@
 		padding: 0 var(--padding) clamp(56px, 8.4vh, 76px);
 	}
 
-	/* The rule, then two spec columns and the description at 1 : 1 : 2
+	/* The rule, then the styles (top left, across the first two columns) and the
+	   description with the spec lines under it (right), at 1 : 1 : 2
 	   (Kontrapunkt's own proportions). One column on a phone. */
 	.FontIntro__cols {
 		display: grid;
@@ -482,6 +501,41 @@
 			grid-template-columns: 1fr 1fr 2fr;
 			gap: 10px 24px;
 			align-items: start;
+		}
+
+		.FontStyles {
+			grid-column: 1 / 3;
+		}
+
+		.FontIntro__text {
+			grid-column: 3;
+		}
+	}
+
+	/* Each style set in itself at its own weight, tight, as Kontrapunkt's list. */
+	.FontStyles {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.FontStyles__item {
+		font-size: clamp(22px, 2.8vw, 40px);
+		line-height: 1.15;
+		letter-spacing: 0;
+		color: var(--color-text);
+	}
+
+	/* The spec lines under the description: two columns from the tablet up. */
+	.FontSpecs {
+		display: grid;
+		gap: 28px 24px;
+		margin-top: 40px;
+	}
+
+	@media (min-width: 768px) {
+		.FontSpecs {
+			grid-template-columns: 1fr 1fr;
 		}
 	}
 
