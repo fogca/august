@@ -1,7 +1,7 @@
 <!-- Home page top (2026-10 redesign, Figma "II-ii"): the opening (1:635 PC,
      7:782 SP), then the resting top (175:178 PC, 7:874 SP).
 
-     Opening: the wordmark's letters, in the brand orange, rise into place
+     Opening: the wordmark's letters, in white, rise into place
      left to right on the brand-blue ground (Figma 1:635; colours swapped
      from the first cut, 2026-10, at the user's request — so the logo turns
      blue at the very moment the ground turns white). Then the ground lifts
@@ -268,7 +268,7 @@
 	}
 
 	/* Only the ground fades (to transparent, so the page and the rising hero
-	   show through); the letters are not faded but recoloured, orange to the
+	   show through); the letters are not faded but recoloured, white to the
 	   Header's blue, over the same beat. */
 	@keyframes opening-lift {
 		to {
@@ -278,7 +278,7 @@
 	}
 
 	.Opening :global(.Logo__word) {
-		color: var(--brand-orange);
+		color: var(--white);
 		animation: logo-to-blue var(--lift-dur) ease var(--lift-at) forwards;
 	}
 
@@ -317,7 +317,7 @@
 		font-variation-settings: 'wght' 400;
 		line-height: 1.4;
 		letter-spacing: 0;
-		color: var(--brand-blue);
+		color: var(--color-text);
 		animation: lead-in var(--lead-dur) ease var(--lead-at) backwards;
 	}
 

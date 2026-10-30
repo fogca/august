@@ -10,21 +10,13 @@
      one) and Location (2026-09, at the user's request, to keep the studio's
      city out of the site's copy as far as reasonably possible).
 
-     Amber ground per base.css's own note on --color-amber ("New brand color
-     (2026-09) — first use: the About page background. Pairs with black text").
+     White ground, black text (2026-10-31, the white / blue / black palette;
+     it was the summer amber).
      Language switching uses the site-wide [data-lang] attribute on <html>, in
      the positive-match form (`[data-lang='fr'] .en { display:none }`), never
      `:not([data-lang='en'])` — that also matches every element with no
      attribute at all, which is most of the document. -->
-<script lang="ts">
-	import { summerColor, summerColorHex } from '$lib/state/summerColor.svelte';
-</script>
-
-<section
-	class="HomeAbout"
-	id="about"
-	style="--summer-color: {summerColorHex(summerColor.current)};"
->
+<section class="HomeAbout" id="about">
 	<div class="HomeAbout__inner">
 		<p class="HomeAbout__label">2026</p>
 
@@ -62,9 +54,7 @@
 <style>
 	.HomeAbout {
 		min-height: 100svh;
-		/* Driven by the debug switcher (2026-09) — falls back to the amber
-		   token if --summer-color somehow isn't set. */
-		background: var(--summer-color, var(--color-amber, #ffbb32));
+		background: var(--color-bg);
 		display: flex;
 		align-items: center;
 		padding-block: clamp(96px, 12vh, 160px);
@@ -72,12 +62,11 @@
 
 	/* base.css §7 re-asserts `color: var(--color-text)` on div/p/a/dt/dd
 	   INDIVIDUALLY, so a plain `color` on this section would never reach them.
-	   Brand blue now (2026-10, at the user's request — "黒の部分は青に変更";
-	   was black, which is what the amber was documented to pair with) — the
-	   rule exists so the section owns its own colour instead of inheriting
+	   Black on the white ground (2026-10-31: text is not blue) — the rule
+	   exists so the section owns its own colour instead of inheriting
 	   whatever the token happens to be. */
 	.HomeAbout :global(*) {
-		color: var(--brand-blue);
+		color: var(--color-text);
 	}
 
 	.HomeAbout__inner {

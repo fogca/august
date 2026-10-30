@@ -427,8 +427,8 @@
 		padding: 0 0 40px;
 		/* Black text on this page (2026-10, at the user's request — "各書体の
 		   ページ情報やタイプテスターなどは、ブラックテキストに"). The site
-		   chrome (Header, Footer, the masthead wordmark) stays brand blue; the
-		   About and Licensing pages keep their playful blue-on-peach. These
+		   chrome (the wordmark) stays brand blue. (Since 2026-10-31 every page's
+		   text is black, so this scope no longer differs from the theme.) These
 		   are the tokens the page and its components read, so one scope
 		   covers the intro, the Type Tester, the glyph set and the rest. */
 		--color-text: #000000;

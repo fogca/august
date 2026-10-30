@@ -1,6 +1,6 @@
 <!-- Editorial page shell for the site's own pages — Contact, the legal
      pages, Fonts and Buy — per Figma 3:671 (file UEy0lKKtgP8jN4x2DWZUOB, the
-     2026-10 Apres Guerre redesign): blue on peach, the page title set large
+     2026-10 Apres Guerre redesign): black on white, the page title set large
      (Ango Regular, 120px at the 1440 width) and pinned to the bottom-left of
      the screen, the copy running down a right-hand column from x=584 (28px
      headings, 16px/1.4 text).

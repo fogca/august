@@ -98,19 +98,16 @@ a {
   /* Sharper signal red — top-page redesign (2026-08) + Header logo. Distinct
      from the older, muted --color-accent above; do not merge the two. */
   --color-signal:    #e0231c;
-  /* New brand color (2026-09) — first use: the About page background. Pairs
-     with black text (--color-text), not white. */
-  --color-amber:     #ffbb32;
 
-  /* Apres Guerre brand palette (2026-10 rebrand, Figma "II-ii"). */
+  /* Apres Guerre brand palette (2026-10 rebrand, Figma "II-ii"): white, blue
+     and black (2026-10-31, at the user's request — the orange, the peach and
+     the amber are gone). */
   /* rgb(25 40 153): the user's own value (2026-10-12, "--currentColorを
      rgb(25 40 153)に変えて") — the colour the wordmark, the header and the
      page text all paint with. The translucent tints below (and Header.svelte's
      BLUE_LUM, which mirrors it for its contrast test) are built from the same
      three numbers. Was #263399. */
   --brand-blue:   rgb(25 40 153);
-  --brand-peach:  #f3d6bc;  /* page background (every page but the home) */
-  --brand-orange: #da6930;  /* the home page's opening screen */
   --brand-hero:   #3e3e3e;  /* home page typeface heroes */
   --brand-paper:  #f1f0ef;  /* text on the heroes */
 
@@ -216,42 +213,16 @@ a {
    :root, so the aliases that read these (--background, --black) pick the
    themed values up.
 
-   Brand blue is the text colour everywhere now (2026-10, at the user's
-   request — "黒の部分は青に変更"); only the ground differs:
-     home  — white (the defaults above)
-     white — white, the typeface detail pages
-     about — brand blue, /about (below; its text is orange, not blue)
-     page  — peach (Figma 3:671), every other page */
-html[data-theme='home'],
-html[data-theme='white'],
-html[data-theme='page'] {
-  --color-text:      var(--brand-blue);
-  /* 0.8: ≥4.5:1 (WCAG AA) on white, the peach and the raised panels below. */
-  --color-text-mute: rgb(25 40 153 / 0.8);
-}
-
-html[data-theme='white'],
-html[data-theme='page'] {
-  --color-line:      rgb(25 40 153 / 0.2);
-}
-
-html[data-theme='page'] {
-  --color-bg:        var(--brand-peach);
-  /* Raised panels (cards, order summary): the peach lifted toward white. */
-  --color-bg-gray:   #f8e6d7;
-}
-
-/* about — the brand blue ground (the home opening's) with the peach the other
-   pages use for their ground as its text colour (2026-10, at the user's
-   request — first "OPのカラーリングで青背景・オレンジテキスト", then "Aboutのテ
-   キストカラーをピンク系の明るめの色、その他ページでつかってるものにして").
-   The translucent tints are built from the peach's own numbers (rgb 243 214
-   188), as the blue ones are from the blue's. Peach on this blue is ~8.4:1
-   (WCAG AA); the wordmark stays the opening's orange (Header.svelte). */
+   The palette is white, blue and black (2026-10-31, at the user's request —
+   "ホワイト・ブルー・ブラックでシンプルにまとめたい", "テキストは基本ブルーにしな
+   い"): text is black, and the blue is the wordmark and the accents (the
+   buttons, the blue grounds). The orange and the peach are gone.
+     home, white, page — the :root defaults above: black on white
+     about — white text on the brand blue ground, /about (below) */
 html[data-theme='about'] {
-  --color-text:      var(--brand-peach);
-  --color-text-mute: rgb(243 214 188 / 0.8);
-  --color-line:      rgb(243 214 188 / 0.3);
+  --color-text:      #ffffff;
+  --color-text-mute: rgb(255 255 255 / 0.8);
+  --color-line:      rgb(255 255 255 / 0.3);
   --color-bg:        var(--brand-blue);
 }
 

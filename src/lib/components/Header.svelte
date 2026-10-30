@@ -410,18 +410,17 @@
 
 	/* /about (base.css, html[data-theme='about']): its ground is the brand
 	   blue, which the probe reads as dark — but the nav and Cart there take
-	   the page's own text colour (the peach), not the paper white a dark
-	   surface would give them, and the wordmark keeps the brand orange it has
-	   in the opening. */
+	   the page's own text colour (white), and the wordmark is white too
+	   (2026-10-31; it was the opening's orange). */
 	:global(html[data-theme='about']) .Header,
 	:global(html[data-theme='about']) .Header.is-on-dark {
 		color: var(--color-text);
 	}
 
 	/* The wordmark's words inherit their colour (the .Header * { color:
-	   inherit } above), so it is the link around them that carries the orange. */
+	   inherit } above), so it is the link around them that carries the white. */
 	:global(html[data-theme='about']) .Header__logo {
-		color: var(--brand-orange);
+		color: var(--white);
 	}
 
 	/* The nav, Cart and the menu toggle are black (2026-10-31, at the user's
@@ -753,7 +752,7 @@
 	}
 
 	/* Black like the nav; on /about the panel is the brand blue, so the page's
-	   own text colour (the peach) there. */
+	   own text colour (white) there. */
 	.MenuPanel :global(*) {
 		color: #000000;
 	}

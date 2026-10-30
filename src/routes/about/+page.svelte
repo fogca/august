@@ -10,10 +10,10 @@
 
      Both blocks share one ground (2026-09, "その下も全体的に背景色ありに
      して") so the whole page reads as one continuous coloured page — the
-     "about" page theme's own orange on blue since 2026-10 (the home
-     opening's colours, at the user's request — "Aboutページのカラーリング
-     を、OPのカラーリングで青背景・オレンジテキストにして"; it was blue on
-     peach, and the summer amber with black text before that), so the
+     "about" page theme's own white on blue since 2026-10-31 (the home
+     opening's colours, minus the orange — the palette is white, blue and
+     black; it was orange on blue, before that blue on peach, and the summer
+     amber with black text before that), so the
      Header, painted in the page colour, sits on it seamlessly.
 
      No arrow-icon link here any more (2026-09, at the user's request —
@@ -480,10 +480,10 @@
 		opacity: 0.8;
 	}
 
-	/* The box is the text colour (orange here), so its label can't be white:
-	   it takes the ground's blue. */
+	/* The box is the text colour (white here), so its label can't be white:
+	   black (2026-10-31: text is not blue). */
 	:global(html[data-theme='about']) .About__cta {
-		color: var(--color-bg);
+		color: #000000;
 	}
 
 	@media (max-width: 767.98px) {

@@ -202,15 +202,14 @@
 </div>
 
 <style>
-	/* Light tone follows the page theme (blue on peach since the 2026-10
-	   redesign; black on white wherever the theme is the default). */
+	/* Light tone follows the page theme (black on white). */
 	.ContactForm {
 		--field-line: color-mix(in srgb, var(--color-text) 35%, transparent);
 		--field-fg: var(--color-text);
 		--submit-bg: var(--color-text);
 		--submit-fg: #ffffff;
-		/* The signal red is 3.4:1 on the peach page — a deeper red of the
-		   same hue clears AA (4.7:1 on peach, 5.4:1 on white). */
+		/* The signal red is under AA on white at this size — a deeper red of
+		   the same hue clears it (5.4:1). */
 		--error-fg: #b3261e;
 	}
 

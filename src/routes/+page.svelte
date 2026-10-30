@@ -527,8 +527,9 @@
 
 	/* Solid, square-cornered box link (2026-09, at the user's request —
 	   "Top AboutとCustomセクションのボタンもContact同様ボックスリンクに変更")
-	   — replaces the Arrow.svelte + text pattern. Brand blue on the brand
-	   orange (2026-10, at the user's request — was white on the signal red). */
+	   — replaces the Arrow.svelte + text pattern. Black on white (2026-10-31,
+	   the white / blue / black palette; it was blue on the brand orange, and
+	   white on the signal red before that). */
 	.Home__customCopy .Custom__cta {
 		display: inline-flex;
 		align-items: center;
@@ -538,8 +539,8 @@
 		font-size: 15px;
 		font-weight: 500;
 		font-variation-settings: 'wght' 500;
-		color: var(--brand-blue);
-		background: var(--brand-orange);
+		color: #000000;
+		background: #ffffff;
 		border: 0;
 		border-radius: 0;
 		text-decoration: none;
@@ -623,7 +624,7 @@
 		font-size: 15px;
 		font-weight: 500;
 		font-variation-settings: 'wght' 500;
-		color: var(--brand-blue);
+		color: #000000;
 		background: #ffffff;
 		border: 0;
 		border-radius: 0;

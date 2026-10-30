@@ -25,7 +25,7 @@
 //    reused, but only after a cheap revalidation round-trip, never blindly.
 //
 // Also: the page theme (2026-10 Apres Guerre redesign). app.html ships
-// data-theme="page" (blue on peach); the home page is "home" and the
+// data-theme="page" (black on white); the home page is "home" and the
 // typeface detail pages "white" (see $lib/theme.ts), swapped in here so the
 // very first paint is already the right colour. +layout.svelte keeps the
 // attribute in sync on client-side navigation.

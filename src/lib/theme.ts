@@ -2,15 +2,15 @@
 // Shared by hooks.server.ts (first paint) and +layout.svelte (client-side
 // navigation), so the two can't disagree.
 //
-//   home  — the home page: white, brand blue text.
+// The palette is white, blue and black (2026-10-31, at the user's request):
+// text is black, blue is the wordmark and the accents.
+//
+//   home  — the home page: black on white.
 //   white — the typeface detail pages (/fonts/<slug>): the same, but a page
-//           of their own rather than the home page's (2026-10, at the
-//           user's request — "白背景で問題ない").
-//   about — /about, in the home opening's own colours: brand orange text on
-//           the brand blue ground (2026-10, at the user's request — "Aboutペ
-//           ージのカラーリングを、OPのカラーリングで青背景・オレンジテキスト
-//           にして").
-//   page  — everything else: brand blue on peach.
+//           of their own rather than the home page's.
+//   about — /about: white text on the brand blue ground, the home opening's
+//           own colours.
+//   page  — everything else: black on white.
 export type Theme = 'home' | 'white' | 'about' | 'page';
 
 const TYPEFACE_PAGE = /^\/fonts\/[^/]+\/?$/;
@@ -29,5 +29,5 @@ export const THEME_BG_TOKEN: Record<Theme, string> = {
 	home: '--white',
 	white: '--white',
 	about: '--brand-blue',
-	page: '--brand-peach'
+	page: '--white'
 };

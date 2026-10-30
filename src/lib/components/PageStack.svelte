@@ -7,7 +7,7 @@
      section's own heading lives inline at the top of its own body.
 
      Laid out per Figma 3:671 (2026-10 Apres Guerre redesign), the same as
-     PageSection.svelte's pinned layout: blue on peach, the title set large
+     PageSection.svelte's pinned layout: black on white, the title set large
      (Ango Regular, 120px at 1440) pinned to the bottom-left of the screen,
      the body running down the right-hand column from x=584 (28px headings,
      16px/1.4 text). SP stacks title, sub-heading and body and pins nothing.
