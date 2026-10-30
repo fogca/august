@@ -247,6 +247,16 @@ html[data-theme='about'] {
   }
 }
 
+/* PC (from 1060px, where the Header has its inline nav): a shorter bar — the
+   small lockup and the link row centred in it (2026-10-31, at the user's
+   request). It is also what every page but the home reserves above its content
+   (--masthead-h below). */
+@media (min-width: 1060px) {
+  :root {
+    --header-bar-h: 72px;
+  }
+}
+
 :root {
   --masthead-gap: 60px;
   /* Leads with 10px, not the wordmark's own 35px top offset (2026-10, the

@@ -14,7 +14,9 @@
 	//   the left, Cart on the right, on no fill (see "Colour follows the
 	//   surface" below). On PC (from 1060px, where the inline nav exists) the
 	//   lockup is smaller and sits on the left margin, and the nav and Cart
-	//   are one group at the right (2026-10-31, at the user's request).
+	//   are one group at the right, on a bar in the page's own background
+	//   colour with a 0.5px #999 rule under it (2026-10-31, at the user's
+	//   request). Below 1060px the header still has no fill.
 	//
 	// The shrink moves the large wordmark's two words themselves (one
 	// transform each, scale about their top-left) onto two invisible "slot"
@@ -153,8 +155,10 @@
 	}
 
 	function probeSurface() {
-		// Open, the menu panel (light) is what is under it.
-		if (open) {
+		// Open, the menu panel (light) is what is under it. On PC, once compact,
+		// it is the bar's own page-coloured fill — whatever scrolls beneath is
+		// hidden — so the default ink stands (/about's blue bar sets its own).
+		if (open || (compact && window.matchMedia('(min-width: 1060px)').matches)) {
 			onDark = false;
 			return;
 		}
@@ -185,6 +189,7 @@
 
 	$effect(() => {
 		void open;
+		void compact;
 		scheduleProbe();
 	});
 
@@ -625,11 +630,43 @@
 	   右にテキストリンク固めて"). The group ignores the pointer itself — the
 	   links take it once they are shown (see .is-compact below). */
 	@media (min-width: 1060px) {
+		/* The bar is --header-bar-h (72px here, base.css) tall: the lockup and the
+		   link row are centred in it (the lockup 170px wide, 19px tall; the links
+		   17.5px). */
 		.Header {
-			--lockup-w: 200px;
-			--lockup-top: 30px;
+			--lockup-w: 170px;
+			--lockup-top: 27px;
+			--row-top: 27px;
 			--lockup-left: var(--edge);
 			--lockup-left-cq: var(--edge);
+		}
+
+		/* The bar: the page's background colour (white; /about's blue) with a
+		   0.5px #999 rule under it (2026-10-31, at the user's request — "PC
+		   Header背景色あり・border-bottom .5pxで#999"; a border cannot be thinner
+		   than a device pixel, so 1px on a 1x screen). It exists in the compact
+		   state only: the home page's large wordmark at scroll 0 has none. */
+		.Header::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			box-sizing: border-box;
+			height: var(--header-bar-h);
+			background: var(--color-bg);
+			border-bottom: 0.5px solid #999999;
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.Header.is-compact::before {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		.Header.is-ready::before {
+			transition: opacity 0.3s ease;
 		}
 
 		.Header__right {
