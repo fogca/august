@@ -517,18 +517,19 @@
 		opacity: 0.6;
 	}
 
-	/* PC: 16px at wght 350 (2026-10, the user's own values — "PCのheaderの
-	   テキストサイズを16pxにして、wght350に"); 12px / 400 as drawn in
-	   Figma 3:671 stays below 768px. */
+	/* PC: 14px at wght 450 (2026-10-31, the user's own values, pasted as
+	   font-variation-settings 'wght' 450 / font-weight 450 / font-size 14px;
+	   it was 16px at 350 from 2026-10); 12px / 400 as drawn in Figma 3:671
+	   stays below 768px. */
 	@media (min-width: 768px) {
 		.Header__nav,
 		.Header__cart {
-			font-size: 16px;
+			font-size: 14px;
 		}
 
 		.Header__link {
-			font-weight: 350;
-			font-variation-settings: 'wght' 350;
+			font-weight: 450;
+			font-variation-settings: 'wght' 450;
 		}
 	}
 
