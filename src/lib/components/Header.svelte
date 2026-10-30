@@ -12,7 +12,9 @@
 	//   always: the wordmark shrinks into a small centred lockup (the Japanese
 	//   subline under it was removed, 2026-10, at the user's request), nav on
 	//   the left, Cart on the right, on no fill (see "Colour follows the
-	//   surface" below).
+	//   surface" below). On PC (from 1060px, where the inline nav exists) the
+	//   lockup is smaller and sits on the left margin, and the nav and Cart
+	//   are one group at the right (2026-10-31, at the user's request).
 	//
 	// The shrink moves the large wordmark's two words themselves (one
 	// transform each, scale about their top-left) onto two invisible "slot"
@@ -61,6 +63,10 @@
 	const fonts = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
 	// The panel's own "Fonts" group stands in for that one link.
 	const PAGES = SITE_NAV.filter((item) => item.href !== '/fonts');
+	// The PC inline nav leaves out License and Contact (2026-10-31, at the
+	// user's request): the footer carries both, and the menu panel below 1060px
+	// (PAGES) still lists every page.
+	const HEADER_NAV = SITE_NAV.filter((item) => !['/licensing', '/contact'].includes(item.href));
 
 	/** Untransformed box of an absolutely positioned element, in its
 	 *  containing block's px. Computed styles rather than offset* (integer-
@@ -276,21 +282,25 @@
 		<span class="Header__ring" aria-hidden="true"></span>
 	</a>
 
-	<nav class="Header__nav" aria-label="Primary navigation">
-		{#each SITE_NAV as item (item.href)}
-			<a class="Header__link" href={item.href}>{item.label}</a>
-		{/each}
-	</nav>
+	<!-- On PC the nav and Cart sit together at the right (this wrapper); below
+	     1060px it is not a box at all and each keeps its own place. -->
+	<div class="Header__right">
+		<nav class="Header__nav" aria-label="Primary navigation">
+			{#each HEADER_NAV as item (item.href)}
+				<a class="Header__link" href={item.href}>{item.label}</a>
+			{/each}
+		</nav>
 
-	<!-- The frame pairs "Account" with Cart; Account stays out until there
-	     is an account system behind it (2026-09, at the user's request). -->
-	<div class="Header__cart">
-		<button type="button" class="Header__link" onclick={showCartNote}>Cart (0)</button>
-		{#if cartNoteVisible}
-			<p class="Header__cart-note" role="status" transition:fade={{ duration: 150 }}>
-				Available from October
-			</p>
-		{/if}
+		<!-- The frame pairs "Account" with Cart; Account stays out until there
+		     is an account system behind it (2026-09, at the user's request). -->
+		<div class="Header__cart">
+			<button type="button" class="Header__link" onclick={showCartNote}>Cart (0)</button>
+			{#if cartNoteVisible}
+				<p class="Header__cart-note" role="status" transition:fade={{ duration: 150 }}>
+					Available from October
+				</p>
+			{/if}
+		</div>
 	</div>
 
 	<button
@@ -366,6 +376,11 @@
 		   space the layout reserves above the content (--masthead-h). */
 		--lockup-w: 273.3px;
 		--lockup-top: 28px;
+		/* The lockup's left edge: centred, as Figma 3:671 has it — or on the
+		   page margin on PC (the 1060px block below). The second is the same
+		   in the container units the words' own CSS works in. */
+		--lockup-left: calc(50% - var(--lockup-w) / 2);
+		--lockup-left-cq: calc(50cqw - var(--lockup-w) / 2);
 		/* The page's side inset (base.css --padding) — the wordmark's margin. */
 		--edge: var(--padding);
 		--row-top: 33px;
@@ -464,12 +479,12 @@
 	   .Header__slot boxes below; cqw is the Logo's own container, the full
 	   header width). */
 	.Header__logo :global(.Logo__word--apres) {
-		--slot-left: calc(50cqw - var(--lockup-w) / 2);
+		--slot-left: var(--lockup-left-cq);
 	}
 
 	.Header__logo :global(.Logo__word--guerre) {
 		--slot-left: calc(
-			50cqw - var(--lockup-w) / 2 + var(--lockup-w) * var(--logo-guerre-x) / var(--logo-w)
+			var(--lockup-left-cq) + var(--lockup-w) * var(--logo-guerre-x) / var(--logo-w)
 		);
 	}
 
@@ -505,7 +520,7 @@
 	.Header__ring {
 		position: absolute;
 		top: calc(var(--lockup-top) + var(--safe-top) - 6px);
-		left: calc(50% - var(--lockup-w) / 2 - 8px);
+		left: calc(var(--lockup-left) - 8px);
 		width: calc(var(--lockup-w) + 16px);
 		height: calc(var(--lockup-w) * var(--logo-h) / var(--logo-w) + 12px);
 		outline: 1px solid currentColor;
@@ -534,12 +549,12 @@
 
 	/* Same x ranges as Logo.svelte's words, at the lockup's width. */
 	.Header__slot--apres {
-		left: calc(50% - var(--lockup-w) / 2);
+		left: var(--lockup-left);
 		width: calc(var(--lockup-w) * var(--logo-apres-w) / var(--logo-w));
 	}
 
 	.Header__slot--guerre {
-		left: calc(50% - var(--lockup-w) / 2 + var(--lockup-w) * var(--logo-guerre-x) / var(--logo-w));
+		left: calc(var(--lockup-left) + var(--lockup-w) * var(--logo-guerre-x) / var(--logo-w));
 		width: calc(var(--lockup-w) * var(--logo-guerre-w) / var(--logo-w));
 	}
 
@@ -561,6 +576,12 @@
 	.Header__cart {
 		right: var(--edge);
 		font-size: 12px;
+	}
+
+	/* Below 1060px the wrapper is not a box: nav and Cart place themselves, as
+	   they always did. */
+	.Header__right {
+		display: contents;
 	}
 
 	.Header__link {
@@ -595,6 +616,38 @@
 		.Header__link {
 			font-weight: 450;
 			font-variation-settings: 'wght' 450;
+		}
+	}
+
+	/* PC (from 1060px, where the inline nav exists): the lockup is smaller and
+	   on the left margin; the nav and Cart are one group on the right margin
+	   (2026-10-31, at the user's request — "ロゴはPCではもっと小さく、左に配置。
+	   右にテキストリンク固めて"). The group ignores the pointer itself — the
+	   links take it once they are shown (see .is-compact below). */
+	@media (min-width: 1060px) {
+		.Header {
+			--lockup-w: 200px;
+			--lockup-top: 30px;
+			--lockup-left: var(--edge);
+			--lockup-left-cq: var(--edge);
+		}
+
+		.Header__right {
+			position: absolute;
+			top: calc(var(--row-top) + var(--safe-top));
+			right: var(--edge);
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			pointer-events: none;
+		}
+
+		.Header__nav,
+		.Header__cart {
+			position: relative;
+			top: auto;
+			left: auto;
+			right: auto;
 		}
 	}
 
