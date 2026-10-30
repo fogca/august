@@ -1,15 +1,14 @@
-<!-- Catalogue. Layout: Figma node 3:671 long-form (PageSection `full`) —
-     "Fonts" as the page title with its one-line sub-heading, the list
-     underneath. The list was redone 2026-10-30, at the user's request, after
-     Kontrapunkt Type's shop (type.kontrapunkt.com/en/shop): one row to a
-     typeface, the name set huge in its own face (the "APGR" prefix dropped
-     there), the full name and "1 family, N styles" bottom-left, a pill
-     bottom-right, a rule between rows. It was a two-column card grid.
-     nativeBody: each name is set in that typeface's own face (inline
-     font-family below), which PageSection's brand-font rule would otherwise
-     flatten to Ango. The chrome (names, counts, pills) is in Ango (--font-en). -->
+<!-- Catalogue: the list and nothing else — no page title or sub-heading
+     (2026-10-31, at the user's request — "Fontsページはタイトルとか不要"). The
+     list was redone 2026-10-30, at the user's request, after Kontrapunkt
+     Type's shop (type.kontrapunkt.com/en/shop): one row to a typeface, the
+     name set huge in its own face (the "APGR" prefix dropped there), the full
+     name and "1 family, N styles" bottom-left, a pill bottom-right, a rule
+     between rows. It was a two-column card grid under a PageSection title.
+     Each name is set in that typeface's own face (inline font-family below).
+     The chrome (names, counts, pills) is in Ango (--font-en). The h1 is there
+     for screen readers and search only. -->
 <script lang="ts">
-	import PageSection from '$lib/components/PageSection.svelte';
 	import { TYPEFACES, displayName } from '$lib/data/typefaces.js';
 	import type { Typeface } from '$lib/data/typefaces.js';
 
@@ -35,31 +34,31 @@
 </svelte:head>
 
 <main class="Fonts">
-	<PageSection title="Fonts" as="h1" subtitle="{lead} and upcoming releases" full nativeBody>
-		<div class="Fonts__list" aria-label="Typeface catalogue">
-			{#each typefaces as tf (tf.slug)}
-				<a href="/fonts/{tf.slug}" class="FontRow" aria-label="View {tf.name}">
-					<!-- font-family inline on the element itself: base.css puts its own
-					     on every tag, which beats anything inherited. -->
-					<p
-						class="FontRow__name"
-						style="font-family: '{tf.fontFamily}', sans-serif; font-variation-settings: 'wght' {tf.specimenWeight ??
-							400}; font-weight: {tf.specimenWeight ?? 400};"
-					>
-						{displayName(tf)}
-					</p>
+	<h1 class="Fonts__sr">Fonts</h1>
 
-					<div class="FontRow__foot">
-						<div class="FontRow__caption">
-							<span class="FontRow__title">{tf.name}</span>
-							<span class="FontRow__count">{caption(tf)}</span>
-						</div>
-						<span class="FontRow__pill">{tf.status === 'available' ? 'Buy' : 'Coming soon'}</span>
+	<div class="Fonts__list" aria-label="Typeface catalogue">
+		{#each typefaces as tf (tf.slug)}
+			<a href="/fonts/{tf.slug}" class="FontRow" aria-label="View {tf.name}">
+				<!-- font-family inline on the element itself: base.css puts its own
+				     on every tag, which beats anything inherited. -->
+				<p
+					class="FontRow__name"
+					style="font-family: '{tf.fontFamily}', sans-serif; font-variation-settings: 'wght' {tf.specimenWeight ??
+						400}; font-weight: {tf.specimenWeight ?? 400};"
+				>
+					{displayName(tf)}
+				</p>
+
+				<div class="FontRow__foot">
+					<div class="FontRow__caption">
+						<span class="FontRow__title">{tf.name}</span>
+						<span class="FontRow__count">{caption(tf)}</span>
 					</div>
-				</a>
-			{/each}
-		</div>
-	</PageSection>
+					<span class="FontRow__pill">{tf.status === 'available' ? 'Buy' : 'Coming soon'}</span>
+				</div>
+			</a>
+		{/each}
+	</div>
 </main>
 
 <style>
@@ -67,15 +66,26 @@
 		background: var(--color-bg);
 	}
 
+	.Fonts__sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
 	/* A rule above the first row and under every one, at half strength and the
 	   whole width of the screen (2026-10-31, at the user's request — "線は
-	   opacity.5で100vw"). The list bleeds out to the section's edges (the
-	   section exposes its insets); each row puts them back as its own padding,
-	   so the copy still sits on the page's margin. */
+	   opacity.5で100vw"). The rows are as wide as the page, with the page's own
+	   margin as their padding, so the copy sits on it. The last row has no rule
+	   of its own: the footer's top rule closes the list. */
 	.Fonts__list {
 		--row-line: color-mix(in srgb, var(--color-text) 50%, transparent);
 		border-top: 1px solid var(--row-line);
-		margin-inline: calc(-1 * var(--ps-inset-left)) calc(-1 * var(--ps-inset-right));
 	}
 
 	.FontRow {
@@ -85,11 +95,15 @@
 		gap: 24px;
 		/* Kontrapunkt's rows are about a third of the page's width tall. */
 		min-height: clamp(300px, 33vw, 480px);
-		padding: 20px var(--ps-inset-right) 20px var(--ps-inset-left);
+		padding: 20px var(--padding);
 		text-decoration: none;
 		color: var(--color-text);
 		border-bottom: 1px solid var(--row-line);
 		transition: opacity 0.15s ease;
+	}
+
+	.FontRow:last-child {
+		border-bottom: 0;
 	}
 
 	.FontRow:hover {
