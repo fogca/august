@@ -67,10 +67,15 @@
 		background: var(--color-bg);
 	}
 
-	/* A rule above the first row and under every one, at the page's own inset
-	   (the section's padding) — the rows are not full-bleed. */
+	/* A rule above the first row and under every one, at half strength and the
+	   whole width of the screen (2026-10-31, at the user's request — "線は
+	   opacity.5で100vw"). The list bleeds out to the section's edges (the
+	   section exposes its insets); each row puts them back as its own padding,
+	   so the copy still sits on the page's margin. */
 	.Fonts__list {
-		border-top: 1px solid var(--color-text);
+		--row-line: color-mix(in srgb, var(--color-text) 50%, transparent);
+		border-top: 1px solid var(--row-line);
+		margin-inline: calc(-1 * var(--ps-inset-left)) calc(-1 * var(--ps-inset-right));
 	}
 
 	.FontRow {
@@ -80,10 +85,10 @@
 		gap: 24px;
 		/* Kontrapunkt's rows are about a third of the page's width tall. */
 		min-height: clamp(300px, 33vw, 480px);
-		padding: 20px 0;
+		padding: 20px var(--ps-inset-right) 20px var(--ps-inset-left);
 		text-decoration: none;
 		color: var(--color-text);
-		border-bottom: 1px solid var(--color-text);
+		border-bottom: 1px solid var(--row-line);
 		transition: opacity 0.15s ease;
 	}
 
@@ -91,14 +96,16 @@
 		opacity: 0.75;
 	}
 
-	/* The name: huge, centred in the space above the caption. */
+	/* The name: huge, centred in the space above the caption. 300px on a wide
+	   screen (2026-10-31, at the user's request); it scales with the width
+	   below that, so the longest name still fits (Humorist runs ≈ 3.9em). */
 	.FontRow__name {
 		flex: 1;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		margin: 0;
-		font-size: clamp(64px, 12vw, 180px);
+		font-size: clamp(64px, 20.84vw, 300px);
 		line-height: 1;
 		letter-spacing: 0;
 		text-align: center;
