@@ -98,6 +98,13 @@
 		color: var(--color-text);
 		padding: 64px 0 24px;
 		margin-top: 0;
+		/* A rule across the whole width of the screen, at half strength
+		   (2026-10-31, at the user's request — "Footerはborder-topで線入れて。
+		   同様.5pxで"): the same half-strength ink as the typeface list's rules
+		   (/fonts), 0.5px thick (a device pixel on a 2x screen; 1px on a 1x
+		   one, where a border cannot be thinner). The footer spans the page,
+		   so its own border is edge to edge. */
+		border-top: 0.5px solid color-mix(in srgb, var(--color-text) 50%, transparent);
 		/* sit above the cover-reveal sections (z-index:1) above it */
 		position: relative;
 		z-index: 2;
