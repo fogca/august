@@ -1,13 +1,18 @@
 <script lang="ts">
 	// Apres Guerre site header (2026-10 redesign, Figma "II-ii").
 	//
-	// Two states, on every page:
-	// - Top of the page: the large wordmark alone (Logo.svelte — PC one line,
-	//   SP two), the same artwork and position as the home page's opening.
-	// - Scrolled (Figma 3:671): the wordmark shrinks into a small centred
-	//   lockup (the Japanese subline under it was removed, 2026-10, at the
-	//   user's request), nav on the left, Cart on the right, on a bar in the
-	//   page's own background colour.
+	// Two states:
+	// - Top of the home page: the large wordmark alone (Logo.svelte — PC one
+	//   line, SP two), the same artwork and position as the home page's
+	//   opening. Only there (2026-10-31, at the user's request — "Topページのみ
+	//   top0の時にロゴを大きく"): every other page has the compact state from
+	//   scroll 0, and the layout reserves the bar's height, not the big
+	//   wordmark's, above its content (base.css --masthead-h).
+	// - Compact (Figma 3:671) — the home page once scrolled, every other page
+	//   always: the wordmark shrinks into a small centred lockup (the Japanese
+	//   subline under it was removed, 2026-10, at the user's request), nav on
+	//   the left, Cart on the right, on no fill (see "Colour follows the
+	//   surface" below).
 	//
 	// The shrink moves the large wordmark's two words themselves (one
 	// transform each, scale about their top-left) onto two invisible "slot"
@@ -25,6 +30,7 @@
 	import { SITE_NAV } from '$lib/data/nav';
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
 	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import { slide, fly, fade } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import Logo from '$lib/components/Logo.svelte';
@@ -43,9 +49,11 @@
 	/** Set once on mount (see .is-prescrolled in the styles). */
 	let hydrated = $state(false);
 	/** True while the surface under the header is dark enough that the light
-	 *  paper colour reads better than the brand blue (see probeSurface). */
+	 *  paper colour reads better than the header's black (see probeSurface). */
 	let onDark = $state(false);
-	const compact = $derived(scrolled || open || focusInside);
+	/** The large wordmark exists only at the top of the home page. */
+	const isHome = $derived(page.url.pathname === '/');
+	const compact = $derived(!isHome || scrolled || open || focusInside);
 
 	let wordEls: HTMLElement[] = $state([]);
 	let slotEls: HTMLElement[] = [];
@@ -96,8 +104,8 @@
 	// The header has no fill on any page (2026-10, at the user's request —
 	// "Headerはその他ページなどでも背景色なしで"), so it sits straight on
 	// whatever scrolls beneath it. Over a dark surface — the typeface heroes,
-	// a pinned black glyph panel, Contact — the brand blue would disappear,
-	// so it turns the light paper colour instead. It reads what is actually
+	// a pinned black glyph panel, Contact — the black (and the blue wordmark)
+	// would disappear, so it turns the light paper colour instead. It reads what is actually
 	// painted under the middle of its own row, rather than relying on every
 	// section to declare its tone.
 
@@ -111,6 +119,7 @@
 	}
 	const contrast = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 	const BLUE_LUM = relLuminance(25, 40, 153); // --brand-blue  rgb(25 40 153)
+	const INK_LUM = 0; // --header-ink  #000, the nav's text
 	const PAPER_LUM = relLuminance(241, 240, 239); // --brand-paper #f1f0ef
 	/** Colours below this opacity are looked through. */
 	const OPAQUE_ENOUGH = 0.5;
@@ -147,7 +156,7 @@
 			getComputedStyle(document.documentElement).getPropertyValue('--header-bar-h')
 		);
 		const lum = surfaceLuminance(window.innerWidth / 2, (barH || 100) / 2);
-		if (lum !== null) onDark = contrast(PAPER_LUM, lum) > contrast(BLUE_LUM, lum);
+		if (lum !== null) onDark = contrast(PAPER_LUM, lum) > contrast(INK_LUM, lum);
 	}
 
 	let probeRaf = 0;
@@ -353,7 +362,8 @@
 	.Header {
 		/* Compact lockup geometry — PC per Figma 3:671 (1440 frame). The
 		   header's overall height is the shared base.css --header-bar-h token,
-		   which sticky page UI clears. */
+		   which sticky page UI clears — and, on every page but the home, the
+		   space the layout reserves above the content (--masthead-h). */
 		--lockup-w: 273.3px;
 		--lockup-top: 28px;
 		/* The page's side inset (base.css --padding) — the wordmark's margin. */
@@ -377,7 +387,10 @@
 		   under them for ~2s (2026-10, at the user's request — "ページ遷移時に
 		   ロゴが表示されるの遅い"). The home opening (1300) sits above it. */
 		z-index: 1200;
+		/* The wordmark's colour — the nav, Cart and toggle take --header-ink
+		   instead (below). */
 		color: var(--brand-blue);
+		--header-ink: #000000;
 		/* The Logo's words follow whatever colour the header has (see
 		   Logo.svelte --logo-color). */
 		--logo-color: currentColor;
@@ -411,6 +424,28 @@
 		color: var(--brand-orange);
 	}
 
+	/* The nav, Cart and the menu toggle are black (2026-10-31, at the user's
+	   request — "色も黒にして"); the wordmark keeps the brand blue the header
+	   itself carries. They take the same two exceptions as the header: paper
+	   over a dark surface, the page's own text colour on /about. */
+	.Header .Header__nav,
+	.Header .Header__cart,
+	.Header .Header__toggle {
+		color: var(--header-ink);
+	}
+
+	.Header.is-on-dark .Header__nav,
+	.Header.is-on-dark .Header__cart,
+	.Header.is-on-dark .Header__toggle {
+		color: var(--brand-paper);
+	}
+
+	:global(html[data-theme='about']) .Header .Header__nav,
+	:global(html[data-theme='about']) .Header .Header__cart,
+	:global(html[data-theme='about']) .Header .Header__toggle {
+		color: var(--color-text);
+	}
+
 	.Header__logo {
 		position: absolute;
 		top: 0;
@@ -426,8 +461,39 @@
 		transform: translate(0, 0) scale(1);
 	}
 
+	/* Where each word lands: its slot's left edge (the same x ranges as the
+	   .Header__slot boxes below; cqw is the Logo's own container, the full
+	   header width). */
+	.Header__logo :global(.Logo__word--apres) {
+		--slot-left: calc(50cqw - var(--lockup-w) / 2);
+	}
+
+	.Header__logo :global(.Logo__word--guerre) {
+		--slot-left: calc(
+			50cqw - var(--lockup-w) / 2 + var(--lockup-w) * var(--logo-guerre-x) / var(--logo-w)
+		);
+	}
+
+	/* --tx/--ty/--k are what measure() reads off the page once it is hydrated.
+	   Until then — and with no JS — the same numbers come from the CSS, so a
+	   page that is compact from scroll 0 (every page but the home) paints its
+	   small lockup in place at once instead of the large wordmark, or none.
+	   The scale is the ratio of two lengths, which calc() cannot divide:
+	   tan(atan2(a, b)) is a / b. */
 	.Header.is-compact .Header__logo :global(.Logo__word) {
-		transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--k, 1));
+		transform: translate(
+				var(--tx, calc(var(--slot-left) - var(--word-left))),
+				var(--ty, calc(var(--lockup-top) + var(--safe-top) - var(--word-top)))
+			)
+			scale(var(--k, tan(atan2(var(--lockup-w), calc(var(--logo-w) * var(--u))))));
+	}
+
+	/* A browser without trig functions in calc() has no pre-hydration
+	   geometry: hold the words back until measure() has run. */
+	@supports not (transform: scale(tan(atan2(1px, 1px)))) {
+		.Header.is-compact:not(.is-hydrated) .Header__logo :global(.Logo__word) {
+			visibility: hidden;
+		}
 	}
 
 	/* The link's own box is zero-height (a stray full-width line if
@@ -576,13 +642,17 @@
 	.Header.is-ready .Header__nav,
 	.Header.is-ready .Header__cart,
 	.Header.is-ready .Header__toggle {
-		transition: opacity 0.25s ease;
+		transition:
+			opacity 0.25s ease,
+			color 0.3s ease;
 	}
 
 	.Header.is-ready.is-compact .Header__nav,
 	.Header.is-ready.is-compact .Header__cart,
 	.Header.is-ready.is-compact .Header__toggle {
-		transition: opacity 0.5s ease 0.35s;
+		transition:
+			opacity 0.5s ease 0.35s,
+			color 0.3s ease;
 	}
 
 	/* Menu toggle — below 1060px only (see the media query further down). */
@@ -682,8 +752,14 @@
 		padding: calc(var(--header-bar-h) + 18px + env(safe-area-inset-top, 0px)) 20px 16px;
 	}
 
+	/* Black like the nav; on /about the panel is the brand blue, so the page's
+	   own text colour (the peach) there. */
 	.MenuPanel :global(*) {
-		color: var(--brand-blue);
+		color: #000000;
+	}
+
+	:global(html[data-theme='about']) .MenuPanel :global(*) {
+		color: var(--color-text);
 	}
 
 	.MenuPanel__nav {

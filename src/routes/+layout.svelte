@@ -99,8 +99,9 @@
 	onPanelUp={() => getLenis()?.stop()}
 	onComplete={() => getLenis()?.start()}
 >
-	<!-- Room for the Header's large top-of-page wordmark (base.css
-	     --masthead-h). The home page lays out its own top around it. -->
+	<!-- Room for the Header above the content (base.css --masthead-h): its
+	     compact bar on every page but the home, which has the large wordmark
+	     at the top and lays out its own top around it. -->
 	{#if page.url.pathname !== '/'}
 		<div class="Masthead" aria-hidden="true"></div>
 	{/if}

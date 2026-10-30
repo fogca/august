@@ -65,9 +65,14 @@
 		--u: calc((100cqw - 2 * var(--logo-side)) / var(--logo-w));
 	}
 
+	/* Each word's box is also published as --word-left / --word-top, so that
+	   the Header can work out where the word has to travel to without
+	   measuring it (its pre-hydration compact state). */
 	.Logo__word {
+		--word-top: var(--logo-top);
 		position: absolute;
-		top: var(--logo-top);
+		top: var(--word-top);
+		left: var(--word-left);
 		display: block;
 		height: calc(var(--logo-h) * var(--u));
 		/* Callers recolour via --logo-color (the Header follows its own text
@@ -85,12 +90,12 @@
 
 	/* x ranges from LOGO_WORDS (the --logo-apres-* / --logo-guerre-* vars). */
 	.Logo__word--apres {
-		left: var(--logo-side);
+		--word-left: var(--logo-side);
 		width: calc(var(--logo-apres-w) * var(--u));
 	}
 
 	.Logo__word--guerre {
-		left: calc(var(--logo-side) + var(--logo-guerre-x) * var(--u));
+		--word-left: calc(var(--logo-side) + var(--logo-guerre-x) * var(--u));
 		width: calc(var(--logo-guerre-w) * var(--u));
 	}
 
@@ -104,12 +109,14 @@
 		}
 
 		.Logo__word--apres {
-			left: calc(var(--logo-side) + (var(--logo-guerre-w) - var(--logo-apres-w)) / 2 * var(--u));
+			--word-left: calc(
+				var(--logo-side) + (var(--logo-guerre-w) - var(--logo-apres-w)) / 2 * var(--u)
+			);
 		}
 
 		.Logo__word--guerre {
-			left: var(--logo-side);
-			top: calc(var(--logo-top) + (var(--logo-h) + var(--logo-stack-gap)) * var(--u));
+			--word-left: var(--logo-side);
+			--word-top: calc(var(--logo-top) + (var(--logo-h) + var(--logo-stack-gap)) * var(--u));
 		}
 	}
 </style>

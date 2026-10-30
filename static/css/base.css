@@ -255,8 +255,10 @@ html[data-theme='about'] {
   --color-bg:        var(--brand-blue);
 }
 
-/* Masthead: the space the Header's large top-of-page wordmark takes, which
-   every page but the home reserves above its own content (+layout.svelte).
+/* Masthead: the space the Header's large top-of-page wordmark takes. The home
+   page lays out its own top around that wordmark (the one page that has it —
+   see the override below); every other page reserves --masthead-h above its
+   own content (+layout.svelte), and that is the Header's compact bar there.
    Mirrors Logo.svelte's geometry — PC one line 35px down, the width inside
    the side margins (--logo-h / --logo-w tall); SP two lines 28px down,
    --logo-stack-h viewBox units tall at (width inside the margins) /
@@ -294,6 +296,16 @@ html[data-theme='about'] {
         env(safe-area-inset-top, 0px)
     );
   }
+}
+
+/* Every page but the home has the Header's compact bar from scroll 0 and no
+   large wordmark (2026-10-31, at the user's request — "Topページのみtop0の時に
+   ロゴを大きく"), so what it reserves above its content is the bar. The theme
+   attribute is set on the server for the first paint (hooks.server.ts), so
+   this holds before any script runs. Pages that size against --masthead-h
+   (the pinned PageSection column, the min-heights) follow. */
+html:not([data-theme='home']) {
+  --masthead-h: var(--header-bar-h);
 }
 
 /* ------------------------------------------------------------
