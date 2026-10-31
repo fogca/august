@@ -96,8 +96,8 @@ export interface Typeface {
 	 *  lines (see .FontCard__spec-line in /fonts/+page.svelte). */
 	specimen?: string[];
 	/** The wght the big name is set at on /fonts and at the top of the typeface
-	 *  page. Also what lets a typeface with no drawings of its own yet (Maxica,
-	 *  Alfred — both borrow Norma) read as a different cut of the borrowed font
+	 *  page. Also what lets a typeface with no drawings of its own yet (Alfred,
+	 *  which borrows Norma) read as a different cut of the borrowed font
 	 *  rather than an identical copy of Norma's own. */
 	specimenWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
@@ -460,16 +460,19 @@ export const TYPEFACES: Typeface[] = [
 	},
 	{
 		// A placeholder (2026-10-30): the grotesque in progress. "Maxica" =
-		// Maxima + Helvetica, after the way Unica is Univers + Helvetica. No
-		// drawings are on the site yet, so it borrows Norma — set at wght 500
-		// so it does not read as Norma's own.
+		// Maxima + Helvetica, after the way Unica is Univers + Helvetica. It
+		// borrowed Norma at wght 500 until 2026-11-01, when its own variable
+		// font went on (Maxica-VF1.woff2, wght 50–950). Only M and a–x are
+		// drawn in both masters so far, so the default tester text is the
+		// name "Maxica" (all six letters are in the file); anything else a
+		// visitor types falls back to the browser's sans-serif.
 		slug: 'apgr-maxica',
 		name: 'APGR Maxica',
 		category: 'Grotesque sans-serif',
 		order: 3,
 		status: 'in-development',
 		placeholder: true,
-		fontFamily: 'Norma',
+		fontFamily: 'Maxica',
 		tagline: 'In development.',
 		description:
 			'APGR Maxica is a grotesque in development at Apres Guerre. ' +
@@ -479,8 +482,9 @@ export const TYPEFACES: Typeface[] = [
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Grotesque · In development',
 		weights: WEIGHTS,
-		defaultTexts: ['APGR Maxica'],
-		testerNotice: 'APGR Maxica is in development. The preview is set in a stand-in face.',
+		defaultTexts: ['Maxica'],
+		testerNotice:
+			'APGR Maxica is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 500,
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
