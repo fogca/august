@@ -300,4 +300,59 @@
 		white-space: nowrap;
 		align-self: flex-end;
 	}
+
+	/* SP (<768px): the small print as outlined pills, after Kontrapunkt Type's
+	   footer (2026-10-31, at the user's request — "Spフッターとヘッダーメニュー
+	   は参考サイト参考に"): the language switch and the legal links, 14px with a
+	   1px rule and a full radius — the typeface page's own pill — and the
+	   current language inverted. A half-strength rule (the footer's own) now
+	   divides them from the nav above, where there was a white hairline that
+	   only showed on /about's blue. The nav column and PC are as they were. */
+	@media (max-width: 767.98px) {
+		.Footer {
+			padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+		}
+
+		.Footer__bottom {
+			margin-top: 40px;
+			padding-top: 24px;
+			border-top: 0.5px solid color-mix(in srgb, var(--color-text) 50%, transparent);
+			gap: 16px;
+			opacity: 1;
+		}
+
+		.Footer__langs,
+		.Footer__legal {
+			gap: 8px;
+		}
+
+		/* The copyright takes its own line at the right, so the legal pills
+		   run on in a row of their own instead of wrapping round it. */
+		.Footer__row {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 16px;
+		}
+
+		.Footer__lang,
+		.Footer__legal a {
+			display: inline-flex;
+			align-items: center;
+			padding: 5px 14px;
+			border: 1px solid currentColor;
+			border-radius: 999px;
+			font-size: 14px;
+			line-height: 1.3;
+			opacity: 1;
+		}
+
+		.Footer__lang:hover {
+			opacity: 1;
+		}
+
+		.Footer__lang.is-active {
+			background: var(--color-text);
+			color: var(--color-bg);
+		}
+	}
 </style>

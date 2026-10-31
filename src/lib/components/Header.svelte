@@ -24,10 +24,11 @@
 	// CSS and this script only measures the difference. That is also how SP's
 	// stacked words come back onto one line.
 	//
-	// SP (<768px): the compact bar holds the menu toggle (left), the lockup
-	// (centre) and Cart (right); the menu panel carries the page links, the
-	// typefaces and the language switch. PC's header has no language switch
-	// (per the frame) — the Footer carries one on every page.
+	// SP (<1060px): the compact bar holds the menu toggle (left), the lockup
+	// (centre) and Cart (right); the menu is a stack of pills under the toggle
+	// that carries the page links, the typefaces and the language switch. PC's
+	// header has no language switch (per the frame) — the Footer carries one on
+	// every page.
 	import { onMount } from 'svelte';
 	import { onScroll } from '$lib/scroll';
 	import { TYPEFACES } from '$lib/data/typefaces';
@@ -35,8 +36,7 @@
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
-	import { slide, fly, fade } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
 	import Logo from '$lib/components/Logo.svelte';
 
 	/** Scroll distance (px) past which the header switches to its compact state. */
@@ -63,12 +63,22 @@
 	let slotEls: HTMLElement[] = [];
 
 	const fonts = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
-	// The panel's own "Fonts" group stands in for that one link.
-	const PAGES = SITE_NAV.filter((item) => item.href !== '/fonts');
+	// The menu below 1060px is one stack of pills, after Kontrapunkt Type's: the
+	// site nav in its own order, with each typeface one step in under Fonts.
+	const MENU_ITEMS = SITE_NAV.flatMap((item) =>
+		item.href === '/fonts'
+			? [
+					{ ...item, depth: 0 },
+					...fonts.map((f) => ({ label: f.name, href: `/fonts/${f.slug}`, depth: 1 }))
+				]
+			: [{ ...item, depth: 0 }]
+	);
 	// The PC inline nav leaves out License and Contact (2026-10-31, at the
-	// user's request): the footer carries both, and the menu panel below 1060px
-	// (PAGES) still lists every page.
+	// user's request): the footer carries both, and the menu below 1060px
+	// (MENU_ITEMS) still lists every page.
 	const HEADER_NAV = SITE_NAV.filter((item) => !['/licensing', '/contact'].includes(item.href));
+	/** The pathname without a trailing slash — which menu pill is the page. */
+	const here = $derived(page.url.pathname.replace(/\/$/, '') || '/');
 
 	/** Untransformed box of an absolutely positioned element, in its
 	 *  containing block's px. Computed styles rather than offset* (integer-
@@ -155,9 +165,10 @@
 	}
 
 	function probeSurface() {
-		// Open, the menu panel (light) is what is under it. On PC, once compact,
-		// it is the bar's own page-coloured fill — whatever scrolls beneath is
-		// hidden — so the default ink stands (/about's blue bar sets its own).
+		// Open, the menu's veil (the page's own colour) is what is under it. On
+		// PC, once compact, it is the bar's own page-coloured fill — whatever
+		// scrolls beneath is hidden — so the default ink stands (/about's blue
+		// bar sets its own).
 		if (open || (compact && window.matchMedia('(min-width: 1060px)').matches)) {
 			onDark = false;
 			return;
@@ -324,53 +335,51 @@
 </header>
 
 {#if open}
+	<!-- A veil in the page's own colour behind the pills, which also catches a
+	     tap outside them. -->
 	<button
 		class="MenuBackdrop"
 		type="button"
 		aria-label="Close menu"
 		onclick={close}
-		transition:fade={{ duration: 200 }}
+		transition:fade={{ duration: 150 }}
 	></button>
 
-	<div
-		class="MenuPanel"
-		id="primary-nav"
-		in:slide={{ duration: 600, easing: cubicOut }}
-		out:slide={{ duration: 420, easing: cubicOut }}
-	>
-		<div class="MenuPanel__nav" in:fly={{ y: 10, duration: 520, delay: 160, easing: cubicOut }}>
-			<div class="MenuPanel__fonts">
-				<span class="MenuPanel__label">Fonts</span>
-				<ul class="MenuPanel__list">
-					{#each fonts as f (f.slug)}
-						<li><a href="/fonts/{f.slug}" onclick={close}>{f.name}</a></li>
-					{/each}
-				</ul>
-			</div>
-
-			<ul class="MenuPanel__pages">
-				{#each PAGES as item (item.href)}
-					<li><a href={item.href} onclick={close}>{item.label}</a></li>
-				{/each}
-			</ul>
-
-			<!-- Moved here from the collapsed bar, which now holds the lockup. -->
-			<div class="MenuPanel__langs" role="group" aria-label="Language">
-				{#each LANG_OPTIONS as l (l.code)}
-					<button
-						type="button"
-						class="MenuPanel__lang"
-						class:is-active={lang.current === l.code}
-						onclick={() => lang.set(l.code)}
-						aria-pressed={lang.current === l.code}
-						aria-label={l.name}
+	<nav class="MenuPanel" id="primary-nav" aria-label="Menu" out:fade={{ duration: 140 }}>
+		<ul class="MenuPanel__list">
+			{#each MENU_ITEMS as item, i (item.href)}
+				<li class="MenuPanel__item" class:is-child={item.depth > 0} style="--i: {i}">
+					<a
+						class="MenuPanel__pill"
+						href={item.href}
+						aria-current={here === item.href ? 'page' : undefined}
+						onclick={close}>{item.label}</a
 					>
-						{l.label}
-					</button>
-				{/each}
-			</div>
+				</li>
+			{/each}
+		</ul>
+
+		<!-- Moved here from the collapsed bar, which now holds the lockup. -->
+		<div
+			class="MenuPanel__langs MenuPanel__item"
+			style="--i: {MENU_ITEMS.length}"
+			role="group"
+			aria-label="Language"
+		>
+			{#each LANG_OPTIONS as l (l.code)}
+				<button
+					type="button"
+					class="MenuPanel__pill MenuPanel__lang"
+					class:is-active={lang.current === l.code}
+					onclick={() => lang.set(l.code)}
+					aria-pressed={lang.current === l.code}
+					aria-label={l.name}
+				>
+					{l.label}
+				</button>
+			{/each}
 		</div>
-	</div>
+	</nav>
 {/if}
 
 <style>
@@ -815,97 +824,129 @@
 		}
 	}
 
-	/* ── SP menu panel ── */
+	/* ── Menu (below 1060px) ──
+	   After Kontrapunkt Type's (2026-10-31, at the user's request — "Spフッターと
+	   ヘッダーメニューは参考サイト参考に"): a stack of outlined pills in the page's
+	   own colours, floating under the bar at the toggle's side, in place of the
+	   half-height sheet. Left-aligned with the toggle they would sit on the
+	   page's own left-aligned text, so the page is veiled in its own colour
+	   behind them — a veil, not a sheet: what is under it still shows through. */
 	.MenuBackdrop {
 		position: fixed;
 		inset: 0;
 		z-index: 1190;
 		border: 0;
 		padding: 0;
-		background: rgba(0, 0, 0, 0.2);
+		background: color-mix(in srgb, var(--color-bg) 88%, transparent);
 		cursor: default;
 	}
 
 	.MenuPanel {
+		/* Pills: black on the page's ground; on /about the page's own text
+		   colour (white) on its blue. */
+		--menu-ink: #000000;
+		--menu-ground: var(--color-bg);
 		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		/* 50vh (2026-09, at the user's request); overflow is a safety net
-		   for a short landscape phone. */
-		height: 50vh;
-		overflow-y: auto;
 		/* Under the header (z 1200), which sits on top of it. */
 		z-index: 1195;
-		background: var(--color-bg);
-		padding: calc(var(--header-bar-h) + 18px + env(safe-area-inset-top, 0px)) 20px 16px;
+		top: calc(var(--header-bar-h) - 12px + env(safe-area-inset-top, 0px));
+		left: var(--padding);
+		/* Hugs the pills, so a tap beside them still reaches the backdrop. A
+		   short landscape phone scrolls the stack instead of cutting it off. */
+		width: max-content;
+		max-width: calc(100% - var(--padding) * 2);
+		max-height: calc(100dvh - var(--header-bar-h) - env(safe-area-inset-top, 0px));
+		overflow-y: auto;
+		overscroll-behavior: contain;
 	}
 
-	/* Black like the nav; on /about the panel is the brand blue, so the page's
-	   own text colour (white) there. */
-	.MenuPanel :global(*) {
-		color: #000000;
+	:global(html[data-theme='about']) .MenuPanel {
+		--menu-ink: var(--color-text);
 	}
 
-	:global(html[data-theme='about']) .MenuPanel :global(*) {
-		color: var(--color-text);
-	}
-
-	.MenuPanel__nav {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 20px;
-	}
-
-	.MenuPanel__label {
-		display: block;
-		font-size: 12px;
-		line-height: 1.5;
-		letter-spacing: 0;
-		opacity: 0.5;
-		margin-bottom: 4px;
-	}
-
-	.MenuPanel__list,
-	.MenuPanel__pages,
-	.MenuPanel__langs {
+	.MenuPanel__list {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		display: flex;
-		flex-wrap: wrap;
-		gap: 14px;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
 	}
 
-	.MenuPanel__list a,
-	.MenuPanel__pages a {
+	/* The typefaces sit one step in under Fonts. */
+	.MenuPanel__item.is-child {
+		margin-left: 16px;
+	}
+
+	.MenuPanel__langs {
+		display: flex;
+		gap: 8px;
+		margin-top: 20px;
+	}
+
+	/* In one after another, top to bottom; out together (the panel's fade). */
+	.MenuPanel__item {
+		animation: menu-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+		animation-delay: calc(var(--i) * 32ms + 40ms);
+	}
+
+	@keyframes menu-in {
+		from {
+			opacity: 0;
+			transform: translateY(-6px);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.MenuPanel__item {
+			animation: none;
+		}
+	}
+
+	/* 14px, 5px 14px, a 1px rule and a full radius — the same pill as the
+	   typeface page's controls. The page you are on, and a pill under the
+	   finger, are inverted. */
+	.MenuPanel__pill {
+		display: inline-flex;
+		align-items: center;
+		padding: 5px 14px;
+		border: 1px solid var(--menu-ink);
+		border-radius: 999px;
+		background: var(--menu-ground);
+		color: var(--menu-ink);
 		font-family: var(--font-ango), sans-serif;
-		font-size: 16px;
-		line-height: 1.5;
+		font-size: 14px;
+		font-weight: 400;
+		font-variation-settings: 'wght' 400;
+		line-height: 1.3;
 		letter-spacing: 0;
 		text-decoration: none;
 		white-space: nowrap;
-		transition: opacity 0.15s ease;
-	}
-
-	.MenuPanel__list a:hover,
-	.MenuPanel__pages a:hover {
-		opacity: 0.55;
-	}
-
-	.MenuPanel__lang {
-		font-family: var(--font-ango), sans-serif;
-		font-size: 13px;
-		background: none;
-		border: 0;
-		padding: 0;
 		cursor: pointer;
-		opacity: 0.45;
-		transition: opacity 0.15s ease;
+		transition:
+			background-color 0.15s ease,
+			color 0.15s ease;
 	}
 
-	.MenuPanel__lang.is-active {
-		opacity: 1;
+	.MenuPanel__pill[aria-current='page'],
+	.MenuPanel__pill.is-active {
+		background: var(--menu-ink);
+		color: var(--menu-ground);
+	}
+
+	@media (hover: hover) {
+		.MenuPanel__pill:hover {
+			background: var(--menu-ink);
+			color: var(--menu-ground);
+		}
+	}
+
+	/* The toggle is gone from 1060px, and so is the menu it opens. */
+	@media (min-width: 1060px) {
+		.MenuBackdrop,
+		.MenuPanel {
+			display: none;
+		}
 	}
 </style>
