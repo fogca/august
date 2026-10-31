@@ -27,6 +27,9 @@
 		defaultNotes?: string[];
 		/** When false, show an "in development" notice */
 		available?: boolean;
+		/** The notice's own wording, where the default ("Preview shown in
+		 *  Norma.") would not be true — a placeholder's stand-in face. */
+		notice?: string;
 		/** Per-typeface override for the desktop default title size — falls
 		 *  back to WEIGHT_ROW_SIZE_DEFAULT_DESKTOP when omitted. */
 		defaultSizeDesktop?: number;
@@ -43,6 +46,7 @@
 		defaultTexts,
 		defaultNotes,
 		available = true,
+		notice,
 		defaultSizeDesktop,
 		defaultSizeMobile
 	}: Props = $props();
@@ -68,7 +72,7 @@
 		<p class="TypeTester__hint">Click any line to edit · drag A—A to resize</p>
 		{#if !available}
 			<p class="TypeTester__notice">
-				{name ?? fontFamily} is in development. Preview shown in Norma.
+				{notice ?? `${name ?? fontFamily} is in development. Preview shown in Norma.`}
 			</p>
 		{/if}
 	</div>

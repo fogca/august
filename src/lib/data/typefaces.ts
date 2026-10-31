@@ -43,14 +43,15 @@ export interface Typeface {
 	/** Public name, prefix included (e.g. 'APGR Humorist'). The CSS family
 	 *  (`fontFamily`) and the font/image files keep their old internal names. */
 	name: string;
-	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = GQ Sans, 5 = Alfred */
+	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Quad Sans, 5 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
 	hidden?: boolean;
-	/** A name on the shelf before the face exists (Maxica, GQ Sans). Its page
-	 *  is the hero name, the spec lines, the description and "Coming soon" —
-	 *  no Type Tester, weights or glyphs to show, and none are invented. */
+	/** A name on the shelf before the face is finished (Maxica, Quad Sans). Its
+	 *  page is the hero name, the spec lines, the description, a one-row Type
+	 *  Tester and "Coming soon" — no weights or glyphs to show, and none are
+	 *  invented. */
 	placeholder?: boolean;
 	/** What kind of typeface it is, for the spec lines ("Classification:").
 	 *  Only what the foundry has said about it. */
@@ -82,6 +83,10 @@ export interface Typeface {
 	defaultTexts: string[];
 	/** Body text set under each word, paired by the same index. */
 	defaultNotes?: string[];
+	/** The notice under the Type Tester, for a face where the default ("… is in
+	 *  development. Preview shown in Norma.") isn't true — a placeholder that
+	 *  borrows a face, or a face still missing characters. */
+	testerNotice?: string;
 	/** Catalogue specimen: a museum-exhibition label set in the face itself,
 	 *  rather than the typeface's own name (referenced from increments.cc's
 	 *  Vorkurs card: "1964–1969 / JOSEF ALBERS / New Works"). Usually three
@@ -411,31 +416,35 @@ export const TYPEFACES: Typeface[] = [
 	},
 	{
 		// A placeholder (2026-10-30, at the user's request — "プレースホルダーでいい
-		// ので、入れておいて"): the sans half of a Sans + Serif sibling family. The
-		// name is provisional ("GQ" is Condé Nast's — change it before launch).
-		// It carries the drawings formerly shown as "Mokuseki Sans", which the
-		// foundry is moving into this family; that name is a client's and stays
-		// off the public site. The CSS family stays 'Mokuseki Sans' (app.html
-		// @font-face, Regular only) — the one face on the site with these shapes.
-		slug: 'apgr-gq-sans',
-		name: 'APGR GQ Sans',
+		// ので、入れておいて"): the sans half of a Sans + Serif sibling family.
+		// "GQ Sans" until 2026-10-31 (GQ is Condé Nast's), then Quad Sans, at the
+		// user's request — "GQは、Quad Sansとして" — with the face itself: the
+		// drawings formerly shown as "Mokuseki Sans" (a client's name, kept off
+		// the public site), exported from Quad.glyphs as one Regular. Its CSS
+		// family is 'Quad Sans' (app.html @font-face; QuadSans-Regular.woff2).
+		slug: 'apgr-quad-sans',
+		name: 'APGR Quad Sans',
 		category: 'Sans-serif',
 		order: 4,
 		status: 'in-development',
 		placeholder: true,
-		fontFamily: 'Mokuseki Sans',
+		fontFamily: 'Quad Sans',
 		tagline: 'In development.',
 		description:
-			'APGR GQ Sans is a sans-serif in development at Apres Guerre, one half of a family that will pair it with a serif. ' +
+			'APGR Quad Sans is a sans-serif in development at Apres Guerre, one half of a family that will pair it with a serif. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'APGR GQ Sans est un sans-serif en cours de développement chez Apres Guerre, une moitié d’une famille qui l’associera à un serif. ' +
+			'APGR Quad Sans est un sans-serif en cours de développement chez Apres Guerre, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
-		// Placeholder: nothing below the spec lines uses these, but the type
-		// asks for them. The cut on the site is a single Regular.
-		weights: WEIGHTS,
-		defaultTexts: ['APGR GQ Sans'],
+		// The one cut there is: a Regular (the file is static, so wght 400 is
+		// only its name in the Type Tester's row).
+		weights: [{ id: 40, name: '40', label: 'Regular', axisValue: 400 }],
+		defaultTexts: ['APGR Quad Sans'],
+		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
+		// the build leaves those out, so the page sets them in another face.
+		testerNotice:
+			'APGR Quad Sans is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -471,6 +480,7 @@ export const TYPEFACES: Typeface[] = [
 		classification: 'Grotesque · In development',
 		weights: WEIGHTS,
 		defaultTexts: ['APGR Maxica'],
+		testerNotice: 'APGR Maxica is in development. The preview is set in a stand-in face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 500,
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -710,12 +720,14 @@ export function getTypeface(slug: string): Typeface | undefined {
 
 /** Slugs the pages answered to before the 2026-10-30 rename, to where they
  *  went (a 301 — see fonts/[slug]/+page.ts). `elio` is Ango's name before
- *  2026-10-03. `alfred` is left out: it is hidden, so it never had a public
- *  page to carry over. */
+ *  2026-10-03. `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before GQ Sans
+ *  became Quad Sans. `alfred` is left out: it is hidden, so it never had a
+ *  public page to carry over. */
 export const LEGACY_SLUGS: Record<string, string> = {
 	ango: 'apgr-humorist',
 	elio: 'apgr-humorist',
-	gq: 'apgr-gq-sans'
+	gq: 'apgr-quad-sans',
+	'apgr-gq-sans': 'apgr-quad-sans'
 };
 
 /** The name as the big display sets it: the prefix dropped ("Humorist"), as

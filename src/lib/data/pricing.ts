@@ -81,7 +81,7 @@ export function isEnterpriseTier(tierIndex: number): boolean {
 
 // ── Package definitions ──────────────────────────────────────────────────────
 
-export type TypefaceSlug = 'norma' | 'apgr-gq-sans';
+export type TypefaceSlug = 'norma' | 'apgr-quad-sans';
 
 export interface PackageDef {
 	id: string;
@@ -92,7 +92,7 @@ export interface PackageDef {
 	// a buyer picks a custom subset from.
 	styles?: string[];
 	// Whether each weight also ships an Italic. When true, the style list renders as a
-	// 2-column layout (upright left, italic right). gQ has no italics.
+	// 2-column layout (upright left, italic right). Quad Sans has no italics.
 	italic?: boolean;
 	// Buyer selects individual styles. The StyleList renders as toggleable chips.
 	selectable?: boolean;
@@ -134,7 +134,7 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 			}
 		]
 	}
-	// gq: in development — not for sale yet
+	// apgr-quad-sans: in development — not for sale yet
 ];
 
 export function getTypefacePricing(slug: TypefaceSlug): TypefacePricing | undefined {

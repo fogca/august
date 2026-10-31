@@ -5,8 +5,8 @@
      bottom of the screen. The colour band with the classification headline
      that stood here (Figma node 12:127, "ogast", file UEy0lKKtgP8jN4x2DWZUOB)
      is gone — the classification is a spec line now. What follows (the
-     gallery, Type Tester, weights …) is unchanged. A placeholder (Maxica, GQ
-     Sans: no face to show yet) stops after the description. The gallery
+     gallery, Type Tester, weights …) is unchanged. A placeholder (Maxica, Quad
+     Sans: not finished) stops after the Type Tester. The gallery
      tiles still take their colours from the `homeSection` data the home
      page's typeface section uses (typefaces.ts), so the two never disagree.
 
@@ -78,6 +78,18 @@
 	// The big name at the top: the prefix dropped, set at the face's own
 	// display weight (400 where it has none).
 	const nameWeight = $derived(tf.specimenWeight ?? 400);
+
+	// The Type Tester's default size on a desktop screen (Humorist since
+	// 2026-10-30; the placeholders follow it).
+	const TESTER_SIZE_DESKTOP = 160;
+
+	// What the Type Tester sets. A placeholder has no drawings of its own — it
+	// borrows a face (see fontFamily in typefaces.ts) — so listing that face's
+	// whole weight range would pass it off as the placeholder's. One row, at
+	// the weight the name above is set in, and no more.
+	const testerWeights = $derived(
+		tf.placeholder ? tf.weights.filter((w) => w.axisValue === nameWeight).slice(0, 1) : tf.weights
+	);
 
 	// The spec lines, in two columns. Only what the data holds: a line with
 	// nothing behind it is left out, never filled in. Styles are upright only
@@ -315,22 +327,27 @@
 		{/if}
 	</section>
 
-	{#if !tf.placeholder}
 	<!-- Type Tester — directly after the intro, per the user's 2026-09
 	     request; the remaining sections keep their earlier order below.
 	     (An "In Use" section used to sit directly below this — 4-5
 	     application-photo slots — removed 2026-09 at the user's request;
-	     tf.inUseImages in typefaces.ts is unused now but left in place.) -->
+	     tf.inUseImages in typefaces.ts is unused now but left in place.)
+	     A placeholder (Maxica, Quad Sans) has it too (2026-10-31, at the user's
+	     request — "各書体ページ、タイプテスター導入して"), as the one row of
+	     testerWeights; the sections below stay off its page. -->
 	<TypeTester
-		weights={tf.weights}
+		weights={testerWeights}
 		fontFamily={tf.fontFamily}
 		name={tf.name}
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
 		available={isAvailable}
-		defaultSizeDesktop={isHumorist ? 160 : tf.slug === 'norma' ? 36 : undefined}
+		notice={tf.testerNotice}
+		defaultSizeDesktop={isHumorist || tf.placeholder ? TESTER_SIZE_DESKTOP : tf.slug === 'norma' ? 36 : undefined}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 	/>
+
+	{#if !tf.placeholder}
 
 	<!-- Weights — the named axis stops, each set in its own weight. A quick
 	     visual index of the range; GlyphSet (further down) is the deep,
