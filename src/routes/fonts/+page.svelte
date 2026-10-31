@@ -98,15 +98,10 @@
 		text-decoration: none;
 		color: var(--color-text);
 		border-bottom: var(--border-line);
-		transition: opacity 0.15s ease;
 	}
 
 	.FontRow:last-child {
 		border-bottom: 0;
-	}
-
-	.FontRow:hover {
-		opacity: 0.75;
 	}
 
 	/* The name: huge, centred in the space above the caption. 300px on a wide
