@@ -286,7 +286,7 @@
 		text-transform: uppercase;
 		color: var(--color-text-mute);
 		background: transparent;
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		border-radius: 999px;
 		padding: 6px 16px;
 		cursor: pointer;

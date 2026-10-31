@@ -11,8 +11,8 @@
 
 <style>
 	.SectionHeading {
-		border-top: 1px solid var(--color-text);
-		border-bottom: 1px solid var(--color-text);
+		border-top: var(--border-line);
+		border-bottom: var(--border-line);
 		padding: 10px 0 12px;
 	}
 

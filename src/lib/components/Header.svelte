@@ -15,8 +15,9 @@
 	//   surface" below). On PC (from 1060px, where the inline nav exists) the
 	//   lockup is smaller and sits on the left margin, and the nav and Cart
 	//   are one group at the right, on a bar in the page's own background
-	//   colour with a 0.5px #999 rule under it (2026-10-31, at the user's
-	//   request). Below 1060px the header still has no fill.
+	//   colour with the site's border (base.css --border-line) under it
+	//   (2026-10-31, at the user's request). Below 1060px the header still has
+	//   no fill.
 	//
 	// The shrink moves the large wordmark's two words themselves (one
 	// transform each, scale about their top-left) onto two invisible "slot"
@@ -650,10 +651,10 @@
 			--lockup-left-cq: var(--edge);
 		}
 
-		/* The bar: the page's background colour (white; /about's blue) with a
-		   0.5px #999 rule under it (2026-10-31, at the user's request — "PC
-		   Header背景色あり・border-bottom .5pxで#999"; a border cannot be thinner
-		   than a device pixel, so 1px on a 1x screen). It exists in the compact
+		/* The bar: the page's background colour (white; /about's blue) with the
+		   site's border under it (2026-10-31, at the user's request — "PC
+		   Header背景色あり・border-bottom"; base.css --border-line, which
+		   replaced the 0.5px #999 first asked for). It exists in the compact
 		   state only: the home page's large wordmark at scroll 0 has none. */
 		.Header::before {
 			content: '';
@@ -664,7 +665,7 @@
 			box-sizing: border-box;
 			height: var(--header-bar-h);
 			background: var(--color-bg);
-			border-bottom: 0.5px solid #999999;
+			border-bottom: var(--border-line);
 			opacity: 0;
 			pointer-events: none;
 		}

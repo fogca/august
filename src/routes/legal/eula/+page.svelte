@@ -129,7 +129,7 @@
 		letter-spacing: 0;
 		opacity: 0.55;
 		background: transparent;
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		border-radius: 999px;
 		padding: 6px 14px;
 		cursor: pointer;
@@ -214,7 +214,7 @@
 	}
 
 	.Eula__divider {
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 		margin: 56px 0;
 	}
 </style>

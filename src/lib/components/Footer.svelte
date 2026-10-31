@@ -98,13 +98,11 @@
 		color: var(--color-text);
 		padding: 64px 0 24px;
 		margin-top: 0;
-		/* A rule across the whole width of the screen, at half strength
-		   (2026-10-31, at the user's request — "Footerはborder-topで線入れて。
-		   同様.5pxで"): the same half-strength ink as the typeface list's rules
-		   (/fonts), 0.5px thick (a device pixel on a 2x screen; 1px on a 1x
-		   one, where a border cannot be thinner). The footer spans the page,
-		   so its own border is edge to edge. */
-		border-top: 0.5px solid color-mix(in srgb, var(--color-text) 50%, transparent);
+		/* A rule across the whole width of the screen (2026-10-31, at the
+		   user's request — "Footerはborder-topで線入れて"), the site's one
+		   border (base.css --border-line). The footer spans the page, so its
+		   own border is edge to edge. */
+		border-top: var(--border-line);
 		/* sit above the cover-reveal sections (z-index:1) above it */
 		position: relative;
 		z-index: 2;
@@ -213,7 +211,7 @@
 	.Footer__bottom {
 		margin-top: 28px;
 		padding: 24px var(--padding) 0;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
+		border-top: var(--border-line);
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
@@ -305,7 +303,7 @@
 	   footer (2026-10-31, at the user's request — "Spフッターとヘッダーメニュー
 	   は参考サイト参考に"): the language switch and the legal links, 14px with a
 	   1px rule and a full radius — the typeface page's own pill — and the
-	   current language inverted. A half-strength rule (the footer's own) now
+	   current language inverted. The site's border (base.css --border-line)
 	   divides them from the nav above, where there was a white hairline that
 	   only showed on /about's blue. The nav column and PC are as they were. */
 	@media (max-width: 767.98px) {
@@ -316,7 +314,7 @@
 		.Footer__bottom {
 			margin-top: 40px;
 			padding-top: 24px;
-			border-top: 0.5px solid color-mix(in srgb, var(--color-text) 50%, transparent);
+			border-top: var(--border-line);
 			gap: 16px;
 			opacity: 1;
 		}

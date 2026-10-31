@@ -243,7 +243,7 @@
 		font-size: 14px;
 		color: var(--color-text);
 		background: var(--color-bg-gray, #f3f3f3);
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		padding: 8px 10px;
 		min-width: 180px;
 		border-radius: 0;
@@ -264,7 +264,7 @@
 		font-size: 13px;
 		color: var(--color-text);
 		background: transparent;
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		padding: 8px 12px;
 		cursor: pointer;
 		opacity: 0.55;

@@ -46,7 +46,7 @@
 		background: var(--color-signal);
 		color: #fff;
 		padding: 80px var(--padding) 60px;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
+		border-top: var(--border-line);
 	}
 
 	.GlyphShowcase__label {
@@ -68,7 +68,7 @@
 	.GlyphShowcase__box {
 		position: relative;
 		aspect-ratio: 21 / 9;
-		border: 1px solid rgba(255, 255, 255, 0.3);
+		border: var(--border-line);
 		display: flex;
 		align-items: center;
 		justify-content: center;

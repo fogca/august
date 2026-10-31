@@ -97,7 +97,7 @@
 	.GlyphSpecimen {
 		height: 300vh;
 		height: 300dvh;
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 	}
 
 	.GlyphSpecimen__pin {

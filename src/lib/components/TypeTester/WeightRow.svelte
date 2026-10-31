@@ -235,12 +235,12 @@
 		   sits directly on the body copy below it. */
 		gap: 0;
 		padding-block: 5px 30px;
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 		width: 100%;
 	}
 
 	.WeightRow:last-child {
-		border-bottom: 1px solid var(--color-line);
+		border-bottom: var(--border-line);
 	}
 
 	.WeightRow__meta {
@@ -248,9 +248,9 @@
 		align-items: center;
 		gap: 12px;
 		margin-bottom: 15px;
-		/* A hairline under each row's label (2026-10, the user's own values). */
+		/* A rule under each row's label (2026-10; the site's border since 2026-10-31). */
 		padding-bottom: 12px;
-		border-bottom: 0.5px solid var(--color-line);
+		border-bottom: var(--border-line);
 		color: var(--color-text-mute);
 		font-family: var(--font-en), sans-serif;
 		font-size: 10px;
@@ -401,7 +401,7 @@
 
 	.align-btn.is-active {
 		color: var(--color-text);
-		border-color: var(--color-line);
+		border: var(--border-line);
 	}
 
 	.align-icon {

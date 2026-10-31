@@ -110,7 +110,7 @@
 	.StyleList {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 	}
 
 	.StyleList__row {
@@ -119,7 +119,7 @@
 		gap: 10px;
 		padding: 12px 0;
 		min-height: 44px;
-		border-bottom: 1px solid var(--color-line);
+		border-bottom: var(--border-line);
 		opacity: 1;
 		transition: opacity 150ms ease;
 	}
@@ -151,7 +151,7 @@
 	}
 
 	.StyleList__row:nth-child(even) {
-		border-left: 1px solid var(--color-line);
+		border-left: var(--border-line);
 		padding-left: 12px;
 		padding-right: var(--padding);
 	}

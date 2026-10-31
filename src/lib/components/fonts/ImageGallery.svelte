@@ -45,7 +45,7 @@
 <style>
 	.Gallery {
 		padding: 80px var(--padding);
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 	}
 
 	.Gallery__label {

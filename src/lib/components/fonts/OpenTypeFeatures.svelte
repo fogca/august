@@ -152,7 +152,7 @@
 		letter-spacing: 0;
 		text-decoration: none;
 		margin-top: 12px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+		border-bottom: var(--border-line);
 		padding-bottom: 2px;
 		transition: color 0.15s ease;
 	}
@@ -172,7 +172,7 @@
 		grid-template-columns: 1fr;
 		gap: 12px;
 		padding: 20px 0;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
+		border-top: var(--border-line);
 	}
 
 	.OpenType__meta {

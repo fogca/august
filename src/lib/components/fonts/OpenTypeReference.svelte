@@ -374,7 +374,7 @@
 	.OTRef__grouphead {
 		margin-bottom: 8px;
 		padding-bottom: 12px;
-		border-bottom: 1px solid var(--color-text);
+		border-bottom: var(--border-line);
 	}
 
 	.OTRef__grouptitle {
@@ -408,7 +408,7 @@
 		grid-template-columns: 1fr;
 		gap: 18px;
 		padding: 28px 0;
-		border-bottom: 1px solid var(--color-line);
+		border-bottom: var(--border-line);
 	}
 
 	.OTRef__meta {
@@ -446,7 +446,7 @@
 		line-height: 1;
 		letter-spacing: 0.02em;
 		padding: 3px 6px;
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		color: rgba(0, 0, 0, 0.5);
 		border-radius: 2px;
 	}

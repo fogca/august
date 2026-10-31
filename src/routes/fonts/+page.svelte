@@ -78,14 +78,13 @@
 		border: 0;
 	}
 
-	/* A rule above the first row and under every one, at half strength and the
-	   whole width of the screen (2026-10-31, at the user's request — "線は
-	   opacity.5で100vw"). The rows are as wide as the page, with the page's own
-	   margin as their padding, so the copy sits on it. The last row has no rule
-	   of its own: the footer's top rule closes the list. */
+	/* A rule above the first row and under every one, the whole width of the
+	   screen (2026-10-31, at the user's request — "線は100vw"), the site's one
+	   border (base.css --border-line). The rows are as wide as the page, with
+	   the page's own margin as their padding, so the copy sits on it. The last
+	   row has no rule of its own: the footer's top rule closes the list. */
 	.Fonts__list {
-		--row-line: color-mix(in srgb, var(--color-text) 50%, transparent);
-		border-top: 1px solid var(--row-line);
+		border-top: var(--border-line);
 	}
 
 	.FontRow {
@@ -98,7 +97,7 @@
 		padding: 20px var(--padding);
 		text-decoration: none;
 		color: var(--color-text);
-		border-bottom: 1px solid var(--row-line);
+		border-bottom: var(--border-line);
 		transition: opacity 0.15s ease;
 	}
 

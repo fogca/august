@@ -179,7 +179,7 @@
 	.LicenseIntake__input {
 		padding: 10px 12px;
 		background: var(--color-bg);
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		border-radius: 0;
 		font-family: 'Norma', sans-serif;
 		font-size: 13px;

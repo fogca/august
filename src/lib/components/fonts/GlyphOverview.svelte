@@ -277,7 +277,7 @@
 	.GlyphOverview__cells {
 		display: grid;
 		grid-template-columns: repeat(8, minmax(0, 1fr));
-		border: 1px solid var(--color-text);
+		border: var(--border-line);
 		border-radius: 6px;
 		overflow: hidden;
 	}

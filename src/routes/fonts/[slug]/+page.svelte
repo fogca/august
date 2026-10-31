@@ -548,7 +548,7 @@
 		display: grid;
 		gap: 28px;
 		padding-top: 18px;
-		border-top: 1px solid var(--color-text);
+		border-top: var(--border-line);
 	}
 
 	@media (min-width: 768px) {
@@ -915,7 +915,7 @@
 	/* ── Inspiration — reference imagery + a short passage ── */
 	.FontInspiration {
 		padding: 40px var(--padding) 48px;
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 	}
 
 	.FontInspiration__row {
@@ -978,7 +978,7 @@
 	/* ── Ango: sample text in place of Glyph set / Beyond A-Z / OpenType ── */
 	.AngoSample {
 		padding: 40px var(--padding) 48px;
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 	}
 
 	.AngoSample__label {
@@ -1001,7 +1001,7 @@
 	/* ── On-page buy block ── */
 	.FontBuy {
 		padding: 96px var(--padding) 120px;
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 	}
 
 	.FontBuy__inner {

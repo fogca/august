@@ -234,7 +234,7 @@
 	   below) rather than just flipping to light text on a dark field. */
 	.GlyphSet {
 		padding: 40px var(--padding) 48px;
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 		background: #000;
 		color: #fff;
 	}
@@ -272,7 +272,7 @@
 		justify-content: space-between;
 		gap: 12px;
 		padding-bottom: 12px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+		border-bottom: var(--border-line);
 	}
 
 	.GlyphSet__type-name {
@@ -399,7 +399,7 @@
 
 	.GlyphSet__group {
 		padding-block: 20px;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
+		border-top: var(--border-line);
 	}
 
 	.GlyphSet__group:first-child {

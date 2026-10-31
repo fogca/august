@@ -45,7 +45,7 @@
 
 <style>
 	.EducationalToggle {
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 		padding-top: 20px;
 		margin-top: 8px;
 	}

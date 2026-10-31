@@ -460,7 +460,7 @@
 	/* ── Totals ── */
 	.CartSummary__totals {
 		padding-top: 20px;
-		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		border-top: var(--border-line);
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
@@ -487,7 +487,7 @@
 
 	.CartSummary__row--total {
 		padding-top: 10px;
-		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		border-top: var(--border-line);
 		font-size: 18px;
 		font-weight: var(--fw-strong);
 	}

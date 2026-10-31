@@ -479,7 +479,7 @@
 		   there's no dark state to design around here any more. */
 		background: var(--color-bg);
 		color: var(--color-text);
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 	}
 
 	/* Complete Collection — full-bleed against the panel's own border (no

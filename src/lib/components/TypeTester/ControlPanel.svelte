@@ -175,7 +175,7 @@
 		bottom: 0;
 		z-index: var(--z-header);
 		background: var(--color-bg);
-		border-top: 1px solid var(--color-line);
+		border-top: var(--border-line);
 		/* sticks to the true screen bottom — keep the tappable controls clear of
 		   the home-indicator safe area */
 		padding: 12px var(--padding) calc(16px + env(safe-area-inset-bottom, 0px));
@@ -238,7 +238,7 @@
 		font-size: 10px;
 		font-family: var(--font-en), sans-serif;
 		padding: 3px 7px;
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		color: var(--color-text-mute);
 		transition: color var(--duration-fast), border-color var(--duration-fast);
 		cursor: pointer;
@@ -256,7 +256,7 @@
 
 	.ControlPanel__textarea {
 		width: 100%;
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		padding: 8px 10px;
 		font-size: 12px;
 		font-family: var(--font-en), sans-serif;
@@ -291,7 +291,7 @@
 		font-size: 10px;
 		font-family: var(--font-en), sans-serif;
 		padding: 4px 10px;
-		border: 1px solid var(--color-line);
+		border: var(--border-line);
 		color: var(--color-text-mute);
 		transition: color var(--duration-fast), border-color var(--duration-fast);
 		cursor: pointer;
