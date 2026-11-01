@@ -78,6 +78,9 @@
 	// The big name at the top: the prefix dropped, set at the face's own
 	// display weight (400 where it has none).
 	const nameWeight = $derived(tf.specimenWeight ?? 400);
+	// …unless the typeface sets its page title apart (Humorist: "APGR", Medium).
+	const titleText = $derived(tf.pageTitle ?? displayName(tf));
+	const titleWeight = $derived(tf.pageTitleWeight ?? nameWeight);
 
 	// The Type Tester's default size on a desktop screen (Humorist since
 	// 2026-10-30; the placeholders follow it).
@@ -193,8 +196,8 @@
 			<span
 				class="FontTitle__text"
 				use:fitText={tf.slug}
-				style="font-variation-settings: 'wght' {nameWeight}; font-weight: {nameWeight};"
-				>{displayName(tf)}</span
+				style="font-variation-settings: 'wght' {titleWeight}; font-weight: {titleWeight};"
+				>{titleText}</span
 			>
 		</h1>
 	</section>

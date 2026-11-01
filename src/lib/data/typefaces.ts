@@ -100,6 +100,11 @@ export interface Typeface {
 	 *  which borrows Norma) read as a different cut of the borrowed font
 	 *  rather than an identical copy of Norma's own. */
 	specimenWeight?: number;
+	/** What the big name at the top of the typeface page says, and the wght it
+	 *  is set at, when they differ from displayName() and specimenWeight. The
+	 *  /fonts list keeps using the latter two. */
+	pageTitle?: string;
+	pageTitleWeight?: number;
 	/** Optional hero thumbnail (image path under /). When absent, the slide
 	 *  falls back to a large typographic placeholder. */
 	thumbnail?: string;
@@ -580,6 +585,10 @@ export const TYPEFACES: Typeface[] = [
 		// hero's own, Light).
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 300,
+		// The page's own title is the family prefix alone, in Medium (2026-11-01,
+		// at the user's request — "一番上のHumoristをApgrにして、Mediumで").
+		pageTitle: NAME_PREFIX,
+		pageTitleWeight: 550,
 		// Borrowed from gQ (2026-08-31, at the user's request) — Ango has no
 		// hero image of its own yet, so its page top reuses gQ's for now.
 		thumbnail: '/images/fonts/gq.png',
