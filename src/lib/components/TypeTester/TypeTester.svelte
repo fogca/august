@@ -142,6 +142,7 @@
 	.TypeTester__title {
 		font-family: var(--font-en), sans-serif;
 		font-size: var(--fs-h5);
+		font-weight: var(--page-regular, var(--fw-base));
 		color: var(--color-text-mute);
 		letter-spacing: 0;
 	}
@@ -149,6 +150,7 @@
 	.TypeTester__hint {
 		font-family: var(--font-en), sans-serif;
 		font-size: var(--fs-h6);
+		font-weight: var(--page-regular, var(--fw-base));
 		color: var(--color-text-mute);
 		margin-top: 6px;
 		opacity: 0.7;
@@ -157,6 +159,7 @@
 	.TypeTester__notice {
 		font-family: var(--font-en), sans-serif;
 		font-size: var(--fs-h6);
+		font-weight: var(--page-regular, var(--fw-base));
 		color: var(--color-text-mute);
 		margin-top: 4px;
 		opacity: 0.7;

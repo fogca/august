@@ -156,6 +156,11 @@
 		}
 	);
 	const lightestWeight = $derived(tf.weights[0]?.axisValue ?? 300);
+	// The page's own text (description, spec lines, the Type Tester's heading
+	// and notes) is set in this typeface at its "Regular" — 400 on most scales,
+	// 450 on Humorist's. The site's body weights (260/320) read thin in a
+	// typeface with a real weight axis (2026-11-05, at the user's request).
+	const regularWeight = $derived(tf.weights.find((w) => w.label === 'Regular')?.axisValue ?? 400);
 
 	// The gallery, left to right — the typeface's own list, else the default
 	// three (glyphs, then the video or the tagline, then the specimen).
@@ -187,7 +192,7 @@
 
 <main
 	class="FontDetail"
-	style="--type-font: '{tf.fontFamily}'; --panel-bg: {hero.panelBg}; --panel-fg: {hero.panelFg}; --block-bg: {hero.blockBg}; --block-fg: {hero.blockFg}; --tile-bg: {hero.galleryBg ?? hero.panelBg}; --tile-fg: {hero.galleryFg ?? hero.panelFg};"
+	style="--type-font: '{tf.fontFamily}'; --page-regular: {regularWeight}; --panel-bg: {hero.panelBg}; --panel-fg: {hero.panelFg}; --block-bg: {hero.blockBg}; --block-fg: {hero.blockFg}; --tile-bg: {hero.galleryBg ?? hero.panelBg}; --tile-fg: {hero.galleryFg ?? hero.panelFg};"
 >
 	<!-- The name, prefix dropped, as wide as the page (see fitText). The h1
 	     says the full name to a screen reader. -->
@@ -603,7 +608,7 @@
 		font-size: 12px;
 		line-height: 1.3;
 		letter-spacing: 0;
-		font-weight: var(--fw-light);
+		font-weight: var(--page-regular, var(--fw-light));
 		color: var(--color-text);
 		opacity: 0.5;
 		margin: 0 0 12px;
@@ -613,7 +618,7 @@
 		font-size: clamp(16px, 1.4vw, 20px);
 		line-height: 1.4;
 		letter-spacing: 0;
-		font-weight: var(--fw-light);
+		font-weight: var(--page-regular, var(--fw-light));
 		color: var(--color-text);
 		max-width: none;
 		margin: 0;
@@ -654,7 +659,7 @@
 	.FontSpec__line dt,
 	.FontSpec__line dd {
 		margin: 0;
-		font-weight: var(--fw-light);
+		font-weight: var(--page-regular, var(--fw-light));
 		color: var(--color-text);
 	}
 
@@ -665,6 +670,7 @@
 
 	/* Small caveat under the spec lines — a typeface still in development. */
 	.FontSpec__note {
+		font-weight: var(--page-regular, var(--fw-base));
 		font-size: 11px;
 		line-height: 1.5;
 		letter-spacing: 0;
