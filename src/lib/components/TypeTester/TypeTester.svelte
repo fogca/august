@@ -2,6 +2,7 @@
 	import { untrack } from 'svelte';
 	import { browser } from '$app/environment';
 	import WeightRow from './WeightRow.svelte';
+	import { weightName } from './presets.js';
 	import type { WeightDef, TesterLine } from './presets.js';
 	import {
 		MOBILE_BREAKPOINT_PX,
@@ -75,10 +76,10 @@
 	const LINE_ALIGN = 'left';
 
 	// A tester line is a weight row that sets its own size, weight and spacing.
-	// Its label is the typeface's name and the wght — nothing that pretends to
-	// be a style of its own.
+	// Its label is the typeface's name and the weight's name ("Medium") —
+	// nothing that pretends to be a style of its own.
 	function lineWeight(l: TesterLine, i: number): WeightDef {
-		return { id: i, name: name ?? fontFamily, label: '', axisValue: l.wght };
+		return { id: i, name: name ?? fontFamily, label: weightName(weights, l.wght), axisValue: l.wght };
 	}
 </script>
 

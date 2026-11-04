@@ -4,6 +4,7 @@
 	// progress drives the variable wght axis from 1 (Hair) to 950 (Ultra).
 	import { onMount } from 'svelte';
 	import { onScroll } from '$lib/scroll';
+	import { WEIGHTS, weightName } from '$lib/components/TypeTester/presets.js';
 
 	interface Props {
 		fontFamily: string;
@@ -80,7 +81,7 @@
 
 <section class="GlyphSpecimen" aria-label="Character specimen" bind:this={wrapEl}>
 	<div class="GlyphSpecimen__pin">
-		<p class="GlyphSpecimen__wght" aria-hidden="true">wght {wght}</p>
+		<p class="GlyphSpecimen__wght" aria-hidden="true">{weightName(WEIGHTS, wght)}</p>
 		<p
 			class="GlyphSpecimen__text"
 			style="font-family: '{fontFamily}', sans-serif; font-variation-settings: 'wght' {wght};"

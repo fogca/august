@@ -32,6 +32,17 @@ export interface TesterLine {
 	columns?: number;
 }
 
+/** The name of the step nearest to a wght value ("Regular"). The site says a
+ *  weight by its name wherever one is shown — a wght number is never put on
+ *  screen (2026-11-04, at the user's request — "wght550などの表記は全面禁止"). */
+export function weightName(weights: WeightDef[], wght: number): string {
+	let best: WeightDef | undefined;
+	for (const w of weights) {
+		if (!best || Math.abs(w.axisValue - wght) < Math.abs(best.axisValue - wght)) best = w;
+	}
+	return best?.label ?? '';
+}
+
 const WEIGHT_LABELS = [
 	'Hair',
 	'Line',

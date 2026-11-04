@@ -11,6 +11,7 @@
      (typefaces.ts) rather than inventing new French copy for this page. -->
 <script lang="ts">
 	import { TYPEFACES, getTypeface } from '$lib/data/typefaces.js';
+	import { weightName } from '$lib/components/TypeTester/presets.js';
 
 	// Every typeface, hidden ones included — this is an internal glyph-check
 	// tool, and checking coverage on an in-development face is the point.
@@ -117,7 +118,7 @@
 			</label>
 
 			<label class="GlyphCheck__field">
-				<span>Weight — {weight}</span>
+				<span>Weight — {weightName(tf.weights, weight)}</span>
 				<input
 					class="GlyphCheck__weight"
 					type="range"

@@ -19,7 +19,7 @@
 		/** Starting text alignment */
 		initialAlign?: AlignValue;
 		/** The row's label, where it is not the weight's own name (a tester line:
-		 *  the typeface's name, with "wght 550" beside it) */
+		 *  the typeface's name, with the weight's name beside it) */
 		title?: string;
 		/** Line-height of the text — running text wants more than the 1 a
 		 *  single specimen word is set at */
@@ -122,7 +122,7 @@
 <div class="WeightRow" role="listitem">
 	<div class="WeightRow__meta">
 		<span class="label-name">{rowName}</span>
-		<span class="label-axis">wght {weight.axisValue}</span>
+		<span class="label-axis">{weight.label}</span>
 		{#if SHOW_ROW_TITLE}
 			<label class="WeightRow__size">
 				<span class="size-icon size-icon--sm">A</span>
