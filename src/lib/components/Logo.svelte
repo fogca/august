@@ -1,12 +1,18 @@
-<!-- The Apres Guerre wordmark at its large, top-of-page size (2026-10
-     redesign, Figma "II-ii" 1:635 / 175:178 PC, 7:782 / 7:874 SP): PC sets it
-     on one line, 40px in from each side and 35px down; SP stacks the two
-     words, GUERRE spanning the width with a 15px margin each side and APRES
-     centred above it at the same scale.
+<!-- The wordmark at its large, top-of-page size (2026-10 redesign, Figma "II-ii"
+     1:635 / 175:178 PC, 7:782 / 7:874 SP): PC sets it on one line, 40px in
+     from each side and 35px down; SP stacks the two words, the second
+     spanning the width with a 15px margin each side and the first centred
+     above it at the same scale.
 
-     Each word is its own <svg> — a horizontal crop of the one 9:1 artwork
-     (see $lib/data/logo.ts, whose dimensions reach the CSS below as the
-     --logo-* custom properties on :root) — so the two can be moved independently:
+     Since 2026-11-05 the wordmark is "TEXMEX TYPEFOUNDRY TOKYO" in Maxa
+     Regular, black (the user's trial — see $lib/data/wordmark.ts, generated
+     from the font by scripts/build_wordmark.py). The words keep the layout's
+     old names, `apres` (the first word) and `guerre` (the second): see
+     LOGO_WORDS in $lib/data/logo.ts.
+
+     Each word is its own <svg> — a horizontal crop of the one wordmark (its
+     dimensions reach the CSS below as the --logo-* custom properties on
+     :root) — so the two can be moved independently:
      the Header shrinks them into its compact one-line lockup, which on SP
      means pulling the stacked words back onto one line.
 
@@ -18,12 +24,13 @@
      this element (itself the full width of that ancestor) rather than vw, so
      a classic scrollbar can't push the right edge out of line. -->
 <script lang="ts">
-	import { LOGO_LETTERS, LOGO_WORDS, LOGO_VIEWBOX_H } from '$lib/data/logo';
+	import { LOGO_WORDS } from '$lib/data/logo';
+	import { WORDMARK_H, WORDMARK_LETTERS } from '$lib/data/wordmark';
 
 	interface Props {
 		/** The two word wrappers (APRES, GUERRE), for callers that move them. */
 		wordEls?: HTMLElement[];
-		/** All eleven letter paths, left to right, for callers that animate them. */
+		/** All the letter paths, left to right, for callers that animate them. */
 		letterEls?: SVGPathElement[];
 	}
 
@@ -31,15 +38,15 @@
 </script>
 
 <span class="Logo" aria-hidden="true">
-	{#each LOGO_WORDS as word, w (word.word)}
-		<span class="Logo__word Logo__word--{word.word.toLowerCase()}" bind:this={wordEls[w]}>
+	{#each LOGO_WORDS as word, w (word.key)}
+		<span class="Logo__word Logo__word--{word.key}" bind:this={wordEls[w]}>
 			<svg
-				viewBox="{word.x0} 0 {word.x1 - word.x0} {LOGO_VIEWBOX_H}"
+				viewBox="{word.x0} 0 {word.x1 - word.x0} {WORDMARK_H}"
 				preserveAspectRatio="xMinYMin meet"
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<!-- --i: the letter's left-to-right index, for callers that stagger. -->
-				{#each LOGO_LETTERS.slice(word.from, word.to) as letter, i (i)}
+				{#each WORDMARK_LETTERS.slice(word.from, word.to) as letter, i (i)}
 					<path bind:this={letterEls[word.from + i]} d={letter.d} style="--i: {word.from + i}" />
 				{/each}
 			</svg>
@@ -76,8 +83,8 @@
 		display: block;
 		height: calc(var(--logo-h) * var(--u));
 		/* Callers recolour via --logo-color (the Header follows its own text
-		   colour); the brand blue otherwise. */
-		color: var(--logo-color, var(--brand-blue));
+		   colour); black otherwise (2026-11-05, with the new name). */
+		color: var(--logo-color, var(--black));
 		transform-origin: 0 0;
 	}
 
@@ -88,7 +95,8 @@
 		fill: currentColor;
 	}
 
-	/* x ranges from LOGO_WORDS (the --logo-apres-* / --logo-guerre-* vars). */
+	/* x ranges from LOGO_WORDS (the --logo-apres-* / --logo-guerre-* vars): the
+	   first word and the second. */
 	.Logo__word--apres {
 		--word-left: var(--logo-side);
 		width: calc(var(--logo-apres-w) * var(--u));

@@ -289,7 +289,7 @@
 	onfocusin={onFocusIn}
 	onfocusout={onFocusOut}
 >
-	<a class="Header__logo" href="/" onclick={close} aria-label="Apres Guerre — home">
+	<a class="Header__logo" href="/" onclick={close} aria-label="Texmex Typefoundry Tokyo — home">
 		<Logo bind:wordEls />
 		<!-- Where the two words land in the compact state (see measure()). -->
 		<span class="Header__slot Header__slot--apres" bind:this={slotEls[0]}></span>
@@ -390,7 +390,7 @@
 		   which sticky page UI clears — and, on every page but the home, the
 		   space the layout reserves above the content (--masthead-h). */
 		--lockup-w: 273.3px;
-		--lockup-top: 28px;
+		--lockup-top: 36px;
 		/* The lockup's left edge: centred, as Figma 3:671 has it — or on the
 		   page margin on PC (the 1060px block below). The second is the same
 		   in the container units the words' own CSS works in. */
@@ -417,9 +417,10 @@
 		   under them for ~2s (2026-10, at the user's request — "ページ遷移時に
 		   ロゴが表示されるの遅い"). The home opening (1300) sits above it. */
 		z-index: 1200;
-		/* The wordmark's colour — the nav, Cart and toggle take --header-ink
-		   instead (below). */
-		color: var(--brand-blue);
+		/* The wordmark's colour — black since 2026-11-05 (the new name, set in
+		   black at the user's request), the same as --header-ink, which the
+		   nav, Cart and toggle take (below). */
+		color: var(--header-ink);
 		--header-ink: #000000;
 		/* The Logo's words follow whatever colour the header has (see
 		   Logo.svelte --logo-color). */
@@ -454,8 +455,8 @@
 	}
 
 	/* The nav, Cart and the menu toggle are black (2026-10-31, at the user's
-	   request — "色も黒にして"); the wordmark keeps the brand blue the header
-	   itself carries. They take the same two exceptions as the header: paper
+	   request — "色も黒にして"); the wordmark is black now too. They take the
+	   same two exceptions as the header: paper
 	   over a dark surface, the page's own text colour on /about. */
 	.Header .Header__nav,
 	.Header .Header__cart,
@@ -641,11 +642,13 @@
 	   links take it once they are shown (see .is-compact below). */
 	@media (min-width: 1060px) {
 		/* The bar is --header-bar-h (72px here, base.css) tall: the lockup and the
-		   link row are centred in it (the lockup 170px wide, 19px tall; the links
-		   17.5px). */
+		   link row are centred in it (the lockup 280px wide, 14px tall; the links
+		   17.5px). The lockup was 170px by 19px for the 9:1 Apres Guerre mark;
+		   the new name is a 20:1 line, so it takes more width for less height
+		   (2026-11-05). */
 		.Header {
-			--lockup-w: 170px;
-			--lockup-top: 27px;
+			--lockup-w: 280px;
+			--lockup-top: 29px;
 			--row-top: 27px;
 			--lockup-left: var(--edge);
 			--lockup-left-cq: var(--edge);
@@ -762,8 +765,8 @@
 	/* ── SP lockup sizes ── */
 	@media (max-width: 767.98px) {
 		.Header {
-			--lockup-w: 180px;
-			--lockup-top: 16px;
+			--lockup-w: 230px;
+			--lockup-top: 20px;
 		}
 	}
 

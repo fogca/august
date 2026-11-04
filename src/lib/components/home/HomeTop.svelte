@@ -4,8 +4,9 @@
      Opening: the wordmark's letters, in white, rise into place
      left to right on the brand-blue ground (Figma 1:635; colours swapped
      from the first cut, 2026-10, at the user's request — so the logo turns
-     blue at the very moment the ground turns white). Then the ground lifts
-     away to the white page underneath, the letters turning blue as it goes,
+     dark at the very moment the ground turns white; black since 2026-11-05,
+     with the new name — it was the brand blue). Then the ground lifts
+     away to the white page underneath, the letters turning black as it goes,
      while the first typeface hero comes up from below, growing as it rises,
      until its top edge rests at half the screen height ("OPから背景が白に
      なり、下から大きくなりながら書体Hero100vhがinして、50vh分見える感じ").
@@ -13,7 +14,7 @@
      The opening is a fixed overlay carrying its own copy of the wordmark
      (Logo.svelte, the same component and position as the Header's), above
      the Header. By the time the overlay's ground has faded the letters have
-     become the same blue as the Header's own mark, which is already sitting
+     become the same black as the Header's own mark, which is already sitting
      on exactly the same pixels underneath — so the hand-over is invisible
      and nothing has to be told to "show" the Header.
 
@@ -265,7 +266,7 @@
 
 	/* Only the ground fades (to transparent, so the page and the rising hero
 	   show through); the letters are not faded but recoloured, white to the
-	   Header's blue, over the same beat. */
+	   Header's black, over the same beat. */
 	@keyframes opening-lift {
 		to {
 			background-color: rgba(255, 255, 255, 0);
@@ -275,12 +276,12 @@
 
 	.Opening :global(.Logo__word) {
 		color: var(--white);
-		animation: logo-to-blue var(--lift-dur) ease var(--lift-at) forwards;
+		animation: logo-to-ink var(--lift-dur) ease var(--lift-at) forwards;
 	}
 
-	@keyframes logo-to-blue {
+	@keyframes logo-to-ink {
 		to {
-			color: var(--brand-blue);
+			color: var(--black);
 		}
 	}
 
