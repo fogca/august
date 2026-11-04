@@ -600,8 +600,8 @@ export const TYPEFACES: Typeface[] = [
 		// A placeholder (2026-10-30): the grotesque in progress. "Maxica" =
 		// Maxima + Helvetica, after the way Unica is Univers + Helvetica. It
 		// borrowed Norma at wght 500 until 2026-11-01, when its own variable
-		// font went on (Maxica-VF5.woff2, wght 50–950). Drawn in both masters so
-		// far: A–F H–T a–x (G is not in yet), so the default
+		// font went on (Maxica-VF6.woff2, wght 50–950). Drawn in both masters so
+		// far: A–Z a–x (y z are not in yet), so the default
 		// tester text is the name "Maxica" (all six letters are in the file);
 		// anything else a visitor types falls back to Norma, then the
 		// browser's sans-serif.
