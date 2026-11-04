@@ -386,7 +386,7 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	},
 	{
 		text: 'the market opens at first light and the first baskets of quince and persimmon arrive from the orchard',
-		wght: 300,
+		wght: 400,
 		sizeDesktop: 80,
 		sizeMobile: 28,
 		lineHeight: 1.1
@@ -405,7 +405,7 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 		sizeMobile: 28,
 		lineHeight: 1.1
 	},
-	{ text: orchardText(2), wght: 300, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
+	{ text: orchardText(2), wght: 400, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
 	{ text: orchardText(5), wght: 400, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
 	{ text: orchardText(10), wght: 400, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
