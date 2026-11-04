@@ -346,6 +346,71 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	{ text: cheeseText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
+/** Running text for Maxica's Type Tester: ten short stanzas about an orchard
+ *  and its market, one phrase to a line, no punctuation. Maxica has only
+ *  `A`-`F` `H`-`T` and `a`-`x` drawn (VF3, 44 characters), so the text is
+ *  made of those alone — no `y` `z`, no `G` `U`-`Z`, no figures, no
+ *  punctuation — and every character comes out in Maxica, not in the face
+ *  that stands in for what is not drawn yet. */
+const ORCHARD_STANZAS = [
+	'first light on the orchard wall\nthe first baskets arrive from the hill\nquince and persimmon wrapped in paper\nmandarin stacked in a tower\na scale a pencil a handful of coins\nno one in a rush',
+	'the market opens before the heat\nstalls of fennel and cinnamon bark\napricot and plum in shallow crates\na pomelo as large as a drum\nthe smell of sorbet from the corner\nsomeone sharpens a knife on a stone',
+	'at noon the shade has moved to the other side\nthe crates are bare the baskets folded\na cart rolls home over the cobbles\nthe awnings come down in turn\nwhat is left is a few peaches and a cat asleep on the scales',
+	'in the evening the orchard is quiet\nthe ladders lean against the trees\na pair of gloves on a branch\nthe pickers have gone home to eat\ntomorrow the same trees will be picked again',
+	'a good season is made in the winter\nin pruning and patience and the cold\nin the weather that no one can order\nthe fruit remembers all of it\nthe sweetness the acid the thin skin\nand the time it was given to ripen',
+	'choose for the weight not the colour\npress near the stem with a thumb\nsmell the fruit before the coins change hands\neat it the same hour or the next\nkeep the peel for tea or for sorbet',
+	'the river is low in the late summer\nstones show where the water was\nchildren cross with their shoes in their hands\na heron stands in the shallows\nnothing moves until it decides to',
+	'a bell somewhere announces the hour\nthe shutters open one after another\nbread arrives in a cloth\ncoffee in small cups on a tin plate\nthe old men take their seats at the corner table',
+	'in the cellar of the market house\njars of preserve line the shelves\neach lid marked with a month and a name\nquince paste apricot jam pomelo peel in sugar\nsealed in summer opened in the cold',
+	'in a drawer a map of the old orchard\neach tree drawn and numbered\nthe date each one was planted\nthe name of the man who planted it\nsome of the trees are gone the numbers remain'
+];
+const orchardText = (n: number) => ORCHARD_STANZAS.slice(0, n).join('\n\n');
+
+/** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"): the same
+ *  shape as Humorist's — a single word 680px wide, a loud capitals line, one
+ *  sentence, single words at their own weight, the lowercase alphabet, then
+ *  running text at 48/19/14px — in the weights 100-900 of the site's scale
+ *  (Thin to Black), each word sized to ~96% of a 1440px screen (measured at
+ *  its weight, tracking -0.03em). The two masters sit at 50 and 950, so the
+ *  extremes are left to the interpolation. */
+const MAXICA_TESTER_LINES: TesterLine[] = [
+	{ text: 'Pear', wght: 500, sizeDesktop: 680, sizeMobile: 180, lineHeight: 1.1, letterSpacing: -0.03 },
+	{
+		text: 'SEASON OF THE ORCHARD',
+		wght: 800,
+		sizeDesktop: 260,
+		sizeMobile: 70,
+		lineHeight: 0.95,
+		letterSpacing: -0.04
+	},
+	{
+		text: 'the market opens at first light and the first baskets of quince and persimmon arrive from the orchard',
+		wght: 300,
+		sizeDesktop: 80,
+		sizeMobile: 28,
+		lineHeight: 1.1,
+		letterSpacing: -0.02
+	},
+	{ text: 'Persimmon', wght: 200, sizeDesktop: 288, sizeMobile: 76, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Mandarin', wght: 600, sizeDesktop: 308, sizeMobile: 80, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Pomelo', wght: 100, sizeDesktop: 432, sizeMobile: 114, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Quince', wght: 900, sizeDesktop: 390, sizeMobile: 102, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Apricot', wght: 700, sizeDesktop: 392, sizeMobile: 104, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Cinnamon', wght: 400, sizeDesktop: 308, sizeMobile: 80, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Fennel', wght: 500, sizeDesktop: 468, sizeMobile: 122, lineHeight: 1.1, letterSpacing: -0.03 },
+	{
+		text: 'abcdefghijklmnopqrstuvwx',
+		wght: 400,
+		sizeDesktop: 108,
+		sizeMobile: 28,
+		lineHeight: 1.1,
+		letterSpacing: -0.02
+	},
+	{ text: orchardText(2), wght: 300, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15, letterSpacing: -0.01 },
+	{ text: orchardText(5), wght: 400, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
+	{ text: orchardText(10), wght: 400, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
+];
+
 export const TYPEFACES: Typeface[] = [
 	{
 		slug: 'norma',
@@ -557,6 +622,7 @@ export const TYPEFACES: Typeface[] = [
 		classification: 'Grotesque · In development',
 		weights: WEIGHTS,
 		defaultTexts: ['Maxica'],
+		testerLines: MAXICA_TESTER_LINES,
 		testerNotice:
 			'APGR Maxica is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],

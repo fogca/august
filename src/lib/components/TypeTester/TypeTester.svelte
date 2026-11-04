@@ -26,6 +26,9 @@
 		defaultTexts: string[];
 		/** Body text set under each word, paired by the same index. */
 		defaultNotes?: string[];
+		/** The typeface's whole weight scale, to name a line's weight by. A
+		 *  placeholder shows one weight row only (`weights`), which cannot. */
+		weightScale?: WeightDef[];
 		/** Lines with a text, weight and size of their own, from a single word
 		 *  the width of the screen to running text. Shown above the weight
 		 *  rows. */
@@ -50,6 +53,7 @@
 		name,
 		defaultTexts,
 		defaultNotes,
+		weightScale,
 		lines,
 		available = true,
 		notice,
@@ -75,7 +79,7 @@
 	// Its label is the typeface's name and the weight's name ("Medium") —
 	// nothing that pretends to be a style of its own.
 	function lineWeight(l: TesterLine, i: number): WeightDef {
-		return { id: i, name: name ?? fontFamily, label: weightName(weights, l.wght), axisValue: l.wght };
+		return { id: i, name: name ?? fontFamily, label: weightName(weightScale ?? weights, l.wght), axisValue: l.wght };
 	}
 </script>
 

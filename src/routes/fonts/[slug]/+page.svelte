@@ -344,6 +344,7 @@
 		name={tf.name}
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
+		weightScale={tf.weights}
 		lines={tf.testerLines}
 		available={isAvailable}
 		notice={tf.testerNotice}
