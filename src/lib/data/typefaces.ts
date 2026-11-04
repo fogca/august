@@ -899,3 +899,71 @@ export const LEGACY_SLUGS: Record<string, string> = {
 export function displayName(tf: Pick<Typeface, 'name'>): string {
 	return tf.name.startsWith(`${NAME_PREFIX} `) ? tf.name.slice(NAME_PREFIX.length + 1) : tf.name;
 }
+
+/** One panel of the home page's typeface section: a flat ground with the name
+ *  set huge in its own face, and a caption (2026-11-05, at the user's request,
+ *  after britishstandardtype.xyz/typefaces — "シンプルな背景とテキストのみ"). */
+export interface HomePanel {
+	key: string;
+	/** The page it opens; none for a name that has no page yet. */
+	href?: string;
+	/** The public name, prefix included — the caption's and the link's label. */
+	name: string;
+	/** The big name, one word to a line ("Quad" over "Sans"). */
+	lines: string[];
+	/** CSS font-family the big name is set in. */
+	fontFamily: string;
+	/** wght of the big name. */
+	weight: number;
+	bg: string;
+	fg: string;
+	/** What the caption says after the name, one part each ("Grotesque", "In
+	 *  development"). Set apart by space, not by a "·": Ango's middle dot sits
+	 *  on the baseline. */
+	meta: string[];
+}
+
+/** How each typeface shows in the home section. The order here is the order
+ *  on the page (Maxa, Humorist, Quad Sans — then Quad Serif, below): kept
+ *  apart from `Typeface.order`, which the menus and /fonts follow. A typeface
+ *  that is hidden is left out, as everywhere else. */
+const HOME_PANEL_STYLES: { slug: string; weight: number; bg: string; fg: string }[] = [
+	{ slug: 'apgr-maxica', weight: 400, bg: 'var(--brand-blue)', fg: 'var(--brand-paper)' },
+	{ slug: 'apgr-humorist', weight: 300, bg: '#000000', fg: 'var(--brand-paper)' },
+	{ slug: 'apgr-quad-sans', weight: 400, bg: 'var(--brand-paper)', fg: 'var(--brand-blue)' }
+];
+
+/** Quad Serif — the serif half of the Quad family, named on the home page
+ *  before it exists: no face is drawn and there is no page, so the panel does
+ *  not link, and its name is set in a stand-in serif (EB Garamond, the file the
+ *  /opentype reference already carries — see app.html) until there is. Quad
+ *  Sans's panel is its inverse: paper and blue there, blue and paper here. */
+const QUAD_SERIF_PANEL: HomePanel = {
+	key: 'apgr-quad-serif',
+	name: `${NAME_PREFIX} Quad Serif`,
+	lines: ['Quad', 'Serif'],
+	fontFamily: 'Quad Serif',
+	weight: 400,
+	bg: 'var(--brand-blue)',
+	fg: 'var(--brand-paper)',
+	meta: ['Serif', 'Coming soon']
+};
+
+/** The home section's panels, in the order they run down the page. */
+export function homePanels(): HomePanel[] {
+	const faces = HOME_PANEL_STYLES.flatMap(({ slug, ...style }) => {
+		const tf = getTypeface(slug);
+		if (!tf || tf.hidden) return [];
+		const panel: HomePanel = {
+			key: tf.slug,
+			href: `/fonts/${tf.slug}`,
+			name: tf.name,
+			lines: displayName(tf).split(' '),
+			fontFamily: tf.fontFamily,
+			meta: tf.classification.split(' · '),
+			...style
+		};
+		return [panel];
+	});
+	return [...faces, QUAD_SERIF_PANEL];
+}

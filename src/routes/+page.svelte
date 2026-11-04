@@ -3,7 +3,7 @@
 	import HomeTop from '$lib/components/home/HomeTop.svelte';
 	import GlyphFill from '$lib/components/home/GlyphFill.svelte';
 	import AboutSection from '$lib/components/home/AboutSection.svelte';
-	import { TYPEFACES } from '$lib/data/typefaces';
+	import { homePanels } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { LOGO_LETTERS } from '$lib/data/logo';
 	import { initScroll, getLenis, onScroll } from '$lib/scroll';
@@ -19,9 +19,7 @@
 	// sets it again once this visit's opening is done.
 	if (browser) homeIntro.introComplete = false;
 
-	const homeTypefaces = TYPEFACES.filter((tf) => !tf.hidden && tf.homeSection).sort(
-		(a, b) => a.order - b.order
-	);
+	const panels = homePanels();
 
 	// The Custom section's pile: the wordmark's own A, P, G and R (2026-10, at
 	// the user's request — "ロゴのsvgから抽出したもの…グリフはAPGRの4つ"),
@@ -365,7 +363,7 @@
 
 <main class="Home">
 	<!-- 1. Opening, then the typeface heroes (see HomeTop.svelte). -->
-	<HomeTop typefaces={homeTypefaces} />
+	<HomeTop {panels} />
 
 	<!-- 2. Custom type for business — a full-screen field of the wordmark's
 	     own A P G R raining down and packing the screen (GlyphFill, in `shapes`

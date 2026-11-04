@@ -31,22 +31,25 @@
      (homeIntro.inApp) and a page that loads already scrolled (a restored
      position) both land straight on the resting state.
 
-     Heroes (175:178): one per typeface, a full screen tall (90vh on SP, at
-     the user's request); a hero with a picture carries no label on it
-     (2026-10, the user's request), one without sits on a dark panel with the
-     face's name set in itself bottom-left; 4px of page between them. -->
+     Heroes: one panel per typeface, a full screen tall (90vh on SP, at the
+     user's request). Since 2026-11-05 (the user's request, after
+     britishstandardtype.xyz/typefaces — "シンプルな背景とテキストのみ、書体
+     セクションであることをもっと分かりやすく") a panel is a flat ground with the
+     name set huge in the face itself, centred, and a caption bottom-left —
+     no picture. Every name is set at one size, the words of a longer name
+     stacked ("Quad" over "Sans"), so the panels read as one list. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Typeface } from '$lib/data/typefaces';
+	import type { HomePanel } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { initScroll, getLenis } from '$lib/scroll';
 	import Logo from '$lib/components/Logo.svelte';
 
 	interface Props {
-		typefaces: Typeface[];
+		panels: HomePanel[];
 	}
 
-	let { typefaces }: Props = $props();
+	let { panels }: Props = $props();
 
 	/** Distance (px) the page may already be scrolled before the opening is
 	 *  skipped outright — a restored mid-page position must never meet the
@@ -171,38 +174,31 @@
 	</section>
 
 	<div class="HomeHeroes" bind:this={heroesEl}>
-		{#each typefaces as tf (tf.slug)}
-			{@const image = tf.homeSection?.heroImage}
-			<!-- data-surface: the Header reads it (a picture has no CSS background
-			     to sample) to pick its colour — see Header.svelte. -->
-			<a
+		{#each panels as panel (panel.key)}
+			<!-- The ground is a plain CSS background, which is what the Header
+			     samples to pick its own colour — see Header.svelte. A name with
+			     no page yet is a section, not a link. -->
+			<svelte:element
+				this={panel.href ? 'a' : 'section'}
 				class="HomeHero"
-				href="/fonts/{tf.slug}"
-				style={image ? `--hero-bg: ${image.bg}; --hero-fg: ${image.fg};` : undefined}
-				data-surface={image?.tone}
-				aria-label={image ? tf.name : undefined}
+				href={panel.href}
+				aria-label="{panel.name}, {panel.meta.join(', ')}"
+				style="--panel-bg: {panel.bg}; --panel-fg: {panel.fg}; --panel-font: '{panel.fontFamily}'; --panel-weight: {panel.weight};"
 			>
-				{#if image}
-					<!-- Decorative: the link's aria-label says what it is. Portrait
-					     art on phones and on any portrait-shaped screen (a tablet
-					     held upright), landscape otherwise — the landscape one
-					     would cut the product off at a hero that tall and narrow. -->
-					<picture class="HomeHero__picture">
-						{#if image.srcSm}
-							<source media="(max-width: 767.98px), (max-aspect-ratio: 1/1)" srcset={image.srcSm} />
-						{/if}
-						<img class="HomeHero__image" src={image.src} alt="" decoding="async" />
-					</picture>
-				{:else}
-					<p
-						class="HomeHero__name"
-						style="font-family: '{tf.fontFamily}', var(--font-norma); font-variation-settings: 'wght' {tf
-							.homeSection?.heroWeight ?? 400};"
-					>
-						{tf.homeSection?.heroName ?? tf.name}
-					</p>
-				{/if}
-			</a>
+				<!-- The caption says it all to a screen reader, so the big name is
+				     for the eye only. -->
+				<p class="HomeHero__name" aria-hidden="true">
+					{#each panel.lines as line (line)}
+						<span class="HomeHero__line">{line}</span>
+					{/each}
+				</p>
+				<p class="HomeHero__caption" aria-hidden="true">
+					<span>{panel.name}</span>
+					{#each panel.meta as part (part)}
+						<span class="HomeHero__meta">{part}</span>
+					{/each}
+				</p>
+			</svelte:element>
 		{/each}
 	</div>
 </div>
@@ -340,49 +336,79 @@
 		}
 	}
 
+	/* --panel-bg / -fg / -font / -weight come from the panel's data. */
 	.HomeHero {
 		position: relative;
 		display: block;
 		height: var(--hero-h);
-		/* --hero-bg / --hero-fg come from a hero's picture, when it has one;
-		   otherwise the plain dark panel with paper type. */
-		background: var(--hero-bg, var(--brand-hero));
+		background: var(--panel-bg);
+		color: var(--panel-fg);
 		text-decoration: none;
 		overflow: hidden;
 	}
 
-	/* The picture fills the hero, cropped to it — behind the type. */
-	.HomeHero__picture {
+	/* The name, centred, at one size for every panel: sized by the width of
+	   the widest ("Humorist", about 4.05em) with a margin, and capped by the
+	   height so a two-line name still sits well inside a short, wide screen. */
+	.HomeHero__name {
+		--name-size: min(20vw, 34vh);
 		position: absolute;
 		inset: 0;
-		display: block;
-	}
-
-	.HomeHero__image {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: 50% 50%;
-	}
-
-	.HomeHero + .HomeHero {
-		margin-top: 4px;
-	}
-
-	.HomeHero__name {
-		position: absolute;
-		left: var(--edge);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 		margin: 0;
+		font-family: var(--panel-font), var(--font-norma), sans-serif;
+		font-size: var(--name-size);
+		font-weight: var(--panel-weight);
+		font-variation-settings: 'wght' var(--panel-weight);
 		line-height: 1;
 		letter-spacing: 0;
-		color: var(--hero-fg, var(--brand-paper));
+		text-align: center;
+		color: var(--panel-fg);
+	}
+
+	/* base.css sets font-family and color straight on every div, a, span and
+	   p, so none of it inherits: each element in the name and the caption
+	   takes the panel's own again. (Left alone, the spans set the name in the
+	   page's face, in black, and the panel's face is never even fetched.) */
+	.HomeHero__line,
+	.HomeHero__caption > span {
+		font-family: inherit;
+		color: inherit;
+	}
+
+	.HomeHero__line {
+		display: block;
 		white-space: nowrap;
 	}
 
-	.HomeHero__name {
-		bottom: 20px;
-		font-size: 100px;
+	/* The caption, on the lead text's own grid: Ango 11px / 1.4 from the page
+	   inset, its last line 30px above the panel's foot. */
+	.HomeHero__caption {
+		position: absolute;
+		left: var(--edge);
+		bottom: 30px;
+		width: calc(100% - 2 * var(--edge));
+		margin: 0;
+		font-family: var(--font-ango), sans-serif;
+		font-size: 11px;
+		font-weight: 400;
+		font-variation-settings: 'wght' 400;
+		line-height: 1.4;
+		letter-spacing: 0;
+		color: var(--panel-fg);
+	}
+
+	.HomeHero__meta {
+		margin-left: 0.8em;
+		opacity: 0.6;
+	}
+
+	.HomeHero:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: -6px;
 	}
 
 	/* Settled (opening over or skipped): no overlay, everything at rest. */
@@ -415,13 +441,14 @@
 			--hero-from: var(--lead-h);
 		}
 
-		.HomeLead__text {
+		.HomeLead__text,
+		.HomeHero__caption {
 			bottom: 32px;
 		}
 
+		/* "Humorist" across the screen with the page inset either side. */
 		.HomeHero__name {
-			bottom: 16px;
-			font-size: 64px;
+			--name-size: 21vw;
 		}
 	}
 </style>
