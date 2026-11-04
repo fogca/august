@@ -900,6 +900,16 @@ export function displayName(tf: Pick<Typeface, 'name'>): string {
 	return tf.name.startsWith(`${NAME_PREFIX} `) ? tf.name.slice(NAME_PREFIX.length + 1) : tf.name;
 }
 
+/** How a home panel's name moves (2026-11-05, at the user's idea — "wght可変
+ *  アニメーション、3D rotationアニメーション、タイプライターアニメーションなどを
+ *  それぞれTopのサムネで動きがあると面白い"). Each runs only while its panel is on
+ *  screen, and none under reduced motion.
+ *  - `wght`: a wave of weight runs through the letters (a variable face).
+ *  - `rotate`: the letters turn about their vertical axis one after another.
+ *  - `typewriter`: the name is typed, held, and backspaced, with a caret.
+ *  - `tracking`: the spacing between the letters opens and closes. */
+export type HomePanelMotion = 'wght' | 'rotate' | 'typewriter' | 'tracking';
+
 /** One panel of the home page's typeface section: a flat ground with the name
  *  set huge in its own face, and a caption (2026-11-05, at the user's request,
  *  after britishstandardtype.xyz/typefaces — "シンプルな背景とテキストのみ"). */
@@ -917,6 +927,7 @@ export interface HomePanel {
 	weight: number;
 	bg: string;
 	fg: string;
+	motion: HomePanelMotion;
 	/** What the caption says after the name, one part each ("Grotesque", "In
 	 *  development"). Set apart by space, not by a "·": Ango's middle dot sits
 	 *  on the baseline. */
@@ -927,10 +938,24 @@ export interface HomePanel {
  *  on the page (Maxa, Humorist, Quad Sans — then Quad Serif, below): kept
  *  apart from `Typeface.order`, which the menus and /fonts follow. A typeface
  *  that is hidden is left out, as everywhere else. */
-const HOME_PANEL_STYLES: { slug: string; weight: number; bg: string; fg: string }[] = [
-	{ slug: 'apgr-maxica', weight: 400, bg: 'var(--brand-blue)', fg: 'var(--brand-paper)' },
-	{ slug: 'apgr-humorist', weight: 300, bg: '#000000', fg: 'var(--brand-paper)' },
-	{ slug: 'apgr-quad-sans', weight: 400, bg: 'var(--brand-paper)', fg: 'var(--brand-blue)' }
+const HOME_PANEL_STYLES: {
+	slug: string;
+	weight: number;
+	bg: string;
+	fg: string;
+	motion: HomePanelMotion;
+}[] = [
+	// Maxa's axis is the widest (50-950) and its name the shortest, so it takes
+	// the weight wave; Quad Sans has the one weight, so it is typed.
+	{ slug: 'apgr-maxica', weight: 400, bg: 'var(--brand-blue)', fg: 'var(--brand-paper)', motion: 'wght' },
+	{ slug: 'apgr-humorist', weight: 300, bg: '#000000', fg: 'var(--brand-paper)', motion: 'rotate' },
+	{
+		slug: 'apgr-quad-sans',
+		weight: 400,
+		bg: 'var(--brand-paper)',
+		fg: 'var(--brand-blue)',
+		motion: 'typewriter'
+	}
 ];
 
 /** Quad Serif — the serif half of the Quad family, named on the home page
@@ -946,6 +971,7 @@ const QUAD_SERIF_PANEL: HomePanel = {
 	weight: 400,
 	bg: 'var(--brand-blue)',
 	fg: 'var(--brand-paper)',
+	motion: 'tracking',
 	meta: ['Serif', 'Coming soon']
 };
 

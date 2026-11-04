@@ -41,6 +41,7 @@
      stacked ("Quad" over "Sans"), so the panels read as one list. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import type { HomePanel } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { initScroll, getLenis } from '$lib/scroll';
@@ -51,6 +52,92 @@
 	}
 
 	let { panels }: Props = $props();
+
+	// ── Panel motion ────────────────────────────────────────────────────────
+	// Each panel's name moves only while the panel is on screen (`live`), and
+	// not at all under reduced motion (the CSS drops the animations, and the
+	// typewriter below is never started, so the name stays whole).
+
+	/** Share of a panel that must be on screen for it to count as live — a
+	 *  name sits at the middle, so it is in view well before this. */
+	const LIVE_THRESHOLD = 0.4;
+	/** The typewriter's pace, in ms: a letter typed, a letter backspaced, the
+	 *  hold on the whole name, and the pause on the empty line. */
+	const TYPE_MS = 130;
+	const ERASE_MS = 55;
+	const HOLD_MS = 2600;
+	const EMPTY_MS = 700;
+
+	const reducedMotion = browser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	/** Which panels are on screen, by key. */
+	let live: Record<string, boolean> = $state({});
+	/** How many letters of a typewriter panel are typed. Absent = all of them
+	 *  (the server-rendered state, no script, reduced motion). */
+	let typed: Record<string, number> = $state({});
+
+	/** Reports whether the element is mostly on screen. */
+	function inview(node: HTMLElement, onChange: (isLive: boolean) => void) {
+		const io = new IntersectionObserver(([entry]) => onChange(entry.isIntersecting), {
+			threshold: LIVE_THRESHOLD
+		});
+		io.observe(node);
+		return { destroy: () => io.disconnect() };
+	}
+
+	/** The panel's letters in all, across its lines. */
+	function letterCount(panel: HomePanel): number {
+		return panel.lines.reduce((n, line) => n + line.length, 0);
+	}
+
+	/** Where a line's letters start in the panel's running count — the index
+	 *  each letter's --i (its stagger) and its place in the typing come from. */
+	function lineStart(panel: HomePanel, line: number): number {
+		return panel.lines.slice(0, line).reduce((n, l) => n + l.length, 0);
+	}
+
+	/** Types the name, holds, backspaces it, pauses, and again, until stopped.
+	 *  Returns the stop. */
+	function runTypewriter(key: string, total: number): () => void {
+		let count = 0;
+		let timer = 0;
+		const show = (n: number) => {
+			count = n;
+			typed[key] = n;
+		};
+		const typeNext = () => {
+			if (count < total) {
+				show(count + 1);
+				timer = window.setTimeout(typeNext, TYPE_MS);
+			} else {
+				timer = window.setTimeout(eraseNext, HOLD_MS);
+			}
+		};
+		const eraseNext = () => {
+			if (count > 0) {
+				show(count - 1);
+				timer = window.setTimeout(eraseNext, ERASE_MS);
+			} else {
+				timer = window.setTimeout(typeNext, EMPTY_MS);
+			}
+		};
+		show(0);
+		timer = window.setTimeout(typeNext, EMPTY_MS);
+		return () => {
+			window.clearTimeout(timer);
+			// Off screen it waits empty, so it never shows whole for a moment on
+			// the way back in.
+			typed[key] = 0;
+		};
+	}
+
+	$effect(() => {
+		if (reducedMotion) return;
+		const stops = panels
+			.filter((p) => p.motion === 'typewriter' && live[p.key])
+			.map((p) => runTypewriter(p.key, letterCount(p)));
+		return () => stops.forEach((stop) => stop());
+	});
 
 	/** Distance (px) the page may already be scrolled before the opening is
 	 *  skipped outright — a restored mid-page position must never meet the
@@ -181,16 +268,36 @@
 			     no page yet is a section, not a link. -->
 			<svelte:element
 				this={panel.href ? 'a' : 'section'}
-				class="HomeHero"
+				class="HomeHero HomeHero--{panel.motion}"
+				class:is-live={live[panel.key]}
 				href={panel.href}
 				aria-label="{panel.name}, {panel.meta.join(', ')}"
 				style="--panel-bg: {panel.bg}; --panel-fg: {panel.fg}; --panel-font: '{panel.fontFamily}'; --panel-weight: {panel.weight};"
+				use:inview={(isLive) => (live[panel.key] = isLive)}
 			>
 				<!-- The caption says it all to a screen reader, so the big name is
-				     for the eye only. -->
+				     for the eye only. Where the motion works on the letters one by
+				     one they are spans (--i: the letter's place in the name, for
+				     its stagger); a motion on the whole name leaves it plain. -->
 				<p class="HomeHero__name" aria-hidden="true">
-					{#each panel.lines as line (line)}
-						<span class="HomeHero__line">{line}</span>
+					{#each panel.lines as line, l (line)}
+						<span class="HomeHero__line">
+							{#if panel.motion === 'tracking'}
+								{line}
+							{:else}
+								{#each [...line] as ch, c (c)}
+									{@const i = lineStart(panel, l) + c}
+									{@const count = typed[panel.key] ?? Infinity}
+									<span
+										class="HomeHero__ch"
+										class:is-typed={i < count}
+										class:is-caret={count === 0 ? i === 0 : i === count - 1}
+										class:is-before={count === 0}
+										style="--i: {i}">{ch}</span
+									>
+								{/each}
+							{/if}
+						</span>
 					{/each}
 				</p>
 				<p class="HomeHero__caption" aria-hidden="true">
@@ -375,6 +482,7 @@
 	   takes the panel's own again. (Left alone, the spans set the name in the
 	   page's face, in black, and the panel's face is never even fetched.) */
 	.HomeHero__line,
+	.HomeHero__ch,
 	.HomeHero__caption > span {
 		font-family: inherit;
 		color: inherit;
@@ -383,6 +491,108 @@
 	.HomeHero__line {
 		display: block;
 		white-space: nowrap;
+	}
+
+	/* ── Motion (see HomePanelMotion). Every animation below is paused until
+	   its panel is live — on screen — and dropped under reduced motion. ── */
+
+	/* wght: a wave of weight through the letters. Each letter is on the same
+	   loop, a step behind the one before (a negative delay, so the wave is
+	   already running when the panel comes in); Hair-ish to Black and back.
+	   The word's width breathes with it, centred. */
+	.HomeHero--wght .HomeHero__ch {
+		animation: ch-weight 3.6s ease-in-out infinite;
+		animation-delay: calc(var(--i) * -0.32s);
+		animation-play-state: paused;
+	}
+
+	@keyframes ch-weight {
+		0%,
+		100% {
+			font-variation-settings: 'wght' 100;
+		}
+		50% {
+			font-variation-settings: 'wght' 900;
+		}
+	}
+
+	/* rotate: each letter, in turn, a full turn about its vertical axis in its
+	   own perspective, then rest for the rest of the loop. */
+	.HomeHero--rotate .HomeHero__ch {
+		--persp: calc(var(--name-size) * 3);
+		display: inline-block;
+		animation: ch-turn 6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+		animation-delay: calc(var(--i) * 0.16s);
+		animation-play-state: paused;
+	}
+
+	@keyframes ch-turn {
+		0% {
+			transform: perspective(var(--persp)) rotateY(0deg);
+		}
+		35%,
+		100% {
+			transform: perspective(var(--persp)) rotateY(360deg);
+		}
+	}
+
+	/* typewriter: the letters not typed yet keep their room (hidden, not
+	   gone) so the centred name does not shift as it fills; the caret is a bar
+	   after the last letter typed, or before the first while the line is empty.
+	   It takes no room either. */
+	.HomeHero--typewriter .HomeHero__ch {
+		position: relative;
+	}
+
+	.HomeHero--typewriter .HomeHero__ch:not(.is-typed) {
+		visibility: hidden;
+	}
+
+	.HomeHero--typewriter .HomeHero__ch.is-caret::after {
+		content: '';
+		position: absolute;
+		left: 100%;
+		bottom: 0.25em;
+		width: 0.04em;
+		height: 0.73em;
+		margin-left: 0.05em;
+		background: currentColor;
+		visibility: visible;
+		animation: caret-blink 1.05s steps(1) infinite;
+		animation-play-state: paused;
+	}
+
+	.HomeHero--typewriter .HomeHero__ch.is-caret.is-before::after {
+		left: 0;
+		margin-left: -0.09em;
+	}
+
+	@keyframes caret-blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	/* tracking: the spacing between the letters opens and closes. */
+	.HomeHero--tracking .HomeHero__name {
+		animation: name-tracking 5.4s ease-in-out infinite;
+		animation-play-state: paused;
+	}
+
+	@keyframes name-tracking {
+		0%,
+		100% {
+			letter-spacing: 0;
+		}
+		50% {
+			letter-spacing: 0.1em;
+		}
+	}
+
+	.HomeHero.is-live .HomeHero__ch,
+	.HomeHero.is-live .HomeHero__ch::after,
+	.HomeHero.is-live .HomeHero__name {
+		animation-play-state: running;
 	}
 
 	/* The caption, on the lead text's own grid: Ango 11px / 1.4 from the page
@@ -428,7 +638,10 @@
 		}
 
 		.HomeHeroes,
-		.HomeLead__text {
+		.HomeLead__text,
+		.HomeHero__name,
+		.HomeHero__ch,
+		.HomeHero__ch::after {
 			animation: none;
 		}
 	}
