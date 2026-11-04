@@ -252,7 +252,7 @@ export interface Typeface {
  *    shipped VF has (the typographic apostrophe, for one, is not among them,
  *    so none is used).
  *  - `mozzarellaBrie`: the current default — see its own note. */
-const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> = {
+const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie' | 'pinotChardonnay', string[]> = {
 	wine: [
 		'Appellation',
 		'Blanc de Blancs',
@@ -269,6 +269,11 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> 
 	 *  a 1440px screen at 100px at any weight. The ampersand isn't in
 	 *  Ango-VF26; VF27 (2026-10-11) added it, so Ango draws it itself now. */
 	mozzarellaBrie: ['Mozzarella & Brie de Meaux'],
+	/** The default since 2026-11-05 (at the user's request — "文言はチーズから
+	 *  ワイン系にして"): the same single line on every row, in place of
+	 *  `mozzarellaBrie`. Narrower than it at every weight (measured at 150 and
+	 *  950), so it fits wherever that one did. */
+	pinotChardonnay: ['Pinot Noir & Chardonnay'],
 	cheese: [
 		'Abondance Asiago Azeitão',
 		'Bleu de Gex Brie Burrata',
@@ -282,57 +287,61 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> 
 	]
 };
 
-/** Running text for Humorist's Type Tester: six paragraphs on cheese, the
+/** Running text for Humorist's Type Tester: six paragraphs on wine, the
  *  register of the weight rows' own line. The lines draw on it by length —
  *  the first paragraph at 48px, the first four at 19px, all six at 14px. */
-const CHEESE_PARAGRAPHS = [
-	'A cheese is never finished, only ready. In the cellar the rind forms first, a thin white bloom that takes weeks to thicken, and under it the paste begins its slow change: firm at the centre, then softer, then almost liquid at the edge. Nobody can hurry it. The affineur turns each wheel by hand, brushes it, tastes it, and decides whether it needs another day or another month.',
-	'Milk is the beginning, and it is never the same twice. It carries the season in it: the grass of April, the hay of January, the weather of the week before. A cheesemaker learns to read that difference the way a winemaker reads a vintage, and to leave most of it alone. The curd is cut, drained and moulded by hand, then salted and left to rest. What happens after that happens in the dark, in cool, damp air at a steady temperature, and it is the cellar that does the rest.',
-	'To eat it well, take it out of the cold an hour before serving. A cheese straight from the refrigerator is closed and quiet; at room temperature it opens, and the smell comes first, of cream and mushroom and warm straw. Cut it so that every slice carries some of the rind and some of the heart. Serve it with bread, with a few grapes, with a glass of something not too sweet, and do not rush. There is nothing on the plate that needs improving.',
-	'Every region has its own answer. In the north the rinds are washed in brine and the smell announces itself from across the room; in the mountains the wheels are large and hard and keep for years; on the plains the cheeses are young, white and fresh, made in the morning and eaten within the week. The names on the board, Brie de Meaux and Comté, Époisses and Reblochon, are less a list than a map.',
-	'A good counter knows the wheel before it is cut. It lifts it, presses the rind with a thumb, and listens for the answer: a cheese that is ready gives slightly, a cheese that is not stays stubborn, and one that has gone too far leans and sags. There is no number for this. It is learned the way a language is, by hearing it spoken every day for years, until the meaning arrives without translation.',
-	'Wrapped in paper rather than plastic, a cheese keeps breathing. Keep it in the vegetable drawer, away from anything with a strong smell, and unwrap it only to cut. If a little blue appears on the surface, scrape it off; if the smell turns sharp and ammoniac, it has simply had its day. Buy less, more often, and ask for a taste. A good cheesemonger will always say yes.'
+const WINE_PARAGRAPHS = [
+	'A wine is never finished, only ready. In the cellar the fruit fades first, the bright cherry and the sharp edge of youth, and under it the bouquet begins its slow change: leather, then mushroom, then the damp of a forest floor after rain. Nobody can hurry it. The cellar master walks the rows with a candle, tastes from the barrel, and decides whether it needs another year or another decade.',
+	'Grapes are the beginning, and they are never the same twice. They carry the year in them: the frost of April, the heat of August, the rain of the week before the harvest. A vigneron learns to read that difference the way a baker reads flour, and to leave most of it alone. The fruit is picked, sorted and pressed by hand, then left to ferment in its own time. What happens after that happens in the dark, in cool air at a steady temperature, and it is the cellar that does the rest.',
+	'To drink it well, open it an hour before serving. A bottle straight from the cellar is closed and quiet; in the glass it opens, and the smell comes first, of cherry and violet and warm stone. Pour it so that the glass is never more than a third full, and turn it gently. Serve it with bread, with a plate of something simple, with good company, and do not rush. There is nothing in the glass that needs improving.',
+	'Every region has its own answer. In the north the wines are pale and sharp and lean toward the sea; in the hills they are dark, tannic and slow to open, and keep for decades; on the plains they are young, bright and generous, made in the autumn and drunk within the year. The names on the label, Bordeaux and Burgundy, Barolo and Rioja, are less a list than a map.',
+	'A good sommelier knows a bottle before it is opened. They lift it, tilt it to the light, and read the colour: a wine that is ready is clear and deep, a wine that is not stays stubborn, and one that has gone too far turns brown at the rim and thin on the palate. There is no number for this. It is learned the way a language is, by hearing it spoken every day for years, until the meaning arrives without translation.',
+	'Laid on its side in the dark, a bottle keeps breathing through the cork. Keep it somewhere cool and still, away from light and from anything with a strong smell, and move it only to open. If a little sediment settles at the bottom, leave it there; if the smell turns sharp and vinegary, it has simply had its day. Buy less, more often, and ask for a taste. A good merchant will always say yes.'
 ];
-const cheeseText = (n: number) => CHEESE_PARAGRAPHS.slice(0, n).join('\n\n');
+const wineText = (n: number) => WINE_PARAGRAPHS.slice(0, n).join('\n\n');
 
 /** Humorist's Type Tester lines (2026-11-04, at the user's request — after
  *  type.kontrapunkt.com/en/fonts/kp-duo-sans: "もっと全体的にコントラストつけて",
- *  "本文などはもっと長文に"). Each has its own weight, sized so a single word
- *  nearly fills the width of a 1440px screen (measured at that weight and
- *  spacing, 97% of 1360px), tighter in the spacing the bigger it is, down to
- *  running text in columns. The nine weights are all used. Every character is
- *  in Ango-VF31 (checked against its cmap), which rules out `@` `%` `^` `~`
- *  and Þ ß Ł Œ ź. Three drawn glyphs are not used either, because they show
- *  at this size: the middle dot is a copy of the period (baseline, y -9…31),
- *  and `€` `$` `¢` keep their Hair-thin bars and ticks at every heavier weight
- *  (the euro's bars run out to the left). A phone's sizes are the same words
- *  fitted to 360px. */
+ *  "本文などはもっと長文に"; 2026-11-05, "文言はチーズからワイン系にして"). It
+ *  opens with VIN and Dégustation!, then runs through the cellar's own French
+ *  terms (assemblage, dégorgement, remuage…), one to a row, before the capitals
+ *  line, the sentence and running text in columns. Each has its own weight,
+ *  sized so a single word nearly fills the width of a 1440px screen (measured
+ *  at that weight and spacing, 97% of 1360px), tighter in the spacing the
+ *  bigger it is. The nine weights are all used. Every character is in
+ *  Ango-VF33 (checked against its cmap), which rules out `%` `@` `^` `~` and
+ *  Þ ß Ł Œ ź. Three drawn glyphs are not used either, because they show at this
+ *  size: the middle dot is a copy of the period (baseline, y -9…31), and `€`
+ *  `$` `¢` keep their Hair-thin bars and ticks at every heavier weight (the
+ *  euro's bars run out to the left). A phone's sizes are the same words fitted
+ *  to 360px. */
 const HUMORIST_TESTER_LINES: TesterLine[] = [
-	{ text: 'Brie', wght: 550, sizeDesktop: 700, sizeMobile: 190, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'VIN', wght: 550, sizeDesktop: 778, sizeMobile: 206, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Dégustation!', wght: 350, sizeDesktop: 252, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Assemblage', wght: 250, sizeDesktop: 265, sizeMobile: 70, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Dégorgement', wght: 650, sizeDesktop: 234, sizeMobile: 61, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Remuage', wght: 150, sizeDesktop: 337, sizeMobile: 89, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Cuvée', wght: 950, sizeDesktop: 499, sizeMobile: 132, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Élevage', wght: 750, sizeDesktop: 424, sizeMobile: 112, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Vendange', wght: 450, sizeDesktop: 317, sizeMobile: 84, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Millésime', wght: 550, sizeDesktop: 329, sizeMobile: 87, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Soutirage', wght: 250, sizeDesktop: 351, sizeMobile: 92, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
-		text: 'AGED SLOWLY. CUT BY HAND.',
+		text: 'PICKED. AGED. POURED.',
 		wght: 850,
-		sizeDesktop: 300,
-		sizeMobile: 80,
+		sizeDesktop: 333,
+		sizeMobile: 88,
 		lineHeight: 0.95,
 		letterSpacing: -0.04
 	},
 	{
-		text: 'Raw milk, a cold cellar and a patient pair of hands: the rind turns white and velvety, and the paste inside softens from the edges toward the centre.',
+		text: 'Old vines, a cold cellar and a patient pair of hands: the colour deepens to garnet, and the fruit gives way to leather, mushroom and damp earth.',
 		wght: 350,
 		sizeDesktop: 80,
 		sizeMobile: 28,
 		lineHeight: 1.1,
 		letterSpacing: -0.02
 	},
-	{ text: 'Camembert', wght: 250, sizeDesktop: 260, sizeMobile: 68, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Époisses', wght: 650, sizeDesktop: 380, sizeMobile: 100, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Mozzarella', wght: 150, sizeDesktop: 296, sizeMobile: 78, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Comté', wght: 950, sizeDesktop: 460, sizeMobile: 120, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Gruyère', wght: 750, sizeDesktop: 380, sizeMobile: 100, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Roquefort', wght: 450, sizeDesktop: 320, sizeMobile: 84, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: '38.50 / kg', wght: 550, sizeDesktop: 320, sizeMobile: 84, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: "L'AFFINEUR", wght: 250, sizeDesktop: 250, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
 		text: 'AaBbCc (0123456789) ?!&#',
 		wght: 450,
@@ -341,63 +350,65 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 		lineHeight: 1.1,
 		letterSpacing: -0.02
 	},
-	{ text: cheeseText(1), wght: 350, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15, letterSpacing: -0.01 },
-	{ text: cheeseText(4), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
-	{ text: cheeseText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
+	{ text: wineText(1), wght: 350, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15, letterSpacing: -0.01 },
+	{ text: wineText(4), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
+	{ text: wineText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
-/** Running text for Maxica's Type Tester: ten short stanzas about an orchard
- *  and its market, one phrase to a line, no punctuation. Maxica has only
- *  `A`-`F` `H`-`T` and `a`-`x` drawn (VF3, 44 characters), so the text is
- *  made of those alone — no `y` `z`, no `G` `U`-`Z`, no figures, no
- *  punctuation — and every character comes out in Maxica, not in the face
- *  that stands in for what is not drawn yet. */
-const ORCHARD_STANZAS = [
-	'first light on the orchard wall\nthe first baskets arrive from the hill\nquince and persimmon wrapped in paper\nmandarin stacked in a tower\na scale a pencil a handful of coins\nno one in a rush',
-	'the market opens before the heat\nstalls of fennel and cinnamon bark\napricot and plum in shallow crates\na pomelo as large as a drum\nthe smell of sorbet from the corner\nsomeone sharpens a knife on a stone',
-	'at noon the shade has moved to the other side\nthe crates are bare the baskets folded\na cart rolls home over the cobbles\nthe awnings come down in turn\nwhat is left is a few peaches and a cat asleep on the scales',
-	'in the evening the orchard is quiet\nthe ladders lean against the trees\na pair of gloves on a branch\nthe pickers have gone home to eat\ntomorrow the same trees will be picked again',
-	'a good season is made in the winter\nin pruning and patience and the cold\nin the weather that no one can order\nthe fruit remembers all of it\nthe sweetness the acid the thin skin\nand the time it was given to ripen',
-	'choose for the weight not the colour\npress near the stem with a thumb\nsmell the fruit before the coins change hands\neat it the same hour or the next\nkeep the peel for tea or for sorbet',
-	'the river is low in the late summer\nstones show where the water was\nchildren cross with their shoes in their hands\na heron stands in the shallows\nnothing moves until it decides to',
-	'a bell somewhere announces the hour\nthe shutters open one after another\nbread arrives in a cloth\ncoffee in small cups on a tin plate\nthe old men take their seats at the corner table',
-	'in the cellar of the market house\njars of preserve line the shelves\neach lid marked with a month and a name\nquince paste apricot jam pomelo peel in sugar\nsealed in summer opened in the cold',
-	'in a drawer a map of the old orchard\neach tree drawn and numbered\nthe date each one was planted\nthe name of the man who planted it\nsome of the trees are gone the numbers remain'
+/** Running text for Maxica's Type Tester: ten short stanzas about a vineyard
+ *  and its cellar, one phrase to a line, no punctuation. Maxica (VF14) draws
+ *  `A`-`Z` and `a`-`y` and nothing else — no `z`, no figures, no accents, no
+ *  punctuation — so the text is made of those alone and every character comes
+ *  out in Maxica, not in the face that stands in for what is not drawn yet. */
+const VINEYARD_STANZAS = [
+	'first light on the vineyard wall\nthe first crates arrive from the hill\npinot and gamay wrapped in cloth\nbarrels stacked in a tower\na funnel a pencil a handful of corks\nno one in a rush',
+	'the cellar opens before the heat\nrows of oak and chestnut staves\nnebbiolo and sangiovese in dim light\na cask as large as a room\nthe smell of cold stone from the corner\nsomeone rinses a glass at the tap',
+	'at noon the shade has moved to the other side\nthe crates are bare the presses idle\na cart rolls home over the cobbles\nthe shutters come down in turn\nwhat is left is a few bottles and a cat asleep on the barrels',
+	'in the evening the vineyard is quiet\nthe ladders lean against the posts\na pair of shears on a wire\nthe pickers have gone home to eat\ntomorrow the same vines will be picked again',
+	'a good vintage is made in the winter\nin pruning and patience and the cold\nin the weather that no one can order\nthe grape remembers all of it\nthe sweetness the acid the thin skin\nand the time it was given to ripen',
+	'choose for the balance not the label\ntilt the glass to the light\nsmell the wine before the first sip\ncherry leather mushroom and damp earth\ndrink it the same hour or the next',
+	'the river is low in the late summer\nstones show where the water was\nthe vines reach down for it\na heron stands in the shallows\nnothing moves until it decides to',
+	'a bell somewhere announces the hour\nthe shutters open one after another\nbread arrives in a cloth\na carafe of red on a tin plate\nthe old men take their seats at the corner table',
+	'in the cellar of the old house\nbottles lie in rows along the walls\neach label marked with a year and a name\nclaret and riesling and a dusty magnum of port\nsealed in summer opened in the cold',
+	'in a drawer a map of the old vineyard\neach row drawn and numbered\nthe date each one was planted\nthe name of the man who planted it\nsome of the vines are gone the numbers remain'
 ];
-const orchardText = (n: number) => ORCHARD_STANZAS.slice(0, n).join('\n\n');
+const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).join('\n\n');
 
-/** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"): the same
- *  shape as Humorist's — a single word 650px wide, a loud capitals line, one
- *  sentence, single words at their own weight, the lowercase alphabet, then
- *  running text at 48/19/14px — in the weights 100-900 of the site's scale
- *  (Thin to Black). No letter-spacing anywhere (2026-11-05, at the user's
- *  request — Maxica's own spacing is drawn to read well at 0): each word is
- *  sized to ~96% of a 1440px screen as measured at its weight with tracking 0.
- *  The two masters sit at 50 and 950, so the extremes are left to the
- *  interpolation. */
+/** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"; wine
+ *  copy 2026-11-05): the same shape as Humorist's — VIN, Degustation, the
+ *  cellar's own terms one to a row, a loud capitals line, one sentence, the
+ *  lowercase alphabet, then running text at 48/19/14px — in the weights
+ *  100-900 of the site's scale (Thin to Black). No letter-spacing anywhere
+ *  (2026-11-05, at the user's request — Maxica's own spacing is drawn to read
+ *  well at 0): each word is sized to ~96% of a 1440px screen as measured at
+ *  its weight with tracking 0. Maxica has no accents or `!` yet, so the terms
+ *  are the ones French spells without any (assemblage, vendange, remuage…)
+ *  and "Degustation" stands without its é and bang. The two masters sit at 50
+ *  and 950, so the extremes are left to the interpolation. */
 const MAXICA_TESTER_LINES: TesterLine[] = [
-	{ text: 'Pear', wght: 500, sizeDesktop: 650, sizeMobile: 172, lineHeight: 1.1 },
+	{ text: 'VIN', wght: 500, sizeDesktop: 733, sizeMobile: 194, lineHeight: 1.1 },
+	{ text: 'Degustation', wght: 300, sizeDesktop: 246, sizeMobile: 65, lineHeight: 1.1 },
+	{ text: 'Assemblage', wght: 200, sizeDesktop: 245, sizeMobile: 64, lineHeight: 1.1 },
+	{ text: 'Vendange', wght: 600, sizeDesktop: 280, sizeMobile: 74, lineHeight: 1.1 },
+	{ text: 'Remuage', wght: 100, sizeDesktop: 317, sizeMobile: 84, lineHeight: 1.1 },
+	{ text: 'Pressurage', wght: 900, sizeDesktop: 243, sizeMobile: 64, lineHeight: 1.1 },
+	{ text: 'Soutirage', wght: 700, sizeDesktop: 295, sizeMobile: 78, lineHeight: 1.1 },
+	{ text: 'Cuvaison', wght: 400, sizeDesktop: 323, sizeMobile: 85, lineHeight: 1.1 },
+	{ text: 'Pigeage', wght: 500, sizeDesktop: 362, sizeMobile: 95, lineHeight: 1.1 },
 	{
-		text: 'SEASON OF THE ORCHARD',
+		text: 'HARVEST OF THE VINEYARD',
 		wght: 800,
-		sizeDesktop: 260,
-		sizeMobile: 70,
+		sizeDesktop: 250,
+		sizeMobile: 66,
 		lineHeight: 0.95
 	},
 	{
-		text: 'the market opens at first light and the first baskets of quince and persimmon arrive from the orchard',
+		text: 'the cellar opens at first light and the first glasses of pinot and merlot are poured from the oldest barrels',
 		wght: 400,
 		sizeDesktop: 80,
 		sizeMobile: 28,
 		lineHeight: 1.1
 	},
-	{ text: 'Persimmon', wght: 200, sizeDesktop: 261, sizeMobile: 69, lineHeight: 1.1 },
-	{ text: 'Mandarin', wght: 600, sizeDesktop: 294, sizeMobile: 78, lineHeight: 1.1 },
-	{ text: 'Pomelo', wght: 100, sizeDesktop: 394, sizeMobile: 104, lineHeight: 1.1 },
-	{ text: 'Quince', wght: 900, sizeDesktop: 391, sizeMobile: 103, lineHeight: 1.1 },
-	{ text: 'Apricot', wght: 700, sizeDesktop: 383, sizeMobile: 101, lineHeight: 1.1 },
-	{ text: 'Cinnamon', wght: 400, sizeDesktop: 281, sizeMobile: 74, lineHeight: 1.1 },
-	{ text: 'Fennel', wght: 500, sizeDesktop: 434, sizeMobile: 114, lineHeight: 1.1 },
 	{
 		text: 'abcdefghijklmnopqrstuvwx',
 		wght: 400,
@@ -405,9 +416,9 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 		sizeMobile: 28,
 		lineHeight: 1.1
 	},
-	{ text: orchardText(2), wght: 400, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
-	{ text: orchardText(5), wght: 400, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
-	{ text: orchardText(10), wght: 400, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
+	{ text: vineyardText(2), wght: 400, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
+	{ text: vineyardText(5), wght: 400, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
+	{ text: vineyardText(10), wght: 400, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
 export const TYPEFACES: Typeface[] = [
@@ -711,9 +722,9 @@ export const TYPEFACES: Typeface[] = [
 		information: { features: HUMORIST_FEATURES, languages: HUMORIST_LANGUAGES },
 		// The same line on every weight row (150 -> 950, lightest to heaviest),
 		// so the rows differ only in weight. The other sets are kept in
-		// ANGO_TESTER_TEXTS above — point this at `.wine` or `.cheese` (the
-		// A-I list) to bring either back.
-		defaultTexts: ANGO_TESTER_TEXTS.mozzarellaBrie,
+		// ANGO_TESTER_TEXTS above — point this at `.wine`, `.cheese` (the A-I
+		// list) or `.mozzarellaBrie` to bring any of them back.
+		defaultTexts: ANGO_TESTER_TEXTS.pinotChardonnay,
 		testerLines: HUMORIST_TESTER_LINES,
 		// The A-Z/a-z proof, for the gallery's specimen tile. The big name on
 		// /fonts and at the top of the page is set at this weight (the home
