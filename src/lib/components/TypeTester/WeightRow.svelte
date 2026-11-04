@@ -18,6 +18,16 @@
 		initialNoteSize?: number;
 		/** Starting text alignment */
 		initialAlign?: AlignValue;
+		/** The row's label, where it is not the weight's own name (a Usage row:
+		 *  "Headline") */
+		title?: string;
+		/** The label's second part, where it is not "wght 550" ("Regular 450") */
+		detail?: string;
+		/** Line-height of the text — a running line wants more than the 1 a
+		 *  single specimen word is set at */
+		lineHeight?: number;
+		/** Longest line, as a CSS length (em of the row's own size) */
+		measure?: string;
 	}
 
 	let {
@@ -27,8 +37,16 @@
 		fontFamily,
 		initialSize = 125,
 		initialNoteSize = 48,
-		initialAlign = 'left'
+		initialAlign = 'left',
+		title,
+		detail,
+		lineHeight = 1,
+		measure
 	}: Props = $props();
+
+	const rowName = $derived(title ?? weight.name);
+	// What a screen reader calls the row: a weight row keeps "55 weight".
+	const rowLabel = $derived(title ?? `${weight.name} weight`);
 
 	const SIZE_MIN = 12;
 	const SIZE_MAX = 200;
@@ -95,8 +113,8 @@
 
 <div class="WeightRow" role="listitem">
 	<div class="WeightRow__meta">
-		<span class="label-name">{weight.name}</span>
-		<span class="label-axis">wght {weight.axisValue}</span>
+		<span class="label-name">{rowName}</span>
+		<span class="label-axis">{detail ?? `wght ${weight.axisValue}`}</span>
 		{#if SHOW_ROW_TITLE}
 			<label class="WeightRow__size">
 				<span class="size-icon size-icon--sm">A</span>
@@ -112,7 +130,7 @@
 							e,
 							sliderEl && { el: sliderEl, min: SIZE_MIN, max: SIZE_MAX, apply: (v) => (size = v) }
 						)}
-					aria-label="{weight.name} size"
+					aria-label="{rowName} size"
 				/>
 				<span class="size-icon size-icon--lg">A</span>
 				<span class="WeightRow__size-val">{size}px</span>
@@ -139,7 +157,7 @@
 								apply: (v) => (noteSize = v)
 							}
 						)}
-					aria-label="{weight.name} body size"
+					aria-label="{rowName} body size"
 				/>
 				<span class="size-icon size-icon--lg">a</span>
 				<span class="WeightRow__size-val">{noteSize}px</span>
@@ -188,14 +206,15 @@
 			role="textbox"
 			tabindex="0"
 			aria-multiline="true"
-			aria-label="{weight.name} weight — editable preview"
+			aria-label="{rowLabel} — editable preview"
 			spellcheck="false"
 			style="
 	      font-family: '{fontFamily}', sans-serif;
 	      font-variation-settings: 'wght' {weight.axisValue};
 	      font-size: {size}px;
-	      line-height: 1;
+	      line-height: {lineHeight};
 	      text-align: {align};
+	      {measure ? `max-width: calc(${measure} + var(--padding) * 2);` : ''}
 	    "
 		></div>
 	{/if}
@@ -211,7 +230,7 @@
 			role="textbox"
 			tabindex="0"
 			aria-multiline="true"
-			aria-label="{weight.name} weight — editable body copy"
+			aria-label="{rowLabel} — editable body copy"
 			spellcheck="false"
 			style="
         font-family: '{fontFamily}', sans-serif;

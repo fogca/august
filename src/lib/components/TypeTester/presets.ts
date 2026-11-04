@@ -11,6 +11,25 @@ export interface WeightDef {
 	axisValue: number;
 }
 
+/** One line of the Type Tester's "Usage" block: a piece of text set the way it
+ *  would be set in use (a headline, body copy, a price …) rather than to show
+ *  a weight. Each carries its own weight, size and line-height. */
+export interface UsageDef {
+	/** Short name of the use, shown as the row's label ("Headline") */
+	label: string;
+	text: string;
+	/** The weight it is set in: the wght value and the word for that step */
+	weight: Pick<WeightDef, 'axisValue' | 'label'>;
+	/** Starting size in px, on a desktop screen and on a phone */
+	sizeDesktop: number;
+	sizeMobile: number;
+	/** Unitless line-height */
+	lineHeight: number;
+	/** Longest line, as a CSS length in em of the row's own size — running text
+	 *  only, so it is read in a line a reader would actually be given */
+	measure?: string;
+}
+
 const WEIGHT_LABELS = [
 	'Hair',
 	'Line',

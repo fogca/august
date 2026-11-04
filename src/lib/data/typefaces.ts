@@ -1,7 +1,7 @@
 // Typeface data definitions for Apres Guerre
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
-import type { WeightDef } from '$lib/components/TypeTester/presets.js';
+import type { WeightDef, UsageDef } from '$lib/components/TypeTester/presets.js';
 import { WEIGHTS, ANGO_WEIGHTS } from '$lib/components/TypeTester/presets.js';
 import type { GlyphGroup, MetricLine } from './humoristOverview.js';
 import {
@@ -83,6 +83,10 @@ export interface Typeface {
 	defaultTexts: string[];
 	/** Body text set under each word, paired by the same index. */
 	defaultNotes?: string[];
+	/** The Type Tester's "Usage" block: text set the way it is used (headline,
+	 *  body, price …), shown above the weight-by-weight rows. Left out, the
+	 *  tester is the weight rows alone. */
+	usages?: UsageDef[];
 	/** The notice under the Type Tester, for a face where the default ("… is in
 	 *  development. Preview shown in Norma.") isn't true — a placeholder that
 	 *  borrows a face, or a face still missing characters. */
@@ -277,6 +281,83 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> 
 		'Ibores Idiazabal Isle of Mull'
 	]
 };
+
+/** Humorist's Type Tester "Usage" block (2026-11-04, at the user's request —
+ *  "今はWeightを見せるだけで、見出し・本文などのusageを見せれてない"): eight uses,
+ *  each in the weight it would be set in, in the cheese vocabulary of the
+ *  weight rows' own line. Every character is in Ango-VF31 (checked against
+ *  its cmap) — which rules out `%` `^` `~` (empty in both masters) and the
+ *  letters Þ ß Ł Œ ź, so no figure line carries a percent sign and no line
+ *  tries to show language coverage (the Glyph overview does that). The middle
+ *  dot is in the file but is a copy of the period (it sits on the baseline,
+ *  y -9…31), so no line uses it as a separator. */
+const HUMORIST_USAGES: UsageDef[] = [
+	{
+		label: 'Display',
+		text: 'Mozzarella & Brie de Meaux',
+		weight: { axisValue: 550, label: 'Medium' },
+		sizeDesktop: 160,
+		sizeMobile: 56,
+		lineHeight: 1
+	},
+	{
+		label: 'Headline',
+		text: 'Aged slowly, cut by hand, served at room temperature',
+		weight: { axisValue: 450, label: 'Regular' },
+		sizeDesktop: 64,
+		sizeMobile: 32,
+		lineHeight: 1.1
+	},
+	{
+		label: 'Subhead',
+		text: 'A washed-rind cheese from the north, firm at the edge and soft at the centre.',
+		weight: { axisValue: 350, label: 'Light' },
+		sizeDesktop: 32,
+		sizeMobile: 22,
+		lineHeight: 1.25
+	},
+	{
+		label: 'Body',
+		text: "Brie de Meaux is made from raw cow's milk and ripened for at least four weeks. The rind turns white and velvety; the paste inside softens from the edges toward the centre. Take it out of the cold an hour before serving.",
+		weight: { axisValue: 450, label: 'Regular' },
+		sizeDesktop: 18,
+		sizeMobile: 16,
+		lineHeight: 1.5,
+		measure: '22em'
+	},
+	{
+		label: 'Caption',
+		text: 'Fig. 3 — Brie de Meaux, ripened for six weeks.',
+		weight: { axisValue: 450, label: 'Regular' },
+		sizeDesktop: 13,
+		sizeMobile: 12,
+		lineHeight: 1.4
+	},
+	{
+		label: 'Capitals',
+		text: 'BRIE DE MEAUX / ÉPOISSES / COMTÉ',
+		weight: { axisValue: 550, label: 'Medium' },
+		sizeDesktop: 24,
+		sizeMobile: 18,
+		lineHeight: 1.2
+	},
+	{
+		label: 'Numerals',
+		text: '€38.50 / kg, 250 g, 12:45, No. 0123456789',
+		weight: { axisValue: 450, label: 'Regular' },
+		sizeDesktop: 40,
+		sizeMobile: 28,
+		lineHeight: 1.15
+	},
+	{
+		label: 'Pangram',
+		text: 'Portez ce vieux whisky au juge blond qui fume.',
+		weight: { axisValue: 350, label: 'Light' },
+		sizeDesktop: 24,
+		sizeMobile: 18,
+		lineHeight: 1.3
+	}
+];
 
 export const TYPEFACES: Typeface[] = [
 	{
@@ -581,6 +662,7 @@ export const TYPEFACES: Typeface[] = [
 		// ANGO_TESTER_TEXTS above — point this at `.wine` or `.cheese` (the
 		// A-I list) to bring either back.
 		defaultTexts: ANGO_TESTER_TEXTS.mozzarellaBrie,
+		usages: HUMORIST_USAGES,
 		// The A-Z/a-z proof, for the gallery's specimen tile. The big name on
 		// /fonts and at the top of the page is set at this weight (the home
 		// hero's own, Light).
