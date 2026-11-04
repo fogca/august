@@ -612,11 +612,15 @@ export const TYPEFACES: Typeface[] = [
 		// borrowed Norma at wght 500 until 2026-11-01, when its own variable
 		// font went on (Maxica-VF14.woff2, wght 50–950). Drawn in both masters so
 		// far: A–Z a–y (z is not in yet), so the default
-		// tester text is the name "Maxica" (all six letters are in the file);
+		// tester text is the name (all of its letters are in the file);
 		// anything else a visitor types falls back to Norma, then the
 		// browser's sans-serif.
+		// Shown as "Maxa" since 2026-11-05 (at the user's request — "書体名、
+		// 一回Maxaにしてみて", a trial): only what a visitor reads changed. The
+		// slug (`apgr-maxica`), the CSS family ('Maxica') and the font file keep
+		// the old spelling, so nothing needs a redirect if it goes back.
 		slug: 'apgr-maxica',
-		name: 'APGR Maxica',
+		name: 'APGR Maxa',
 		category: 'Grotesque sans-serif',
 		order: 3,
 		status: 'in-development',
@@ -624,17 +628,17 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Maxica',
 		tagline: 'In development.',
 		description:
-			'APGR Maxica is a grotesque in development at Apres Guerre. ' +
+			'APGR Maxa is a grotesque in development at Apres Guerre. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'APGR Maxica est une grotesque en cours de développement chez Apres Guerre. ' +
+			'APGR Maxa est une grotesque en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Grotesque · In development',
 		weights: WEIGHTS,
-		defaultTexts: ['Maxica'],
+		defaultTexts: ['Maxa'],
 		testerLines: MAXICA_TESTER_LINES,
 		testerNotice:
-			'APGR Maxica is in development. Characters not drawn yet are set in another face.',
+			'APGR Maxa is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 500,
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
