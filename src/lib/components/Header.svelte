@@ -390,7 +390,7 @@
 		   which sticky page UI clears — and, on every page but the home, the
 		   space the layout reserves above the content (--masthead-h). */
 		--lockup-w: 273.3px;
-		--lockup-top: 36px;
+		--lockup-top: 34px;
 		/* The lockup's left edge: centred, as Figma 3:671 has it — or on the
 		   page margin on PC (the 1060px block below). The second is the same
 		   in the container units the words' own CSS works in. */
@@ -642,13 +642,13 @@
 	   links take it once they are shown (see .is-compact below). */
 	@media (min-width: 1060px) {
 		/* The bar is --header-bar-h (72px here, base.css) tall: the lockup and the
-		   link row are centred in it (the lockup 280px wide, 14px tall; the links
+		   link row are centred in it (the lockup 223px wide, 17px tall; the links
 		   17.5px). The lockup was 170px by 19px for the 9:1 Apres Guerre mark;
-		   the new name is a 20:1 line, so it takes more width for less height
+		   the new name is a 13:1 line, so it takes more width for less height
 		   (2026-11-05). */
 		.Header {
-			--lockup-w: 280px;
-			--lockup-top: 29px;
+			--lockup-w: 223px;
+			--lockup-top: 28px;
 			--row-top: 27px;
 			--lockup-left: var(--edge);
 			--lockup-left-cq: var(--edge);
@@ -765,8 +765,8 @@
 	/* ── SP lockup sizes ── */
 	@media (max-width: 767.98px) {
 		.Header {
-			--lockup-w: 230px;
-			--lockup-top: 20px;
+			--lockup-w: 211px;
+			--lockup-top: 19px;
 		}
 	}
 

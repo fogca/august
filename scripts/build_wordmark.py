@@ -15,6 +15,7 @@ weight, edit the constants below and run it again.
 """
 
 import io
+import math
 from pathlib import Path
 
 import uharfbuzz as hb
@@ -29,19 +30,18 @@ FONT = ROOT / "static/fonts/Maxica-VF18.woff2"
 OUT = ROOT / "src/lib/data/wordmark.ts"
 
 # 2026-11-05, at the user's request: "Texmex Typefoundry Tokyo" for now, in
-# Maxa Regular, in capitals.
-WORDMARK_TEXT = "TEXMEX TYPEFOUNDRY TOKYO"
+# Maxa Regular, capitalised (initial capitals; first set in all caps by
+# mistake, then corrected). Maxica draws A-Z and a-y, so the name has to stay
+# clear of "z".
+WORDMARK_TEXT = "Texmex Typefoundry Tokyo"
 WEIGHT = 400
 # Where the name breaks into the two words the Header moves (the first word's
 # letters, then the rest — a space inside the second word stays a space).
-FIRST_WORD = "TEXMEX"
+FIRST_WORD = "Texmex"
 
-# The capitals' height, and room above and below it for the round letters'
-# overshoot (O and U run 7 units under the baseline), in font units.
-CAP = 732
-PAD = 8
-BASELINE = PAD + CAP
-HEIGHT = CAP + 2 * PAD
+# Room above the tallest ink and below the lowest, in font units: the box is
+# measured off the letters themselves (ascenders d f k, descenders y p).
+PAD = 4
 
 DECIMALS = 2
 
@@ -75,15 +75,22 @@ def shaped_positions(font: TTFont) -> tuple[list[tuple[str, float]], float]:
     return out, x
 
 
-def outline(font: TTFont, char: str, x: float) -> tuple[str, float, float]:
+def glyph_bounds(font: TTFont, char: str) -> tuple[float, float, float, float]:
+    glyph_set = font.getGlyphSet()
+    bp = BoundsPen(glyph_set)
+    glyph_set[font.getBestCmap()[ord(char)]].draw(bp)
+    return bp.bounds
+
+
+def outline(
+    font: TTFont, char: str, x: float, baseline: float
+) -> tuple[str, float, float]:
     """The letter's path in wordmark space and its horizontal extent."""
     glyph_set = font.getGlyphSet()
     name = font.getBestCmap()[ord(char)]
     pen = SVGPathPen(glyph_set, ntos=lambda v: f"{r(v):g}")
-    glyph_set[name].draw(TransformPen(pen, (1, 0, 0, -1, x, BASELINE)))
-    bp = BoundsPen(glyph_set)
-    glyph_set[name].draw(bp)
-    x0, _, x1, _ = bp.bounds
+    glyph_set[name].draw(TransformPen(pen, (1, 0, 0, -1, x, baseline)))
+    x0, _, x1, _ = glyph_bounds(font, char)
     return pen.getCommands(), r(x + x0), r(x + x1)
 
 
@@ -92,13 +99,19 @@ def build() -> str:
     assert font["head"].unitsPerEm == 1000, "the numbers below are in 1000-unit em"
     placed, total = shaped_positions(font)
 
+    # The box: from the top of the tallest letter to the foot of the lowest.
+    ink = [glyph_bounds(font, ch) for ch, _ in placed if ch != " "]
+    ascent = math.ceil(max(b[3] for b in ink)) + PAD
+    descent = math.ceil(-min(b[1] for b in ink)) + PAD
+    baseline, height = ascent, ascent + descent
+
     letters = []
     origins = {}
     for i, (char, x) in enumerate(placed):
         origins[i] = x
         if char == " ":
             continue
-        d, x0, x1 = outline(font, char, x)
+        d, x0, x1 = outline(font, char, x, baseline)
         letters.append({"char": char, "x0": x0, "x1": x1, "d": d, "index": i})
 
     first_end = len(FIRST_WORD)
@@ -125,7 +138,7 @@ def build() -> str:
         "",
         f"export const WORDMARK_TEXT = {WORDMARK_TEXT!r};",
         f"export const WORDMARK_W = {r(total)};",
-        f"export const WORDMARK_H = {HEIGHT};",
+        f"export const WORDMARK_H = {height};",
         "",
         "export interface WordmarkLetter {",
         "\tchar: string;",

@@ -4,7 +4,7 @@
      spanning the width with a 15px margin each side and the first centred
      above it at the same scale.
 
-     Since 2026-11-05 the wordmark is "TEXMEX TYPEFOUNDRY TOKYO" in Maxa
+     Since 2026-11-05 the wordmark is "Texmex Typefoundry Tokyo" in Maxa
      Regular, black (the user's trial — see $lib/data/wordmark.ts, generated
      from the font by scripts/build_wordmark.py). The words keep the layout's
      old names, `apres` (the first word) and `guerre` (the second): see
