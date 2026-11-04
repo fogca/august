@@ -49,9 +49,10 @@
 	const rowLabel = $derived(title ?? `${weight.name} weight`);
 
 	const SIZE_MIN = 12;
-	// 800: the reference sets single words at up to ~700px.
-	const SIZE_MAX = 800;
-	// The slider runs on a log scale — a linear one over 12-800px would move
+	// 1000: the reference sets single words at up to ~700px, and the opening
+	// "Vin" fills a 1440px screen at ~900px (2026-11-05).
+	const SIZE_MAX = 1000;
+	// The slider runs on a log scale — a linear one over 12-1000px would move
 	// the body sizes by whole tens of px per step.
 	const SLIDER_STEPS = 1000;
 	const sizeToPos = (px: number) =>

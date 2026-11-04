@@ -303,7 +303,7 @@ const wineText = (n: number) => WINE_PARAGRAPHS.slice(0, n).join('\n\n');
 /** Humorist's Type Tester lines (2026-11-04, at the user's request — after
  *  type.kontrapunkt.com/en/fonts/kp-duo-sans: "もっと全体的にコントラストつけて",
  *  "本文などはもっと長文に"; 2026-11-05, "文言はチーズからワイン系にして"). It
- *  opens with VIN and Dégustation!, then runs through the cellar's own French
+ *  opens with Vin and Dégustation!, then runs through the cellar's own French
  *  terms (assemblage, dégorgement, remuage…), one to a row, before the capitals
  *  line, the sentence and running text in columns. Each has its own weight,
  *  sized so a single word nearly fills the width of a 1440px screen (measured
@@ -316,7 +316,7 @@ const wineText = (n: number) => WINE_PARAGRAPHS.slice(0, n).join('\n\n');
  *  euro's bars run out to the left). A phone's sizes are the same words fitted
  *  to 360px. */
 const HUMORIST_TESTER_LINES: TesterLine[] = [
-	{ text: 'VIN', wght: 550, sizeDesktop: 778, sizeMobile: 206, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Vin', wght: 550, sizeDesktop: 913, sizeMobile: 241, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Dégustation!', wght: 350, sizeDesktop: 252, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Assemblage', wght: 250, sizeDesktop: 265, sizeMobile: 70, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Dégorgement', wght: 650, sizeDesktop: 234, sizeMobile: 61, lineHeight: 1.1, letterSpacing: -0.03 },
@@ -375,7 +375,7 @@ const VINEYARD_STANZAS = [
 const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).join('\n\n');
 
 /** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"; wine
- *  copy 2026-11-05): the same shape as Humorist's — VIN, Degustation, the
+ *  copy 2026-11-05): the same shape as Humorist's — Vin, Degustation, the
  *  cellar's own terms one to a row, a loud capitals line, one sentence, the
  *  lowercase alphabet, then running text at 48/19/14px — in the weights
  *  100-900 of the site's scale (Thin to Black). No letter-spacing anywhere
@@ -386,7 +386,7 @@ const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).join('\n\n');
  *  and "Degustation" stands without its é and bang. The two masters sit at 50
  *  and 950, so the extremes are left to the interpolation. */
 const MAXICA_TESTER_LINES: TesterLine[] = [
-	{ text: 'VIN', wght: 500, sizeDesktop: 733, sizeMobile: 194, lineHeight: 1.1 },
+	{ text: 'Vin', wght: 500, sizeDesktop: 877, sizeMobile: 232, lineHeight: 1.1 },
 	{ text: 'Degustation', wght: 300, sizeDesktop: 246, sizeMobile: 65, lineHeight: 1.1 },
 	{ text: 'Assemblage', wght: 200, sizeDesktop: 245, sizeMobile: 64, lineHeight: 1.1 },
 	{ text: 'Vendange', wght: 600, sizeDesktop: 280, sizeMobile: 74, lineHeight: 1.1 },
