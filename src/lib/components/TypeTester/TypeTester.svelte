@@ -71,10 +71,6 @@
 		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
 	const initialAlign = isPhone ? WEIGHT_ROW_ALIGN_DEFAULT_MOBILE : WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP;
 
-	// Lines are read from the left; the centring above is for the single
-	// words of the weight rows.
-	const LINE_ALIGN = 'left';
-
 	// A tester line is a weight row that sets its own size, weight and spacing.
 	// Its label is the typeface's name and the weight's name ("Medium") —
 	// nothing that pretends to be a style of its own.
@@ -102,7 +98,7 @@
 				defaultText={line.text}
 				{fontFamily}
 				initialSize={isPhone ? line.sizeMobile : line.sizeDesktop}
-				initialAlign={LINE_ALIGN}
+				{initialAlign}
 				lineHeight={line.lineHeight}
 				letterSpacing={line.letterSpacing}
 				columns={line.columns}
