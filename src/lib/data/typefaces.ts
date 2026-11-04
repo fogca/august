@@ -367,46 +367,45 @@ const ORCHARD_STANZAS = [
 const orchardText = (n: number) => ORCHARD_STANZAS.slice(0, n).join('\n\n');
 
 /** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"): the same
- *  shape as Humorist's — a single word 680px wide, a loud capitals line, one
+ *  shape as Humorist's — a single word 650px wide, a loud capitals line, one
  *  sentence, single words at their own weight, the lowercase alphabet, then
  *  running text at 48/19/14px — in the weights 100-900 of the site's scale
- *  (Thin to Black), each word sized to ~96% of a 1440px screen (measured at
- *  its weight, tracking -0.03em). The two masters sit at 50 and 950, so the
- *  extremes are left to the interpolation. */
+ *  (Thin to Black). No letter-spacing anywhere (2026-11-05, at the user's
+ *  request — Maxica's own spacing is drawn to read well at 0): each word is
+ *  sized to ~96% of a 1440px screen as measured at its weight with tracking 0.
+ *  The two masters sit at 50 and 950, so the extremes are left to the
+ *  interpolation. */
 const MAXICA_TESTER_LINES: TesterLine[] = [
-	{ text: 'Pear', wght: 500, sizeDesktop: 680, sizeMobile: 180, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Pear', wght: 500, sizeDesktop: 650, sizeMobile: 172, lineHeight: 1.1 },
 	{
 		text: 'SEASON OF THE ORCHARD',
 		wght: 800,
 		sizeDesktop: 260,
 		sizeMobile: 70,
-		lineHeight: 0.95,
-		letterSpacing: -0.04
+		lineHeight: 0.95
 	},
 	{
 		text: 'the market opens at first light and the first baskets of quince and persimmon arrive from the orchard',
 		wght: 300,
 		sizeDesktop: 80,
 		sizeMobile: 28,
-		lineHeight: 1.1,
-		letterSpacing: -0.02
+		lineHeight: 1.1
 	},
-	{ text: 'Persimmon', wght: 200, sizeDesktop: 288, sizeMobile: 76, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Mandarin', wght: 600, sizeDesktop: 308, sizeMobile: 80, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Pomelo', wght: 100, sizeDesktop: 432, sizeMobile: 114, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Quince', wght: 900, sizeDesktop: 390, sizeMobile: 102, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Apricot', wght: 700, sizeDesktop: 392, sizeMobile: 104, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Cinnamon', wght: 400, sizeDesktop: 308, sizeMobile: 80, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Fennel', wght: 500, sizeDesktop: 468, sizeMobile: 122, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Persimmon', wght: 200, sizeDesktop: 261, sizeMobile: 69, lineHeight: 1.1 },
+	{ text: 'Mandarin', wght: 600, sizeDesktop: 294, sizeMobile: 78, lineHeight: 1.1 },
+	{ text: 'Pomelo', wght: 100, sizeDesktop: 394, sizeMobile: 104, lineHeight: 1.1 },
+	{ text: 'Quince', wght: 900, sizeDesktop: 391, sizeMobile: 103, lineHeight: 1.1 },
+	{ text: 'Apricot', wght: 700, sizeDesktop: 383, sizeMobile: 101, lineHeight: 1.1 },
+	{ text: 'Cinnamon', wght: 400, sizeDesktop: 281, sizeMobile: 74, lineHeight: 1.1 },
+	{ text: 'Fennel', wght: 500, sizeDesktop: 434, sizeMobile: 114, lineHeight: 1.1 },
 	{
 		text: 'abcdefghijklmnopqrstuvwx',
 		wght: 400,
 		sizeDesktop: 108,
 		sizeMobile: 28,
-		lineHeight: 1.1,
-		letterSpacing: -0.02
+		lineHeight: 1.1
 	},
-	{ text: orchardText(2), wght: 300, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15, letterSpacing: -0.01 },
+	{ text: orchardText(2), wght: 300, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
 	{ text: orchardText(5), wght: 400, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
 	{ text: orchardText(10), wght: 400, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
