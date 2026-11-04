@@ -11,23 +11,25 @@ export interface WeightDef {
 	axisValue: number;
 }
 
-/** One line of the Type Tester's "Usage" block: a piece of text set the way it
- *  would be set in use (a headline, body copy, a price …) rather than to show
- *  a weight. Each carries its own weight, size and line-height. */
-export interface UsageDef {
-	/** Short name of the use, shown as the row's label ("Headline") */
-	label: string;
+/** One line of the Type Tester, set the way Kontrapunkt Type's tester rows
+ *  are (2026-11-04, at the user's request): its own text, weight and size —
+ *  from a single word the width of the screen down to running text — rather
+ *  than one text at every weight. A line carries no name of its own; the row
+ *  says only the typeface and the wght it is set at. */
+export interface TesterLine {
 	text: string;
-	/** The weight it is set in: the wght value and the word for that step */
-	weight: Pick<WeightDef, 'axisValue' | 'label'>;
+	/** The wght it is set at */
+	wght: number;
 	/** Starting size in px, on a desktop screen and on a phone */
 	sizeDesktop: number;
 	sizeMobile: number;
 	/** Unitless line-height */
 	lineHeight: number;
-	/** Longest line, as a CSS length in em of the row's own size — running text
-	 *  only, so it is read in a line a reader would actually be given */
-	measure?: string;
+	/** Letter-spacing in em — large sizes are drawn in tighter than the
+	 *  face's own spacing, as in the reference */
+	letterSpacing?: number;
+	/** Columns on a desktop screen (running text; a phone always has one) */
+	columns?: number;
 }
 
 const WEIGHT_LABELS = [

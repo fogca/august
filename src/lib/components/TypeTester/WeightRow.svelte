@@ -18,16 +18,16 @@
 		initialNoteSize?: number;
 		/** Starting text alignment */
 		initialAlign?: AlignValue;
-		/** The row's label, where it is not the weight's own name (a Usage row:
-		 *  "Headline") */
+		/** The row's label, where it is not the weight's own name (a tester line:
+		 *  the typeface's name, with "wght 550" beside it) */
 		title?: string;
-		/** The label's second part, where it is not "wght 550" ("Regular 450") */
-		detail?: string;
-		/** Line-height of the text — a running line wants more than the 1 a
+		/** Line-height of the text — running text wants more than the 1 a
 		 *  single specimen word is set at */
 		lineHeight?: number;
-		/** Longest line, as a CSS length (em of the row's own size) */
-		measure?: string;
+		/** Letter-spacing in em */
+		letterSpacing?: number;
+		/** Columns on a desktop screen (a phone always has one) */
+		columns?: number;
 	}
 
 	let {
@@ -39,9 +39,9 @@
 		initialNoteSize = 48,
 		initialAlign = 'left',
 		title,
-		detail,
 		lineHeight = 1,
-		measure
+		letterSpacing = 0,
+		columns = 1
 	}: Props = $props();
 
 	const rowName = $derived(title ?? weight.name);
@@ -49,7 +49,15 @@
 	const rowLabel = $derived(title ?? `${weight.name} weight`);
 
 	const SIZE_MIN = 12;
-	const SIZE_MAX = 200;
+	// 800: the reference sets single words at up to ~700px.
+	const SIZE_MAX = 800;
+	// The slider runs on a log scale — a linear one over 12-800px would move
+	// the body sizes by whole tens of px per step.
+	const SLIDER_STEPS = 1000;
+	const sizeToPos = (px: number) =>
+		Math.round((Math.log(px / SIZE_MIN) / Math.log(SIZE_MAX / SIZE_MIN)) * SLIDER_STEPS);
+	const posToSize = (pos: number) =>
+		Math.round(SIZE_MIN * Math.pow(SIZE_MAX / SIZE_MIN, pos / SLIDER_STEPS));
 	const NOTE_MIN = 10;
 	const NOTE_MAX = 96;
 
@@ -114,21 +122,28 @@
 <div class="WeightRow" role="listitem">
 	<div class="WeightRow__meta">
 		<span class="label-name">{rowName}</span>
-		<span class="label-axis">{detail ?? `wght ${weight.axisValue}`}</span>
+		<span class="label-axis">wght {weight.axisValue}</span>
 		{#if SHOW_ROW_TITLE}
 			<label class="WeightRow__size">
 				<span class="size-icon size-icon--sm">A</span>
 				<input
 					class="WeightRow__size-range"
 					type="range"
-					min={SIZE_MIN}
-					max={SIZE_MAX}
-					bind:value={size}
+					min="0"
+					max={SLIDER_STEPS}
+					step="5"
+					value={sizeToPos(size)}
+					oninput={(e) => (size = posToSize(+e.currentTarget.value))}
 					bind:this={sliderEl}
 					onpointerdown={(e) =>
 						startDrag(
 							e,
-							sliderEl && { el: sliderEl, min: SIZE_MIN, max: SIZE_MAX, apply: (v) => (size = v) }
+							sliderEl && {
+								el: sliderEl,
+								min: 0,
+								max: SLIDER_STEPS,
+								apply: (v) => (size = posToSize(v))
+							}
 						)}
 					aria-label="{rowName} size"
 				/>
@@ -213,8 +228,9 @@
 	      font-variation-settings: 'wght' {weight.axisValue};
 	      font-size: {size}px;
 	      line-height: {lineHeight};
+	      letter-spacing: {letterSpacing}em;
 	      text-align: {align};
-	      {measure ? `max-width: calc(${measure} + var(--padding) * 2);` : ''}
+	      --cols: {columns};
 	    "
 		></div>
 	{/if}
@@ -265,11 +281,12 @@
 	.WeightRow__meta {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		/* 8px on a phone, so the longer label (the typeface's name) and the
+		   controls still fit one line; 12px from 768px up. */
+		gap: 8px;
 		margin-bottom: 15px;
-		/* A rule under each row's label (2026-10; the site's border since 2026-10-31). */
-		padding-bottom: 12px;
-		border-bottom: var(--border-line);
+		/* No rule under the row's label and controls (2026-11-04, at the user's
+		   request — "testerのパラメータの下線は無しで"). */
 		color: var(--color-text-mute);
 		font-family: var(--font-en), sans-serif;
 		font-size: 10px;
@@ -312,6 +329,7 @@
 		}
 
 		.WeightRow__meta {
+			gap: 12px;
 			margin-bottom: 25px;
 		}
 
@@ -457,5 +475,14 @@
 		cursor: text;
 		outline: none;
 		padding-block: 8px 0;
+	}
+
+	/* Running text can be set in columns on a wide screen (--cols, from the
+	   line's own data); a phone always has one. */
+	@media (min-width: 768px) {
+		.WeightRow__text {
+			column-count: var(--cols, 1);
+			column-gap: 40px;
+		}
 	}
 </style>

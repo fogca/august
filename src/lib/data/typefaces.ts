@@ -1,7 +1,7 @@
 // Typeface data definitions for Apres Guerre
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
-import type { WeightDef, UsageDef } from '$lib/components/TypeTester/presets.js';
+import type { WeightDef, TesterLine } from '$lib/components/TypeTester/presets.js';
 import { WEIGHTS, ANGO_WEIGHTS } from '$lib/components/TypeTester/presets.js';
 import type { GlyphGroup, MetricLine } from './humoristOverview.js';
 import {
@@ -83,10 +83,10 @@ export interface Typeface {
 	defaultTexts: string[];
 	/** Body text set under each word, paired by the same index. */
 	defaultNotes?: string[];
-	/** The Type Tester's "Usage" block: text set the way it is used (headline,
-	 *  body, price …), shown above the weight-by-weight rows. Left out, the
-	 *  tester is the weight rows alone. */
-	usages?: UsageDef[];
+	/** The Type Tester's own lines (text, weight, size, spacing — a single word
+	 *  the width of the screen down to running text), shown above the
+	 *  weight-by-weight rows. Left out, the tester is the weight rows alone. */
+	testerLines?: TesterLine[];
 	/** The notice under the Type Tester, for a face where the default ("… is in
 	 *  development. Preview shown in Norma.") isn't true — a placeholder that
 	 *  borrows a face, or a face still missing characters. */
@@ -282,81 +282,68 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie', string[]> 
 	]
 };
 
-/** Humorist's Type Tester "Usage" block (2026-11-04, at the user's request —
- *  "今はWeightを見せるだけで、見出し・本文などのusageを見せれてない"): eight uses,
- *  each in the weight it would be set in, in the cheese vocabulary of the
- *  weight rows' own line. Every character is in Ango-VF31 (checked against
- *  its cmap) — which rules out `%` `^` `~` (empty in both masters) and the
- *  letters Þ ß Ł Œ ź, so no figure line carries a percent sign and no line
- *  tries to show language coverage (the Glyph overview does that). The middle
- *  dot is in the file but is a copy of the period (it sits on the baseline,
- *  y -9…31), so no line uses it as a separator. */
-const HUMORIST_USAGES: UsageDef[] = [
+/** Running text for Humorist's Type Tester: six paragraphs on cheese, the
+ *  register of the weight rows' own line. The lines draw on it by length —
+ *  the first paragraph at 48px, the first four at 19px, all six at 14px. */
+const CHEESE_PARAGRAPHS = [
+	'A cheese is never finished, only ready. In the cellar the rind forms first, a thin white bloom that takes weeks to thicken, and under it the paste begins its slow change: firm at the centre, then softer, then almost liquid at the edge. Nobody can hurry it. The affineur turns each wheel by hand, brushes it, tastes it, and decides whether it needs another day or another month.',
+	'Milk is the beginning, and it is never the same twice. It carries the season in it: the grass of April, the hay of January, the weather of the week before. A cheesemaker learns to read that difference the way a winemaker reads a vintage, and to leave most of it alone. The curd is cut, drained and moulded by hand, then salted and left to rest. What happens after that happens in the dark, in cool, damp air at a steady temperature, and it is the cellar that does the rest.',
+	'To eat it well, take it out of the cold an hour before serving. A cheese straight from the refrigerator is closed and quiet; at room temperature it opens, and the smell comes first, of cream and mushroom and warm straw. Cut it so that every slice carries some of the rind and some of the heart. Serve it with bread, with a few grapes, with a glass of something not too sweet, and do not rush. There is nothing on the plate that needs improving.',
+	'Every region has its own answer. In the north the rinds are washed in brine and the smell announces itself from across the room; in the mountains the wheels are large and hard and keep for years; on the plains the cheeses are young, white and fresh, made in the morning and eaten within the week. The names on the board, Brie de Meaux and Comté, Époisses and Reblochon, are less a list than a map.',
+	'A good counter knows the wheel before it is cut. It lifts it, presses the rind with a thumb, and listens for the answer: a cheese that is ready gives slightly, a cheese that is not stays stubborn, and one that has gone too far leans and sags. There is no number for this. It is learned the way a language is, by hearing it spoken every day for years, until the meaning arrives without translation.',
+	'Wrapped in paper rather than plastic, a cheese keeps breathing. Keep it in the vegetable drawer, away from anything with a strong smell, and unwrap it only to cut. If a little blue appears on the surface, scrape it off; if the smell turns sharp and ammoniac, it has simply had its day. Buy less, more often, and ask for a taste. A good cheesemonger will always say yes.'
+];
+const cheeseText = (n: number) => CHEESE_PARAGRAPHS.slice(0, n).join('\n\n');
+
+/** Humorist's Type Tester lines (2026-11-04, at the user's request — after
+ *  type.kontrapunkt.com/en/fonts/kp-duo-sans: "もっと全体的にコントラストつけて",
+ *  "本文などはもっと長文に"). Each has its own weight, sized so a single word
+ *  nearly fills the width of a 1440px screen (measured at that weight and
+ *  spacing, 97% of 1360px), tighter in the spacing the bigger it is, down to
+ *  running text in columns. The nine weights are all used. Every character is
+ *  in Ango-VF31 (checked against its cmap), which rules out `@` `%` `^` `~`
+ *  and Þ ß Ł Œ ź. Three drawn glyphs are not used either, because they show
+ *  at this size: the middle dot is a copy of the period (baseline, y -9…31),
+ *  and `€` `$` `¢` keep their Hair-thin bars and ticks at every heavier weight
+ *  (the euro's bars run out to the left). A phone's sizes are the same words
+ *  fitted to 360px. */
+const HUMORIST_TESTER_LINES: TesterLine[] = [
+	{ text: 'Brie', wght: 550, sizeDesktop: 700, sizeMobile: 190, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
-		label: 'Display',
-		text: 'Mozzarella & Brie de Meaux',
-		weight: { axisValue: 550, label: 'Medium' },
-		sizeDesktop: 160,
-		sizeMobile: 56,
-		lineHeight: 1
+		text: 'AGED SLOWLY. CUT BY HAND.',
+		wght: 850,
+		sizeDesktop: 300,
+		sizeMobile: 80,
+		lineHeight: 0.95,
+		letterSpacing: -0.04
 	},
 	{
-		label: 'Headline',
-		text: 'Aged slowly, cut by hand, served at room temperature',
-		weight: { axisValue: 450, label: 'Regular' },
-		sizeDesktop: 64,
-		sizeMobile: 32,
-		lineHeight: 1.1
-	},
-	{
-		label: 'Subhead',
-		text: 'A washed-rind cheese from the north, firm at the edge and soft at the centre.',
-		weight: { axisValue: 350, label: 'Light' },
-		sizeDesktop: 32,
-		sizeMobile: 22,
-		lineHeight: 1.25
-	},
-	{
-		label: 'Body',
-		text: "Brie de Meaux is made from raw cow's milk and ripened for at least four weeks. The rind turns white and velvety; the paste inside softens from the edges toward the centre. Take it out of the cold an hour before serving.",
-		weight: { axisValue: 450, label: 'Regular' },
-		sizeDesktop: 18,
-		sizeMobile: 16,
-		lineHeight: 1.5,
-		measure: '22em'
-	},
-	{
-		label: 'Caption',
-		text: 'Fig. 3 — Brie de Meaux, ripened for six weeks.',
-		weight: { axisValue: 450, label: 'Regular' },
-		sizeDesktop: 13,
-		sizeMobile: 12,
-		lineHeight: 1.4
-	},
-	{
-		label: 'Capitals',
-		text: 'BRIE DE MEAUX / ÉPOISSES / COMTÉ',
-		weight: { axisValue: 550, label: 'Medium' },
-		sizeDesktop: 24,
-		sizeMobile: 18,
-		lineHeight: 1.2
-	},
-	{
-		label: 'Numerals',
-		text: '€38.50 / kg, 250 g, 12:45, No. 0123456789',
-		weight: { axisValue: 450, label: 'Regular' },
-		sizeDesktop: 40,
+		text: 'Raw milk, a cold cellar and a patient pair of hands: the rind turns white and velvety, and the paste inside softens from the edges toward the centre.',
+		wght: 350,
+		sizeDesktop: 80,
 		sizeMobile: 28,
-		lineHeight: 1.15
+		lineHeight: 1.1,
+		letterSpacing: -0.02
 	},
+	{ text: 'Camembert', wght: 250, sizeDesktop: 260, sizeMobile: 68, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Époisses', wght: 650, sizeDesktop: 380, sizeMobile: 100, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Mozzarella', wght: 150, sizeDesktop: 296, sizeMobile: 78, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Comté', wght: 950, sizeDesktop: 460, sizeMobile: 120, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Gruyère', wght: 750, sizeDesktop: 380, sizeMobile: 100, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Roquefort', wght: 450, sizeDesktop: 320, sizeMobile: 84, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: '38.50 / kg', wght: 550, sizeDesktop: 320, sizeMobile: 84, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: "L'AFFINEUR", wght: 250, sizeDesktop: 250, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
-		label: 'Pangram',
-		text: 'Portez ce vieux whisky au juge blond qui fume.',
-		weight: { axisValue: 350, label: 'Light' },
-		sizeDesktop: 24,
-		sizeMobile: 18,
-		lineHeight: 1.3
-	}
+		text: 'AaBbCc (0123456789) ?!&#',
+		wght: 450,
+		sizeDesktop: 108,
+		sizeMobile: 29,
+		lineHeight: 1.1,
+		letterSpacing: -0.02
+	},
+	{ text: cheeseText(1), wght: 350, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15, letterSpacing: -0.01 },
+	{ text: cheeseText(4), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
+	{ text: cheeseText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
 export const TYPEFACES: Typeface[] = [
@@ -662,7 +649,7 @@ export const TYPEFACES: Typeface[] = [
 		// ANGO_TESTER_TEXTS above — point this at `.wine` or `.cheese` (the
 		// A-I list) to bring either back.
 		defaultTexts: ANGO_TESTER_TEXTS.mozzarellaBrie,
-		usages: HUMORIST_USAGES,
+		testerLines: HUMORIST_TESTER_LINES,
 		// The A-Z/a-z proof, for the gallery's specimen tile. The big name on
 		// /fonts and at the top of the page is set at this weight (the home
 		// hero's own, Light).

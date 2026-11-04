@@ -2,7 +2,7 @@
 	import { untrack } from 'svelte';
 	import { browser } from '$app/environment';
 	import WeightRow from './WeightRow.svelte';
-	import type { WeightDef, UsageDef } from './presets.js';
+	import type { WeightDef, TesterLine } from './presets.js';
 	import {
 		MOBILE_BREAKPOINT_PX,
 		WEIGHT_ROW_SIZE_DEFAULT_DESKTOP,
@@ -25,9 +25,10 @@
 		defaultTexts: string[];
 		/** Body text set under each word, paired by the same index. */
 		defaultNotes?: string[];
-		/** Text set the way it is used (headline, body, price …). Shown above
-		 *  the weight rows, each use at its own weight and size. */
-		usages?: UsageDef[];
+		/** Lines with a text, weight and size of their own, from a single word
+		 *  the width of the screen to running text. Shown above the weight
+		 *  rows. */
+		lines?: TesterLine[];
 		/** When false, show an "in development" notice */
 		available?: boolean;
 		/** The notice's own wording, where the default ("Preview shown in
@@ -48,7 +49,7 @@
 		name,
 		defaultTexts,
 		defaultNotes,
-		usages,
+		lines,
 		available = true,
 		notice,
 		defaultSizeDesktop,
@@ -69,13 +70,15 @@
 		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
 	const initialAlign = isPhone ? WEIGHT_ROW_ALIGN_DEFAULT_MOBILE : WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP;
 
-	// Running text is read from the left; the centring above is for the single
+	// Lines are read from the left; the centring above is for the single
 	// words of the weight rows.
-	const USAGE_ALIGN = 'left';
+	const LINE_ALIGN = 'left';
 
-	// A usage row is a weight row that sets its own size, weight and spacing.
-	function usageWeight(u: UsageDef, i: number): WeightDef {
-		return { id: i, name: u.label, label: u.weight.label, axisValue: u.weight.axisValue };
+	// A tester line is a weight row that sets its own size, weight and spacing.
+	// Its label is the typeface's name and the wght — nothing that pretends to
+	// be a style of its own.
+	function lineWeight(l: TesterLine, i: number): WeightDef {
+		return { id: i, name: name ?? fontFamily, label: '', axisValue: l.wght };
 	}
 </script>
 
@@ -90,27 +93,20 @@
 		{/if}
 	</div>
 
-	{#if usages?.length}
-		<h3 class="TypeTester__group">Usage</h3>
-		<div class="TypeTester__rows" role="list" aria-label="Usage specimens">
-			{#each usages as u, i (u.label)}
-				<WeightRow
-					weight={usageWeight(u, i)}
-					title={u.label}
-					detail="{u.weight.label} {u.weight.axisValue}"
-					defaultText={u.text}
-					{fontFamily}
-					initialSize={isPhone ? u.sizeMobile : u.sizeDesktop}
-					initialAlign={USAGE_ALIGN}
-					lineHeight={u.lineHeight}
-					measure={u.measure}
-				/>
-			{/each}
-		</div>
-		<h3 class="TypeTester__group">By weight</h3>
-	{/if}
-
-	<div class="TypeTester__rows" role="list" aria-label="Weight specimens">
+	<div class="TypeTester__rows" role="list" aria-label="Type specimens">
+		{#each lines ?? [] as line, i (i)}
+			<WeightRow
+				weight={lineWeight(line, i)}
+				title={name ?? fontFamily}
+				defaultText={line.text}
+				{fontFamily}
+				initialSize={isPhone ? line.sizeMobile : line.sizeDesktop}
+				initialAlign={LINE_ALIGN}
+				lineHeight={line.lineHeight}
+				letterSpacing={line.letterSpacing}
+				columns={line.columns}
+			/>
+		{/each}
 		{#each weights as weight, i (weight.id)}
 			<WeightRow
 				{weight}
@@ -155,16 +151,6 @@
 		color: var(--color-text-mute);
 		margin-top: 6px;
 		opacity: 0.7;
-	}
-
-	/* The two blocks of a tester that has a Usage block: a small label over
-	   each, in the same quiet voice as the title. */
-	.TypeTester__group {
-		font-family: var(--font-en), sans-serif;
-		font-size: var(--fs-h5);
-		color: var(--color-text-mute);
-		letter-spacing: 0;
-		padding: 24px var(--padding) 12px;
 	}
 
 	.TypeTester__notice {
