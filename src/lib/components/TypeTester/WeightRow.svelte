@@ -261,16 +261,17 @@
 
 <style>
 	/* Border lines run the full viewport width; content is padded per-row. */
-	/* Mobile-first base; the >=768px block below restores the roomier
-	   desktop spacing (padding-block 15px/40px, meta margin-bottom 40px) —
-	   SP tightened 2026-09 at the user's request. */
+	/* Mobile-first base; the >=768px block below sets the desktop spacing.
+	   Tightened 2026-11-05, at the user's request ("それぞれのテスター間の余白が
+	   広いので、もう少し詰めて"): what a row adds around its line is ~65px on a
+	   desktop screen (was ~113px), the same as Kontrapunkt Type's rows. */
 	.WeightRow {
 		display: flex;
 		flex-direction: column;
 		/* No gap: the meta row carries the space under itself, and the specimen
 		   sits directly on the body copy below it. */
 		gap: 0;
-		padding-block: 5px 30px;
+		padding-block: 5px 16px;
 		border-top: var(--border-line);
 		width: 100%;
 	}
@@ -285,7 +286,7 @@
 		/* 8px on a phone, so the longer label (the typeface's name) and the
 		   controls still fit one line; 12px from 768px up. */
 		gap: 8px;
-		margin-bottom: 15px;
+		margin-bottom: 10px;
 		/* No rule under the row's label and controls (2026-11-04, at the user's
 		   request — "testerのパラメータの下線は無しで"). */
 		color: var(--color-text-mute);
@@ -326,12 +327,12 @@
 	   plus a little more slider travel. */
 	@media (min-width: 768px) {
 		.WeightRow {
-			padding-block: 15px 40px;
+			padding-block: 12px 16px;
 		}
 
 		.WeightRow__meta {
 			gap: 12px;
-			margin-bottom: 25px;
+			margin-bottom: 12px;
 		}
 
 		.WeightRow__size-range {
@@ -475,7 +476,7 @@
 		min-height: 1em;
 		cursor: text;
 		outline: none;
-		padding-block: 8px 0;
+		padding-block: 0;
 	}
 
 	/* Running text can be set in columns on a wide screen (--cols, from the
