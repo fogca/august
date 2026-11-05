@@ -947,13 +947,14 @@ const HOME_PANEL_STYLES: {
 }[] = [
 	// Maxa's axis is the widest (50-950) and its name the shortest, so it takes
 	// the weight wave; Quad Sans has the one weight, so it is typed.
-	{ slug: 'apgr-maxica', weight: 400, bg: 'var(--brand-blue)', fg: 'var(--brand-paper)', motion: 'wght' },
-	{ slug: 'apgr-humorist', weight: 300, bg: '#000000', fg: 'var(--brand-paper)', motion: 'rotate' },
+	// Grounds (2026-11-05, the user's): Maxa black, Humorist white, Quad Sans blue.
+	{ slug: 'apgr-maxica', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
+	{ slug: 'apgr-humorist', weight: 300, bg: 'var(--white)', fg: 'var(--black)', motion: 'rotate' },
 	{
 		slug: 'apgr-quad-sans',
 		weight: 400,
-		bg: 'var(--brand-paper)',
-		fg: 'var(--brand-blue)',
+		bg: 'var(--brand-blue)',
+		fg: 'var(--brand-paper)',
 		motion: 'typewriter'
 	}
 ];
@@ -962,15 +963,16 @@ const HOME_PANEL_STYLES: {
  *  before it exists: no face is drawn and there is no page, so the panel does
  *  not link, and its name is set in a stand-in serif (EB Garamond, the file the
  *  /opentype reference already carries — see app.html) until there is. Quad
- *  Sans's panel is its inverse: paper and blue there, blue and paper here. */
+ *  Sans's panel is blue and paper, so this one is its inverse: paper and
+ *  blue (the user named the first three grounds only, 2026-11-05). */
 const QUAD_SERIF_PANEL: HomePanel = {
 	key: 'apgr-quad-serif',
 	name: `${NAME_PREFIX} Quad Serif`,
 	lines: ['Quad', 'Serif'],
 	fontFamily: 'Quad Serif',
 	weight: 400,
-	bg: 'var(--brand-blue)',
-	fg: 'var(--brand-paper)',
+	bg: 'var(--brand-paper)',
+	fg: 'var(--brand-blue)',
 	motion: 'tracking',
 	meta: ['Serif', 'Coming soon']
 };

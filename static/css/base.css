@@ -242,8 +242,10 @@ html[data-theme='about'] {
    --logo-stack-h viewBox units tall at (width inside the margins) /
    --logo-guerre-w per unit — plus a gap below. The --logo-* proportions come
    from $lib/data/logo.ts, emitted on :root by +layout.svelte. */
-/* The Header's compact bar (Header.svelte) — opaque, so anything pinned to
-   the top of the screen (sticky panels, jump targets) has to clear it. */
+/* The Header's compact bar (Header.svelte). It has no fill (since 2026-11-05;
+   it blends with what is under it), but it is still the row the lockup and
+   the links stand in, so anything pinned to the top of the screen (sticky
+   panels, jump targets) has to clear it. */
 :root {
   --header-bar-h: 100px;
 }

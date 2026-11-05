@@ -25,7 +25,7 @@
      a classic scrollbar can't push the right edge out of line. -->
 <script lang="ts">
 	import { LOGO_WORDS } from '$lib/data/logo';
-	import { WORDMARK_H, WORDMARK_LETTERS } from '$lib/data/wordmark';
+	import { WORDMARK_H, WORDMARK_LETTERS, WORDMARK_TEXT } from '$lib/data/wordmark';
 
 	interface Props {
 		/** The two word wrappers (APRES, GUERRE), for callers that move them. */
@@ -35,6 +35,13 @@
 	}
 
 	let { wordEls = $bindable([]), letterEls = $bindable([]) }: Props = $props();
+
+	/** Each letter's word of the name (Texmex, Typefoundry, Tokyo — not the two
+	 *  crops above, the second of which holds two) and its place in that word,
+	 *  in WORDMARK_LETTERS' order (which leaves the spaces out). */
+	const LETTER_POS = WORDMARK_TEXT.split(' ').flatMap((text, word) =>
+		[...text].map((_, place) => ({ word, place }))
+	);
 </script>
 
 <span class="Logo" aria-hidden="true">
@@ -45,9 +52,15 @@
 				preserveAspectRatio="xMinYMin meet"
 				xmlns="http://www.w3.org/2000/svg"
 			>
-				<!-- --i: the letter's left-to-right index, for callers that stagger. -->
+				<!-- For callers that stagger: --i is the letter's left-to-right index in
+				     the whole name, --w the number of its word and --j its place in it. -->
 				{#each WORDMARK_LETTERS.slice(word.from, word.to) as letter, i (i)}
-					<path bind:this={letterEls[word.from + i]} d={letter.d} style="--i: {word.from + i}" />
+					{@const pos = LETTER_POS[word.from + i]}
+					<path
+						bind:this={letterEls[word.from + i]}
+						d={letter.d}
+						style="--i: {word.from + i}; --w: {pos.word}; --j: {pos.place}"
+					/>
 				{/each}
 			</svg>
 		</span>

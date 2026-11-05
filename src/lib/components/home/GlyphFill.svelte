@@ -91,8 +91,9 @@
 		 *  canvas. Driven by the caller from scroll. While the ink covers the
 		 *  header's row the HOST element (this one's parent — this layer
 		 *  ignores the pointer, so the Header's hit test never lands on it)
-		 *  carries data-surface="dark", which the Header reads to switch to
-		 *  its light colour. */
+		 *  carries data-surface="dark" (the Header used to read it to switch to
+		 *  its light colour; since 2026-11-05 it blends with what is under it
+		 *  instead, and nothing reads it). */
 		zoom?: number;
 	}
 	let {
@@ -498,8 +499,9 @@
 			return t * t * (3 - 2 * t);
 		};
 
-		/** Tells the Header (which samples what is under its row) whether the
-		 *  zoom's ink now covers it — see the `zoom` prop for why the host. */
+		/** Marks the host while the zoom's ink covers the Header's row — see the
+		 *  `zoom` prop for why the host. Unread since 2026-11-05 (the Header
+		 *  blends with what is under it now), kept as a harmless marker. */
 		let surfaceDark = false;
 		function setSurface(dark: boolean) {
 			const host = section.parentElement;

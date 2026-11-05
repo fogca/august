@@ -1,12 +1,14 @@
 <!-- Home page top (2026-10 redesign, Figma "II-ii"): the opening (1:635 PC,
      7:782 SP), then the resting top (175:178 PC, 7:874 SP).
 
-     Opening: the wordmark's letters, in white, rise into place
-     left to right on the brand-blue ground (Figma 1:635; colours swapped
-     from the first cut, 2026-10, at the user's request — so the logo turns
-     dark at the very moment the ground turns white; black since 2026-11-05,
-     with the new name — it was the brand blue). Then the ground lifts
-     away to the white page underneath, the letters turning black as it goes,
+     Opening: the wordmark's letters, in white, rise into place on a black
+     ground (Figma 1:635 had it brand blue; black since 2026-11-05, at the
+     user's request, with the new name). The words overlap: each begins when
+     the one before it is three letters in ("Tex" of Texmex), not when it is
+     done, so the whole name is up sooner (the user asked for a shorter
+     opening). Then the ground lifts
+     away to the white page underneath, the letters turning black as it goes
+     (so the logo turns dark at the very moment the ground turns white),
      while the first typeface hero comes up from below, growing as it rises,
      until its top edge rests at half the screen height ("OPから背景が白に
      なり、下から大きくなりながら書体Hero100vhがinして、50vh分見える感じ").
@@ -317,12 +319,16 @@
 		--rise-at: 0.3s;
 		--rise-dur: 1.2s;
 		--rise-step: 60ms;
-		--lift-at: 2.4s;
+		/* How many letters of a word are up before the next word starts. */
+		--word-lead: 3;
+		/* The last letter starts rising at 1.08s (it was 1.56s, a word at a
+		   time), so the lift, and what follows it, come 0.5s sooner. */
+		--lift-at: 1.9s;
 		--lift-dur: 0.8s;
 		/* The ground turns white first, then the hero comes up into it. */
-		--hero-at: 2.75s;
+		--hero-at: 2.25s;
 		--hero-dur: 1.6s;
-		--lead-at: 3.2s;
+		--lead-at: 2.7s;
 		--lead-dur: 0.8s;
 		--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 		--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
@@ -344,7 +350,7 @@
 		inset: 0;
 		/* Above the Header (1200), whose own mark it hands over to. */
 		z-index: 1300;
-		background: var(--brand-blue);
+		background: var(--black);
 		pointer-events: none;
 		animation: opening-lift var(--lift-dur) ease var(--lift-at) forwards;
 	}
@@ -359,10 +365,14 @@
 
 	/* Each letter rises out of its word's own box (the <svg> clips to its
 	   viewBox), staggered left to right. translateY is in viewBox units here
-	   — 1.1 line heights clears the box entirely. */
+	   — 1.1 line heights clears the box entirely. --w is the letter's word,
+	   --j its place in that word (Logo.svelte): a word starts --word-lead
+	   letters after the one before it. */
 	.Opening :global(.Logo__word path) {
 		animation: letter-rise var(--rise-dur) var(--ease-out-expo) backwards;
-		animation-delay: calc(var(--rise-at) + var(--i) * var(--rise-step));
+		animation-delay: calc(
+			var(--rise-at) + (var(--w) * var(--word-lead) + var(--j)) * var(--rise-step)
+		);
 	}
 
 	@keyframes letter-rise {

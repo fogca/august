@@ -9,15 +9,14 @@
 	//   scroll 0, and the layout reserves the bar's height, not the big
 	//   wordmark's, above its content (base.css --masthead-h).
 	// - Compact (Figma 3:671) — the home page once scrolled, every other page
-	//   always: the wordmark shrinks into a small centred lockup (the Japanese
-	//   subline under it was removed, 2026-10, at the user's request), nav on
-	//   the left, Cart on the right, on no fill (see "Colour follows the
-	//   surface" below). On PC (from 1060px, where the inline nav exists) the
-	//   lockup is smaller and sits on the left margin, and the nav and Cart
-	//   are one group at the right, on a bar in the page's own background
-	//   colour with the site's border (base.css --border-line) under it
-	//   (2026-10-31, at the user's request). Below 1060px the header still has
-	//   no fill.
+	//   always: the wordmark shrinks into a small lockup at the centre (the
+	//   Japanese subline under it was removed, 2026-10, at the user's request),
+	//   the page links on the left, Account and Cart on the right. On PC (from
+	//   1060px, where the inline nav exists) the lockup is smaller. There is
+	//   no fill at any width, and the whole header is white blended with
+	//   `difference` (see "Colour" below). PC had the lockup on the left
+	//   margin and the links and Cart in a group on the right, on a bar with a
+	//   border under it, until 2026-11-05 (the user's request).
 	//
 	// The shrink moves the large wordmark's two words themselves (one
 	// transform each, scale about their top-left) onto two invisible "slot"
@@ -35,7 +34,6 @@
 	import { TYPEFACES } from '$lib/data/typefaces';
 	import { SITE_NAV } from '$lib/data/nav';
 	import { lang, LANG_OPTIONS } from '$lib/state/lang.svelte';
-	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { fade } from 'svelte/transition';
 	import Logo from '$lib/components/Logo.svelte';
@@ -53,9 +51,6 @@
 	let ready = $state(false);
 	/** Set once on mount (see .is-prescrolled in the styles). */
 	let hydrated = $state(false);
-	/** True while the surface under the header is dark enough that the light
-	 *  paper colour reads better than the header's black (see probeSurface). */
-	let onDark = $state(false);
 	/** The large wordmark exists only at the top of the home page. */
 	const isHome = $derived(page.url.pathname === '/');
 	const compact = $derived(!isHome || scrolled || open || focusInside);
@@ -119,96 +114,9 @@
 		});
 	}
 
-	// ── Colour follows the surface under it ───────────────────────────────────
-	// The header has no fill on any page (2026-10, at the user's request —
-	// "Headerはその他ページなどでも背景色なしで"), so it sits straight on
-	// whatever scrolls beneath it. Over a dark surface — the typeface heroes,
-	// a pinned black glyph panel, Contact — the black (and the blue wordmark)
-	// would disappear, so it turns the light paper colour instead. It reads what is actually
-	// painted under the middle of its own row, rather than relying on every
-	// section to declare its tone.
-
-	/** WCAG relative luminance of an sRGB colour (0-255 channels). */
-	function relLuminance(r: number, g: number, b: number) {
-		const lin = (v: number) => {
-			const c = v / 255;
-			return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-		};
-		return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-	}
-	const contrast = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-	const BLUE_LUM = relLuminance(25, 40, 153); // --brand-blue  rgb(25 40 153)
-	const INK_LUM = 0; // --header-ink  #000, the nav's text
-	const PAPER_LUM = relLuminance(241, 240, 239); // --brand-paper #f1f0ef
-	/** Colours below this opacity are looked through. */
-	const OPAQUE_ENOUGH = 0.5;
-
-	/** Luminance of the first mostly-opaque background found at a point, going
-	 *  down through the page from the top and skipping the header itself.
-	 *  Elements that ignore the pointer (the transition panels, the canvas)
-	 *  are skipped by the hit test, which is what is wanted here. A
-	 *  [data-surface] element (a canvas drawing, which has no CSS background
-	 *  to read — GlyphFill's zoom) states its own tone instead. */
-	function surfaceLuminance(x: number, y: number): number | null {
-		for (const el of document.elementsFromPoint(x, y)) {
-			if (headerEl?.contains(el)) continue;
-			const declared = el.closest<HTMLElement>('[data-surface]')?.dataset.surface;
-			if (declared === 'dark') return BLUE_LUM;
-			if (declared === 'light') return PAPER_LUM;
-			const m = getComputedStyle(el).backgroundColor.match(
-				/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,/\s]+([\d.]+))?\s*\)$/
-			);
-			if (!m) continue;
-			if (m[4] !== undefined && parseFloat(m[4]) < OPAQUE_ENOUGH) continue;
-			return relLuminance(+m[1], +m[2], +m[3]);
-		}
-		return null;
-	}
-
-	function probeSurface() {
-		// Open, the menu's veil (the page's own colour) is what is under it. On
-		// PC, once compact, it is the bar's own page-coloured fill — whatever
-		// scrolls beneath is hidden — so the default ink stands (/about's blue
-		// bar sets its own).
-		if (open || (compact && window.matchMedia('(min-width: 1060px)').matches)) {
-			onDark = false;
-			return;
-		}
-		const barH = parseFloat(
-			getComputedStyle(document.documentElement).getPropertyValue('--header-bar-h')
-		);
-		const lum = surfaceLuminance(window.innerWidth / 2, (barH || 100) / 2);
-		if (lum !== null) onDark = contrast(PAPER_LUM, lum) > contrast(INK_LUM, lum);
-	}
-
-	let probeRaf = 0;
-	/** Coalesces scroll/resize/navigation bursts into one probe per frame. */
-	function scheduleProbe() {
-		if (probeRaf) return;
-		probeRaf = requestAnimationFrame(() => {
-			probeRaf = 0;
-			probeSurface();
-		});
-	}
-
-	// A new page has new surfaces; some of it lands a beat after the route
-	// changes (the transition fade, lazy sections), so look again shortly too.
-	afterNavigate(() => {
-		scheduleProbe();
-		setTimeout(scheduleProbe, 600);
-		setTimeout(scheduleProbe, 1600);
-	});
-
-	$effect(() => {
-		void open;
-		void compact;
-		scheduleProbe();
-	});
-
 	onMount(() => {
 		const update = () => {
 			scrolled = window.scrollY > COMPACT_AFTER;
-			scheduleProbe();
 			// Back at the top, a focus left behind in the header (a keyboard
 			// user who has tabbed on into the page) no longer holds it compact.
 			if (!scrolled && !headerHasFocus()) focusInside = false;
@@ -222,18 +130,14 @@
 		const onResize = () => {
 			cancelAnimationFrame(raf);
 			raf = requestAnimationFrame(measureThenArm);
-			scheduleProbe();
 		};
 		window.addEventListener('resize', onResize, { passive: true });
-		window.addEventListener('surfacechange', scheduleProbe);
 		const offScroll = onScroll(update);
 		return () => {
 			offScroll();
 			window.removeEventListener('resize', onResize);
-			window.removeEventListener('surfacechange', scheduleProbe);
 			cancelAnimationFrame(raf);
 			cancelAnimationFrame(armRaf);
-			cancelAnimationFrame(probeRaf);
 		};
 	});
 
@@ -284,7 +188,6 @@
 	class:is-open={open}
 	class:is-ready={ready}
 	class:is-hydrated={hydrated}
-	class:is-on-dark={onDark}
 	bind:this={headerEl}
 	onfocusin={onFocusIn}
 	onfocusout={onFocusOut}
@@ -299,25 +202,22 @@
 		<span class="Header__ring" aria-hidden="true"></span>
 	</a>
 
-	<!-- On PC the nav and Cart sit together at the right (this wrapper); below
-	     1060px it is not a box at all and each keeps its own place. -->
-	<div class="Header__right">
-		<nav class="Header__nav" aria-label="Primary navigation">
-			{#each HEADER_NAV as item (item.href)}
-				<a class="Header__link" href={item.href}>{item.label}</a>
-			{/each}
-		</nav>
+	<!-- The page links, on the left; below 1060px the menu toggle carries them. -->
+	<nav class="Header__nav" aria-label="Primary navigation">
+		{#each HEADER_NAV as item (item.href)}
+			<a class="Header__link" href={item.href}>{item.label}</a>
+		{/each}
+	</nav>
 
-		<!-- The frame pairs "Account" with Cart; Account stays out until there
-		     is an account system behind it (2026-09, at the user's request). -->
-		<div class="Header__cart">
-			<button type="button" class="Header__link" onclick={showCartNote}>Cart (0)</button>
-			{#if cartNoteVisible}
-				<p class="Header__cart-note" role="status" transition:fade={{ duration: 150 }}>
-					Available from October
-				</p>
-			{/if}
-		</div>
+	<!-- Account and Cart, on the right, as the frame pairs them (Account was left
+	     out until now, 2026-11-05: the user listed it with Cart). Neither has a
+	     system behind it yet, so each reveals the note below. Account goes below
+	     768px, where the lockup leaves room for Cart alone. -->
+	<div class="Header__cart">
+		<button type="button" class="Header__link Header__account" onclick={showCartNote}>
+			Account
+		</button>
+		<button type="button" class="Header__link" onclick={showCartNote}>Cart (0)</button>
 	</div>
 
 	<button
@@ -334,6 +234,12 @@
 		</span>
 	</button>
 </header>
+
+{#if cartNoteVisible}
+	<!-- Outside the header on purpose: the header is blended with `difference`,
+	     which would turn this blue box into its inverse. -->
+	<p class="CartNote" role="status" transition:fade={{ duration: 150 }}>Available from October</p>
+{/if}
 
 {#if open}
 	<!-- A veil in the page's own colour behind the pills, which also catches a
@@ -391,9 +297,9 @@
 		   space the layout reserves above the content (--masthead-h). */
 		--lockup-w: 273.3px;
 		--lockup-top: 34px;
-		/* The lockup's left edge: centred, as Figma 3:671 has it — or on the
-		   page margin on PC (the 1060px block below). The second is the same
-		   in the container units the words' own CSS works in. */
+		/* The lockup's left edge: centred, as Figma 3:671 has it (on the page
+		   margin on PC until 2026-11-05). The second is the same in the
+		   container units the words' own CSS works in. */
 		--lockup-left: calc(50% - var(--lockup-w) / 2);
 		--lockup-left-cq: calc(50cqw - var(--lockup-w) / 2);
 		/* The page's side inset (base.css --padding) — the wordmark's margin. */
@@ -417,15 +323,17 @@
 		   under them for ~2s (2026-10, at the user's request — "ページ遷移時に
 		   ロゴが表示されるの遅い"). The home opening (1300) sits above it. */
 		z-index: 1200;
-		/* The wordmark's colour — black since 2026-11-05 (the new name, set in
-		   black at the user's request), the same as --header-ink, which the
-		   nav, Cart and toggle take (below). */
-		color: var(--header-ink);
-		--header-ink: #000000;
-		/* The Logo's words follow whatever colour the header has (see
-		   Logo.svelte --logo-color). */
+		/* Colour (2026-11-05, at the user's request: no white ground, and
+		   `mix-blend-mode: difference`): the whole header is white blended
+		   with `difference`, so it shows as the inverse of whatever is under
+		   it — black on the white page, white on a black panel — with no fill
+		   and no sampling. Everything in it has to stay exactly this white
+		   (the `*` rule below): a black source blends to the backdrop itself,
+		   which is invisible, and a colour of its own would come out inverted.
+		   The Logo's words follow it (Logo.svelte --logo-color). */
+		color: #ffffff;
+		mix-blend-mode: difference;
 		--logo-color: currentColor;
-		transition: color 0.3s ease;
 	}
 
 	/* base.css re-asserts its own colour on div/span/a/button/p — keep the
@@ -434,45 +342,12 @@
 		color: inherit;
 	}
 
-	/* Over a dark surface the header turns light — see probeSurface(). */
-	.Header.is-on-dark {
-		color: var(--brand-paper);
-	}
-
 	/* /about (base.css, html[data-theme='about']): its ground is the brand
-	   blue, which the probe reads as dark — but the nav and Cart there take
-	   the page's own text colour (white), and the wordmark is white too
-	   (2026-10-31; it was the opening's orange). */
-	:global(html[data-theme='about']) .Header,
-	:global(html[data-theme='about']) .Header.is-on-dark {
-		color: var(--color-text);
-	}
-
-	/* The wordmark's words inherit their colour (the .Header * { color:
-	   inherit } above), so it is the link around them that carries the white. */
-	:global(html[data-theme='about']) .Header__logo {
-		color: var(--white);
-	}
-
-	/* The nav, Cart and the menu toggle are black (2026-10-31, at the user's
-	   request — "色も黒にして"); the wordmark is black now too. They take the
-	   same two exceptions as the header: paper
-	   over a dark surface, the page's own text colour on /about. */
-	.Header .Header__nav,
-	.Header .Header__cart,
-	.Header .Header__toggle {
-		color: var(--header-ink);
-	}
-
-	.Header.is-on-dark .Header__nav,
-	.Header.is-on-dark .Header__cart,
-	.Header.is-on-dark .Header__toggle {
-		color: var(--brand-paper);
-	}
-
-	:global(html[data-theme='about']) .Header .Header__nav,
-	:global(html[data-theme='about']) .Header .Header__cart,
-	:global(html[data-theme='about']) .Header .Header__toggle {
+	   blue, which `difference` would turn the white into a yellow on — so the
+	   page keeps what it had: the header unblended, in the page's own text
+	   colour (white), the wordmark white with it. */
+	:global(html[data-theme='about']) .Header {
+		mix-blend-mode: normal;
 		color: var(--color-text);
 	}
 
@@ -591,13 +466,8 @@
 
 	.Header__cart {
 		right: var(--edge);
+		gap: 14px;
 		font-size: 12px;
-	}
-
-	/* Below 1060px the wrapper is not a box: nav and Cart place themselves, as
-	   they always did. */
-	.Header__right {
-		display: contents;
 	}
 
 	.Header__link {
@@ -635,83 +505,20 @@
 		}
 	}
 
-	/* PC (from 1060px, where the inline nav exists): the lockup is smaller and
-	   on the left margin; the nav and Cart are one group on the right margin
-	   (2026-10-31, at the user's request — "ロゴはPCではもっと小さく、左に配置。
-	   右にテキストリンク固めて"). The group ignores the pointer itself — the
-	   links take it once they are shown (see .is-compact below). */
+	/* PC (from 1060px, where the inline nav exists): a smaller lockup (2026-10-31,
+	   at the user's request), in the middle like everywhere else since
+	   2026-11-05 — the links are on its left, Account and Cart on its right.
+	   The bar is --header-bar-h (72px here, base.css) tall: the lockup and
+	   the link row are centred in it (the lockup 223px wide, 17px tall; the
+	   links 17.5px). The lockup was 170px by 19px for the 9:1 Apres Guerre
+	   mark; the new name is a 13:1 line, so it takes more width for less
+	   height. */
 	@media (min-width: 1060px) {
-		/* The bar is --header-bar-h (72px here, base.css) tall: the lockup and the
-		   link row are centred in it (the lockup 223px wide, 17px tall; the links
-		   17.5px). The lockup was 170px by 19px for the 9:1 Apres Guerre mark;
-		   the new name is a 13:1 line, so it takes more width for less height
-		   (2026-11-05). */
 		.Header {
 			--lockup-w: 223px;
 			--lockup-top: 28px;
 			--row-top: 27px;
-			--lockup-left: var(--edge);
-			--lockup-left-cq: var(--edge);
 		}
-
-		/* The bar: the page's background colour (white; /about's blue) with the
-		   site's border under it (2026-10-31, at the user's request — "PC
-		   Header背景色あり・border-bottom"; base.css --border-line, which
-		   replaced the 0.5px #999 first asked for). It exists in the compact
-		   state only: the home page's large wordmark at scroll 0 has none. */
-		.Header::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			box-sizing: border-box;
-			height: var(--header-bar-h);
-			background: var(--color-bg);
-			border-bottom: var(--border-line);
-			opacity: 0;
-			pointer-events: none;
-		}
-
-		.Header.is-compact::before {
-			opacity: 1;
-			pointer-events: auto;
-		}
-
-		.Header.is-ready::before {
-			transition: opacity 0.3s ease;
-		}
-
-		.Header__right {
-			position: absolute;
-			top: calc(var(--row-top) + var(--safe-top));
-			right: var(--edge);
-			display: flex;
-			align-items: center;
-			gap: 14px;
-			pointer-events: none;
-		}
-
-		.Header__nav,
-		.Header__cart {
-			position: relative;
-			top: auto;
-			left: auto;
-			right: auto;
-		}
-	}
-
-	.Header__cart-note {
-		position: absolute;
-		top: 100%;
-		right: 0;
-		margin: 8px 0 0;
-		padding: 6px 10px;
-		font-size: 11px;
-		line-height: 1.3;
-		white-space: nowrap;
-		background: var(--brand-blue);
-		color: #ffffff !important;
 	}
 
 	/* Everything but the wordmark only exists in the compact state. Faded
@@ -767,6 +574,11 @@
 		.Header {
 			--lockup-w: 211px;
 			--lockup-top: 19px;
+		}
+
+		/* The lockup spans most of the width; Cart alone fits beside it. */
+		.Header__account {
+			display: none;
 		}
 	}
 
@@ -826,6 +638,22 @@
 		.Header__toggle-icon.is-open .Header__toggle-bar:last-child {
 			transform: translateY(-3.5px) rotate(-45deg);
 		}
+	}
+
+	/* The "not yet" note under Account and Cart. Fixed rather than inside the
+	   header, which is blended with `difference` (see .Header). */
+	.CartNote {
+		position: fixed;
+		z-index: 1201;
+		top: calc(var(--header-bar-h) - 20px + env(safe-area-inset-top, 0px));
+		right: var(--padding);
+		margin: 0;
+		padding: 6px 10px;
+		font-size: 11px;
+		line-height: 1.3;
+		white-space: nowrap;
+		background: var(--brand-blue);
+		color: #ffffff !important;
 	}
 
 	/* ── Menu (below 1060px) ──

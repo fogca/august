@@ -319,7 +319,7 @@
 		.CartSummary {
 			height: 100%;
 			/* Single source for the gap the panel keeps above (below the
-			   Header's opaque compact bar, base.css --header-bar-h) and below
+			   Header's compact bar, base.css --header-bar-h) and below
 			   it, so top and bottom read as a matching pair. */
 			--cart-gap: 20px;
 			--cart-top-offset: calc(var(--header-bar-h) + var(--cart-gap));
