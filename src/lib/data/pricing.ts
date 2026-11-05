@@ -237,3 +237,21 @@ export function getFlatPackages(): FlatPackage[] {
 	}
 	return result;
 }
+
+// ── Checkout form encoding ───────────────────────────────────────────────────
+// An order can hold several typefaces (2026-11-05), each with its own styles,
+// so a selected style travels as "<packageId>:<style>" — the page writes it,
+// the checkout action reads it back (see $lib/server/checkout-order).
+
+export const STYLE_FIELD_SEPARATOR = ':';
+
+export function encodeStyleField(packageId: string, style: string): string {
+	return `${packageId}${STYLE_FIELD_SEPARATOR}${style}`;
+}
+
+/** A value without a separator is the pre-multi-typeface form: no package. */
+export function decodeStyleField(value: string): { packageId: string | null; style: string } {
+	const at = value.indexOf(STYLE_FIELD_SEPARATOR);
+	if (at < 0) return { packageId: null, style: value };
+	return { packageId: value.slice(0, at), style: value.slice(at + 1) };
+}

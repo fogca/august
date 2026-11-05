@@ -1,11 +1,18 @@
 <script lang="ts">
 	// Cart summary — read-only receipt of what Step 1 (About you) resolved,
-	// plus the selected typeface package(s). There is nothing to pick here
+	// plus the typeface(s) in the order, each with its styles and price. There is nothing to pick here
 	// any more: the licence is a consequence of the intake step's answers,
 	// not a free choice, so no tier dropdown — only an "Edit" link back to
 	// Step 1 for changing the answers themselves.
 	import { enhance } from '$app/forms';
-	import { formatPrice, getTierName, getTierScope, SCOPE_BLURB, PROJECT_LICENSE_LABEL } from '$lib/data/pricing';
+	import {
+		encodeStyleField,
+		formatPrice,
+		getTierName,
+		getTierScope,
+		SCOPE_BLURB,
+		PROJECT_LICENSE_LABEL
+	} from '$lib/data/pricing';
 	import type { PackageDef } from '$lib/data/pricing';
 	import type { CartItem, AppliedDiscount } from '$lib/data/discounts';
 	import type { IntakeMeta } from '$lib/components/Buy/LicenseIntake.svelte';
@@ -17,11 +24,10 @@
 		subtotal: number;
 		discounts: AppliedDiscount[];
 		total: number;
-		/** All selected packages (multi-package support). */
-		packageDefs: PackageDef[];
-		/** Step 3's selected style names — sent to checkout so the server prices
-		 *  and fulfils exactly what was picked, not just a tier. */
-		selectedStyles: string[];
+		/** The typefaces in the order, each with the style names picked for it —
+		 *  sent to checkout so the server prices and fulfils exactly what was
+		 *  picked, not just a tier. Same order as `items`. */
+		lines: { pkg: PackageDef; styles: string[] }[];
 		mobileExpanded?: boolean;
 		onMobileToggle?: () => void;
 		/** Render as an always-open in-flow block (no collapsing sticky bar). */
@@ -38,8 +44,7 @@
 		subtotal,
 		discounts,
 		total,
-		packageDefs,
-		selectedStyles,
+		lines,
 		mobileExpanded = false,
 		onMobileToggle,
 		inline = false,
@@ -67,9 +72,9 @@
 		return SCOPE_BLURB[getTierScope(item.tierIndex)];
 	}
 
-	/** Sum of charged (post-package) prices across selected packages. */
-	function licensePrice(): number {
-		return items.reduce((s, i) => s + i.basePrice, 0);
+	/** One typeface's charged (post-package) price. */
+	function linePrice(packageId: string): number {
+		return items.find((i) => i.packageId === packageId)?.basePrice ?? 0;
 	}
 
 	function editStep1() {
@@ -126,7 +131,6 @@
 						<li class="CartSummary__licence">
 							<div class="CartSummary__licence-main">
 								<span class="CartSummary__licence-type">{licenseName(activeItem)}</span>
-								<span class="CartSummary__licence-price">{formatPrice(licensePrice())}</span>
 								<button type="button" class="CartSummary__edit" onclick={editStep1}>Edit</button>
 							</div>
 							{#if intakeMeta.licenseeName}
@@ -143,15 +147,18 @@
 				</section>
 			{/if}
 
-			<!-- Fonts section — list all selected packages -->
-			{#if packageDefs.length > 0}
+			<!-- Fonts section — each typeface with its styles and its own price -->
+			{#if lines.length > 0}
 				<section class="CartSummary__section">
 					<h3 class="CartSummary__heading">Fonts</h3>
 					<ul class="CartSummary__packages">
-						{#each packageDefs as pkg (pkg.id)}
+						{#each lines as line (line.pkg.id)}
 							<li class="CartSummary__package-row">
-								<span class="CartSummary__package-name">{pkg.label}</span>
-								<span class="CartSummary__package-detail">{pkg.detail}</span>
+								<span class="CartSummary__package-name">{line.pkg.label}</span>
+								<span class="CartSummary__package-detail"
+									>{line.styles.length} {line.styles.length === 1 ? 'style' : 'styles'}</span
+								>
+								<span class="CartSummary__licence-price">{formatPrice(linePrice(line.pkg.id))}</span>
 							</li>
 						{/each}
 					</ul>
@@ -199,18 +206,21 @@
 			>
 				<input type="hidden" name="educational" value={isStudent ? '1' : '0'} />
 				<input type="hidden" name="licensee_name" value={intakeMeta.licenseeName} />
-				{#each packageDefs as pkg}
-					<input type="hidden" name="package_id" value={pkg.id} />
-				{/each}
 				{#each items as item}
 					<input type="hidden" name="item_kind" value={item.kind} />
 					<input type="hidden" name="item_tier" value={item.tierIndex ?? ''} />
 					<input type="hidden" name="item_price" value={item.basePrice} />
 					<input type="hidden" name="item_package" value={item.packageId} />
 				{/each}
-				{#each selectedStyles as style}
-					<input type="hidden" name="selected_style" value={style} />
-				{/each}
+				{#each lines as line (line.pkg.id)}
+						{#each line.styles as style (style)}
+							<input
+								type="hidden"
+								name="selected_style"
+								value={encodeStyleField(line.pkg.id, style)}
+							/>
+						{/each}
+					{/each}
 				<button type="submit" class="CartSummary__checkout-btn" disabled={submitting}>
 					{submitting ? 'Redirecting…' : 'Checkout'}
 				</button>
@@ -414,6 +424,7 @@
 
 	.CartSummary__edit {
 		flex-shrink: 0;
+		margin-left: auto;
 		background: transparent;
 		border: 0;
 		font: inherit;

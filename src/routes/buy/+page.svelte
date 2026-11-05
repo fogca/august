@@ -4,7 +4,10 @@
 	// (see fonts/[slug]/+page.svelte's Buy CTA), so the typeface itself is
 	// never chosen here -- it arrives pre-decided from wherever the buyer
 	// was actually convinced (specimens, glyph set, weights). Three-step
-	// flow -- About you → Select styles -- with a running order summary.
+	// flow -- About you → Select styles → Add another typeface -- with a
+	// running order summary. The last step lets the same order take further
+	// typefaces (2026-11-05): the licence from Step 1 covers all of them, and
+	// each has its own styles.
 	// The intake step comes first on purpose: rather than a free-browse
 	// tier picker showing every tier's price side by side, it asks who the
 	// licence is for and resolves the one tier whose per-style rate
@@ -12,10 +15,8 @@
 	// The actual total is tier × selected style count (see
 	// $lib/data/pricing's computeEur), so it isn't known until Select
 	// styles has a selection either -- this page is what joins the two.
-	// No fallback picker yet for a cold /buy visit (no ?font) -- see the
-	// August/Marketing session's 2026-08-29 note for the planned Phase 2
-	// (multi-typeface picker once Alfred/Ango go on sale); today there's
-	// only one real product, so falling back to it is enough.
+	// A cold /buy visit (no ?font) falls back to the first purchasable
+	// typeface -- today there's only one real product, so that is enough.
 
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -25,8 +26,10 @@
 		getPrice,
 		getGrossPrice,
 		formatPrice,
-		type FlatPackage
+		type FlatPackage,
+		type PackageDef
 	} from '$lib/data/pricing';
+	import { TYPEFACES as CATALOGUE, getTypeface } from '$lib/data/typefaces';
 	import type { CartItem } from '$lib/data/discounts';
 	import { computeTotal, EDUCATIONAL_ACTIVE } from '$lib/data/discounts';
 
@@ -55,7 +58,8 @@
 		intakeMeta = meta;
 	}
 
-	// ── Typeface (from the URL, not chosen on this page) ──────────
+	// ── Typefaces ─────────────────────────────────────────────
+	// The first arrives from the URL; Step 3 adds more to the same order.
 
 	const TYPEFACES: FlatPackage[] = getFlatPackages();
 	// ?font=<TypefaceSlug> from the referring font page; falls back to the
@@ -66,6 +70,27 @@
 		TYPEFACES.find((p) => p.typefaceSlug === fontSlug) ?? TYPEFACES[0] ?? null
 	);
 
+	// Step 3: what else can join the order -- every other typeface on sale and
+	// listed on the site (a hidden one is unannounced, so never offered here)...
+	const addablePackages = $derived(
+		TYPEFACES.filter((p) => p.id !== selectedPackage?.id && !getTypeface(p.typefaceSlug)?.hidden)
+	);
+	// ...and, shown but not yet selectable, the listed ones still in development.
+	const upcomingTypefaces = $derived(
+		CATALOGUE.filter(
+			(tf) =>
+				!tf.hidden &&
+				tf.slug !== selectedPackage?.typefaceSlug &&
+				!TYPEFACES.some((p) => p.typefaceSlug === tf.slug)
+		)
+	);
+	const hasMoreTypefaces = $derived(addablePackages.length + upcomingTypefaces.length > 0);
+
+	let addedIds = $state<string[]>([]);
+	// Catalogue order, not the order they were added in.
+	const addedPackages = $derived(addablePackages.filter((p) => addedIds.includes(p.id)));
+	const orderPackages = $derived(selectedPackage ? [selectedPackage, ...addedPackages] : []);
+
 	// ── Select styles ────────────────────────────────────
 	// Pricing is per-style (see $lib/data/pricing's computeEur): the tier
 	// resolved in Step 1 sets a rate per style, and how many are selected
@@ -73,24 +98,30 @@
 	// (Complete Collection) earns a 50% discount off that rate; a
 	// hand-picked subset (Individual) pays it straight — same total price
 	// either way buys either the full 20 or half that count, on purpose.
+	// Each typeface in the order keeps its own selection.
 
 	// Starts empty, not "all" — Select styles is the buyer's own choice, not
 	// a pre-made one they have to notice and undo. Complete Collection is
 	// one click away for anyone who does want everything.
-	let selectedWeights = $state<Set<string>>(new Set());
+	let selection = $state<Record<string, Set<string>>>({});
 
-	// Switching typeface (once there is more than one) resets to empty for
-	// the newly selected package rather than carrying over a stale Set.
+	// Switching the first typeface starts the order over, rather than
+	// carrying over stale selections.
 	$effect(() => {
 		selectedPackage;
-		selectedWeights = new Set();
+		selection = {};
+		addedIds = [];
 	});
 
-	function toggleWeight(name: string) {
-		const next = new Set(selectedWeights);
+	function stylesOf(packageId: string): Set<string> {
+		return selection[packageId] ?? new Set<string>();
+	}
+
+	function toggleWeight(packageId: string, name: string) {
+		const next = new Set(stylesOf(packageId));
 		if (next.has(name)) next.delete(name);
 		else next.add(name);
-		selectedWeights = next;
+		selection = { ...selection, [packageId]: next };
 	}
 
 	function setsEqual(a: Set<string>, b: Set<string>): boolean {
@@ -104,34 +135,46 @@
 	// full set, so a hand edit in the grid below honestly drops the
 	// highlight instead of keeping a stale claim (see toggleComplete for why
 	// that's a derived read, never a stored flag that could force a clear).
-	const completeSet = $derived(new Set(selectedPackage?.styles ?? []));
-	const isCompleteActive = $derived(
-		completeSet.size > 0 && setsEqual(selectedWeights, completeSet)
-	);
+	function isCompleteActive(pkg: PackageDef): boolean {
+		const all = new Set(pkg.styles ?? []);
+		return all.size > 0 && setsEqual(stylesOf(pkg.id), all);
+	}
 
 	// A master toggle, not a one-way "select all": clicking while every
 	// style is already selected clears to zero; clicking from any other
 	// state (empty, a hand-picked subset, or a set that only used to be
 	// complete before an individual deselect dropped it) selects every
-	// style. isCompleteActive is purely derived from selectedWeights, so a
+	// style. isCompleteActive is purely derived from the selection, so a
 	// single deselect elsewhere never has to separately "remember" to also
 	// zero this out -- it already isn't the source of truth for the count.
-	function toggleComplete() {
-		selectedWeights = isCompleteActive ? new Set() : new Set(completeSet);
+	function toggleComplete(pkg: PackageDef) {
+		selection = {
+			...selection,
+			[pkg.id]: isCompleteActive(pkg) ? new Set() : new Set(pkg.styles ?? [])
+		};
 	}
 
 	// Complete Collection's price — null until Step 1 has resolved a tier
 	// (no rate to price against yet).
-	const completePrice = $derived(
-		resolvedTierIndex !== null && selectedPackage
-			? getPrice(selectedPackage, resolvedTierIndex, completeSet.size)
-			: null
-	);
-	const completeGross = $derived(
-		resolvedTierIndex !== null && selectedPackage
-			? getGrossPrice(selectedPackage, resolvedTierIndex, completeSet.size)
-			: null
-	);
+	function completePrice(pkg: PackageDef) {
+		return resolvedTierIndex !== null
+			? getPrice(pkg, resolvedTierIndex, pkg.styles?.length ?? 0)
+			: null;
+	}
+	function completeGross(pkg: PackageDef) {
+		return resolvedTierIndex !== null
+			? getGrossPrice(pkg, resolvedTierIndex, pkg.styles?.length ?? 0)
+			: null;
+	}
+
+	function addTypeface(packageId: string) {
+		addedIds = [...addedIds, packageId];
+	}
+
+	function removeTypeface(packageId: string) {
+		addedIds = addedIds.filter((id) => id !== packageId);
+		selection = Object.fromEntries(Object.entries(selection).filter(([id]) => id !== packageId));
+	}
 
 	// ── State ──────────────────────────────────────────────
 
@@ -161,23 +204,32 @@
 
 	// ── Computed ────────────────────────────────────────────
 
-	// Joins Step 1's resolved tier with Step 3's selected style count — the
-	// actual chargeable total isn't known until both exist, so this is where
-	// the real CartItem gets priced (see $lib/data/pricing's computeEur).
+	// The typefaces that actually have styles picked -- the order's lines.
+	const orderLines = $derived(
+		orderPackages
+			.map((pkg) => ({ pkg, styles: [...stylesOf(pkg.id)] }))
+			.filter((line) => line.styles.length > 0)
+	);
+
+	// Joins Step 1's resolved tier with each typeface's selected style count —
+	// the actual chargeable total isn't known until both exist, so this is
+	// where the real CartItems get priced (see $lib/data/pricing's computeEur).
 	const cartItems = $derived.by<CartItem[]>(() => {
-		if (resolvedTierIndex === null || !selectedPackage || selectedWeights.size === 0) return [];
-		const price = getPrice(selectedPackage, resolvedTierIndex, selectedWeights.size);
-		const gross = getGrossPrice(selectedPackage, resolvedTierIndex, selectedWeights.size);
-		if (price === null || gross === null) return [];
-		return [
-			{
+		if (resolvedTierIndex === null) return [];
+		const items: CartItem[] = [];
+		for (const { pkg, styles } of orderLines) {
+			const price = getPrice(pkg, resolvedTierIndex, styles.length);
+			const gross = getGrossPrice(pkg, resolvedTierIndex, styles.length);
+			if (price === null || gross === null) return [];
+			items.push({
 				kind: 'tier',
 				tierIndex: resolvedTierIndex,
 				basePrice: price,
 				grossPrice: gross,
-				packageId: selectedPackage.id
-			}
-		];
+				packageId: pkg.id
+			});
+		}
+		return items;
 	});
 
 	const hasLicense = $derived(cartItems.length > 0);
@@ -185,8 +237,8 @@
 	const cartState = $derived({
 		items: cartItems,
 		isStudent,
-		packageDef: selectedPackage,
-		packageDefs: selectedPackage ? [selectedPackage] : []
+		packageDef: orderLines[0]?.pkg ?? null,
+		packageDefs: orderLines.map((line) => line.pkg)
 	});
 
 	const { subtotal, discounts, total } = $derived(computeTotal(cartState));
@@ -212,6 +264,51 @@
 		<meta name="description" content="Licences go on sale soon." />
 	{/if}
 </svelte:head>
+
+<!-- Select styles for one typeface: the Complete Collection card over the
+     style grid (informational: Complete always ships every weight shown here
+     at one price — this just lets a buyer mark the ones they'll reach for
+     first). The card is the same round-radio card as Typeface selection,
+     formatted identically to it: name, "N weights" detail, price at the right
+     (struck-through gross → the discounted final, once Step 1 has resolved a
+     rate). -->
+{#snippet stylePanel(pkg: PackageDef)}
+	{@const active = isCompleteActive(pkg)}
+	{@const price = completePrice(pkg)}
+	{@const gross = completeGross(pkg)}
+	<div class="WeightPanel">
+		<button
+			type="button"
+			class="WeightPanel__collection"
+			class:is-active={active}
+			onclick={() => toggleComplete(pkg)}
+			aria-pressed={active}
+		>
+			<span class="TypefaceCard__radio" aria-hidden="true">
+				{#if active}<span class="TypefaceCard__dot"></span>{/if}
+			</span>
+			<span class="TypefaceCard__body">
+				<span class="TypefaceCard__name">Complete Collection</span>
+				<span class="TypefaceCard__detail">{pkg.styles?.length ?? 0} weights</span>
+			</span>
+			{#if price !== null}
+				<span class="TypefaceCard__price">
+					{#if gross !== null && gross > price}
+						<span class="TypefaceCard__price-gross">{formatPrice(gross)}</span>
+					{/if}
+					<span class="TypefaceCard__price-final">{formatPrice(price)}</span>
+				</span>
+			{/if}
+		</button>
+
+		<StyleList
+			{pkg}
+			selectable
+			selected={stylesOf(pkg.id)}
+			onToggle={(name) => toggleWeight(pkg.id, name)}
+		/>
+	</div>
+{/snippet}
 
 <main class="BuyPage">
 	<!-- Figma node 3:671 long-form layout (PageSection `full`): the typeface's
@@ -248,51 +345,52 @@
 			     the referring font page's ?font= — see the script header
 			     comment.) -->
 					{#if resolvedTierIndex !== null}
-						<!-- Select styles (informational: Complete always ships every
-				     weight shown here at one price — this just lets a buyer mark the
-				     ones they'll reach for first). -->
+						<!-- Select styles: one panel per typeface in the order. -->
 						{#if selectedPackage?.styles?.length}
 							<div class="BuyStep">
 								<p class="BuyStep__eyebrow">2 — Select styles</p>
-								<div class="WeightPanel">
-									<!-- Complete Collection — same round-radio card as Typeface
-							     selection, formatted identically to it: name, "N weights"
-							     detail, price at the right (struck-through gross → the
-							     discounted final, once Step 1 has resolved a rate). -->
-									<button
-										type="button"
-										class="WeightPanel__collection"
-										class:is-active={isCompleteActive}
-										onclick={toggleComplete}
-										aria-pressed={isCompleteActive}
-									>
-										<span class="TypefaceCard__radio" aria-hidden="true">
-											{#if isCompleteActive}<span class="TypefaceCard__dot"></span>{/if}
-										</span>
-										<span class="TypefaceCard__body">
-											<span class="TypefaceCard__name">Complete Collection</span>
-											<span class="TypefaceCard__detail"
-												>{selectedPackage.styles.length} weights</span
-											>
-										</span>
-										{#if completePrice !== null}
-											<span class="TypefaceCard__price">
-												{#if completeGross !== null && completeGross > completePrice}
-													<span class="TypefaceCard__price-gross">{formatPrice(completeGross)}</span
-													>
-												{/if}
-												<span class="TypefaceCard__price-final">{formatPrice(completePrice)}</span>
-											</span>
-										{/if}
-									</button>
+								{@render stylePanel(selectedPackage)}
+							</div>
+						{/if}
 
-									<StyleList
-										pkg={selectedPackage}
-										selectable
-										selected={selectedWeights}
-										onToggle={toggleWeight}
-									/>
-								</div>
+						<!-- Step 3 — other typefaces to put in the same order. The licence
+				     from Step 1 covers them, so this only asks which, and how many
+				     styles of each. -->
+						{#if hasMoreTypefaces}
+							<div class="BuyStep" id="step-3">
+								<p class="BuyStep__eyebrow">3 — Add another typeface</p>
+								<ul class="MoreTypefaces">
+									{#each addablePackages as pkg (pkg.id)}
+										{@const added = addedIds.includes(pkg.id)}
+										<li class="MoreTypefaces__item" class:is-added={added}>
+											<div class="MoreTypefaces__row">
+												<span class="MoreTypefaces__name"
+													>{getTypeface(pkg.typefaceSlug)?.name ?? pkg.label}</span
+												>
+												<span class="MoreTypefaces__detail">{pkg.detail}</span>
+												<button
+													type="button"
+													class="MoreTypefaces__action"
+													onclick={() => (added ? removeTypeface(pkg.id) : addTypeface(pkg.id))}
+													aria-expanded={added}
+												>
+													{added ? 'Remove' : 'Add'}
+												</button>
+											</div>
+											{#if added}
+												{@render stylePanel(pkg)}
+											{/if}
+										</li>
+									{/each}
+									{#each upcomingTypefaces as tf (tf.slug)}
+										<li class="MoreTypefaces__item is-soon">
+											<div class="MoreTypefaces__row">
+												<span class="MoreTypefaces__name">{tf.name}</span>
+												<span class="MoreTypefaces__detail">Coming soon</span>
+											</div>
+										</li>
+									{/each}
+								</ul>
 							</div>
 						{/if}
 
@@ -320,8 +418,7 @@
 						{subtotal}
 						{discounts}
 						{total}
-						packageDefs={hasLicense && selectedPackage ? [selectedPackage] : []}
-						selectedStyles={hasLicense ? [...selectedWeights] : []}
+						lines={hasLicense ? orderLines : []}
 						errorMessage={form?.message ?? null}
 					/>
 				</div>
@@ -525,6 +622,73 @@
 	   also stack .TypefaceCard__detail's own opacity on top of that. */
 	.WeightPanel__collection .TypefaceCard__detail {
 		opacity: 1;
+	}
+
+	/* ── Step 3: another typeface ── a plain list in the style panel's own
+	   border language: name, detail, one action at the right. An added
+	   typeface opens its own style panel under its row, inside the same card
+	   (so the card's border does for both). Ones still in development are
+	   listed but muted, with no action. */
+	.MoreTypefaces {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		max-width: 480px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.MoreTypefaces__item {
+		background: var(--color-bg);
+		color: var(--color-text);
+		border: var(--border-line);
+	}
+
+	.MoreTypefaces__item.is-soon {
+		opacity: 0.5;
+	}
+
+	.MoreTypefaces__row {
+		display: flex;
+		align-items: baseline;
+		gap: 12px;
+		padding: 16px var(--padding);
+		font-family: 'Norma', sans-serif;
+	}
+
+	.MoreTypefaces__name {
+		font-size: 20px;
+		font-weight: var(--fw-strong);
+		line-height: 1.1;
+		color: inherit;
+	}
+
+	.MoreTypefaces__detail {
+		flex: 1;
+		min-width: 0;
+		font-size: 11px;
+		color: var(--color-text-mute);
+	}
+
+	.MoreTypefaces__action {
+		flex-shrink: 0;
+		background: transparent;
+		border: 0;
+		padding: 0 4px;
+		font: inherit;
+		font-size: 12px;
+		color: var(--color-text);
+		text-decoration: underline;
+		text-underline-offset: 2px;
+		cursor: pointer;
+	}
+
+	.MoreTypefaces__item .WeightPanel {
+		max-width: none;
+		border: 0;
+		border-top: var(--border-line);
 	}
 
 	/* ── Educational option ── */

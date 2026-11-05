@@ -1,8 +1,9 @@
 <!-- Typeface page. Top of the page redone 2026-10-30, at the user's request, after
      Kontrapunkt Type's typeface pages (type.kontrapunkt.com): the name, with
      the "APGR" prefix dropped, as wide as the page; a rule; then the spec lines
-     (two columns) and the description (the wider column); a fixed pill at the
-     bottom of the screen. The colour band with the classification headline
+     (two columns) and the description (the wider column); a Buy pill fixed at
+     the bottom of the screen (centred on SP, bottom right on PC — Klim's "Buy
+     fonts" made a fixture, 2026-11-05) that opens that typeface's purchase. The colour band with the classification headline
      that stood here (Figma node 12:127, "ogast", file UEy0lKKtgP8jN4x2DWZUOB)
      is gone — the classification is a spec line now. What follows (the
      gallery, Type Tester, weights …) is unchanged. A placeholder (Maxica, Quad
@@ -20,6 +21,7 @@
      slots when it exists. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
 	import { dragScroll } from '$lib/actions/dragScroll';
 	import { fitText } from '$lib/actions/fitText';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
@@ -65,11 +67,16 @@
 	// Use $derived so these stay reactive if data changes on navigation
 	const tf = $derived(data.typeface);
 	const isAvailable = $derived(tf.status === 'available');
+	// What /buy can sell of it: a package in the pricing table. Both must hold —
+	// a typeface still in development never gets a way to pay, even if a price
+	// has been drawn up for it.
+	const buyPackage = $derived(getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`));
+	const canBuy = $derived(isAvailable && buyPackage !== undefined);
+	// The purchase opens on this typeface (/buy?font=<slug>).
+	const buyHref = $derived(`${resolve('/buy')}?font=${tf.slug}`);
 	// Same "from" price as the /fonts catalogue's own fromPrice() — the
 	// Individual tier's per-style rate, not the full-collection price.
-	const fromPriceEur = $derived(
-		getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`)?.baseEur ?? null
-	);
+	const fromPriceEur = $derived(buyPackage?.baseEur ?? null);
 	// Humorist (Ango) only has 52 letters and no OpenType features drawn yet —
 	// Glyph set / Beyond A-Z / OpenType below are swapped for a plain
 	// sample-text block on its page (see the {#if isHumorist} further down).
@@ -128,18 +135,6 @@
 		return d;
 	});
 
-	// The fixed pill hands over to the buy block at the foot of the page once
-	// that is on screen, so the two are never seen together.
-	let buyEl: HTMLElement | undefined = $state();
-	let buyInView = $state(false);
-
-	onMount(() => {
-		if (!buyEl || typeof IntersectionObserver === 'undefined') return;
-		const io = new IntersectionObserver(([entry]) => (buyInView = entry.isIntersecting));
-		io.observe(buyEl);
-		return () => io.disconnect();
-	});
-
 	// Every visible typeface defines homeSection today; the fallback keeps a
 	// typeface without one rendering sensibly rather than throwing.
 	const hero = $derived(
@@ -172,17 +167,6 @@
 		]
 	);
 	const firstImageIndex = $derived(galleryItems.findIndex((g) => g.kind === 'image'));
-
-	// Checkout isn't open yet (2026-09, at the user's request — same "10月
-	// より使用開始" note as the Header's Cart). Purchase License stays a
-	// clickable button rather than a live link to /buy until then.
-	let buyNoteVisible = $state(false);
-	let buyNoteTimer: ReturnType<typeof setTimeout> | undefined;
-	function showBuyNote() {
-		buyNoteVisible = true;
-		clearTimeout(buyNoteTimer);
-		buyNoteTimer = setTimeout(() => (buyNoteVisible = false), 3200);
-	}
 </script>
 
 <svelte:head>
@@ -468,20 +452,17 @@
 	{/if}
 
 	<!-- On-page buy block -->
-	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}" bind:this={buyEl}>
+	<section class="FontBuy" id="buy" aria-label="Buy {tf.name}">
 		<div class="FontBuy__inner">
-			{#if isAvailable}
+			{#if canBuy}
 				<p class="FontBuy__eyebrow">License</p>
 				<h2 class="FontBuy__heading">{tf.name}</h2>
 				<p class="FontBuy__price">
 					{fromPriceEur !== null ? `From €${fromPriceEur}` : 'Price on request'} · pay once, every license
 					included
 				</p>
-				<button type="button" class="FontBuy__cta" onclick={showBuyNote}>Purchase License →</button
-				>
-				<p class="FontBuy__note">
-					{buyNoteVisible ? 'Available from October.' : '20 weights — Hairline to Ultra.'}
-				</p>
+				<a class="FontBuy__cta" href={buyHref}>Purchase License →</a>
+				<p class="FontBuy__note">{buyPackage?.detail}</p>
 			{:else}
 				<p class="FontBuy__eyebrow">Coming Soon</p>
 				<h2 class="FontBuy__heading">{tf.name}</h2>
@@ -491,16 +472,11 @@
 		</div>
 	</section>
 
-	<!-- Fixed at the foot of the screen, centred (Kontrapunkt Type's "Buy KP Duo
-	     Sans"); it steps aside once the buy block itself is in view. -->
-	<a
-		class="FontPill"
-		class:is-hidden={buyInView}
-		href="#buy"
-		aria-hidden={buyInView}
-		tabindex={buyInView ? -1 : undefined}
-	>
-		{isAvailable ? `Buy ${tf.name}` : 'Coming soon'}
+	<!-- Always on screen, fixed at the foot: centred on SP, bottom right on PC.
+	     It opens the purchase (a typeface still in development has none, so its
+	     pill points to the "Coming soon" block above instead). -->
+	<a class="FontPill" href={canBuy ? buyHref : '#buy'}>
+		{canBuy ? `Buy ${tf.name}` : 'Coming soon'}
 	</a>
 </main>
 
@@ -689,17 +665,36 @@
 		border-radius: 999px;
 		background: #000;
 		color: #fff;
+		/* A hairline in the page's own light, so the pill still reads on a black
+		   panel (it is always on screen, over every ground the page has). */
+		box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
 		font-size: 16px;
 		line-height: 1.2;
 		letter-spacing: 0;
 		white-space: nowrap;
 		text-decoration: none;
-		transition: opacity 0.25s ease;
+		transition: opacity 0.15s ease;
 	}
 
-	.FontPill.is-hidden {
-		opacity: 0;
-		pointer-events: none;
+	.FontPill:hover {
+		opacity: 0.85;
+	}
+
+	/* The pill is always on screen, so at the very end of the page it would sit on
+	   the footer's copyright line: the footer gets a clear strip below (the
+	   pill's 20px offset + its ~36px height + a gap, on top of the footer's
+	   own 24px). Keyed on the pill's presence, so no other page is touched. */
+	:global(body:has(.FontPill) .Footer) {
+		padding-bottom: calc(24px + 56px + env(safe-area-inset-bottom, 0px));
+	}
+
+	/* PC: bottom right, on the page's own side margin. */
+	@media (min-width: 768px) {
+		.FontPill {
+			left: auto;
+			right: var(--padding);
+			transform: none;
+		}
 	}
 
 	/* ── Gallery — one strip of tiles and pictures, scrolling sideways ── */
