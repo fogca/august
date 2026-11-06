@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { checkoutFeatureParams, isCheckoutOpen, priceTaxBehavior } from './stripe-options';
+import {
+	checkoutFeatureParams,
+	isCheckoutOpen,
+	isLiveStripeKey,
+	priceTaxBehavior
+} from './stripe-options';
 
 describe('checkoutFeatureParams', () => {
 	it('adds nothing when every flag is off (the default)', () => {
@@ -60,5 +65,16 @@ describe('isCheckoutOpen', () => {
 
 	it('is always open in local dev, even with no key (the dev stub)', () => {
 		expect(isCheckoutOpen({}, true)).toBe(true);
+	});
+});
+
+describe('isLiveStripeKey', () => {
+	it('is live for a live or restricted-live key, not for test keys or no key', () => {
+		expect(isLiveStripeKey({ STRIPE_SECRET_KEY: 'sk_live_abc' })).toBe(true);
+		expect(isLiveStripeKey({ STRIPE_SECRET_KEY: 'rk_live_abc' })).toBe(true);
+		expect(isLiveStripeKey({ STRIPE_SECRET_KEY: ' sk_test_abc ' })).toBe(false);
+		expect(isLiveStripeKey({ STRIPE_SECRET_KEY: 'rk_test_abc' })).toBe(false);
+		expect(isLiveStripeKey({ STRIPE_SECRET_KEY: '' })).toBe(false);
+		expect(isLiveStripeKey({})).toBe(false);
 	});
 });

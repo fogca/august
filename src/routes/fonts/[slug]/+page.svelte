@@ -71,7 +71,7 @@
 	// a typeface still in development never gets a way to pay, even if a price
 	// has been drawn up for it.
 	const buyPackage = $derived(getPackage(tf.slug as TypefaceSlug, `${tf.slug}-complete`));
-	const canBuy = $derived(isAvailable && buyPackage !== undefined);
+	const canBuy = $derived((isAvailable || buyPackage?.preview === true) && buyPackage !== undefined);
 	// The purchase opens on this typeface (/buy?font=<slug>).
 	const buyHref = $derived(`${resolve('/buy')}?font=${tf.slug}`);
 	// Same "from" price as the /fonts catalogue's own fromPrice() — the
@@ -466,8 +466,10 @@
 				<p class="FontBuy__eyebrow">License</p>
 				<h2 class="FontBuy__heading">{tf.name}</h2>
 				<p class="FontBuy__price">
-					{fromPriceEur !== null ? `From €${fromPriceEur}` : 'Price on request'} · pay once, every license
-					included
+					{fromPriceEur !== null ? `From €${fromPriceEur}` : 'Price on request'}{buyPackage?.licensing ===
+					'toppings'
+						? ' a style · pay once, every update yours for good'
+						: ' · pay once, every license included'}
 				</p>
 				<a class="FontBuy__cta" href={buyHref}>Purchase License →</a>
 				<p class="FontBuy__note">{stageNote ?? buyPackage?.detail}</p>

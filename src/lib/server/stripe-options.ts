@@ -33,6 +33,17 @@ export function isCheckoutOpen(env: StripeFeatureEnv, dev: boolean): boolean {
 	return dev || Boolean(env.STRIPE_SECRET_KEY?.trim());
 }
 
+/**
+ * Whether the configured Stripe key would take REAL money: any key that is not
+ * a test key (`sk_test_…`, `rk_test_…`). A typeface shown for review before the
+ * sale opens (PackageDef.preview) can only be checked out with a test key — so
+ * the review can't turn into a sale, whatever the deployment's key is.
+ */
+export function isLiveStripeKey(env: StripeFeatureEnv): boolean {
+	const key = env.STRIPE_SECRET_KEY?.trim();
+	return Boolean(key) && !/^[sr]k_test_/.test(key as string);
+}
+
 /** Shop prices are shown tax-included (Legal Notice: "tax included"). */
 const PRICE_TAX_BEHAVIOR = 'inclusive' as const;
 

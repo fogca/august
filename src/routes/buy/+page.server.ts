@@ -21,6 +21,7 @@ import { getTierLabel } from '$lib/data/pricing';
 import {
 	checkoutFeatureParams,
 	isCheckoutOpen,
+	isLiveStripeKey,
 	priceTaxBehavior
 } from '$lib/server/stripe-options';
 
@@ -31,9 +32,14 @@ function toStripeAmount(amount: number): number {
 
 // Closed until a Stripe key is configured (see isCheckoutOpen): the page then
 // shows COMING SOON rather than a flow that could only end in a 503 at checkout.
+// previewLocked: the key would take real money, so a typeface shown for review
+// (PackageDef.preview) can't be checked out here — see PREVIEW_MESSAGE.
 export const load: PageServerLoad = () => ({
-	checkoutOpen: isCheckoutOpen(env, dev)
+	checkoutOpen: isCheckoutOpen(env, dev),
+	previewLocked: isLiveStripeKey(env)
 });
+
+const PREVIEW_MESSAGE = 'This typeface is shown for review — checkout opens when the sale does.';
 
 export const actions: Actions = {
 	checkout: async ({ request, url }) => {
@@ -41,6 +47,11 @@ export const actions: Actions = {
 		const built = buildOrder(await request.formData());
 		if (!built.ok) return fail(built.status, { message: built.message });
 		const { order } = built;
+
+		// A typeface shown for review can't be paid for with a live key.
+		if (order.lines.some((line) => line.pkg.preview) && isLiveStripeKey(env)) {
+			return fail(403, { message: PREVIEW_MESSAGE });
+		}
 
 		// ── Stripe Checkout Session ────────────────────────────
 		const secretKey = env.STRIPE_SECRET_KEY;

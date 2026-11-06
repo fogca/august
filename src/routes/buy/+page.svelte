@@ -354,6 +354,11 @@
 
 	const { subtotal, discounts, total } = $derived(computeTotal(cartState));
 
+	// A typeface shown for review, on a deployment whose Stripe key is live: the
+	// whole flow is there to look at, the payment is not (the server says no too).
+	const isPreview = $derived(orderPackages.some((pkg) => pkg.preview));
+	const checkoutLocked = $derived(isPreview && data.previewLocked);
+
 	// Headline is just the typeface name — the buyer already arrived to buy
 	// this one specifically, so no tagline framing it needs restating here.
 	const heroHeading = $derived(selectedPackage ? selectedPackage.label : 'Buy');
@@ -458,6 +463,15 @@
 							>
 							— not finished yet, so the price is lower; it rises as the family is completed. Your licence
 							includes every update to it, for good.
+						</p>
+					{/if}
+					{#if isPreview}
+						<!-- Shown for review before the sale opens. -->
+						<p class="BuyStage BuyStage--preview" role="note">
+							<strong>Preview</strong> — this typeface is shown for review before the sale opens.
+							Prices and wording are not final{data.previewLocked
+								? ', and checkout is closed'
+								: ''}.
 						</p>
 					{/if}
 					<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
@@ -573,6 +587,7 @@
 						brands={hasLicense ? brandSummary : []}
 						{brandsJson}
 						subcontractors={hasLicense ? subcontractors : 0}
+						{checkoutLocked}
 						errorMessage={form?.message ?? null}
 					/>
 				</div>
@@ -639,6 +654,10 @@
 		font-size: 13px;
 		line-height: 1.5;
 		color: var(--color-text);
+	}
+
+	.BuyStage--preview {
+		margin-top: -16px;
 	}
 
 	/* ── Steps (shared) ── */

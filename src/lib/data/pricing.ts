@@ -92,7 +92,7 @@ export function isEnterpriseTier(tierIndex: number): boolean {
 
 // ── Package definitions ──────────────────────────────────────────────────────
 
-export type TypefaceSlug = 'norma' | 'apgr-quad-sans';
+export type TypefaceSlug = 'norma' | 'apgr-quad-sans' | 'apgr-humorist';
 
 export interface PackageDef {
 	id: string;
@@ -129,12 +129,19 @@ export interface PackageDef {
 	// book. 'toppings': the licence is for ordinary design work (desktop,
 	// print); a brand's logo, web, social … are bought per brand and style.
 	licensing?: 'bundled' | 'toppings';
+	// Shown for review before the sale opens (the domain isn't public yet): the
+	// pages and the purchase screens work, but checkout only goes through with a
+	// Stripe TEST key. Take this off to open the sale.
+	preview?: boolean;
 }
 
 export interface TypefacePricing {
 	slug: TypefaceSlug;
 	packages: PackageDef[];
 }
+
+/** An italic style's name is its upright's plus this ("40" → "40i"). */
+export const ITALIC_SUFFIX = 'i';
 
 // Norma ships 20 numeric weights (name × 10 = wght; 40 = Book, 95 = Ultra),
 // upright only — a single weight axis from Hairline to Ultra.
@@ -178,8 +185,35 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 				baseEur: 30
 			}
 		]
+	},
+	{
+		// Humorist, for review (2026-11-06): early access, sold with toppings. The
+		// nine weights drawn so far, each upright and italic; the italics are
+		// promised, not drawn. The final family is ten weights (20 styles) —
+		// styles gets its tenth when its name is settled.
+		slug: 'apgr-humorist',
+		packages: [
+			{
+				id: 'apgr-humorist-complete',
+				label: 'APGR Humorist',
+				detail: '9 weights, upright and italic',
+				styles: ['15', '25', '35', '45', '55', '65', '75', '85', '95'].flatMap((w) => [
+					w,
+					`${w}${ITALIC_SUFFIX}`
+				]),
+				availableStyles: ['15', '25', '35', '45', '55', '65', '75', '85', '95'],
+				defaultStyle: '45', // Regular
+				italic: true,
+				selectable: true,
+				stage: 'early',
+				licensing: 'toppings',
+				preview: true,
+				baseEur: 30
+			}
+		]
 	}
-	// apgr-quad-sans: in development — not for sale yet
+	// apgr-quad-sans: in development — not for sale yet (its five weights' names
+	// and which are drawn are not settled)
 ];
 
 export function getTypefacePricing(slug: TypefaceSlug): TypefacePricing | undefined {
@@ -232,9 +266,6 @@ export function unavailableStyles(pkg: PackageDef): string[] {
 	const drawn = new Set(pkg.availableStyles);
 	return (pkg.styles ?? []).filter((style) => !drawn.has(style));
 }
-
-/** An italic style's name is its upright's plus this ("40" → "40i"). */
-export const ITALIC_SUFFIX = 'i';
 
 export function isItalicStyle(style: string): boolean {
 	return style.endsWith(ITALIC_SUFFIX);

@@ -32,6 +32,9 @@
 		/** The brands as the checkout reads them (JSON). */
 		brandsJson: string;
 		subcontractors: number;
+		/** The order holds a typeface shown for review, and checkout is live-keyed:
+		 *  everything is shown, but the button stays shut. */
+		checkoutLocked?: boolean;
 		mobileExpanded?: boolean;
 		onMobileToggle?: () => void;
 		/** Render as an always-open in-flow block (no collapsing sticky bar). */
@@ -52,6 +55,7 @@
 		brands,
 		brandsJson,
 		subcontractors,
+		checkoutLocked = false,
 		mobileExpanded = false,
 		onMobileToggle,
 		inline = false,
@@ -268,8 +272,16 @@
 						/>
 					{/each}
 				{/each}
-				<button type="submit" class="CartSummary__checkout-btn" disabled={submitting}>
-					{submitting ? 'Redirecting…' : 'Checkout'}
+				<button
+					type="submit"
+					class="CartSummary__checkout-btn"
+					disabled={submitting || checkoutLocked}
+				>
+					{checkoutLocked
+						? 'Checkout opens with the sale'
+						: submitting
+							? 'Redirecting…'
+							: 'Checkout'}
 				</button>
 			</form>
 		{/if}
