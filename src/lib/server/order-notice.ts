@@ -71,7 +71,8 @@ export function buildOrderNotice(session: Stripe.Checkout.Session): OrderNotice 
 		line('Educational:', meta.educational),
 		line('Licenses:', meta.licenses),
 		line('Styles:', meta.selected_styles),
-		line('Brands:', meta.brands),
+		line('Uses:', meta.uses),
+		line('Domains:', meta.web_domains),
 		line(
 			'Subcontract.:',
 			meta.subcontractors && meta.subcontractors !== '0' ? meta.subcontractors : null

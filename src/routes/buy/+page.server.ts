@@ -13,7 +13,7 @@ import { dev } from '$app/environment';
 import type { Actions, PageServerLoad } from './$types';
 import {
 	buildOrder,
-	orderBrandsSummary,
+	describeUses,
 	orderProductName,
 	orderStylesSummary
 } from '$lib/server/checkout-order';
@@ -104,9 +104,10 @@ export const actions: Actions = {
 					// What to actually deliver — the Sales Receipt's fulfilment record,
 					// not just a headcount tier, now that style count drives price.
 					selected_styles: orderStylesSummary(order).slice(0, 490),
-					// The brands that use the fonts beyond ordinary design work (logo, web …)
-					// and the subcontractors they are shared with — also part of the licence.
-					brands: orderBrandsSummary(order).slice(0, 490),
+					// The licence's toppings, the domains its Web topping is registered for and
+					// the subcontractors the fonts are shared with — all part of the licence.
+					uses: describeUses(order.uses).slice(0, 490),
+					web_domains: order.webDomains.join(',').slice(0, 490),
 					subcontractors: String(order.subcontractors)
 				},
 				success_url: `${url.origin}/buy/success?session_id={CHECKOUT_SESSION_ID}`,

@@ -27,17 +27,16 @@ export const EDUCATIONAL_ACTIVE = false;
 export const EARLY_BIRD_RATE = 0.3;
 export const EDUCATIONAL_RATE = 0.3;
 
-// 'tier' = a typeface's licence at the buyer's company size (tierIndex set).
-// 'topping' = a brand's use of one typeface (logo, web …; tierIndex = the
-//   brand's own size) — never discounted for the full set.
+// 'tier' = a typeface's licence at the buyer's company size (tierIndex set) —
+//   with its toppings (logo, web …) in the price, for a typeface sold with them.
 // 'sub' = a subcontractor licence: flat, no typeface (packageId '').
 // (The flat-priced 'project' kind was retired 2026-11-06 — see TOPPINGS.)
-export type CartItemKind = 'tier' | 'topping' | 'sub';
+export type CartItemKind = 'tier' | 'sub';
 
 export interface CartItem {
 	kind: CartItemKind;
 	tierIndex: number | null;
-	basePrice: number; // post-package price in EUR (at selected tier, or the topping / subcontractor price)
+	basePrice: number; // post-package price in EUR (at selected tier, or the subcontractor price)
 	grossPrice: number; // pre-package price in EUR (for anchoring)
 	packageId: string;
 }
@@ -116,8 +115,8 @@ export function computeTotal(cart: CartState): {
 	}
 
 	// Early access: a family not yet at its release stage costs its stage's
-	// share of the price — on the licence and on the brands' toppings alike
-	// (a subcontractor licence has no typeface, so it is left out).
+	// share of the price — toppings included (a subcontractor licence has no
+	// typeface, so it is left out).
 	let stageAmount = 0;
 	for (const pkg of pkgList) {
 		const factor = stageFactor(pkg);

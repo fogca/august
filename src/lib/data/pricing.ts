@@ -71,7 +71,7 @@ export function scopeBlurb(tierIndex: number, licensing: PackageDef['licensing']
 }
 
 export const TOPPING_SCOPE_BLURB =
-	'Ordinary design work — print, packaging, signage, presentations. A brand’s logo, website or social media is added per brand.';
+	'Ordinary design work — print, packaging, signage, presentations. Your logo, website, social media and add-ons are added to it.';
 
 export function getTierDef(tierIndex: number): TierDef | undefined {
 	return TIER_DEFS.find((t) => t.index === tierIndex);
@@ -271,28 +271,35 @@ export function isItalicStyle(style: string): boolean {
 	return style.endsWith(ITALIC_SUFFIX);
 }
 
-// ── Toppings (brand licences) ────────────────────────────────────────────────
-// Ordinary design work — print, packaging, signage, presentations — is the
-// licence itself. What a brand does with a typeface beyond that (its logo, its
-// website, its social accounts …) is bought on top, per brand and per style
-// (2026-11-06, the user's design after Rellence): the studio names the client
-// and the styles it uses. A topping costs the per-style rate at the *brand's*
-// size × the topping's ratio, for each style — never the Complete discount,
-// since a logo uses a style or two.
+// ── Toppings ─────────────────────────────────────────────────────────────────
+// For a typeface sold with toppings (2026-11-06, the user's design after
+// Rellence and Kontrapunkt): ordinary design work — print, packaging, signage,
+// presentations — is the licence itself. The licensee's logo, website, social
+// media and the add-ons are toppings on that licence: each adds its ratio of the
+// per-style rate to every style's price, so a style costs
+//     rate at the licensee's size × (1 + the toppings' ratios)
+// and the package discounts (Complete, half the set) apply to that whole. The
+// purchase page opens on a preset (LICENCE_PRESET) — what most licensees need —
+// and every topping can be taken off: the price only goes down from there.
 
 export type ToppingId = 'logo' | 'web' | 'social' | 'app' | 'broadcast';
 
 export interface ToppingOption {
 	id: string;
 	label: string;
-	/** × the per-style rate at the brand's size. */
+	/** × the per-style rate, added to every style's price. */
 	ratio: number;
 }
 
 export interface ToppingDef {
 	id: ToppingId;
 	label: string;
+	/** The question its row asks. */
+	question: string;
+	/** What it covers — the row's Info. */
 	blurb: string;
+	/** A row of its own, or one of the add-ons listed together. */
+	group: 'main' | 'addon';
 	options: ToppingOption[];
 }
 
@@ -300,7 +307,9 @@ export const TOPPINGS: ToppingDef[] = [
 	{
 		id: 'logo',
 		label: 'Logo',
-		blurb: 'In the brand’s logo or wordmark.',
+		question: 'Use the fonts in your logo',
+		blurb: 'Your logo or wordmark, set in the font or drawn from it.',
+		group: 'main',
 		options: [
 			{ id: 'logo-1', label: '1 logo', ratio: 2 },
 			{ id: 'logo-3', label: 'Up to 3 logos', ratio: 4 }
@@ -309,41 +318,41 @@ export const TOPPINGS: ToppingDef[] = [
 	{
 		id: 'web',
 		label: 'Web',
-		blurb: 'On the brand’s website, up to 100K views a month.',
+		question: 'Embed the fonts on your website',
+		blurb: 'Your own website(s), by web font, registered by domain.',
+		group: 'main',
 		options: [{ id: 'web-100k', label: 'Up to 100K views / month', ratio: 0.3 }]
 	},
 	{
 		id: 'social',
 		label: 'Social',
-		blurb: 'In the brand’s social media posts and profiles.',
-		options: [{ id: 'social', label: 'Social media', ratio: 0.2 }]
+		question: 'Use the fonts on social media',
+		blurb: 'Your social media posts and profiles.',
+		group: 'main',
+		options: [{ id: 'social', label: 'Your social media accounts', ratio: 0.2 }]
 	},
 	{
 		id: 'app',
 		label: 'App',
-		blurb: 'Embedded in an app, a game, an e-book or a server.',
+		question: 'App, game, e-book or server',
+		blurb: 'Embedded in an app, a game, an e-book, or software that sets text on a server.',
+		group: 'addon',
 		options: [{ id: 'app', label: 'App / embedding', ratio: 1 }]
 	},
 	{
 		id: 'broadcast',
 		label: 'Broadcast',
-		blurb: 'In film, television, streaming or advertising.',
+		question: 'Film, TV, streaming and advertising',
+		blurb: 'Film, television, streaming and paid advertising.',
+		group: 'addon',
 		options: [{ id: 'broadcast', label: 'Film, TV and advertising', ratio: 1.5 }]
 	}
 ];
 
-/** What a new brand starts with: the licence most brands need, one logo, one
- *  website and their social media — each can be taken off, and the price drops. */
-export const DEFAULT_BRAND_USES: { topping: ToppingId; option: string }[] = [
-	{ topping: 'logo', option: 'logo-1' },
-	{ topping: 'web', option: 'web-100k' },
-	{ topping: 'social', option: 'social' }
-];
-
-/** Sharing the fonts with a subcontractor (a freelancer, a printer): flat, per
- *  subcontractor, whatever the styles — the early-access factor leaves it alone. */
-export const SUB_LICENSE_EUR = 50;
-export const MAX_SUBCONTRACTORS = 20;
+export interface Use {
+	topping: ToppingId;
+	option: string;
+}
 
 export function getTopping(id: string): ToppingDef | undefined {
 	return TOPPINGS.find((t) => t.id === id);
@@ -358,53 +367,48 @@ export function getToppingOption(
 	return topping && option ? { topping, option } : undefined;
 }
 
-/** EUR for one topping on `styleCount` styles of a brand of this size. */
-export function toppingPrice(tierIndex: number, ratio: number, styleCount: number): Price {
-	const rate = getTierDef(tierIndex)?.perStyleEur ?? null;
-	if (rate === null || styleCount <= 0) return null;
-	return Math.round(rate * ratio * styleCount);
+/** The toppings' ratios, summed (unknown ones count for nothing — the order
+ *  check refuses them before a price is taken). */
+export function usesRatio(uses: Use[]): number {
+	return uses.reduce(
+		(sum, use) => sum + (getToppingOption(use.topping, use.option)?.option.ratio ?? 0),
+		0
+	);
 }
 
-// ── A brand's uses, priced ──────────────────────────────────────────────────
+/** Sharing the fonts with a subcontractor (a freelancer, a printer): flat, per
+ *  subcontractor, whatever the styles — the early-access factor leaves it alone. */
+export const SUB_LICENSE_EUR = 50;
+export const MAX_SUBCONTRACTORS = 5;
+export const SUB_OPTIONS = [1, 2, 3, 4, 5];
 
-export interface BrandUse {
-	topping: ToppingId;
-	option: string;
+/** How many website domains one Web topping can register. */
+export const MAX_WEB_DOMAINS = 10;
+
+/** A website domain as typed ("https://www.Example.com/shop") → its host
+ *  ("www.example.com"), or null if it isn't one. */
+export function normalizeDomain(input: string): string | null {
+	const host = input
+		.trim()
+		.toLowerCase()
+		.replace(/^[a-z][a-z0-9+.-]*:\/\//, '')
+		.split(/[/?#:]/)[0];
+	return /^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(host)
+		? host
+		: null;
 }
 
-export interface BrandInput {
-	name: string;
-	/** The brand's own size (not the buyer's). */
-	tierIndex: number;
-	uses: BrandUse[];
-	/** The styles it uses, per package id. */
-	styles: Record<string, string[]>;
-}
-
-export interface BrandLine {
-	topping: ToppingDef;
-	option: ToppingOption;
-	packageId: string;
-	styleCount: number;
-	price: number;
-}
-
-/** Every (use × typeface) of a brand with its price. Skips what can't be
- *  priced (a use that no longer exists, a size with no rate): the order check
- *  refuses those before it gets here. */
-export function priceBrand(brand: BrandInput): BrandLine[] {
-	const lines: BrandLine[] = [];
-	for (const use of brand.uses) {
-		const found = getToppingOption(use.topping, use.option);
-		if (!found) continue;
-		for (const [packageId, styles] of Object.entries(brand.styles)) {
-			const price = toppingPrice(brand.tierIndex, found.option.ratio, styles.length);
-			if (price === null) continue;
-			lines.push({ ...found, packageId, styleCount: styles.length, price });
-		}
-	}
-	return lines;
-}
+/** Where the purchase page starts (2026-11-06, the user's preset): the Complete
+ *  Collection, 5 people, one subcontractor, one logo, one website, social media. */
+export const LICENCE_PRESET: { tierIndex: number; uses: Use[]; subcontractors: number } = {
+	tierIndex: 2,
+	uses: [
+		{ topping: 'logo', option: 'logo-1' },
+		{ topping: 'web', option: 'web-100k' },
+		{ topping: 'social', option: 'social' }
+	],
+	subcontractors: 1
+};
 
 // ── Price calculation ────────────────────────────────────────────────────────
 //
@@ -431,30 +435,52 @@ function discountRateFor(pkg: PackageDef, styleCount: number): number {
 	return 0;
 }
 
-// Gross EUR for a given package × tier × selected style count, before any
-// volume discount — the "was" price shown struck through when a discount
-// applies. Returns null for the Global tier (no self-serve rate).
-export function computeGrossEur(pkg: PackageDef, tierIndex: number, styleCount: number): Price {
+// Gross EUR for a given package × tier × selected style count (× the toppings,
+// for a package sold with them), before any volume discount — the "was" price
+// shown struck through when a discount applies. Returns null for the Global
+// tier (no self-serve rate).
+export function computeGrossEur(
+	pkg: PackageDef,
+	tierIndex: number,
+	styleCount: number,
+	uses: Use[] = []
+): Price {
 	const tier = getTierDef(tierIndex);
 	if (!tier || tier.perStyleEur === null || styleCount <= 0) return null;
-	return Math.round(tier.perStyleEur * styleCount);
+	const perStyle = pkg.licensing === 'toppings' ? 1 + usesRatio(uses) : 1;
+	return Math.round(tier.perStyleEur * perStyle * styleCount);
 }
 
 // Final EUR — the gross price, reduced by whichever volume discount the
 // selected style count qualifies for (see discountRateFor).
-export function computeEur(pkg: PackageDef, tierIndex: number, styleCount: number): Price {
-	const gross = computeGrossEur(pkg, tierIndex, styleCount);
+export function computeEur(
+	pkg: PackageDef,
+	tierIndex: number,
+	styleCount: number,
+	uses: Use[] = []
+): Price {
+	const gross = computeGrossEur(pkg, tierIndex, styleCount, uses);
 	if (gross === null) return null;
 	const rate = discountRateFor(pkg, styleCount);
 	return rate > 0 ? Math.round(gross * (1 - rate)) : gross;
 }
 
-export function getPrice(pkg: PackageDef, tierIndex: number, styleCount: number): Price {
-	return computeEur(pkg, tierIndex, styleCount);
+export function getPrice(
+	pkg: PackageDef,
+	tierIndex: number,
+	styleCount: number,
+	uses: Use[] = []
+): Price {
+	return computeEur(pkg, tierIndex, styleCount, uses);
 }
 
-export function getGrossPrice(pkg: PackageDef, tierIndex: number, styleCount: number): Price {
-	return computeGrossEur(pkg, tierIndex, styleCount);
+export function getGrossPrice(
+	pkg: PackageDef,
+	tierIndex: number,
+	styleCount: number,
+	uses: Use[] = []
+): Price {
+	return computeGrossEur(pkg, tierIndex, styleCount, uses);
 }
 
 // The per-style rate alone (no count, no discount) — what Step 1's intake
