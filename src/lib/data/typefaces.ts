@@ -621,11 +621,11 @@ export const TYPEFACES: Typeface[] = [
 		// anything else a visitor types falls back to Norma, then the
 		// browser's sans-serif.
 		// Shown as "Maxa" since 2026-11-05 (at the user's request — "書体名、
-		// 一回Maxaにしてみて", a trial): only what a visitor reads changed. The
-		// slug (`ttt-maxica` — the prefix changed 2026-11-06, the trial name
-		// did not reach it), the CSS family ('Maxica') and the font file keep
-		// the old spelling, so nothing needs a redirect if it goes back.
-		slug: 'ttt-maxica',
+		// 一回Maxaにしてみて", a trial), confirmed 2026-11-06 ("Maxaで確定、
+		// ttt-maxaにして"): the slug followed (`ttt-maxica` and `apgr-maxica`
+		// 301 here). The CSS family ('Maxica') and the font file keep the
+		// working name, as Humorist's keep 'Ango'.
+		slug: 'ttt-maxa',
 		name: 'TTT Maxa',
 		category: 'Grotesque sans-serif',
 		order: 3,
@@ -893,7 +893,7 @@ export function getTypeface(slug: string): Typeface | undefined {
  *  `elio` is Ango's name before 2026-10-03; `ango` and `gq` before the
  *  2026-10-30 rename; `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before
  *  GQ Sans became Quad Sans; the `apgr-` ones until the TTT prefix
- *  (2026-11-06). Alfred is left out: it is hidden, so it never had a public
+ *  (2026-11-06); `ttt-maxica` for the hours before Maxa was confirmed. Alfred is left out: it is hidden, so it never had a public
  *  page to carry over. The /buy?font= parameter reads the same map. */
 export const LEGACY_SLUGS: Record<string, string> = {
 	ango: 'ttt-humorist',
@@ -902,7 +902,8 @@ export const LEGACY_SLUGS: Record<string, string> = {
 	'apgr-gq-sans': 'ttt-quad-sans',
 	'apgr-humorist': 'ttt-humorist',
 	'apgr-quad-sans': 'ttt-quad-sans',
-	'apgr-maxica': 'ttt-maxica'
+	'apgr-maxica': 'ttt-maxa',
+	'ttt-maxica': 'ttt-maxa'
 };
 
 /** The name as the big display sets it: the prefix dropped ("Humorist"), as
@@ -960,7 +961,7 @@ const HOME_PANEL_STYLES: {
 	// Maxa's axis is the widest (50-950) and its name the shortest, so it takes
 	// the weight wave; Quad Sans has the one weight, so it is typed.
 	// Grounds (2026-11-05, the user's): Maxa black, Humorist white, Quad Sans blue.
-	{ slug: 'ttt-maxica', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
+	{ slug: 'ttt-maxa', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
 	{ slug: 'ttt-humorist', weight: 300, bg: 'var(--white)', fg: 'var(--black)', motion: 'rotate' },
 	{
 		slug: 'ttt-quad-sans',
