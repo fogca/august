@@ -1049,8 +1049,9 @@
 	.Cart {
 		background: #000;
 		color: #fff;
-		border-radius: 15px;
-		margin: 0 var(--padding);
+		border-radius: 30px;
+		/* The page margin on its sides and below it, as a card. */
+		margin: 0 var(--padding) var(--padding);
 		padding: 28px 20px 40px;
 		--mute: rgba(255, 255, 255, 0.55);
 		--rule: rgba(255, 255, 255, 0.25);
@@ -1060,8 +1061,8 @@
 		.Cart {
 			position: sticky;
 			top: var(--header-bar-h);
-			height: calc(100dvh - var(--header-bar-h));
-			margin: 0 var(--padding) 0 0;
+			height: calc(100dvh - var(--header-bar-h) - var(--padding));
+			margin: 0 var(--padding) var(--padding) 0;
 			overflow-y: auto;
 			overscroll-behavior: contain;
 			padding: 28px 32px 40px;
