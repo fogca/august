@@ -321,16 +321,16 @@ const wineText = (n: number) => WINE_PARAGRAPHS.slice(0, n).join('\n\n');
  *  euro's bars run out to the left). A phone's sizes are the same words fitted
  *  to 360px. */
 const HUMORIST_TESTER_LINES: TesterLine[] = [
-	{ text: 'Vin', wght: 550, sizeDesktop: 913, sizeMobile: 241, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Dégustation!', wght: 350, sizeDesktop: 252, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Assemblage', wght: 250, sizeDesktop: 265, sizeMobile: 70, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Dégorgement', wght: 650, sizeDesktop: 234, sizeMobile: 61, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Remuage', wght: 50, sizeDesktop: 337, sizeMobile: 89, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Cuvée', wght: 950, sizeDesktop: 499, sizeMobile: 132, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Élevage', wght: 750, sizeDesktop: 424, sizeMobile: 112, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Vendange', wght: 450, sizeDesktop: 317, sizeMobile: 84, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Millésime', wght: 550, sizeDesktop: 329, sizeMobile: 87, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Soutirage', wght: 250, sizeDesktop: 351, sizeMobile: 92, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Vin', wght: 550, sizeDesktop: 926, sizeMobile: 245, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Dégustation!', wght: 350, sizeDesktop: 254, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Assemblage', wght: 250, sizeDesktop: 271, sizeMobile: 72, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Dégorgement', wght: 650, sizeDesktop: 231, sizeMobile: 60, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Remuage', wght: 50, sizeDesktop: 345, sizeMobile: 91, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Cuvée', wght: 950, sizeDesktop: 491, sizeMobile: 130, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Élevage', wght: 750, sizeDesktop: 413, sizeMobile: 109, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Vendange', wght: 450, sizeDesktop: 321, sizeMobile: 85, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Millésime', wght: 550, sizeDesktop: 332, sizeMobile: 88, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Soutirage', wght: 250, sizeDesktop: 355, sizeMobile: 93, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
 		text: 'PICKED. AGED. POURED.',
 		wght: 850,
