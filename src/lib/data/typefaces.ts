@@ -308,8 +308,9 @@ const wineText = (n: number) => WINE_PARAGRAPHS.slice(0, n).join('\n\n');
  *  line, the sentence and running text in columns. Each has its own weight,
  *  sized so a single word nearly fills the width of a 1440px screen (measured
  *  at that weight and spacing, 97% of 1360px), tighter in the spacing the
- *  bigger it is. The nine weights are all used. Every character is in
- *  Ango-VF33 (checked against its cmap), which rules out `%` `@` `^` `~` and
+ *  bigger it is. Remuage is the Hair row (wght 150 until VF33, 50 from VF34,
+ *  where 150 became Thin). Every character is in
+ *  Ango-VF33 (checked against its cmap; VF34 adds `%` `^` `~` and Þ Œ as drafts), which rules out `%` `@` `^` `~` and
  *  Þ ß Ł Œ ź. Three drawn glyphs are not used either, because they show at this
  *  size: the middle dot is a copy of the period (baseline, y -9…31), and `€`
  *  `$` `¢` keep their Hair-thin bars and ticks at every heavier weight (the
@@ -320,7 +321,7 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	{ text: 'Dégustation!', wght: 350, sizeDesktop: 252, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Assemblage', wght: 250, sizeDesktop: 265, sizeMobile: 70, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Dégorgement', wght: 650, sizeDesktop: 234, sizeMobile: 61, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Remuage', wght: 150, sizeDesktop: 337, sizeMobile: 89, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'Remuage', wght: 50, sizeDesktop: 337, sizeMobile: 89, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Cuvée', wght: 950, sizeDesktop: 499, sizeMobile: 132, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Élevage', wght: 750, sizeDesktop: 424, sizeMobile: 112, lineHeight: 1.1, letterSpacing: -0.03 },
 	{ text: 'Vendange', wght: 450, sizeDesktop: 317, sizeMobile: 84, lineHeight: 1.1, letterSpacing: -0.03 },
@@ -674,15 +675,15 @@ export const TYPEFACES: Typeface[] = [
 		tagline: 'Reticent and Ravenous.',
 		description:
 			'APGR Humorist is a sibling to Norma, in development at Apres Guerre. ' +
-			'Where Norma runs wide and even across twenty weights, APGR Humorist narrows its focus to nine — an axis built from two hand-drawn extremes, Hair and Ultra, with the seven named stops between them genuinely interpolated rather than invented. ' +
+			'Where Norma runs wide and even across twenty weights, APGR Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
-			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Ultra — the same letterforms pulled toward opposite instincts. ' +
+			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Black — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
 			'APGR Humorist est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
-		classification: 'In development · 9 weights',
+		classification: 'In development · 10 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
 		// (Asta.glyphs' own glyph box), not the shipped VF's cmap — unlike
 		// Norma's info, where those two numbers are nearly the same since
@@ -714,13 +715,14 @@ export const TYPEFACES: Typeface[] = [
 		info: {
 			design: 'Takumi Isobe',
 			release: 'TBD',
-			collection: '9 weights',
+			collection: '10 weights',
 			formats: 'OTF, TTF, WOFF2',
-			glyphs: '175',
-			languages: '79'
+			glyphs: '234',
+			languages: '92'
 		},
-		// Now a real variable font — all 9 named stops are genuine
-		// interpolation between the drawn Hair/Ultra masters.
+		// Now a real variable font — all 10 named stops are genuine
+		// interpolation between the drawn Hair/Ultra masters (Ango-VF34: 2026-11-06
+		// counts above are the shipped cmap, 234, and Hyperglot verified, 92).
 		weights: ANGO_WEIGHTS,
 		overview: { groups: HUMORIST_GLYPH_GROUPS, metrics: HUMORIST_METRICS },
 		information: { features: HUMORIST_FEATURES, languages: HUMORIST_LANGUAGES },

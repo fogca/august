@@ -91,9 +91,14 @@ export const WEIGHTS: WeightDef[] = [
 // order once a scale has all three), and every intermediate stop's
 // rendered weight shifted slightly since it now interpolates across the
 // wider 150-950 span.
+// Revised 2026-11-06 (Ango-VF34): ten weights on the same scale as Maxica —
+// the Hair master moved to wght 50 (its stem thinned to 11 units) and the
+// stops are named Hair / Thin / ExtraLight / Light / Regular / Medium /
+// SemiBold / Bold / ExtraBold / Black (the Ultra master is the Black stop).
 export const ANGO_WEIGHTS: WeightDef[] = [
-	{ id: 150, name: '15', label: 'Hair', axisValue: 150 },
-	{ id: 250, name: '25', label: 'Thin', axisValue: 250 },
+	{ id: 50, name: '5', label: 'Hair', axisValue: 50 },
+	{ id: 150, name: '15', label: 'Thin', axisValue: 150 },
+	{ id: 250, name: '25', label: 'ExtraLight', axisValue: 250 },
 	{ id: 350, name: '35', label: 'Light', axisValue: 350 },
 	// Book -> Regular (2026-09, at the user's request) — also fixes a
 	// previously unnoticed side effect in GlyphSet.svelte: its default-weight
@@ -102,10 +107,10 @@ export const ANGO_WEIGHTS: WeightDef[] = [
 	// as Ango's default inspected weight instead of this one.
 	{ id: 450, name: '45', label: 'Regular', axisValue: 450 },
 	{ id: 550, name: '55', label: 'Medium', axisValue: 550 },
-	{ id: 650, name: '65', label: 'Bold', axisValue: 650 },
-	{ id: 750, name: '75', label: 'Heavy', axisValue: 750 },
-	{ id: 850, name: '85', label: 'Black', axisValue: 850 },
-	{ id: 950, name: '95', label: 'Ultra', axisValue: 950 }
+	{ id: 650, name: '65', label: 'SemiBold', axisValue: 650 },
+	{ id: 750, name: '75', label: 'Bold', axisValue: 750 },
+	{ id: 850, name: '85', label: 'ExtraBold', axisValue: 850 },
+	{ id: 950, name: '95', label: 'Black', axisValue: 950 }
 ];
 
 // Maximum characters allowed in the textarea

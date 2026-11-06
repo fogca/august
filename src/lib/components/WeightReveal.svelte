@@ -45,7 +45,7 @@
 	let {
 		text,
 		to = 350,
-		from = 150,
+		from = 50, // Ango's axis floor since VF34 (2026-11-06; was 150)
 		delay = 500,
 		stagger = 45,
 		duration = 700,

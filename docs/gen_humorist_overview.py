@@ -15,7 +15,7 @@ font = TTFont(font_path)
 cmap = font.getBestCmap()
 os2, hhea, post = font['OS/2'], font['hhea'], font['post']
 
-chars = [chr(cp) for cp in sorted(cmap) if cp > 0x20 and cp != 0xA0 and unicodedata.category(chr(cp)) != 'Cc']
+chars = [chr(cp) for cp in sorted(cmap) if cp > 0x20 and cp != 0xA0 and unicodedata.category(chr(cp)) not in ('Cc', 'Cf')]  # Cf: soft hyphen has no ink to show
 
 
 def base_letter(c):
