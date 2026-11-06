@@ -97,6 +97,10 @@ export function computeTotal(cart: CartState): {
 	// package definition alone.
 	const pkgList =
 		packageDefs && packageDefs.length > 0 ? packageDefs : packageDef ? [packageDef] : [];
+	// "50% Package Discount" (2026-11-06, the user's wording); with several
+	// typefaces in the order, each line says whose it is.
+	const labelFor = (pct: number, kind: string, pkg?: PackageDef) =>
+		`${pct}% ${kind} Discount${pkg && pkgList.length > 1 ? ` · ${pkg.label}` : ''}`;
 	for (const pkg of pkgList) {
 		// Items belonging to this package
 		const pkgItems = items.filter((i) => i.packageId === pkg.id && i.kind === 'tier');
@@ -108,7 +112,7 @@ export function computeTotal(cart: CartState): {
 		const pct = Math.round((pkgAmount / pkgGross) * 100);
 		discounts.push({
 			id: 'package',
-			label: `${pkg.label} (−${pct}%)`,
+			label: labelFor(pct, 'Package', pkg),
 			rate: pkgAmount / pkgGross,
 			amount: pkgAmount
 		});
@@ -124,10 +128,9 @@ export function computeTotal(cart: CartState): {
 		const pkgItems = items.filter((i) => i.packageId === pkg.id);
 		const amount = Math.round(baseSubtotal(pkgItems) * (1 - factor));
 		if (amount <= 0) continue;
-		const version = pkg.version ? ` v${pkg.version}` : '';
 		discounts.push({
 			id: 'early-access',
-			label: `${pkg.label} ${STAGE_LABELS[packageStage(pkg)]}${version} (−${Math.round((1 - factor) * 100)}%)`,
+			label: labelFor(Math.round((1 - factor) * 100), STAGE_LABELS[packageStage(pkg)], pkg),
 			rate: 1 - factor,
 			amount
 		});
@@ -139,7 +142,7 @@ export function computeTotal(cart: CartState): {
 		const amount = Math.round((base - stageAmount) * EDUCATIONAL_RATE);
 		discounts.push({
 			id: 'educational',
-			label: 'Educational (−30%)',
+			label: labelFor(Math.round(EDUCATIONAL_RATE * 100), 'Educational'),
 			rate: EDUCATIONAL_RATE,
 			amount
 		});
@@ -150,7 +153,7 @@ export function computeTotal(cart: CartState): {
 		const amount = Math.round((base - stageAmount) * EARLY_BIRD_RATE);
 		discounts.push({
 			id: 'early-bird',
-			label: 'Early Bird (−30%)',
+			label: labelFor(Math.round(EARLY_BIRD_RATE * 100), 'Early Bird'),
 			rate: EARLY_BIRD_RATE,
 			amount
 		});

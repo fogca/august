@@ -240,9 +240,9 @@ export const STAGE_FACTORS: Record<ReleaseStage, number> = {
 };
 
 export const STAGE_LABELS: Record<ReleaseStage, string> = {
-	early: 'Early access',
+	early: 'Early Access',
 	beta: 'Beta',
-	rc: 'Release candidate',
+	rc: 'Release Candidate',
 	release: 'Release'
 };
 
