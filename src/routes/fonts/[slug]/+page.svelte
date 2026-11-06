@@ -1,6 +1,6 @@
 <!-- Typeface page. Top of the page redone 2026-10-30, at the user's request, after
      Kontrapunkt Type's typeface pages (type.kontrapunkt.com): the name, with
-     the "APGR" prefix dropped, as wide as the page; a rule; then the spec lines
+     the "TTT" prefix dropped, as wide as the page; a rule; then the spec lines
      (two columns) and the description (the wider column); a Buy pill fixed at
      the bottom of the screen (centred on SP, bottom right on PC — Klim's "Buy
      fonts" made a fixture, 2026-11-05) that opens that typeface's purchase. The colour band with the classification headline
@@ -93,7 +93,7 @@
 	// The big name at the top: the prefix dropped, set at the face's own
 	// display weight (400 where it has none).
 	const nameWeight = $derived(tf.specimenWeight ?? 400);
-	// …unless the typeface sets its page title apart (Humorist: "APGR", Medium).
+	// …unless the typeface sets its page title apart (Humorist: "TTT", Medium).
 	const titleText = $derived(tf.pageTitle ?? displayName(tf));
 	const titleWeight = $derived(tf.pageTitleWeight ?? nameWeight);
 
@@ -409,7 +409,7 @@
 		<section class="AngoSample" aria-label="Sample text">
 			<p class="AngoSample__label">Sample text</p>
 			<p class="AngoSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
-				APGR Humorist is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
+				TTT Humorist is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
 				dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
 				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
 				ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate

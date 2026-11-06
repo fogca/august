@@ -141,7 +141,7 @@ a {
   /* --- Font weight tokens (Norma VF, wght 1–950) ---
      Change --fw-base to reweight the entire site. Components must NOT
      hardcode weights; use these tokens (or inherit). */
-  --fw-base:   320;  /* default text weight (body inherits everywhere) */
+  --fw-base:   400;  /* default text weight (body inherits everywhere); 320 until 2026-11-06 */
   --fw-light:  260;  /* lighter body copy — sits between the Norma "SemiLight" (250) and "Light" (300) stops */
   --fw-ui:     380;  /* UI accents: nav, buttons, labels */
   --fw-strong: 500;  /* emphasis / sub-headings */

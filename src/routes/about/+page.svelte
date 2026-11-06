@@ -123,10 +123,10 @@
 								<span class="fr" lang="fr">Caractères de vente</span>
 							</h3>
 							<p class="en" lang="en">
-								APGR Humorist, a nine-weight variable typeface, in development.
+								TTT Humorist, a nine-weight variable typeface, in development.
 							</p>
 							<p class="fr" lang="fr">
-								APGR Humorist, une police variable en neuf graisses, en cours de développement.
+								TTT Humorist, une police variable en neuf graisses, en cours de développement.
 							</p>
 						</div>
 						<div class="About__item">

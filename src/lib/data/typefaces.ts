@@ -33,14 +33,17 @@ export type GalleryItem =
 /** The foundry's initials, the prefix of every public typeface name
  *  (2026-10-30, at the user's request — "APGRは全てつけるようにして"), the way
  *  Kontrapunkt Type's are "KP Duo Sans". Slugs follow: lowercase, hyphenated
- *  (`apgr-humorist`). The big display of a name drops it — see displayName(). */
-export const NAME_PREFIX = 'APGR';
+ *  (`apgr-humorist`). The big display of a name drops it — see displayName().
+ *  "TTT" (Time Type Tokyo) since 2026-11-06, at the user's request ("書体名は
+ *  APGR {XXX}からTTT {XXX}に変更"): the names only — the slugs keep `apgr-`,
+ *  as the Maxa trial kept its slug, so no URL moves until that is decided. */
+export const NAME_PREFIX = 'TTT';
 
 export interface Typeface {
 	/** `apgr-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
 	 *  pricing and checkout tables are keyed by it, and the face is hidden). */
 	slug: string;
-	/** Public name, prefix included (e.g. 'APGR Humorist'). The CSS family
+	/** Public name, prefix included (e.g. 'TTT Humorist'). The CSS family
 	 *  (`fontFamily`) and the font/image files keep their old internal names. */
 	name: string;
 	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Quad Sans, 5 = Alfred */
@@ -428,7 +431,7 @@ export const TYPEFACES: Typeface[] = [
 		// Prefixed with the rest (2026-10-30). Its final name is still open —
 		// Linotype already sells a "Norma" — and the prose below still says
 		// "Norma": settle the name, then rewrite it (see the TODO below).
-		name: 'APGR Norma',
+		name: 'TTT Norma',
 		category: 'Neo humanist sans-serif',
 		order: 1,
 		status: 'available',
@@ -572,7 +575,7 @@ export const TYPEFACES: Typeface[] = [
 		// the public site), exported from Quad.glyphs as one Regular. Its CSS
 		// family is 'Quad Sans' (app.html @font-face; QuadSans-Regular.woff2).
 		slug: 'apgr-quad-sans',
-		name: 'APGR Quad Sans',
+		name: 'TTT Quad Sans',
 		category: 'Sans-serif',
 		order: 4,
 		status: 'in-development',
@@ -580,20 +583,20 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Quad Sans',
 		tagline: 'In development.',
 		description:
-			'APGR Quad Sans is a sans-serif in development at Apres Guerre, one half of a family that will pair it with a serif. ' +
+			'TTT Quad Sans is a sans-serif in development at Apres Guerre, one half of a family that will pair it with a serif. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'APGR Quad Sans est un sans-serif en cours de développement chez Apres Guerre, une moitié d’une famille qui l’associera à un serif. ' +
+			'TTT Quad Sans est un sans-serif en cours de développement chez Apres Guerre, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
 		// The one cut there is: a Regular (the file is static, so wght 400 is
 		// only its name in the Type Tester's row).
 		weights: [{ id: 40, name: '40', label: 'Regular', axisValue: 400 }],
-		defaultTexts: ['APGR Quad Sans'],
+		defaultTexts: ['TTT Quad Sans'],
 		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
 		// the build leaves those out, so the page sets them in another face.
 		testerNotice:
-			'APGR Quad Sans is in development. Characters not drawn yet are set in another face.',
+			'TTT Quad Sans is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -621,7 +624,7 @@ export const TYPEFACES: Typeface[] = [
 		// slug (`apgr-maxica`), the CSS family ('Maxica') and the font file keep
 		// the old spelling, so nothing needs a redirect if it goes back.
 		slug: 'apgr-maxica',
-		name: 'APGR Maxa',
+		name: 'TTT Maxa',
 		category: 'Grotesque sans-serif',
 		order: 3,
 		status: 'in-development',
@@ -629,17 +632,17 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Maxica',
 		tagline: 'In development.',
 		description:
-			'APGR Maxa is a grotesque in development at Apres Guerre. ' +
+			'TTT Maxa is a grotesque in development at Apres Guerre. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'APGR Maxa est une grotesque en cours de développement chez Apres Guerre. ' +
+			'TTT Maxa est une grotesque en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Grotesque · In development',
 		weights: WEIGHTS,
 		defaultTexts: ['Maxa'],
 		testerLines: MAXICA_TESTER_LINES,
 		testerNotice:
-			'APGR Maxa is in development. Characters not drawn yet are set in another face.',
+			'TTT Maxa is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 500,
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -661,12 +664,12 @@ export const TYPEFACES: Typeface[] = [
 		// position moved from wght 850 to 950 on 2026-09-22, at the user's
 		// request, so its scale now reaches Norma's own top stop.
 		// Re-shown 2026-08-29 at the user's request (temporary).
-		// "Ango" until 2026-10-30, then "APGR Humorist" (a pun on the category
+		// "Ango" until 2026-10-30, then "TTT Humorist" (a pun on the category
 		// Humanist). Only the public name and slug moved: the CSS family stays
 		// 'Ango' (other projects set type in it) and so do the Ango-VF*.woff2
 		// and ango-* image files below.
 		slug: 'apgr-humorist',
-		name: 'APGR Humorist',
+		name: 'TTT Humorist',
 		category: 'Geometric humanist sans-serif',
 		order: 2,
 		status: 'in-development',
@@ -674,14 +677,14 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Ango',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'APGR Humorist is a sibling to Norma, in development at Apres Guerre. ' +
-			'Where Norma runs wide and even across twenty weights, APGR Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
+			'TTT Humorist is a sibling to Norma, in development at Apres Guerre. ' +
+			'Where Norma runs wide and even across twenty weights, TTT Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Black — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'APGR Humorist est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
+			'TTT Humorist est une police sœur de Norma, en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development · 10 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -757,21 +760,21 @@ export const TYPEFACES: Typeface[] = [
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-cream.jpg',
-				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in APGR Humorist — a case study mockup',
+				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Apres Guerre, set in TTT Humorist — a case study mockup',
 				width: 2000,
 				height: 1125
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-mozzarella-brie.webp',
-				alt: '“Mozzarella &” in a light weight of APGR Humorist above “Brie de Meaux” in a heavy one, white on blue',
+				alt: '“Mozzarella &” in a light weight of TTT Humorist above “Brie de Meaux” in a heavy one, white on blue',
 				width: 2000,
 				height: 720
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-extinguisher.jpg',
-				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in APGR Humorist — a case study mockup',
+				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in TTT Humorist — a case study mockup',
 				width: 2000,
 				height: 1333
 			},
@@ -836,7 +839,7 @@ export const TYPEFACES: Typeface[] = [
 		// no drawings at all yet). Re-shown 2026-08-29, re-hidden 2026-08-31,
 		// both at the user's request.
 		slug: 'apgr-alfred',
-		name: 'APGR Alfred',
+		name: 'TTT Alfred',
 		category: 'Neo classic',
 		order: 5,
 		status: 'in-development',
@@ -846,10 +849,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'APGR Alfred is a Neo Classic typeface in development at Apres Guerre. ' +
+			'TTT Alfred is a Neo Classic typeface in development at Apres Guerre. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'APGR Alfred est un caractère Neo Classic en cours de développement chez Apres Guerre. ' +
+			'TTT Alfred est un caractère Neo Classic en cours de développement chez Apres Guerre. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised
