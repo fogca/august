@@ -88,7 +88,7 @@
 	// Humorist (Ango) only has 52 letters and no OpenType features drawn yet —
 	// Glyph set / Beyond A-Z / OpenType below are swapped for a plain
 	// sample-text block on its page (see the {#if isHumorist} further down).
-	const isHumorist = $derived(tf.slug === 'apgr-humorist');
+	const isHumorist = $derived(tf.slug === 'ttt-humorist');
 
 	// The big name at the top: the prefix dropped, set at the face's own
 	// display weight (400 where it has none).

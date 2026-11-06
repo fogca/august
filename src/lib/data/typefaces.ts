@@ -33,14 +33,15 @@ export type GalleryItem =
 /** The foundry's initials, the prefix of every public typeface name
  *  (2026-10-30, at the user's request — "APGRは全てつけるようにして"), the way
  *  Kontrapunkt Type's are "KP Duo Sans". Slugs follow: lowercase, hyphenated
- *  (`apgr-humorist`). The big display of a name drops it — see displayName().
+ *  (`ttt-humorist`). The big display of a name drops it — see displayName().
  *  "TTT" (Time Type Tokyo) since 2026-11-06, at the user's request ("書体名は
- *  APGR {XXX}からTTT {XXX}に変更"): the names only — the slugs keep `apgr-`,
- *  as the Maxa trial kept its slug, so no URL moves until that is decided. */
+ *  APGR {XXX}からTTT {XXX}に変更"), and the slugs with them the same day
+ *  ("リンク含めて全て変えて"): `apgr-…` → `ttt-…`, the old ones 301 (LEGACY_SLUGS
+ *  below and the repo-root _redirects). */
 export const NAME_PREFIX = 'TTT';
 
 export interface Typeface {
-	/** `apgr-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
+	/** `ttt-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
 	 *  pricing and checkout tables are keyed by it, and the face is hidden). */
 	slug: string;
 	/** Public name, prefix included (e.g. 'TTT Humorist'). The CSS family
@@ -574,7 +575,7 @@ export const TYPEFACES: Typeface[] = [
 		// drawings formerly shown as "Mokuseki Sans" (a client's name, kept off
 		// the public site), exported from Quad.glyphs as one Regular. Its CSS
 		// family is 'Quad Sans' (app.html @font-face; QuadSans-Regular.woff2).
-		slug: 'apgr-quad-sans',
+		slug: 'ttt-quad-sans',
 		name: 'TTT Quad Sans',
 		category: 'Sans-serif',
 		order: 4,
@@ -621,9 +622,10 @@ export const TYPEFACES: Typeface[] = [
 		// browser's sans-serif.
 		// Shown as "Maxa" since 2026-11-05 (at the user's request — "書体名、
 		// 一回Maxaにしてみて", a trial): only what a visitor reads changed. The
-		// slug (`apgr-maxica`), the CSS family ('Maxica') and the font file keep
+		// slug (`ttt-maxica` — the prefix changed 2026-11-06, the trial name
+		// did not reach it), the CSS family ('Maxica') and the font file keep
 		// the old spelling, so nothing needs a redirect if it goes back.
-		slug: 'apgr-maxica',
+		slug: 'ttt-maxica',
 		name: 'TTT Maxa',
 		category: 'Grotesque sans-serif',
 		order: 3,
@@ -668,7 +670,7 @@ export const TYPEFACES: Typeface[] = [
 		// Humanist). Only the public name and slug moved: the CSS family stays
 		// 'Ango' (other projects set type in it) and so do the Ango-VF*.woff2
 		// and ango-* image files below.
-		slug: 'apgr-humorist',
+		slug: 'ttt-humorist',
 		name: 'TTT Humorist',
 		category: 'Geometric humanist sans-serif',
 		order: 2,
@@ -838,7 +840,7 @@ export const TYPEFACES: Typeface[] = [
 		// specimen; everything below is still fully provisional (unlike Ango,
 		// no drawings at all yet). Re-shown 2026-08-29, re-hidden 2026-08-31,
 		// both at the user's request.
-		slug: 'apgr-alfred',
+		slug: 'ttt-alfred',
 		name: 'TTT Alfred',
 		category: 'Neo classic',
 		order: 5,
@@ -886,16 +888,21 @@ export function getTypeface(slug: string): Typeface | undefined {
 	return TYPEFACES.find((tf) => tf.slug === slug);
 }
 
-/** Slugs the pages answered to before the 2026-10-30 rename, to where they
- *  went (a 301 — see fonts/[slug]/+page.ts). `elio` is Ango's name before
- *  2026-10-03. `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before GQ Sans
- *  became Quad Sans. `alfred` is left out: it is hidden, so it never had a
- *  public page to carry over. */
+/** Slugs the pages answered to before the renames, straight to where they
+ *  are now (a 301 — see fonts/[slug]/+page.ts; one hop, never a chain).
+ *  `elio` is Ango's name before 2026-10-03; `ango` and `gq` before the
+ *  2026-10-30 rename; `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before
+ *  GQ Sans became Quad Sans; the `apgr-` ones until the TTT prefix
+ *  (2026-11-06). Alfred is left out: it is hidden, so it never had a public
+ *  page to carry over. The /buy?font= parameter reads the same map. */
 export const LEGACY_SLUGS: Record<string, string> = {
-	ango: 'apgr-humorist',
-	elio: 'apgr-humorist',
-	gq: 'apgr-quad-sans',
-	'apgr-gq-sans': 'apgr-quad-sans'
+	ango: 'ttt-humorist',
+	elio: 'ttt-humorist',
+	gq: 'ttt-quad-sans',
+	'apgr-gq-sans': 'ttt-quad-sans',
+	'apgr-humorist': 'ttt-humorist',
+	'apgr-quad-sans': 'ttt-quad-sans',
+	'apgr-maxica': 'ttt-maxica'
 };
 
 /** The name as the big display sets it: the prefix dropped ("Humorist"), as
@@ -953,10 +960,10 @@ const HOME_PANEL_STYLES: {
 	// Maxa's axis is the widest (50-950) and its name the shortest, so it takes
 	// the weight wave; Quad Sans has the one weight, so it is typed.
 	// Grounds (2026-11-05, the user's): Maxa black, Humorist white, Quad Sans blue.
-	{ slug: 'apgr-maxica', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
-	{ slug: 'apgr-humorist', weight: 300, bg: 'var(--white)', fg: 'var(--black)', motion: 'rotate' },
+	{ slug: 'ttt-maxica', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
+	{ slug: 'ttt-humorist', weight: 300, bg: 'var(--white)', fg: 'var(--black)', motion: 'rotate' },
 	{
-		slug: 'apgr-quad-sans',
+		slug: 'ttt-quad-sans',
 		weight: 400,
 		bg: 'var(--brand-blue)',
 		fg: 'var(--brand-paper)',
@@ -971,7 +978,7 @@ const HOME_PANEL_STYLES: {
  *  Sans's panel is blue and paper, so this one is its inverse: paper and
  *  blue (the user named the first three grounds only, 2026-11-05). */
 const QUAD_SERIF_PANEL: HomePanel = {
-	key: 'apgr-quad-serif',
+	key: 'ttt-quad-serif',
 	name: `${NAME_PREFIX} Quad Serif`,
 	lines: ['Quad', 'Serif'],
 	fontFamily: 'Quad Serif',

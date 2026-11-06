@@ -49,7 +49,7 @@
 		type ToppingDef,
 		type Use
 	} from '$lib/data/pricing';
-	import { TYPEFACES as CATALOGUE, getTypeface } from '$lib/data/typefaces';
+	import { TYPEFACES as CATALOGUE, LEGACY_SLUGS, getTypeface } from '$lib/data/typefaces';
 	import type { CartItem } from '$lib/data/discounts';
 	import { computeTotal } from '$lib/data/discounts';
 	import PageSection from '$lib/components/PageSection.svelte';
@@ -63,7 +63,9 @@
 	// The first arrives from the URL; more can be added to the same order.
 
 	const TYPEFACES: FlatPackage[] = getFlatPackages();
-	const fontSlug = $derived(page.url.searchParams.get('font'));
+	// A link made before a rename (?font=apgr-humorist) still opens its typeface.
+	const fontParam = $derived(page.url.searchParams.get('font'));
+	const fontSlug = $derived(fontParam ? (LEGACY_SLUGS[fontParam] ?? fontParam) : null);
 	const selectedPackage = $derived(
 		TYPEFACES.find((p) => p.typefaceSlug === fontSlug) ?? TYPEFACES[0] ?? null
 	);
