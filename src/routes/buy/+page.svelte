@@ -99,8 +99,6 @@
 	let domainDraft = $state('');
 	let domainError = $state('');
 	let eula = $state(false);
-	/** Which rows have their Info open. */
-	let infoOpen = $state<Record<string, boolean>>({});
 
 	const tierIndex = $derived(Number(tier));
 	const isCustomQuote = $derived(getTierDef(tierIndex)?.perStyleEur === null);
@@ -352,15 +350,6 @@
 	</div>
 {/snippet}
 
-{#snippet infoButton(id: string)}
-	<button
-		type="button"
-		class="Row__info-btn"
-		aria-expanded={infoOpen[id] ?? false}
-		onclick={() => (infoOpen[id] = !infoOpen[id])}>Info</button
-	>
-{/snippet}
-
 <main class="Buy">
 	{#if data.checkoutOpen && selectedPackage}
 		<div class="Buy__grid">
@@ -402,15 +391,12 @@
 										>
 									{/each}
 								</select>
-								{@render infoButton('licensee')}
 							</span>
 						</label>
-						{#if infoOpen.licensee}
-							<p class="Row__info">
-								The size of the whole licensing company, not only the people who use the fonts.
-								{scopeBlurb(tierIndex, selectedPackage.licensing)}
-							</p>
-						{/if}
+						<p class="Row__info">
+							The size of the whole licensing company, not only the people who use the fonts.
+							{scopeBlurb(tierIndex, selectedPackage.licensing)}
+						</p>
 						{#if isCustomQuote}
 							<p class="Row__info">
 								Above 500 people, we make the license with you —
@@ -441,14 +427,11 @@
 									<option value={String(n)}>{n} subcontractor{n === 1 ? '' : 's'}</option>
 								{/each}
 							</select>
-							{@render infoButton('sub')}
 						</span>
-						{#if infoOpen.sub}
-							<p class="Row__info">
-								A freelancer or a printer may use the fonts to produce your work —
-								{formatPrice(SUB_LICENSE_EUR)} each, for any styles.
-							</p>
-						{/if}
+						<p class="Row__info">
+							A freelancer or a printer may use the fonts to produce your work —
+							{formatPrice(SUB_LICENSE_EUR)} each, for any styles.
+						</p>
 					</div>
 				</section>
 
@@ -474,11 +457,8 @@
 											onclick={() => toggleTopping(topping)}>Not included — add</button
 										>
 									{/if}
-									{@render infoButton(topping.id)}
 								</span>
-								{#if infoOpen[topping.id]}
-									<p class="Row__info">{topping.blurb}</p>
-								{/if}
+								<p class="Row__info">{topping.blurb}</p>
 								{#if topping.id === 'web' && on}
 									<!-- 4 — the Web license's domains -->
 									<div class="Domains">
@@ -921,18 +901,6 @@
 		color: #c4361e !important;
 	}
 
-	.Row__info-btn {
-		flex-shrink: 0;
-		background: transparent;
-		border: 0;
-		padding: 0 4px;
-		font: inherit;
-		font-size: 13px;
-		cursor: pointer;
-		text-decoration: underline;
-		text-underline-offset: 2px;
-	}
-
 	/* The on/off dot — Kontrapunkt's round radio, filled when on. */
 	.Dot {
 		width: 14px;
@@ -975,6 +943,19 @@
 		font: inherit;
 		font-size: 14px;
 		color: var(--color-text);
+	}
+
+	/* A select's own arrow sits hard against the pill's edge and can't be moved:
+	   draw it instead, with room to its right. */
+	select.Field__input {
+		appearance: none;
+		-webkit-appearance: none;
+		padding-right: 48px;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23000' stroke-width='1.4'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 20px center;
+		background-size: 12px 8px;
+		cursor: pointer;
 	}
 
 	.Field__off {
@@ -1068,7 +1049,9 @@
 	.Cart {
 		background: #000;
 		color: #fff;
-		padding: 28px var(--padding) 40px;
+		border-radius: 15px;
+		margin: 0 var(--padding);
+		padding: 28px 20px 40px;
 		--mute: rgba(255, 255, 255, 0.55);
 		--rule: rgba(255, 255, 255, 0.25);
 	}
@@ -1078,6 +1061,7 @@
 			position: sticky;
 			top: var(--header-bar-h);
 			height: calc(100dvh - var(--header-bar-h));
+			margin: 0 var(--padding) 0 0;
 			overflow-y: auto;
 			overscroll-behavior: contain;
 			padding: 28px 32px 40px;
@@ -1151,7 +1135,7 @@
 	.Option {
 		display: grid;
 		/* Fixed tracks, so every option's columns line up whatever its text. */
-		grid-template-columns: 14px minmax(0, 0.9fr) minmax(0, 1.6fr) 7.5em;
+		grid-template-columns: 16px minmax(0, 0.9fr) minmax(0, 1.6fr) 110px;
 		align-items: start;
 		gap: 4px 14px;
 		width: calc(100% + 20px);
@@ -1180,6 +1164,29 @@
 
 	.Option .Dot {
 		margin-top: 3px;
+	}
+
+	/* Selected, in the cart: a white disc with a smaller dot inside it. */
+	.Cart .Dot {
+		position: relative;
+		width: 16px;
+		height: 16px;
+		border-color: #fff;
+	}
+
+	.Cart .Dot.is-on {
+		background: #fff;
+	}
+
+	.Cart .Dot.is-on::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		margin: auto;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #000;
 	}
 
 	.Option__name {
@@ -1222,7 +1229,7 @@
 
 	@media (max-width: 767.98px) {
 		.Option {
-			grid-template-columns: 14px minmax(0, 1fr) 7.5em;
+			grid-template-columns: 16px minmax(0, 1fr) 110px;
 		}
 
 		.Option__samples {
