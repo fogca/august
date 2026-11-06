@@ -516,12 +516,18 @@
 	   the link row are centred in it (the lockup 135px wide, 17px tall; the
 	   links 17.5px). The lockup was 170px by 19px for the 9:1 Apres Guerre
 	   mark, then 223px by 17px for the 13:1 "Texmex Typefoundry Tokyo"; the
-	   8:1 "Time Type Tokyo" keeps the 17px. */
+	   8:1 "Time Type Tokyo" keeps the 17px.
+	   Since 2026-11-06 (the user's own values: "top 10px, left, right 20px")
+	   the row sits 10px from the top and 20px in from each side, no longer
+	   centred in the bar nor on the page margin; the lockup keeps its 1px
+	   offset from the row. The bar itself stays 72px — it is still what
+	   sticky UI and the pages' content clear. */
 	@media (min-width: 1060px) {
 		.Header {
 			--lockup-w: 135.2px;
-			--lockup-top: 28px;
-			--row-top: 27px;
+			--lockup-top: 11px;
+			--row-top: 10px;
+			--edge: 20px;
 		}
 	}
 
@@ -660,6 +666,15 @@
 		white-space: nowrap;
 		background: var(--brand-blue);
 		color: #ffffff !important;
+	}
+
+	/* PC: under Cart as before, on the row moved up (2026-11-06) — the row's
+	   10px + its 17.5px line + the same 7.5px gap, on its 20px edge. */
+	@media (min-width: 1060px) {
+		.CartNote {
+			top: calc(35px + env(safe-area-inset-top, 0px));
+			right: 20px;
+		}
 	}
 
 	/* ── Menu (below 1060px) ──
