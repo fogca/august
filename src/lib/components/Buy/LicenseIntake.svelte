@@ -15,11 +15,10 @@
 	import {
 		TIER_DEFS,
 		getTierDef,
-		getTierScope,
 		getPerStylePrice,
 		isEnterpriseTier,
 		formatPrice,
-		SCOPE_BLURB
+		scopeBlurb
 	} from '$lib/data/pricing';
 	import type { PackageDef } from '$lib/data/pricing';
 
@@ -121,7 +120,7 @@
 		<p class="LicenseIntake__resolved" role="status">
 			→ {resolvedTier.name} license ({resolvedTier.label}) · {formatPrice(getPerStylePrice(resolvedTier.index))}/style
 		</p>
-		<p class="LicenseIntake__scope">{SCOPE_BLURB[getTierScope(resolvedTier.index)]}</p>
+		<p class="LicenseIntake__scope">{scopeBlurb(resolvedTier.index, pkg?.licensing)}</p>
 	{:else if !confirmed}
 		<button
 			type="button"

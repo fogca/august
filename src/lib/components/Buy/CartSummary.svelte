@@ -9,9 +9,8 @@
 		encodeStyleField,
 		formatPrice,
 		getTierName,
-		getTierScope,
-		SCOPE_BLURB,
-		PROJECT_LICENSE_LABEL
+		scopeBlurb,
+		SUB_LICENSE_EUR
 	} from '$lib/data/pricing';
 	import type { PackageDef } from '$lib/data/pricing';
 	import type { CartItem, AppliedDiscount } from '$lib/data/discounts';
@@ -28,6 +27,11 @@
 		 *  sent to checkout so the server prices and fulfils exactly what was
 		 *  picked, not just a tier. Same order as `items`. */
 		lines: { pkg: PackageDef; styles: string[] }[];
+		/** The brands in the order — what they use, how many styles, what it costs. */
+		brands: { name: string; size: string; uses: string[]; styleCount: number; price: number }[];
+		/** The brands as the checkout reads them (JSON). */
+		brandsJson: string;
+		subcontractors: number;
 		mobileExpanded?: boolean;
 		onMobileToggle?: () => void;
 		/** Render as an always-open in-flow block (no collapsing sticky bar). */
@@ -45,6 +49,9 @@
 		discounts,
 		total,
 		lines,
+		brands,
+		brandsJson,
+		subcontractors,
 		mobileExpanded = false,
 		onMobileToggle,
 		inline = false,
@@ -62,19 +69,19 @@
 	const activeItem = $derived<CartItem | null>(items[0] ?? null);
 
 	function licenseName(item: CartItem): string {
-		return item.kind === 'project' ? PROJECT_LICENSE_LABEL : getTierName(item.tierIndex ?? 1);
+		return getTierName(item.tierIndex ?? 1);
 	}
 
 	// What the licence bundles — shown for a tier item only (Project
 	// License's own blurb already covers its scope elsewhere).
 	function licenseScope(item: CartItem): string | null {
 		if (item.kind !== 'tier' || item.tierIndex === null) return null;
-		return SCOPE_BLURB[getTierScope(item.tierIndex)];
+		return scopeBlurb(item.tierIndex, lines[0]?.pkg.licensing);
 	}
 
 	/** One typeface's charged (post-package) price. */
 	function linePrice(packageId: string): number {
-		return items.find((i) => i.packageId === packageId)?.basePrice ?? 0;
+		return items.find((i) => i.packageId === packageId && i.kind === 'tier')?.basePrice ?? 0;
 	}
 
 	function editStep1() {
@@ -84,7 +91,11 @@
 
 <!-- bfcache: coming Back from Stripe restores the page with submitting=true —
      reset it so the Checkout button is usable again -->
-<svelte:window onpageshow={(e) => { if (e.persisted) submitting = false; }} />
+<svelte:window
+	onpageshow={(e) => {
+		if (e.persisted) submitting = false;
+	}}
+/>
 
 <aside
 	class="CartSummary"
@@ -158,9 +169,40 @@
 								<span class="CartSummary__package-detail"
 									>{line.styles.length} {line.styles.length === 1 ? 'style' : 'styles'}</span
 								>
-								<span class="CartSummary__licence-price">{formatPrice(linePrice(line.pkg.id))}</span>
+								<span class="CartSummary__licence-price">{formatPrice(linePrice(line.pkg.id))}</span
+								>
 							</li>
 						{/each}
+					</ul>
+				</section>
+			{/if}
+
+			<!-- Brands that use the fonts beyond everyday design work, and subcontractors -->
+			{#if brands.length > 0 || subcontractors > 0}
+				<section class="CartSummary__section">
+					<h3 class="CartSummary__heading">Brands</h3>
+					<ul class="CartSummary__packages">
+						{#each brands as brand, i (i)}
+							<li class="CartSummary__package-row CartSummary__package-row--brand">
+								<span class="CartSummary__package-name">{brand.name}</span>
+								<span class="CartSummary__package-detail"
+									>{brand.uses.join(', ')} · {brand.styleCount}
+									{brand.styleCount === 1 ? 'style' : 'styles'} · {brand.size}</span
+								>
+								<span class="CartSummary__licence-price">{formatPrice(brand.price)}</span>
+							</li>
+						{/each}
+						{#if subcontractors > 0}
+							<li class="CartSummary__package-row">
+								<span class="CartSummary__package-name">Subcontractors</span>
+								<span class="CartSummary__package-detail"
+									>{subcontractors} × {formatPrice(SUB_LICENSE_EUR)}</span
+								>
+								<span class="CartSummary__licence-price"
+									>{formatPrice(subcontractors * SUB_LICENSE_EUR)}</span
+								>
+							</li>
+						{/if}
 					</ul>
 				</section>
 			{/if}
@@ -206,21 +248,26 @@
 			>
 				<input type="hidden" name="educational" value={isStudent ? '1' : '0'} />
 				<input type="hidden" name="licensee_name" value={intakeMeta.licenseeName} />
-				{#each items as item}
+				<input type="hidden" name="brands" value={brandsJson} />
+				<input type="hidden" name="subcontractors" value={subcontractors} />
+				<!-- Only the licence lines are posted as items: a brand's toppings and the
+					     subcontractors are priced again by the server from `brands` and
+					     `subcontractors`, never taken from here. -->
+				{#each items.filter((i) => i.kind === 'tier') as item}
 					<input type="hidden" name="item_kind" value={item.kind} />
 					<input type="hidden" name="item_tier" value={item.tierIndex ?? ''} />
 					<input type="hidden" name="item_price" value={item.basePrice} />
 					<input type="hidden" name="item_package" value={item.packageId} />
 				{/each}
 				{#each lines as line (line.pkg.id)}
-						{#each line.styles as style (style)}
-							<input
-								type="hidden"
-								name="selected_style"
-								value={encodeStyleField(line.pkg.id, style)}
-							/>
-						{/each}
+					{#each line.styles as style (style)}
+						<input
+							type="hidden"
+							name="selected_style"
+							value={encodeStyleField(line.pkg.id, style)}
+						/>
 					{/each}
+				{/each}
 				<button type="submit" class="CartSummary__checkout-btn" disabled={submitting}>
 					{submitting ? 'Redirecting…' : 'Checkout'}
 				</button>
@@ -457,6 +504,12 @@
 		gap: 8px;
 		padding: 10px 14px;
 		font-size: 14px;
+	}
+
+	/* A brand's detail is a sentence (uses · styles · size): it wraps under the
+	   name rather than squeezing the price. */
+	.CartSummary__package-row--brand {
+		flex-wrap: wrap;
 	}
 
 	.CartSummary__package-name {

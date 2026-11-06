@@ -11,7 +11,12 @@ import Stripe from 'stripe';
 import { env } from '$env/dynamic/private';
 import { dev } from '$app/environment';
 import type { Actions, PageServerLoad } from './$types';
-import { buildOrder, orderProductName, orderStylesSummary } from '$lib/server/checkout-order';
+import {
+	buildOrder,
+	orderBrandsSummary,
+	orderProductName,
+	orderStylesSummary
+} from '$lib/server/checkout-order';
 import { getTierLabel } from '$lib/data/pricing';
 import {
 	checkoutFeatureParams,
@@ -83,12 +88,15 @@ export const actions: Actions = {
 					licenses: licensesSummary,
 					educational: order.isStudent ? 'yes' : 'no',
 					licensee_name: order.licenseeName,
-					client_name: order.clientName,
 					organisation_size:
 						order.tierIndex && order.tierIndex > 1 ? getTierLabel(order.tierIndex) : '',
 					// What to actually deliver — the Sales Receipt's fulfilment record,
 					// not just a headcount tier, now that style count drives price.
-					selected_styles: orderStylesSummary(order).slice(0, 490)
+					selected_styles: orderStylesSummary(order).slice(0, 490),
+					// The brands that use the fonts beyond ordinary design work (logo, web …)
+					// and the subcontractors they are shared with — also part of the licence.
+					brands: orderBrandsSummary(order).slice(0, 490),
+					subcontractors: String(order.subcontractors)
 				},
 				success_url: `${url.origin}/buy/success?session_id={CHECKOUT_SESSION_ID}`,
 				cancel_url: `${url.origin}/buy`,

@@ -3,11 +3,13 @@
 	// Entry point is a font's own detail page: /buy?font=<TypefaceSlug>
 	// (see fonts/[slug]/+page.svelte's Buy CTA), so the typeface itself is
 	// never chosen here -- it arrives pre-decided from wherever the buyer
-	// was actually convinced (specimens, glyph set, weights). Three-step
-	// flow -- About you → Select styles → Add another typeface -- with a
-	// running order summary. The last step lets the same order take further
-	// typefaces (2026-11-05): the licence from Step 1 covers all of them, and
-	// each has its own styles.
+	// was actually convinced (specimens, glyph set, weights). A step flow --
+	// About you → Select styles → Add another typeface → Brands and uses --
+	// with a running order summary. Add another typeface lets the same order
+	// take further typefaces (2026-11-05): the licence from Step 1 covers all
+	// of them, and each has its own styles. Brands and uses (2026-11-06, for a
+	// typeface sold with toppings): everyday design work is the licence; a
+	// brand's logo, website, social … is bought per brand and style.
 	// The intake step comes first on purpose: rather than a free-browse
 	// tier picker showing every tier's price side by side, it asks who the
 	// licence is for and resolves the one tier whose per-style rate
@@ -26,6 +28,17 @@
 		getPrice,
 		getGrossPrice,
 		formatPrice,
+		getTierLabel,
+		getToppingOption,
+		isItalicStyle,
+		ITALIC_SUFFIX,
+		packageStage,
+		priceBrand,
+		stageFactor,
+		stagedPrice,
+		STAGE_LABELS,
+		SUB_LICENSE_EUR,
+		unavailableStyles,
 		type FlatPackage,
 		type PackageDef
 	} from '$lib/data/pricing';
@@ -38,6 +51,11 @@
 	import EducationalToggle from '$lib/components/Buy/EducationalToggle.svelte';
 	import CartSummary from '$lib/components/Buy/CartSummary.svelte';
 	import StyleList from '$lib/components/Buy/StyleList.svelte';
+	import BrandUses, {
+		toBrandInput,
+		type BrandDraft,
+		type StyleChoice
+	} from '$lib/components/Buy/BrandUses.svelte';
 	import type { ActionData, PageData } from './$types';
 
 	// Checkout action result — carries the error message when the action fails.
@@ -111,6 +129,8 @@
 		selectedPackage;
 		selection = {};
 		addedIds = [];
+		brands = [];
+		subcontractors = 0;
 	});
 
 	function stylesOf(packageId: string): Set<string> {
@@ -157,9 +177,9 @@
 	// Complete Collection's price — null until Step 1 has resolved a tier
 	// (no rate to price against yet).
 	function completePrice(pkg: PackageDef) {
-		return resolvedTierIndex !== null
-			? getPrice(pkg, resolvedTierIndex, pkg.styles?.length ?? 0)
-			: null;
+		const price =
+			resolvedTierIndex !== null ? getPrice(pkg, resolvedTierIndex, pkg.styles?.length ?? 0) : null;
+		return price === null ? null : stagedPrice(pkg, price);
 	}
 	function completeGross(pkg: PackageDef) {
 		return resolvedTierIndex !== null
@@ -207,8 +227,77 @@
 	// The typefaces that actually have styles picked -- the order's lines.
 	const orderLines = $derived(
 		orderPackages
-			.map((pkg) => ({ pkg, styles: [...stylesOf(pkg.id)] }))
+			.map((pkg) => {
+				const picked = stylesOf(pkg.id);
+				return { pkg, styles: (pkg.styles ?? []).filter((style) => picked.has(style)) };
+			})
 			.filter((line) => line.styles.length > 0)
+	);
+
+	// ── Brands and uses ──────────────────────────────────────
+	// Only a typeface sold with toppings has them. A brand may use the styles
+	// the licence holds that are already drawn.
+	let brands = $state<BrandDraft[]>([]);
+	let subcontractors = $state(0);
+
+	// A style's name on screen: its weight's label ("Regular", "Medium Italic").
+	function styleLabel(pkg: FlatPackage, id: string): string {
+		const italic = isItalicStyle(id);
+		const base = italic ? id.slice(0, -ITALIC_SUFFIX.length) : id;
+		const label =
+			getTypeface(pkg.typefaceSlug)?.weights.find((w) => w.name === base)?.label ?? base;
+		return italic ? `${label} Italic` : label;
+	}
+
+	const brandChoices = $derived<StyleChoice[]>(
+		orderLines
+			.filter((line) => line.pkg.licensing === 'toppings')
+			.map(({ pkg, styles }) => {
+				const notDrawn = new Set(unavailableStyles(pkg));
+				return {
+					pkg,
+					styles: styles
+						.filter((id) => !notDrawn.has(id))
+						.map((id) => ({ id, label: styleLabel(pkg, id) }))
+				};
+			})
+			.filter((choice) => choice.styles.length > 0)
+	);
+
+	// The brands complete enough to be in the order: named, with a use and a style.
+	const brandInputs = $derived(
+		brands
+			.map((draft) => toBrandInput(draft, brandChoices))
+			.filter(
+				(brand) =>
+					brand.name !== '' &&
+					Number.isInteger(brand.tierIndex) &&
+					brand.uses.length > 0 &&
+					Object.keys(brand.styles).length > 0
+			)
+	);
+
+	// What the order summary lists of them, and what the checkout is sent.
+	const brandSummary = $derived(
+		brandInputs.map((brand) => ({
+			name: brand.name,
+			size: `${getTierLabel(brand.tierIndex)}${brand.tierIndex === 1 ? '' : ' people'}`,
+			uses: brand.uses
+				.map((use) => getToppingOption(use.topping, use.option)?.topping.label ?? '')
+				.filter(Boolean),
+			styleCount: Object.values(brand.styles).reduce((sum, list) => sum + list.length, 0),
+			price: priceBrand(brand).reduce((sum, line) => sum + line.price, 0)
+		}))
+	);
+	const brandsJson = $derived(
+		JSON.stringify(
+			brandInputs.map((brand) => ({
+				name: brand.name,
+				tier: brand.tierIndex,
+				uses: brand.uses,
+				styles: brand.styles
+			}))
+		)
 	);
 
 	// Joins Step 1's resolved tier with each typeface's selected style count —
@@ -227,6 +316,28 @@
 				basePrice: price,
 				grossPrice: gross,
 				packageId: pkg.id
+			});
+		}
+		if (items.length === 0) return items;
+		for (const brand of brandInputs) {
+			for (const line of priceBrand(brand)) {
+				items.push({
+					kind: 'topping',
+					tierIndex: brand.tierIndex,
+					basePrice: line.price,
+					grossPrice: line.price,
+					packageId: line.packageId
+				});
+			}
+		}
+		if (subcontractors > 0) {
+			const flat = subcontractors * SUB_LICENSE_EUR;
+			items.push({
+				kind: 'sub',
+				tierIndex: null,
+				basePrice: flat,
+				grossPrice: flat,
+				packageId: ''
 			});
 		}
 		return items;
@@ -254,8 +365,9 @@
 		<title>{pageTitle} — Apres Guerre</title>
 		<meta
 			name="description"
-			content="Purchase {selectedPackage?.label ??
-				'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast."
+			content={selectedPackage?.licensing === 'toppings'
+				? `Purchase ${selectedPackage.label}. One licence per organisation size for everyday design work; a brand's logo, web or social media is added per brand.`
+				: `Purchase ${selectedPackage?.label ?? 'Norma'} — a 20-weight variable family. One license per organisation size, covering desktop, web, app, and broadcast.`}
 		/>
 	{:else}
 		<!-- Generic while closed: the default package here is a typeface that isn't
@@ -276,6 +388,8 @@
 	{@const active = isCompleteActive(pkg)}
 	{@const price = completePrice(pkg)}
 	{@const gross = completeGross(pkg)}
+	{@const toCome = unavailableStyles(pkg)}
+	{@const face = getTypeface((pkg as FlatPackage).typefaceSlug)}
 	<div class="WeightPanel">
 		<button
 			type="button"
@@ -289,7 +403,12 @@
 			</span>
 			<span class="TypefaceCard__body">
 				<span class="TypefaceCard__name">Complete Collection</span>
-				<span class="TypefaceCard__detail">{pkg.styles?.length ?? 0} weights</span>
+				<span class="TypefaceCard__detail"
+					>{pkg.styles?.length ?? 0}
+					{pkg.italic ? 'styles' : 'weights'}{toCome.length > 0
+						? ` · ${toCome.length} still to come, included`
+						: ''}</span
+				>
 			</span>
 			{#if price !== null}
 				<span class="TypefaceCard__price">
@@ -306,6 +425,10 @@
 			selectable
 			selected={stylesOf(pkg.id)}
 			onToggle={(name) => toggleWeight(pkg.id, name)}
+			fontFamily={pkg.licensing === 'toppings' ? face?.fontFamily : undefined}
+			weights={pkg.licensing === 'toppings' ? face?.weights : undefined}
+			showLabels={pkg.licensing === 'toppings'}
+			unavailable={new Set(toCome)}
 		/>
 	</div>
 {/snippet}
@@ -325,6 +448,18 @@
 			<div class="BuyPage__grid">
 				<!-- Left column (PC: 65%) — everything that isn't the running order. -->
 				<div class="BuyPage__main">
+					{#if selectedPackage && stageFactor(selectedPackage) < 1}
+						<!-- Early access: said before anything is priced. -->
+						<p class="BuyStage" role="note">
+							<strong
+								>{STAGE_LABELS[packageStage(selectedPackage)]}{selectedPackage.version
+									? ` v${selectedPackage.version}`
+									: ''}</strong
+							>
+							— not finished yet, so the price is lower; it rises as the family is completed. Your licence
+							includes every update to it, for good.
+						</p>
+					{/if}
 					<!-- Step 1 — About you (intake). Comes before Typeface on purpose — see
 			     the script header comment. Required fields are marked (*) inside
 			     LicenseIntake itself — Steps 2/3 stay hidden until it resolves. -->
@@ -394,6 +529,22 @@
 							</div>
 						{/if}
 
+						<!-- Step 4 — brands and uses, for a typeface sold with toppings. -->
+						{#if brandChoices.length > 0}
+							<div class="BuyStep" id="step-brands">
+								<p class="BuyStep__eyebrow">
+									{hasMoreTypefaces ? 4 : 3} — Brands and uses
+								</p>
+								<BrandUses
+									choices={brandChoices}
+									bind:brands
+									bind:subcontractors
+									ownerName={intakeMeta.licenseeName}
+									ownerTier={resolvedTierIndex}
+								/>
+							</div>
+						{/if}
+
 						<!-- Educational discount — left out for now (2026-08-29, at the
 				     user's request); see EDUCATIONAL_ACTIVE in $lib/data/discounts. -->
 						{#if EDUCATIONAL_ACTIVE}
@@ -419,6 +570,9 @@
 						{discounts}
 						{total}
 						lines={hasLicense ? orderLines : []}
+						brands={hasLicense ? brandSummary : []}
+						{brandsJson}
+						subcontractors={hasLicense ? subcontractors : 0}
 						errorMessage={form?.message ?? null}
 					/>
 				</div>
@@ -473,6 +627,18 @@
 
 	.BuyPage__main {
 		min-width: 0;
+	}
+
+	/* ── Early access notice ── */
+	.BuyStage {
+		margin: 0 0 32px;
+		max-width: 480px;
+		padding: 14px var(--padding);
+		background: var(--color-bg-gray);
+		font-family: 'Norma', sans-serif;
+		font-size: 13px;
+		line-height: 1.5;
+		color: var(--color-text);
 	}
 
 	/* ── Steps (shared) ── */

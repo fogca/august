@@ -11,9 +11,10 @@
 // | Early Bird      | −30% | Package (on top)    |
 // | Educational     | −30% | Package (on top)    |
 
+import { packageStage, stageFactor, STAGE_LABELS } from './pricing';
 import type { PackageDef } from './pricing';
 
-export type DiscountId = 'early-bird' | 'educational';
+export type DiscountId = 'early-bird' | 'educational' | 'early-access';
 
 // Toggle Early Bird globally — set to false after launch period
 export const EARLY_BIRD_ACTIVE = false;
@@ -26,14 +27,17 @@ export const EDUCATIONAL_ACTIVE = false;
 export const EARLY_BIRD_RATE = 0.3;
 export const EDUCATIONAL_RATE = 0.3;
 
-// 'tier' = standard company-size licence (tierIndex set).
-// 'project' = flat-priced Project License, single-brand scope (tierIndex null).
-export type CartItemKind = 'tier' | 'project';
+// 'tier' = a typeface's licence at the buyer's company size (tierIndex set).
+// 'topping' = a brand's use of one typeface (logo, web …; tierIndex = the
+//   brand's own size) — never discounted for the full set.
+// 'sub' = a subcontractor licence: flat, no typeface (packageId '').
+// (The flat-priced 'project' kind was retired 2026-11-06 — see TOPPINGS.)
+export type CartItemKind = 'tier' | 'topping' | 'sub';
 
 export interface CartItem {
 	kind: CartItemKind;
 	tierIndex: number | null;
-	basePrice: number; // post-package price in EUR (at selected tier, or flat Project License price)
+	basePrice: number; // post-package price in EUR (at selected tier, or the topping / subcontractor price)
 	grossPrice: number; // pre-package price in EUR (for anchoring)
 	packageId: string;
 }
@@ -92,10 +96,11 @@ export function computeTotal(cart: CartState): {
 	// $lib/data/pricing is conditional on selected style count, so whether
 	// it applies can only be read off the priced cart items, not the
 	// package definition alone.
-	const pkgList = packageDefs && packageDefs.length > 0 ? packageDefs : packageDef ? [packageDef] : [];
+	const pkgList =
+		packageDefs && packageDefs.length > 0 ? packageDefs : packageDef ? [packageDef] : [];
 	for (const pkg of pkgList) {
 		// Items belonging to this package
-		const pkgItems = items.filter((i) => i.packageId === pkg.id);
+		const pkgItems = items.filter((i) => i.packageId === pkg.id && i.kind === 'tier');
 		if (pkgItems.length === 0) continue;
 		const pkgGross = grossSubtotal(pkgItems);
 		const pkgBase = baseSubtotal(pkgItems);
@@ -110,9 +115,29 @@ export function computeTotal(cart: CartState): {
 		});
 	}
 
+	// Early access: a family not yet at its release stage costs its stage's
+	// share of the price — on the licence and on the brands' toppings alike
+	// (a subcontractor licence has no typeface, so it is left out).
+	let stageAmount = 0;
+	for (const pkg of pkgList) {
+		const factor = stageFactor(pkg);
+		if (factor >= 1) continue;
+		const pkgItems = items.filter((i) => i.packageId === pkg.id);
+		const amount = Math.round(baseSubtotal(pkgItems) * (1 - factor));
+		if (amount <= 0) continue;
+		const version = pkg.version ? ` v${pkg.version}` : '';
+		discounts.push({
+			id: 'early-access',
+			label: `${pkg.label} ${STAGE_LABELS[packageStage(pkg)]}${version} (−${Math.round((1 - factor) * 100)}%)`,
+			rate: 1 - factor,
+			amount
+		});
+		stageAmount += amount;
+	}
+
 	// Educational: −30% on post-package subtotal
 	if (EDUCATIONAL_ACTIVE && isStudent) {
-		const amount = Math.round(base * EDUCATIONAL_RATE);
+		const amount = Math.round((base - stageAmount) * EDUCATIONAL_RATE);
 		discounts.push({
 			id: 'educational',
 			label: 'Educational (−30%)',
@@ -123,7 +148,7 @@ export function computeTotal(cart: CartState): {
 
 	// Early Bird: −30% on post-package subtotal
 	if (EARLY_BIRD_ACTIVE) {
-		const amount = Math.round(base * EARLY_BIRD_RATE);
+		const amount = Math.round((base - stageAmount) * EARLY_BIRD_RATE);
 		discounts.push({
 			id: 'early-bird',
 			label: 'Early Bird (−30%)',

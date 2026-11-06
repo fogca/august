@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import type { PackageDef } from '$lib/data/pricing';
-import { buildOrder, orderProductName, orderStylesSummary } from './checkout-order';
+import {
+	buildOrder,
+	orderBrandsSummary,
+	orderProductName,
+	orderStylesSummary
+} from './checkout-order';
 
 const ALPHA: PackageDef = {
 	id: 'alpha-complete',
@@ -190,5 +195,163 @@ describe('buildOrder — a tampered form', () => {
 	it('sends the Global tier to a custom quote, never to a price', () => {
 		const result = buildOrder(form([{ pkg: ALPHA.id, tier: 7, styles: ['10'] }]), CATALOGUE);
 		expect(result).toMatchObject({ ok: false, message: expect.stringContaining('custom quote') });
+	});
+});
+
+// ── Early access, brands (toppings) and subcontractors ───────────────────────
+
+const GAMMA: PackageDef = {
+	id: 'gamma-complete',
+	label: 'Gamma',
+	detail: '4 styles',
+	styles: ['10', '20', '30', '40'],
+	availableStyles: ['10', '20'], // 30 and 40 are promised, not drawn
+	defaultStyle: '10',
+	stage: 'early',
+	version: '0.3',
+	licensing: 'toppings',
+	baseEur: 30
+};
+const WITH_GAMMA = [ALPHA, BETA, GAMMA];
+const DEFAULT_USES = [
+	{ topping: 'logo', option: 'logo-1' },
+	{ topping: 'web', option: 'web-100k' },
+	{ topping: 'social', option: 'social' }
+];
+
+function brandsOf(brands: unknown): Record<string, string> {
+	return { brands: JSON.stringify(brands) };
+}
+
+function gammaForm(styles: string[], extra: Record<string, string> = {}): FormData {
+	return form([{ pkg: GAMMA.id, tier: TEAM, styles }], extra);
+}
+
+describe('buildOrder — early access', () => {
+	it('multiplies the licence by the stage’s share, and shows it as a discount', () => {
+		// Complete (4 of 4): 50% off €200 = €100 → early ×0.4 = €40.
+		const result = buildOrder(gammaForm(['10', '20', '30', '40']), WITH_GAMMA);
+		if (!result.ok) throw new Error(result.message);
+		expect(result.order.total).toBe(40);
+	});
+
+	it('sells a style that is not drawn yet only as part of the Complete Collection', () => {
+		// 10 is drawn, 30 is not: not the whole set, so refused.
+		expect(buildOrder(gammaForm(['10', '30']), WITH_GAMMA)).toMatchObject({ ok: false });
+		// The drawn styles alone are fine: 2 of 4 = half the set, 25% off €100 = €75 → ×0.4.
+		const drawn = buildOrder(gammaForm(['10', '20']), WITH_GAMMA);
+		expect(drawn.ok && drawn.order.total).toBe(30);
+	});
+});
+
+describe('buildOrder — brands', () => {
+	const complete = ['10', '20', '30', '40'];
+	const acme = { name: 'Acme', tier: TEAM, uses: DEFAULT_USES, styles: { [GAMMA.id]: ['10'] } };
+
+	it('prices a brand at its own size, per use and per style, under the early factor', () => {
+		const result = buildOrder(gammaForm(complete, brandsOf([acme])), WITH_GAMMA);
+		if (!result.ok) throw new Error(result.message);
+		// Licence €100 + logo €100 + web €15 + social €10 = €225 → ×0.4.
+		expect(result.order.total).toBe(90);
+		expect(result.order.brands[0].price).toBe(125);
+		expect(orderBrandsSummary(result.order)).toContain('Acme');
+	});
+
+	it('charges each style a brand names, with no Complete discount', () => {
+		const two = {
+			...acme,
+			uses: [{ topping: 'logo', option: 'logo-1' }],
+			styles: { [GAMMA.id]: ['10', '20'] }
+		};
+		const result = buildOrder(gammaForm(complete, brandsOf([two])), WITH_GAMMA);
+		// Licence €100 + logo 2 styles × €100 = €300 → ×0.4.
+		expect(result.ok && result.order.total).toBe(120);
+	});
+
+	it('takes a use off and the price drops', () => {
+		const noLogo = { ...acme, uses: DEFAULT_USES.slice(1) };
+		const result = buildOrder(gammaForm(complete, brandsOf([noLogo])), WITH_GAMMA);
+		// €100 + €15 + €10 = €125 → ×0.4.
+		expect(result.ok && result.order.total).toBe(50);
+	});
+
+	it('prices each brand by its own size', () => {
+		const studio = {
+			...acme,
+			name: 'Big Co',
+			tier: 4,
+			uses: [{ topping: 'logo', option: 'logo-1' }]
+		};
+		const result = buildOrder(gammaForm(complete, brandsOf([acme, studio])), WITH_GAMMA);
+		// Acme €125 + Big Co logo at €130 × 2 = €260; licence €100 → €485 × 0.4.
+		expect(result.ok && result.order.total).toBe(194);
+	});
+
+	it('refuses styles the licence does not hold, or has not drawn', () => {
+		// Only 10 and 20 are bought and drawn; a brand may not use 30 …
+		const base = ['10', '20'];
+		const uses30 = { ...acme, styles: { [GAMMA.id]: ['30'] } };
+		expect(buildOrder(gammaForm(base, brandsOf([uses30])), WITH_GAMMA)).toMatchObject({
+			ok: false
+		});
+		// … nor 30 even with the Complete Collection, since it is not drawn.
+		expect(buildOrder(gammaForm(complete, brandsOf([uses30])), WITH_GAMMA)).toMatchObject({
+			ok: false
+		});
+	});
+
+	it('refuses brand uses on a typeface that is sold bundled', () => {
+		const onAlpha = { ...acme, styles: { [ALPHA.id]: ['10'] } };
+		const result = buildOrder(
+			form([{ pkg: ALPHA.id, tier: TEAM, styles: ['10', '20'] }], brandsOf([onAlpha])),
+			WITH_GAMMA
+		);
+		expect(result).toMatchObject({ ok: false, message: 'Invalid style selection.' });
+	});
+
+	it('refuses a nameless brand, an unknown or repeated use, no uses, and bad JSON', () => {
+		const bad = (brand: unknown) => buildOrder(gammaForm(complete, brandsOf([brand])), WITH_GAMMA);
+		expect(bad({ ...acme, name: ' ' })).toMatchObject({ ok: false });
+		expect(bad({ ...acme, uses: [{ topping: 'logo', option: 'logo-99' }] })).toMatchObject({
+			ok: false
+		});
+		expect(bad({ ...acme, uses: [DEFAULT_USES[0], DEFAULT_USES[0]] })).toMatchObject({ ok: false });
+		expect(bad({ ...acme, uses: [] })).toMatchObject({ ok: false });
+		expect(buildOrder(gammaForm(complete, { brands: '{not json' }), WITH_GAMMA)).toMatchObject({
+			ok: false
+		});
+		expect(buildOrder(gammaForm(complete, { brands: '"a string"' }), WITH_GAMMA)).toMatchObject({
+			ok: false
+		});
+	});
+
+	it('sends a Global-size brand to a custom quote', () => {
+		const result = buildOrder(gammaForm(complete, brandsOf([{ ...acme, tier: 7 }])), WITH_GAMMA);
+		expect(result).toMatchObject({ ok: false, message: expect.stringContaining('custom quote') });
+	});
+
+	it('refuses more brands than a page could send', () => {
+		const many = Array.from({ length: 21 }, () => acme);
+		expect(buildOrder(gammaForm(complete, brandsOf(many)), WITH_GAMMA)).toMatchObject({
+			ok: false
+		});
+	});
+});
+
+describe('buildOrder — subcontractors', () => {
+	const complete = ['10', '20', '30', '40'];
+
+	it('adds a flat fee each, outside the early-access factor', () => {
+		const result = buildOrder(gammaForm(complete, { subcontractors: '2' }), WITH_GAMMA);
+		// Licence €100 × 0.4 = €40, plus 2 × €50 untouched.
+		expect(result.ok && result.order.total).toBe(140);
+	});
+
+	it('refuses a negative, fractional or absurd count', () => {
+		for (const n of ['-1', '1.5', '21', 'many']) {
+			expect(buildOrder(gammaForm(complete, { subcontractors: n }), WITH_GAMMA)).toMatchObject({
+				ok: false
+			});
+		}
 	});
 });

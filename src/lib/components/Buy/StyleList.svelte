@@ -6,8 +6,14 @@
 	// checkboxes read as a different control family, so this stays circular
 	// even though many rows can be "on" at once. Selection reads through
 	// opacity, not a background/colour invert.
-	import type { PackageDef } from '$lib/data/pricing';
+	import { isItalicStyle, ITALIC_SUFFIX, type PackageDef } from '$lib/data/pricing';
 	import { WEIGHTS } from '$lib/components/TypeTester/presets';
+
+	interface WeightLookup {
+		name: string;
+		label: string;
+		axisValue: number;
+	}
 
 	interface Props {
 		pkg: PackageDef;
@@ -17,61 +23,102 @@
 		selected?: Set<string>;
 		/** Called when a style row is toggled. */
 		onToggle?: (name: string) => void;
+		/** The face the "Aa" previews are set in (Norma when absent). */
+		fontFamily?: string;
+		/** The family's own weights (name → label, axis position). Norma's scale
+		 *  when absent. */
+		weights?: WeightLookup[];
+		/** Name each style by its weight's label (Regular, Medium …) rather than
+		 *  its numeric name. */
+		showLabels?: boolean;
+		/** Styles promised but not drawn yet: shown, but not selectable alone —
+		 *  they come with the Complete Collection. */
+		unavailable?: Set<string>;
 	}
 
-	let { pkg, selectable = false, selected, onToggle }: Props = $props();
+	let {
+		pkg,
+		selectable = false,
+		selected,
+		onToggle,
+		fontFamily = 'Norma',
+		weights,
+		showLabels = false,
+		unavailable
+	}: Props = $props();
 
-	// Resolve wght axis value from weight name; falls back to 400 if not found.
-	function axisValue(weightName: string): number {
-		return WEIGHTS.find((w) => w.name === weightName)?.axisValue ?? 400;
+	// A style's weight, from the family's own scale; falls back to Norma's,
+	// then to 400 if not found. An italic style (its upright's name + "i")
+	// takes its upright's weight.
+	function weightOf(style: string): WeightLookup | undefined {
+		const base = isItalicStyle(style) ? style.slice(0, -ITALIC_SUFFIX.length) : style;
+		return weights?.find((w) => w.name === base) ?? WEIGHTS.find((w) => w.name === base);
 	}
 
 	const hasItalic = $derived(pkg.italic === true);
 	const styles = $derived(pkg.styles ?? []);
 
 	interface Cell {
+		/** The style's id — what is selected and sent. */
+		id: string;
+		/** What it is called on screen. */
 		name: string;
 		wght: number;
 		italic: boolean;
 	}
 
+	function cellOf(id: string): Cell {
+		const italic = hasItalic && isItalicStyle(id);
+		const base = italic ? id.slice(0, -ITALIC_SUFFIX.length) : id;
+		const weight = weightOf(id);
+		return {
+			id,
+			name: showLabels ? (weight?.label ?? base) : base,
+			wght: weight?.axisValue ?? 400,
+			italic
+		};
+	}
+
 	// Row pairs — left column is the first half in source order, right
 	// column the second half (e.g. 1–45 left, 50–95 right for Norma's 20
-	// weights), not an interleaved split.
+	// weights), not an interleaved split. With italics, one row per weight:
+	// the upright on the left, its italic on the right.
 	const rows = $derived.by<{ left: Cell; right: Cell | null }[]>(() => {
 		if (hasItalic) {
-			return styles.map((n) => ({
-				left: { name: n, wght: axisValue(n), italic: false },
-				right: { name: n, wght: axisValue(n), italic: true }
-			}));
+			return styles
+				.filter((id) => !isItalicStyle(id))
+				.map((id) => ({
+					left: cellOf(id),
+					right: styles.includes(id + ITALIC_SUFFIX) ? cellOf(id + ITALIC_SUFFIX) : null
+				}));
 		}
 		const half = Math.ceil(styles.length / 2);
 		return Array.from({ length: half }, (_, i) => {
 			const r = styles[i + half];
-			return {
-				left: { name: styles[i], wght: axisValue(styles[i]), italic: false },
-				right: r ? { name: r, wght: axisValue(r), italic: false } : null
-			};
+			return { left: cellOf(styles[i]), right: r ? cellOf(r) : null };
 		});
 	});
 </script>
 
 {#snippet cell(c: Cell)}
-	{@const sel = selected?.has(c.name) ?? false}
+	{@const sel = selected?.has(c.id) ?? false}
+	{@const soon = unavailable?.has(c.id) ?? false}
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div
 		class="StyleList__row"
-		class:is-selectable={selectable}
+		class:is-selectable={selectable && !soon}
 		class:is-on={selectable && sel}
+		class:is-soon={soon}
 		role={selectable ? 'button' : undefined}
-		tabindex={selectable ? 0 : undefined}
+		tabindex={selectable && !soon ? 0 : undefined}
 		aria-pressed={selectable ? sel : undefined}
-		onclick={selectable ? () => onToggle?.(c.name) : undefined}
-		onkeydown={selectable
+		aria-disabled={soon || undefined}
+		onclick={selectable && !soon ? () => onToggle?.(c.id) : undefined}
+		onkeydown={selectable && !soon
 			? (e) => {
 					if (e.key === 'Enter' || e.key === ' ') {
 						e.preventDefault();
-						onToggle?.(c.name);
+						onToggle?.(c.id);
 					}
 				}
 			: undefined}
@@ -83,10 +130,15 @@
 		{/if}
 		<span
 			class="StyleList__preview"
-			style="font-variation-settings: 'wght' {c.wght};{c.italic ? ' font-style: italic;' : ''}"
-			aria-hidden="true">Aa</span>
+			style="font-family: '{fontFamily}', sans-serif; font-variation-settings: 'wght' {c.wght};{c.italic
+				? ' font-style: italic;'
+				: ''}"
+			aria-hidden="true">Aa</span
+		>
 		<span class="StyleList__name">
-			{c.name}{#if c.italic}<span class="StyleList__ital">Italic</span>{/if}
+			{c.name}{#if c.italic || soon}<span class="StyleList__ital"
+					>{[c.italic ? 'Italic' : '', soon ? 'Coming' : ''].filter(Boolean).join(' · ')}</span
+				>{/if}
 		</span>
 	</div>
 {/snippet}
@@ -137,6 +189,12 @@
 
 	.StyleList__row.is-selectable:not(.is-on):hover {
 		opacity: 0.6;
+	}
+
+	/* Promised, not drawn: shown, but only the Complete Collection has it. */
+	.StyleList__row.is-soon:not(.is-on) {
+		opacity: 0.35;
+		cursor: default;
 	}
 
 	.StyleList__row.is-on {

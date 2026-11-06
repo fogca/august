@@ -62,6 +62,17 @@ export const SCOPE_BLURB: Record<TierScope, string> = {
 	full: 'Includes Desktop, Web, App, and Book License.'
 };
 
+/** What a licence covers, in one line, for the licence model of its typeface:
+ *  with toppings, the licence is ordinary design work and brands' uses are
+ *  added per brand (see TOPPINGS). */
+export function scopeBlurb(tierIndex: number, licensing: PackageDef['licensing']): string {
+	if (licensing === 'toppings') return TOPPING_SCOPE_BLURB;
+	return SCOPE_BLURB[getTierScope(tierIndex)];
+}
+
+export const TOPPING_SCOPE_BLURB =
+	'Ordinary design work — print, packaging, signage, presentations. A brand’s logo, website or social media is added per brand.';
+
 export function getTierDef(tierIndex: number): TierDef | undefined {
 	return TIER_DEFS.find((t) => t.index === tierIndex);
 }
@@ -102,6 +113,22 @@ export interface PackageDef {
 	// Not used in the actual checkout computation (see computeEur), which
 	// always derives from tier × selected style count.
 	baseEur: number;
+	// Early access (2026-11-06): where the family stands, and so what its price
+	// is multiplied by (STAGE_FACTORS). Absent = 'release', full price. The
+	// stage is moved by hand, in this table.
+	stage?: ReleaseStage;
+	// The version shown beside the stage ("0.3").
+	version?: string;
+	// The styles already drawn. The rest of `styles` is promised: Complete
+	// Collection includes it (delivered as it is drawn), a single style of it
+	// can't be bought yet. Absent = all of them.
+	availableStyles?: string[];
+	// The family's Regular — the one style a brand starts with (see TOPPINGS).
+	defaultStyle?: string;
+	// 'bundled' (the default, Norma): one licence covers desktop, web, app and
+	// book. 'toppings': the licence is for ordinary design work (desktop,
+	// print); a brand's logo, web, social … are bought per brand and style.
+	licensing?: 'bundled' | 'toppings';
 }
 
 export interface TypefacePricing {
@@ -113,8 +140,26 @@ export interface TypefacePricing {
 // upright only — a single weight axis from Hairline to Ultra.
 // (No italic masters yet; do not advertise italics until they actually ship.)
 export const STEINER_WEIGHTS: string[] = [
-	'1', '5', '10', '15', '20', '25', '30', '35', '40', '45',
-	'50', '55', '60', '65', '70', '75', '80', '85', '90', '95'
+	'1',
+	'5',
+	'10',
+	'15',
+	'20',
+	'25',
+	'30',
+	'35',
+	'40',
+	'45',
+	'50',
+	'55',
+	'60',
+	'65',
+	'70',
+	'75',
+	'80',
+	'85',
+	'90',
+	'95'
 ];
 
 export const TYPEFACE_PRICING: TypefacePricing[] = [
@@ -143,6 +188,191 @@ export function getTypefacePricing(slug: TypefaceSlug): TypefacePricing | undefi
 
 export function getPackage(slug: TypefaceSlug, packageId: string): PackageDef | undefined {
 	return getTypefacePricing(slug)?.packages.find((p) => p.id === packageId);
+}
+
+// ── Release stages (early access) ────────────────────────────────────────────
+// A family on sale before it is finished costs less the less finished it is:
+// the price is multiplied by its stage's factor, and the buyer keeps every
+// update to the family for good (the download side comes with the signed
+// links). Stages are moved by hand — no timers, no stock counters.
+
+export type ReleaseStage = 'early' | 'beta' | 'rc' | 'release';
+
+export const STAGE_FACTORS: Record<ReleaseStage, number> = {
+	early: 0.4,
+	beta: 0.6,
+	rc: 0.8,
+	release: 1
+};
+
+export const STAGE_LABELS: Record<ReleaseStage, string> = {
+	early: 'Early access',
+	beta: 'Beta',
+	rc: 'Release candidate',
+	release: 'Release'
+};
+
+export function packageStage(pkg: PackageDef): ReleaseStage {
+	return pkg.stage ?? 'release';
+}
+
+export function stageFactor(pkg: PackageDef): number {
+	return STAGE_FACTORS[packageStage(pkg)];
+}
+
+/** `price` after the stage's factor — the same rounding computeTotal's
+ *  early-access line uses, so a price shown here adds up with the total. */
+export function stagedPrice(pkg: PackageDef, price: number): number {
+	return price - Math.round(price * (1 - stageFactor(pkg)));
+}
+
+/** The styles promised but not drawn yet. */
+export function unavailableStyles(pkg: PackageDef): string[] {
+	if (!pkg.availableStyles) return [];
+	const drawn = new Set(pkg.availableStyles);
+	return (pkg.styles ?? []).filter((style) => !drawn.has(style));
+}
+
+/** An italic style's name is its upright's plus this ("40" → "40i"). */
+export const ITALIC_SUFFIX = 'i';
+
+export function isItalicStyle(style: string): boolean {
+	return style.endsWith(ITALIC_SUFFIX);
+}
+
+// ── Toppings (brand licences) ────────────────────────────────────────────────
+// Ordinary design work — print, packaging, signage, presentations — is the
+// licence itself. What a brand does with a typeface beyond that (its logo, its
+// website, its social accounts …) is bought on top, per brand and per style
+// (2026-11-06, the user's design after Rellence): the studio names the client
+// and the styles it uses. A topping costs the per-style rate at the *brand's*
+// size × the topping's ratio, for each style — never the Complete discount,
+// since a logo uses a style or two.
+
+export type ToppingId = 'logo' | 'web' | 'social' | 'app' | 'broadcast';
+
+export interface ToppingOption {
+	id: string;
+	label: string;
+	/** × the per-style rate at the brand's size. */
+	ratio: number;
+}
+
+export interface ToppingDef {
+	id: ToppingId;
+	label: string;
+	blurb: string;
+	options: ToppingOption[];
+}
+
+export const TOPPINGS: ToppingDef[] = [
+	{
+		id: 'logo',
+		label: 'Logo',
+		blurb: 'In the brand’s logo or wordmark.',
+		options: [
+			{ id: 'logo-1', label: '1 logo', ratio: 2 },
+			{ id: 'logo-3', label: 'Up to 3 logos', ratio: 4 }
+		]
+	},
+	{
+		id: 'web',
+		label: 'Web',
+		blurb: 'On the brand’s website, up to 100K views a month.',
+		options: [{ id: 'web-100k', label: 'Up to 100K views / month', ratio: 0.3 }]
+	},
+	{
+		id: 'social',
+		label: 'Social',
+		blurb: 'In the brand’s social media posts and profiles.',
+		options: [{ id: 'social', label: 'Social media', ratio: 0.2 }]
+	},
+	{
+		id: 'app',
+		label: 'App',
+		blurb: 'Embedded in an app, a game, an e-book or a server.',
+		options: [{ id: 'app', label: 'App / embedding', ratio: 1 }]
+	},
+	{
+		id: 'broadcast',
+		label: 'Broadcast',
+		blurb: 'In film, television, streaming or advertising.',
+		options: [{ id: 'broadcast', label: 'Film, TV and advertising', ratio: 1.5 }]
+	}
+];
+
+/** What a new brand starts with: the licence most brands need, one logo, one
+ *  website and their social media — each can be taken off, and the price drops. */
+export const DEFAULT_BRAND_USES: { topping: ToppingId; option: string }[] = [
+	{ topping: 'logo', option: 'logo-1' },
+	{ topping: 'web', option: 'web-100k' },
+	{ topping: 'social', option: 'social' }
+];
+
+/** Sharing the fonts with a subcontractor (a freelancer, a printer): flat, per
+ *  subcontractor, whatever the styles — the early-access factor leaves it alone. */
+export const SUB_LICENSE_EUR = 50;
+export const MAX_SUBCONTRACTORS = 20;
+
+export function getTopping(id: string): ToppingDef | undefined {
+	return TOPPINGS.find((t) => t.id === id);
+}
+
+export function getToppingOption(
+	toppingId: string,
+	optionId: string
+): { topping: ToppingDef; option: ToppingOption } | undefined {
+	const topping = getTopping(toppingId);
+	const option = topping?.options.find((o) => o.id === optionId);
+	return topping && option ? { topping, option } : undefined;
+}
+
+/** EUR for one topping on `styleCount` styles of a brand of this size. */
+export function toppingPrice(tierIndex: number, ratio: number, styleCount: number): Price {
+	const rate = getTierDef(tierIndex)?.perStyleEur ?? null;
+	if (rate === null || styleCount <= 0) return null;
+	return Math.round(rate * ratio * styleCount);
+}
+
+// ── A brand's uses, priced ──────────────────────────────────────────────────
+
+export interface BrandUse {
+	topping: ToppingId;
+	option: string;
+}
+
+export interface BrandInput {
+	name: string;
+	/** The brand's own size (not the buyer's). */
+	tierIndex: number;
+	uses: BrandUse[];
+	/** The styles it uses, per package id. */
+	styles: Record<string, string[]>;
+}
+
+export interface BrandLine {
+	topping: ToppingDef;
+	option: ToppingOption;
+	packageId: string;
+	styleCount: number;
+	price: number;
+}
+
+/** Every (use × typeface) of a brand with its price. Skips what can't be
+ *  priced (a use that no longer exists, a size with no rate): the order check
+ *  refuses those before it gets here. */
+export function priceBrand(brand: BrandInput): BrandLine[] {
+	const lines: BrandLine[] = [];
+	for (const use of brand.uses) {
+		const found = getToppingOption(use.topping, use.option);
+		if (!found) continue;
+		for (const [packageId, styles] of Object.entries(brand.styles)) {
+			const price = toppingPrice(brand.tierIndex, found.option.ratio, styles.length);
+			if (price === null) continue;
+			lines.push({ ...found, packageId, styleCount: styles.length, price });
+		}
+	}
+	return lines;
 }
 
 // ── Price calculation ────────────────────────────────────────────────────────
@@ -204,6 +434,9 @@ export function getPerStylePrice(tierIndex: number): Price {
 }
 
 // ── Project / Client License ─────────────────────────────────────────────────
+// Retired from checkout 2026-11-06: a client's logo, web … are now toppings
+// (see TOPPINGS). These stay only for /licensing, until that page's copy is
+// rewritten for the new licences.
 // Flat-priced, single-brand-scoped licence for a design studio or agency
 // buying on behalf of one client. Full scope (desktop/web/app/broadcast) like
 // Team-and-above, but restricted to one named brand identity — not

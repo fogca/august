@@ -67,11 +67,15 @@ export function buildOrderNotice(session: Stripe.Checkout.Session): OrderNotice 
 		line('Buyer:', buyer),
 		line('Country:', customer?.address?.country),
 		line('Licensee:', meta.licensee_name),
-		line('Client:', meta.client_name),
 		line('Size:', meta.organisation_size),
 		line('Educational:', meta.educational),
 		line('Licenses:', meta.licenses),
 		line('Styles:', meta.selected_styles),
+		line('Brands:', meta.brands),
+		line(
+			'Subcontract.:',
+			meta.subcontractors && meta.subcontractors !== '0' ? meta.subcontractors : null
+		),
 		line('Invoice:', invoice),
 		line('Reference:', pi ?? session.id),
 		line('Dashboard:', dashboardUrl)

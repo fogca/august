@@ -29,7 +29,7 @@
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
 	import GlyphOverview from '$lib/components/fonts/GlyphOverview.svelte';
 	import FontInformation from '$lib/components/fonts/FontInformation.svelte';
-	import { getPackage } from '$lib/data/pricing.js';
+	import { getPackage, packageStage, stageFactor, STAGE_LABELS } from '$lib/data/pricing.js';
 	import type { TypefaceSlug } from '$lib/data/pricing.js';
 	import { displayName } from '$lib/data/typefaces.js';
 	import type { GalleryItem } from '$lib/data/typefaces.js';
@@ -75,8 +75,16 @@
 	// The purchase opens on this typeface (/buy?font=<slug>).
 	const buyHref = $derived(`${resolve('/buy')}?font=${tf.slug}`);
 	// Same "from" price as the /fonts catalogue's own fromPrice() — the
-	// Individual tier's per-style rate, not the full-collection price.
-	const fromPriceEur = $derived(buyPackage?.baseEur ?? null);
+	// Individual tier's per-style rate, not the full-collection price — at the
+	// stage the family is at (early access costs its stage's share).
+	const fromPriceEur = $derived(
+		buyPackage ? Math.round(buyPackage.baseEur * stageFactor(buyPackage)) : null
+	);
+	const stageNote = $derived(
+		buyPackage && stageFactor(buyPackage) < 1
+			? `${STAGE_LABELS[packageStage(buyPackage)]}${buyPackage.version ? ` v${buyPackage.version}` : ''} — the price rises as the family is completed; every update is yours for good.`
+			: null
+	);
 	// Humorist (Ango) only has 52 letters and no OpenType features drawn yet —
 	// Glyph set / Beyond A-Z / OpenType below are swapped for a plain
 	// sample-text block on its page (see the {#if isHumorist} further down).
@@ -462,7 +470,7 @@
 					included
 				</p>
 				<a class="FontBuy__cta" href={buyHref}>Purchase License →</a>
-				<p class="FontBuy__note">{buyPackage?.detail}</p>
+				<p class="FontBuy__note">{stageNote ?? buyPackage?.detail}</p>
 			{:else}
 				<p class="FontBuy__eyebrow">Coming Soon</p>
 				<h2 class="FontBuy__heading">{tf.name}</h2>
