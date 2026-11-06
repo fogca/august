@@ -192,7 +192,7 @@
 	onfocusin={onFocusIn}
 	onfocusout={onFocusOut}
 >
-	<a class="Header__logo" href="/" onclick={close} aria-label="Texmex Typefoundry Tokyo — home">
+	<a class="Header__logo" href="/" onclick={close} aria-label="Time Type Tokyo — home">
 		<Logo bind:wordEls />
 		<!-- Where the two words land in the compact state (see measure()). -->
 		<span class="Header__slot Header__slot--apres" bind:this={slotEls[0]}></span>
@@ -294,8 +294,12 @@
 		/* Compact lockup geometry — PC per Figma 3:671 (1440 frame). The
 		   header's overall height is the shared base.css --header-bar-h token,
 		   which sticky page UI clears — and, on every page but the home, the
-		   space the layout reserves above the content (--masthead-h). */
-		--lockup-w: 273.3px;
+		   space the layout reserves above the content (--masthead-h).
+		   The lockup widths here and below are set for the name's own
+		   proportions (8:1 since "Time Type Tokyo", 2026-11-06; it was 13:1),
+		   keeping the heights the longer name had: ≈20.7px here, 16.9px on PC,
+		   16px on SP — the header's rhythm doesn't change with the name. */
+		--lockup-w: 165.7px;
 		--lockup-top: 34px;
 		/* The lockup's left edge: centred, as Figma 3:671 has it (on the page
 		   margin on PC until 2026-11-05). The second is the same in the
@@ -509,13 +513,13 @@
 	   at the user's request), in the middle like everywhere else since
 	   2026-11-05 — the links are on its left, Account and Cart on its right.
 	   The bar is --header-bar-h (72px here, base.css) tall: the lockup and
-	   the link row are centred in it (the lockup 223px wide, 17px tall; the
+	   the link row are centred in it (the lockup 135px wide, 17px tall; the
 	   links 17.5px). The lockup was 170px by 19px for the 9:1 Apres Guerre
-	   mark; the new name is a 13:1 line, so it takes more width for less
-	   height. */
+	   mark, then 223px by 17px for the 13:1 "Texmex Typefoundry Tokyo"; the
+	   8:1 "Time Type Tokyo" keeps the 17px. */
 	@media (min-width: 1060px) {
 		.Header {
-			--lockup-w: 223px;
+			--lockup-w: 135.2px;
 			--lockup-top: 28px;
 			--row-top: 27px;
 		}
@@ -572,7 +576,7 @@
 	/* ── SP lockup sizes ── */
 	@media (max-width: 767.98px) {
 		.Header {
-			--lockup-w: 211px;
+			--lockup-w: 128px;
 			--lockup-top: 19px;
 		}
 
@@ -584,8 +588,10 @@
 
 	/* ── Below 1060px: menu toggle instead of the inline nav ── the PC nav
 	   is ≈299px wide from x=40 at 16px (it was ≈239px at 12px, when this
-	   was 960px), and the lockup's left edge is at half the width less 137px:
-	   at 1060px that leaves ≈55px clear, at 960px only 5px. Tablets in
+	   was 960px), and the lockup's left edge is at half the width less 83px
+	   (less 137px for the longer name this had until 2026-11-06): at 1060px
+	   that leaves ≈108px clear, at 960px ≈58px (≈55px and 5px with the longer
+	   name — which is why the breakpoint sits where it does). Tablets in
 	   portrait, and landscape iPads (1024px), get the SP menu. */
 	@media (max-width: 1059.98px) {
 		.Header__nav {

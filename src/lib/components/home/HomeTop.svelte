@@ -4,7 +4,7 @@
      Opening: the wordmark's letters, in white, rise into place on a black
      ground (Figma 1:635 had it brand blue; black since 2026-11-05, at the
      user's request, with the new name). The words overlap: each begins when
-     the one before it is three letters in ("Tex" of Texmex), not when it is
+     the one before it is three letters in ("Tim" of Time), not when it is
      done, so the whole name is up sooner (the user asked for a shorter
      opening). Then the ground lifts
      away to the white page underneath, the letters turning black as it goes

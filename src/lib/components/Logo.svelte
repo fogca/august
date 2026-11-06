@@ -4,9 +4,10 @@
      spanning the width with a 15px margin each side and the first centred
      above it at the same scale.
 
-     Since 2026-11-05 the wordmark is "Texmex Typefoundry Tokyo" in Maxa
-     Regular, black (the user's trial — see $lib/data/wordmark.ts, generated
-     from the font by scripts/build_wordmark.py). The words keep the layout's
+     Since 2026-11-05 the wordmark is the user's trial name in Maxa Regular,
+     black — "Texmex Typefoundry Tokyo" on the first day, "Time Type Tokyo"
+     since 2026-11-06 (see $lib/data/wordmark.ts, generated from the font by
+     scripts/build_wordmark.py). The words keep the layout's
      old names, `apres` (the first word) and `guerre` (the second): see
      LOGO_WORDS in $lib/data/logo.ts.
 
@@ -36,7 +37,7 @@
 
 	let { wordEls = $bindable([]), letterEls = $bindable([]) }: Props = $props();
 
-	/** Each letter's word of the name (Texmex, Typefoundry, Tokyo — not the two
+	/** Each letter's word of the name (Time, Type, Tokyo — not the two
 	 *  crops above, the second of which holds two) and its place in that word,
 	 *  in WORDMARK_LETTERS' order (which leaves the spaces out). */
 	const LETTER_POS = WORDMARK_TEXT.split(' ').flatMap((text, word) =>
