@@ -901,19 +901,35 @@
 		color: #c4361e !important;
 	}
 
-	/* The on/off dot — Kontrapunkt's round radio, filled when on. */
+	/* The on/off dot — one radio for the whole page (2026-11-06, the user's
+	   design): a ring when off; when on, the disc filled with a smaller dot of
+	   the ground's colour inside it (black with a white dot on the license,
+	   white with a black dot in the cart). */
 	.Dot {
-		width: 14px;
-		height: 14px;
+		position: relative;
+		width: 16px;
+		height: 16px;
 		flex-shrink: 0;
 		border: 1px solid currentColor;
 		border-radius: 50%;
 		background: transparent;
 		box-sizing: border-box;
+		--dot-inner: var(--color-bg);
 	}
 
 	.Dot.is-on {
 		background: currentColor;
+	}
+
+	.Dot.is-on::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		margin: auto;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--dot-inner);
 	}
 
 	.Field {
@@ -1011,7 +1027,7 @@
 
 	.Addon {
 		display: grid;
-		grid-template-columns: 14px 1fr auto;
+		grid-template-columns: 16px 1fr auto;
 		align-items: start;
 		gap: 10px;
 		background: transparent;
@@ -1167,27 +1183,14 @@
 		margin-top: 3px;
 	}
 
-	/* Selected, in the cart: a white disc with a smaller dot inside it. */
+	/* In the cart: white, with a black dot inside when on. */
 	.Cart .Dot {
-		position: relative;
-		width: 16px;
-		height: 16px;
 		border-color: #fff;
+		--dot-inner: #000;
 	}
 
 	.Cart .Dot.is-on {
 		background: #fff;
-	}
-
-	.Cart .Dot.is-on::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		margin: auto;
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background: #000;
 	}
 
 	.Option__name {
