@@ -335,7 +335,10 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	// HUMORISTは流石にRegularかな").
 	{ text: 'HUMORIST', wght: 450, sizeDesktop: 261, sizeMobile: 69, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
-		text: 'PICKED. AGED. POURED.',
+		// Two lines (2026-11-08, at the user's request — "NEW<br>DEBUTに変えて");
+		// it was "PICKED. AGED. POURED.". DEBUT, the longer, is ≤3.03em at
+		// every weight, so each line holds at this size.
+		text: 'NEW\nDEBUT',
 		wght: 850,
 		sizeDesktop: 333,
 		sizeMobile: 88,
