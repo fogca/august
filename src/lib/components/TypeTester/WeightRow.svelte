@@ -70,15 +70,19 @@
 	let size = $state(untrack(() => initialSize));
 	let noteSize = $state(untrack(() => initialNoteSize));
 	let align = $state<AlignValue>(untrack(() => initialAlign));
-	// The row's weight: its own until a visitor picks another. The menu shows
-	// the option nearest to it, so a line set between two named stops still
-	// reads as one of them.
-	let wght = $state(untrack(() => weight.axisValue));
-	const selectedOption = $derived(
-		weightOptions?.reduce((best, w) =>
-			Math.abs(w.axisValue - wght) < Math.abs(best.axisValue - wght) ? w : best
+	// The row's weight: its own until a visitor picks another. With a menu, a
+	// weight between two named stops starts on the nearest of them, so what
+	// the row shows is what the menu names.
+	const nearest = (options: WeightDef[], v: number) =>
+		options.reduce((best, w) => (Math.abs(w.axisValue - v) < Math.abs(best.axisValue - v) ? w : best));
+	let wght = $state(
+		untrack(() =>
+			weightOptions && weightOptions.length > 1
+				? nearest(weightOptions, weight.axisValue).axisValue
+				: weight.axisValue
 		)
 	);
+	const selectedOption = $derived(weightOptions?.length ? nearest(weightOptions, wght) : undefined);
 
 	let el = $state<HTMLElement>();
 	let noteEl = $state<HTMLElement>();

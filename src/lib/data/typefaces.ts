@@ -91,6 +91,10 @@ export interface Typeface {
 	 *  the width of the screen down to running text), shown above the
 	 *  weight-by-weight rows. Left out, the tester is the weight rows alone. */
 	testerLines?: TesterLine[];
+	/** The weights a visitor can switch every tester row to (2026-11-08, at the
+	 *  user's request — "weight選択できるようにして欲しい"): the face's own named
+	 *  stops, for a real variable font. Left out, the rows keep their weights. */
+	weightMenu?: WeightDef[];
 	/** The notice under the Type Tester, for a face where the default ("… is in
 	 *  development. Preview shown in Norma.") isn't true — a placeholder that
 	 *  borrows a face, or a face still missing characters. */
@@ -390,39 +394,36 @@ const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).join('\n\n');
  *  and "Degustation" stands without its é and bang. The two masters sit at 50
  *  and 950, so the extremes are left to the interpolation. */
 const MAXICA_TESTER_LINES: TesterLine[] = [
-	{ text: 'Vin', wght: 500, sizeDesktop: 881, sizeMobile: 233, lineHeight: 1.1 },
-	{ text: 'Degustation', wght: 300, sizeDesktop: 253, sizeMobile: 67, lineHeight: 1.1 },
-	{ text: 'Assemblage', wght: 200, sizeDesktop: 254, sizeMobile: 66, lineHeight: 1.1 },
-	{ text: 'Vendange', wght: 600, sizeDesktop: 288, sizeMobile: 76, lineHeight: 1.1 },
-	{ text: 'Remuage', wght: 100, sizeDesktop: 331, sizeMobile: 88, lineHeight: 1.1 },
-	{ text: 'Pressurage', wght: 900, sizeDesktop: 248, sizeMobile: 65, lineHeight: 1.1 },
-	{ text: 'Soutirage', wght: 700, sizeDesktop: 298, sizeMobile: 79, lineHeight: 1.1 },
-	{ text: 'Cuvaison', wght: 400, sizeDesktop: 329, sizeMobile: 87, lineHeight: 1.1 },
-	{ text: 'Pigeage', wght: 500, sizeDesktop: 370, sizeMobile: 97, lineHeight: 1.1 },
+	// Opens on the name in Regular at one line, its single cellar words gone
+	// (2026-11-08, at the user's request — "Maxaの書体ページも同様にアップデート",
+	// after Humorist's). MAXA is 3.08em in Regular and 3.25em in Black
+	// (VF20), so 97% of 1360px / 360px at the widest weight keeps it on one
+	// line whichever weight is chosen.
+	{ text: 'MAXA', wght: 450, sizeDesktop: 406, sizeMobile: 107, lineHeight: 1.1 },
 	{
 		text: 'HARVEST OF THE VINEYARD',
-		wght: 800,
+		wght: 850,
 		sizeDesktop: 250,
 		sizeMobile: 66,
 		lineHeight: 0.95
 	},
 	{
 		text: 'the cellar opens at first light and the first glasses of pinot and merlot are poured from the oldest barrels',
-		wght: 400,
+		wght: 450,
 		sizeDesktop: 80,
 		sizeMobile: 28,
 		lineHeight: 1.1
 	},
 	{
 		text: 'abcdefghijklmnopqrstuvwx',
-		wght: 400,
+		wght: 450,
 		sizeDesktop: 108,
 		sizeMobile: 28,
 		lineHeight: 1.1
 	},
-	{ text: vineyardText(2), wght: 400, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
-	{ text: vineyardText(5), wght: 400, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
-	{ text: vineyardText(10), wght: 400, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
+	{ text: vineyardText(2), wght: 450, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
+	{ text: vineyardText(5), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
+	{ text: vineyardText(10), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
 export const TYPEFACES: Typeface[] = [
@@ -642,6 +643,8 @@ export const TYPEFACES: Typeface[] = [
 		weights: WEIGHTS,
 		defaultTexts: ['Maxa'],
 		testerLines: MAXICA_TESTER_LINES,
+		// Its ten named stops are Humorist's (Hair 50 … Regular 450 … Black 950).
+		weightMenu: ANGO_WEIGHTS,
 		testerNotice:
 			'TTT Maxa is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
@@ -736,6 +739,7 @@ export const TYPEFACES: Typeface[] = [
 		// list) or `.mozzarellaBrie` to bring any of them back.
 		defaultTexts: ANGO_TESTER_TEXTS.pinotChardonnay,
 		testerLines: HUMORIST_TESTER_LINES,
+		weightMenu: ANGO_WEIGHTS,
 		// The A-Z/a-z proof, for the gallery's specimen tile. The big name on
 		// /fonts and at the top of the page is set at this weight (the home
 		// hero's own, Light).

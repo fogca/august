@@ -341,13 +341,13 @@
 		name={tf.name}
 		defaultTexts={tf.defaultTexts}
 		defaultNotes={tf.defaultNotes}
-		weightScale={tf.weights}
+		weightScale={tf.weightMenu ?? tf.weights}
 		lines={tf.testerLines}
 		available={isAvailable}
 		notice={tf.testerNotice}
 		defaultSizeDesktop={isHumorist || tf.placeholder ? TESTER_SIZE_DESKTOP : tf.slug === 'norma' ? 36 : undefined}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
-		selectableWeights={isHumorist}
+		selectableWeights={tf.weightMenu !== undefined}
 	/>
 
 	{#if !tf.placeholder}
