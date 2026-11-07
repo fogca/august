@@ -399,7 +399,7 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// after Humorist's). MAXA is 3.08em in Regular and 3.25em in Black
 	// (VF20), so 97% of 1360px / 360px at the widest weight keeps it on one
 	// line whichever weight is chosen.
-	{ text: 'MAXA', wght: 450, sizeDesktop: 406, sizeMobile: 107, lineHeight: 1.1 },
+	{ text: 'MAXA', wght: 450, sizeDesktop: 427, sizeMobile: 113, lineHeight: 1.1 },
 	{
 		text: 'HARVEST OF THE VINEYARD',
 		wght: 850,
@@ -615,7 +615,7 @@ export const TYPEFACES: Typeface[] = [
 		// A placeholder (2026-10-30): the grotesque in progress. "Maxica" =
 		// Maxima + Helvetica, after the way Unica is Univers + Helvetica. It
 		// borrowed Norma at wght 500 until 2026-11-01, when its own variable
-		// font went on (Maxica-VF19.woff2, wght 50–950; VF20 on 2026-11-08). Drawn in both masters so
+		// font went on (Maxica-VF19.woff2, wght 50–950; VF20, VF21 on 2026-11-08). Drawn in both masters so
 		// far: A–Z a–y (z is not in yet), so the default
 		// tester text is the name (all of its letters are in the file);
 		// anything else a visitor types falls back to Norma, then the
