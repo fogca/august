@@ -345,14 +345,8 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 		lineHeight: 0.95,
 		letterSpacing: -0.04
 	},
-	{
-		text: 'Old vines, a cold cellar and a patient pair of hands: the colour deepens to garnet, and the fruit gives way to leather, mushroom and damp earth.',
-		wght: 350,
-		sizeDesktop: 80,
-		sizeMobile: 28,
-		lineHeight: 1.1,
-		letterSpacing: -0.02
-	},
+	// The sentence that followed ("Old vines, a cold cellar…") was removed
+	// 2026-11-08, at the user's request ("このセクション削除").
 	{
 		text: 'AaBbCc (0123456789) ?!&#',
 		wght: 450,
@@ -402,7 +396,7 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// after Humorist's). MAXA is 3.08em in Regular and 3.25em in Black
 	// (VF20), so 97% of 1360px / 360px at the widest weight keeps it on one
 	// line whichever weight is chosen.
-	{ text: 'MAXA', wght: 450, sizeDesktop: 427, sizeMobile: 113, lineHeight: 1.1 },
+	{ text: 'MAXA', wght: 450, sizeDesktop: 406, sizeMobile: 107, lineHeight: 1.1 },
 	{
 		text: 'HARVEST OF THE VINEYARD',
 		wght: 850,
