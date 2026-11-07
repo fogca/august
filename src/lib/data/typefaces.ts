@@ -327,8 +327,9 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	// spacing, nearly the same at every weight (5.03-5.07em, Regular to Black),
 	// so 97% of 1360px / 360px holds on one line whichever weight is chosen.
 	// The single cellar words that followed (Dégustation! to Soutirage) were
-	// removed the same day ("ブロックはまるまる消して").
-	{ text: 'HUMORIST', wght: 550, sizeDesktop: 261, sizeMobile: 69, lineHeight: 1.1, letterSpacing: -0.03 },
+	// removed the same day ("ブロックはまるまる消して"). Set in Regular ("最初の
+	// HUMORISTは流石にRegularかな").
+	{ text: 'HUMORIST', wght: 450, sizeDesktop: 261, sizeMobile: 69, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
 		text: 'PICKED. AGED. POURED.',
 		wght: 850,

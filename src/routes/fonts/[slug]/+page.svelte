@@ -493,8 +493,10 @@
 
 <style>
 	.FontDetail {
-		/* The name starts at the top, under the fixed header. */
-		padding: 0 0 40px;
+		/* The name starts at the top, under the fixed header. No space at the
+		   foot: the black buy block (always last) runs straight into the footer
+		   (40px until 2026-11-08, which left a white strip under it). */
+		padding: 0;
 		/* Black text on this page (2026-10, at the user's request — "各書体の
 		   ページ情報やタイプテスターなどは、ブラックテキストに"). The site
 		   chrome (the wordmark) stays brand blue. (Since 2026-10-31 every page's
@@ -1016,9 +1018,17 @@
 	}
 
 	/* ── On-page buy block ── */
+	/* Full width on black (2026-11-08, at the user's request — "Purchase
+	   Licenseセクションのとこ、100vw黒背景にして"). The page's tokens are
+	   inverted inside it, so the heading, notes and the button (ground-coloured
+	   text on a text-coloured block) turn over with it. */
 	.FontBuy {
+		--color-text: #ffffff;
+		--color-text-mute: rgba(255, 255, 255, 0.6);
+		--color-bg: #000000;
 		padding: 96px var(--padding) 120px;
-		border-top: var(--border-line);
+		background: #000000;
+		color: var(--color-text);
 	}
 
 	.FontBuy__inner {
