@@ -347,6 +347,7 @@
 		notice={tf.testerNotice}
 		defaultSizeDesktop={isHumorist || tf.placeholder ? TESTER_SIZE_DESKTOP : tf.slug === 'norma' ? 36 : undefined}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
+		selectableWeights={isHumorist}
 	/>
 
 	{#if !tf.placeholder}

@@ -45,6 +45,9 @@
 		 *  "NormaのタイプテスターデフォfsをSpでは24pxにして") — falls back to
 		 *  WEIGHT_ROW_SIZE_DEFAULT_MOBILE when omitted. */
 		defaultSizeMobile?: number;
+		/** Every row gets a weight menu over `weightScale` (2026-11-08,
+		 *  Humorist — a real variable font, so any stop is drawn). */
+		selectableWeights?: boolean;
 	}
 
 	let {
@@ -58,8 +61,11 @@
 		available = true,
 		notice,
 		defaultSizeDesktop,
-		defaultSizeMobile
+		defaultSizeMobile,
+		selectableWeights = false
 	}: Props = $props();
+
+	const weightOptions = $derived(selectableWeights ? (weightScale ?? weights) : undefined);
 
 	// Viewport-dependent default size (evaluated once on mount). Only the
 	// initial defaultSizeDesktop/defaultSizeMobile prop values are read — same
@@ -106,6 +112,7 @@
 				lineHeight={line.lineHeight}
 				letterSpacing={line.letterSpacing}
 				columns={line.columns}
+				{weightOptions}
 			/>
 		{/each}
 		{#each weights as weight, i (weight.id)}
@@ -117,6 +124,7 @@
 				{initialSize}
 				{initialNoteSize}
 				{initialAlign}
+				{weightOptions}
 			/>
 		{/each}
 	</div>

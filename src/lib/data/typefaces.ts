@@ -321,16 +321,14 @@ const wineText = (n: number) => WINE_PARAGRAPHS.slice(0, n).join('\n\n');
  *  euro's bars run out to the left). A phone's sizes are the same words fitted
  *  to 360px. */
 const HUMORIST_TESTER_LINES: TesterLine[] = [
-	{ text: 'Vin', wght: 550, sizeDesktop: 926, sizeMobile: 245, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Dégustation!', wght: 350, sizeDesktop: 254, sizeMobile: 66, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Assemblage', wght: 250, sizeDesktop: 271, sizeMobile: 72, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Dégorgement', wght: 650, sizeDesktop: 231, sizeMobile: 60, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Remuage', wght: 50, sizeDesktop: 345, sizeMobile: 91, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Cuvée', wght: 950, sizeDesktop: 491, sizeMobile: 130, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Élevage', wght: 750, sizeDesktop: 413, sizeMobile: 109, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Vendange', wght: 450, sizeDesktop: 321, sizeMobile: 85, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Millésime', wght: 550, sizeDesktop: 332, sizeMobile: 88, lineHeight: 1.1, letterSpacing: -0.03 },
-	{ text: 'Soutirage', wght: 250, sizeDesktop: 355, sizeMobile: 93, lineHeight: 1.1, letterSpacing: -0.03 },
+	// The opening word is the name, sized to one line (2026-11-08, at the
+	// user's request — "最初VInが大きく表示されてるけど、HUMORISTにして、1行で
+	// 収まる程度のサイズをデフォにして"): HUMORIST measures 5.04em at this
+	// spacing, nearly the same at every weight (5.03-5.07em, Regular to Black),
+	// so 97% of 1360px / 360px holds on one line whichever weight is chosen.
+	// The single cellar words that followed (Dégustation! to Soutirage) were
+	// removed the same day ("ブロックはまるまる消して").
+	{ text: 'HUMORIST', wght: 550, sizeDesktop: 261, sizeMobile: 69, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
 		text: 'PICKED. AGED. POURED.',
 		wght: 850,

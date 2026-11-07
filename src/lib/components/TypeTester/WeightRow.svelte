@@ -28,6 +28,10 @@
 		letterSpacing?: number;
 		/** Columns on a desktop screen (a phone always has one) */
 		columns?: number;
+		/** The weights a visitor can switch the row to (2026-11-08, at the
+		 *  user's request — "weight選択できるようにして欲しい"). Left out, the
+		 *  row stays at its own weight and only names it. */
+		weightOptions?: WeightDef[];
 	}
 
 	let {
@@ -41,7 +45,8 @@
 		title,
 		lineHeight = 1,
 		letterSpacing = 0,
-		columns = 1
+		columns = 1,
+		weightOptions
 	}: Props = $props();
 
 	const rowName = $derived(title ?? weight.name);
@@ -65,6 +70,15 @@
 	let size = $state(untrack(() => initialSize));
 	let noteSize = $state(untrack(() => initialNoteSize));
 	let align = $state<AlignValue>(untrack(() => initialAlign));
+	// The row's weight: its own until a visitor picks another. The menu shows
+	// the option nearest to it, so a line set between two named stops still
+	// reads as one of them.
+	let wght = $state(untrack(() => weight.axisValue));
+	const selectedOption = $derived(
+		weightOptions?.reduce((best, w) =>
+			Math.abs(w.axisValue - wght) < Math.abs(best.axisValue - wght) ? w : best
+		)
+	);
 
 	let el = $state<HTMLElement>();
 	let noteEl = $state<HTMLElement>();
@@ -123,7 +137,20 @@
 <div class="WeightRow" role="listitem">
 	<div class="WeightRow__meta">
 		<span class="label-name">{rowName}</span>
-		<span class="label-axis">{weight.label}</span>
+		{#if weightOptions && weightOptions.length > 1 && selectedOption}
+			<select
+				class="WeightRow__weight"
+				value={selectedOption.axisValue}
+				onchange={(e) => (wght = +e.currentTarget.value)}
+				aria-label="{rowName} weight"
+			>
+				{#each weightOptions as opt (opt.id)}
+					<option value={opt.axisValue}>{opt.label}</option>
+				{/each}
+			</select>
+		{:else}
+			<span class="label-axis">{weight.label}</span>
+		{/if}
 		{#if SHOW_ROW_TITLE}
 			<label class="WeightRow__size">
 				<span class="size-icon size-icon--sm">A</span>
@@ -226,7 +253,7 @@
 			spellcheck="false"
 			style="
 	      font-family: '{fontFamily}', sans-serif;
-	      font-variation-settings: 'wght' {weight.axisValue};
+	      font-variation-settings: 'wght' {wght};
 	      font-size: {size}px;
 	      line-height: {lineHeight};
 	      letter-spacing: {letterSpacing}em;
@@ -251,7 +278,7 @@
 			spellcheck="false"
 			style="
         font-family: '{fontFamily}', sans-serif;
-        font-variation-settings: 'wght' {weight.axisValue};
+        font-variation-settings: 'wght' {wght};
         font-size: {noteSize}px;
         text-align: {align};
       "
@@ -314,6 +341,30 @@
 	.label-axis {
 		opacity: 0.45;
 		min-width: 56px;
+	}
+
+	/* The weight menu reads as the weight's name beside the row's label, with
+	   a small chevron to say it opens; the native list does the choosing. */
+	.WeightRow__weight {
+		appearance: none;
+		-webkit-appearance: none;
+		min-width: 56px;
+		margin: 0;
+		padding: 2px 16px 2px 0;
+		border: 0;
+		border-radius: 0;
+		background: transparent
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3Cpath d='M.5.5 4 4 7.5.5' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E")
+			no-repeat right 2px center / 8px 5px;
+		color: inherit;
+		font: inherit;
+		font-variation-settings: normal;
+		cursor: pointer;
+	}
+
+	.WeightRow__weight:focus-visible {
+		outline: 1px solid currentColor;
+		outline-offset: 2px;
 	}
 
 	.WeightRow__size {
