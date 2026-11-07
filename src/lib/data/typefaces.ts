@@ -354,6 +354,17 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	},
 	// The sentence that followed ("Old vines, a cold cellar…") was removed
 	// 2026-11-08, at the user's request ("このセクション削除").
+	// Added 2026-11-08 at the same size as the line below, in Hair (at the
+	// user's request — "同じサイズのテスター増やして、Hairで、Geometrical
+	// Humanistをデフォに").
+	{
+		text: 'Geometrical Humanist',
+		wght: 50,
+		sizeDesktop: 108,
+		sizeMobile: 29,
+		lineHeight: 1.1,
+		letterSpacing: -0.02
+	},
 	{
 		text: 'AaBbCc (0123456789) ?!&#',
 		wght: 450,
