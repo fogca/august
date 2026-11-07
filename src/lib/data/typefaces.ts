@@ -260,7 +260,10 @@ export interface Typeface {
  *    shipped VF has (the typographic apostrophe, for one, is not among them,
  *    so none is used).
  *  - `mozzarellaBrie`: the current default — see its own note. */
-const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie' | 'pinotChardonnay', string[]> = {
+const ANGO_TESTER_TEXTS: Record<
+	'wine' | 'cheese' | 'mozzarellaBrie' | 'pinotChardonnay' | 'alphabet',
+	string[]
+> = {
 	wine: [
 		'Appellation',
 		'Blanc de Blancs',
@@ -282,6 +285,10 @@ const ANGO_TESTER_TEXTS: Record<'wine' | 'cheese' | 'mozzarellaBrie' | 'pinotCha
 	 *  `mozzarellaBrie`. Narrower than it at every weight (measured at 150 and
 	 *  950), so it fits wherever that one did. */
 	pinotChardonnay: ['Pinot Noir & Chardonnay'],
+	/** The default since 2026-11-08, in place of Pinot Noir & Chardonnay on
+	 *  every row (at the user's request — "Pinot Noir & Chardonayは全て、
+	 *  AaBbCcDdEeFfGgに置換"). */
+	alphabet: ['AaBbCcDdEeFfGg'],
 	cheese: [
 		'Abondance Asiago Azeitão',
 		'Bleu de Gex Brie Burrata',
@@ -734,7 +741,7 @@ export const TYPEFACES: Typeface[] = [
 		// so the rows differ only in weight. The other sets are kept in
 		// ANGO_TESTER_TEXTS above — point this at `.wine`, `.cheese` (the A-I
 		// list) or `.mozzarellaBrie` to bring any of them back.
-		defaultTexts: ANGO_TESTER_TEXTS.pinotChardonnay,
+		defaultTexts: ANGO_TESTER_TEXTS.alphabet,
 		testerLines: HUMORIST_TESTER_LINES,
 		weightMenu: ANGO_WEIGHTS,
 		// The A-Z/a-z proof, for the gallery's specimen tile. The big name on
