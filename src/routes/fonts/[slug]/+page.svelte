@@ -352,31 +352,10 @@
 
 	{#if !tf.placeholder}
 
-	<!-- Weights — the named axis stops, each set in its own weight. A quick
-	     visual index of the range; GlyphSet (further down) is the deep,
-	     interactive per-letter inspector across the same axis. -->
-	<section class="FontWeights" aria-label="Weights">
-		<p class="FontDetail__spec-title">Weights</p>
-		<ul class="FontWeights__list">
-			{#each tf.weights as w (w.id)}
-				<li
-					class="FontWeights__item"
-					style="font-variation-settings: 'wght' {w.axisValue}; font-family: '{tf.fontFamily}', sans-serif;"
-				>
-					<!-- Norma's own weights are named by number (1-95, name x 10 =
-					     wght) — that number is the name, not a word standing in for
-					     it, so it's the only thing shown. Humorist's smaller, newer axis
-					     doesn't carry that convention, so it gets the more familiar
-					     "number word" pairing instead. -->
-					{#if isHumorist}
-						<span class="FontWeights__label">{w.name} {w.label}</span>
-					{:else}
-						<span class="FontWeights__label">{w.name}</span>
-					{/if}
-				</li>
-			{/each}
-		</ul>
-	</section>
+	<!-- The Weights list and Humorist's Sample text that stood here were
+	     removed from every typeface page 2026-11-08, at the user's request
+	     ("WeightsとSample Textセクションは全ての書体ページから削除。そのまま
+	     Glyph Overviewで") — the Type Tester runs straight into Glyph Overview. -->
 
 	{#if tf.inspiration}
 		<!-- Inspiration — reference imagery + a short passage on a specific
@@ -402,30 +381,7 @@
 		</section>
 	{/if}
 
-	{#if isHumorist}
-		<!-- Humorist (Ango) only has 52 letters and no OpenType features yet —
-		     the Glyph set / specimen / OpenType sections below would mostly
-		     show .notdef/tofu or empty demos. A plain sample-text block
-		     instead, using only characters actually in its cmap. -->
-		<section class="AngoSample" aria-label="Sample text">
-			<p class="AngoSample__label">Sample text</p>
-			<p class="AngoSample__text" style="font-family: '{tf.fontFamily}', sans-serif;">
-				TTT Humorist is a sibling to Norma, drawn in Hair so far. More weights follow soon. Lorem ipsum
-				dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-				dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-				ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis
-				unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
-				aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta
-				sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,
-				sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro
-				quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia
-				non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat
-				voluptatem.
-			</p>
-		</section>
-	{:else}
+	{#if !isHumorist}
 		<!-- Glyph set: full A-Z inspector -->
 		<GlyphSet fontFamily={tf.fontFamily} name={tf.name} title="Glyph set" weights={tf.weights} />
 
@@ -887,50 +843,6 @@
 		margin: 0 0 20px;
 	}
 
-	/* ── Weights — the named axis stops, each set in its own weight ──
-	   More subdued than the first pass (2026-09, at the user's request —
-	   "各書体ページのweight表示はもう少し控えめにして"): smaller, lower
-	   opacity, so this reads as a reference list rather than another
-	   display headline competing with the gallery above it. Two columns
-	   from the base breakpoint up, not just desktop (2026-09, "Normaの
-	   wightsは1-95までと長いので折り返して2カラムとかで対応") — Norma's
-	   twenty weights made this the tallest section on the page at one
-	   column on SP. */
-	.FontWeights {
-		padding: 40px var(--padding) 48px;
-	}
-
-	.FontWeights__list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		column-gap: 24px;
-	}
-
-	.FontWeights__item {
-		display: block;
-		padding: 6px 0;
-		font-size: clamp(18px, 6vw, 24px);
-		line-height: 1.25;
-		letter-spacing: 0;
-		opacity: 0.7;
-	}
-
-	@media (min-width: 600px) {
-		.FontWeights__list {
-			column-gap: 48px;
-		}
-	}
-
-	@media (min-width: 768px) {
-		.FontWeights__item {
-			padding: 8px 0;
-			font-size: clamp(20px, 2.6vw, 28px);
-		}
-	}
-
 	/* ── Inspiration — reference imagery + a short passage ── */
 	.FontInspiration {
 		padding: 40px var(--padding) 48px;
@@ -992,29 +904,6 @@
 	.FontInspiration .FontInspiration__text.fr {
 		font-weight: 300;
 		font-size: 15px;
-	}
-
-	/* ── Ango: sample text in place of Glyph set / Beyond A-Z / OpenType ── */
-	.AngoSample {
-		padding: 40px var(--padding) 48px;
-		border-top: var(--border-line);
-	}
-
-	.AngoSample__label {
-		font-family: 'Norma', sans-serif;
-		font-size: var(--fs-h5);
-		color: var(--color-text-mute);
-		letter-spacing: 0;
-		margin: 0 0 20px;
-	}
-
-	.AngoSample__text {
-		font-size: clamp(20px, 3vw, 32px);
-		line-height: 1.4;
-		letter-spacing: 0;
-		color: var(--color-text);
-		max-width: 60ch;
-		margin: 0;
 	}
 
 	/* ── On-page buy block ── */
