@@ -389,15 +389,15 @@ const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).join('\n\n');
  *  and "Degustation" stands without its é and bang. The two masters sit at 50
  *  and 950, so the extremes are left to the interpolation. */
 const MAXICA_TESTER_LINES: TesterLine[] = [
-	{ text: 'Vin', wght: 500, sizeDesktop: 877, sizeMobile: 232, lineHeight: 1.1 },
-	{ text: 'Degustation', wght: 300, sizeDesktop: 246, sizeMobile: 65, lineHeight: 1.1 },
-	{ text: 'Assemblage', wght: 200, sizeDesktop: 245, sizeMobile: 64, lineHeight: 1.1 },
-	{ text: 'Vendange', wght: 600, sizeDesktop: 280, sizeMobile: 74, lineHeight: 1.1 },
-	{ text: 'Remuage', wght: 100, sizeDesktop: 317, sizeMobile: 84, lineHeight: 1.1 },
-	{ text: 'Pressurage', wght: 900, sizeDesktop: 243, sizeMobile: 64, lineHeight: 1.1 },
-	{ text: 'Soutirage', wght: 700, sizeDesktop: 295, sizeMobile: 78, lineHeight: 1.1 },
-	{ text: 'Cuvaison', wght: 400, sizeDesktop: 323, sizeMobile: 85, lineHeight: 1.1 },
-	{ text: 'Pigeage', wght: 500, sizeDesktop: 362, sizeMobile: 95, lineHeight: 1.1 },
+	{ text: 'Vin', wght: 500, sizeDesktop: 881, sizeMobile: 233, lineHeight: 1.1 },
+	{ text: 'Degustation', wght: 300, sizeDesktop: 253, sizeMobile: 67, lineHeight: 1.1 },
+	{ text: 'Assemblage', wght: 200, sizeDesktop: 254, sizeMobile: 66, lineHeight: 1.1 },
+	{ text: 'Vendange', wght: 600, sizeDesktop: 288, sizeMobile: 76, lineHeight: 1.1 },
+	{ text: 'Remuage', wght: 100, sizeDesktop: 331, sizeMobile: 88, lineHeight: 1.1 },
+	{ text: 'Pressurage', wght: 900, sizeDesktop: 248, sizeMobile: 65, lineHeight: 1.1 },
+	{ text: 'Soutirage', wght: 700, sizeDesktop: 298, sizeMobile: 79, lineHeight: 1.1 },
+	{ text: 'Cuvaison', wght: 400, sizeDesktop: 329, sizeMobile: 87, lineHeight: 1.1 },
+	{ text: 'Pigeage', wght: 500, sizeDesktop: 370, sizeMobile: 97, lineHeight: 1.1 },
 	{
 		text: 'HARVEST OF THE VINEYARD',
 		wght: 800,
@@ -613,7 +613,7 @@ export const TYPEFACES: Typeface[] = [
 		// A placeholder (2026-10-30): the grotesque in progress. "Maxica" =
 		// Maxima + Helvetica, after the way Unica is Univers + Helvetica. It
 		// borrowed Norma at wght 500 until 2026-11-01, when its own variable
-		// font went on (Maxica-VF19.woff2, wght 50–950). Drawn in both masters so
+		// font went on (Maxica-VF19.woff2, wght 50–950; VF20 on 2026-11-08). Drawn in both masters so
 		// far: A–Z a–y (z is not in yet), so the default
 		// tester text is the name (all of its letters are in the file);
 		// anything else a visitor types falls back to Norma, then the

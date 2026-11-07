@@ -26,8 +26,10 @@ from fontTools.ttLib import TTFont
 from fontTools.varLib import instancer
 
 ROOT = Path(__file__).resolve().parent.parent
-# The site's current Maxa (VF18 until 2026-11-05; VF19 replaced it in static/fonts).
-FONT = ROOT / "static/fonts/Maxica-VF19.woff2"
+# The wordmark is still set in Maxa VF19 (VF18 until 2026-11-05). VF20 (2026-11-08) changed
+# the face (x-height, widths, spacing); the file is kept here, out of static/, so the
+# wordmark stays reproducible. Point FONT at static/fonts/Maxica-VF20.woff2 to follow the new Maxa.
+FONT = ROOT / "scripts/fonts/Maxica-VF19.woff2"
 OUT = ROOT / "src/lib/data/wordmark.ts"
 
 # 2026-11-05, at the user's request: the name in Maxa Regular, capitalised
