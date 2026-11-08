@@ -400,7 +400,16 @@ const VINEYARD_STANZAS = [
 	'in the cellar of the old house\nbottles lie in rows along the walls\neach label marked with a year and a name\nclaret and riesling and a dusty magnum of port\nsealed in summer opened in the cold',
 	'in a drawer a map of the old vineyard\neach row drawn and numbered\nthe date each one was planted\nthe name of the man who planted it\nsome of the vines are gone the numbers remain'
 ];
-const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).join('\n\n');
+// Set as prose, not one phrase to a line (2026-11-08, at the user's request
+// — "Maxaではサイズが同じでも改行されてる": the hard line breaks made Maxa's
+// running text break where Humorist's flows). Each stanza's phrases are
+// joined with commas into one sentence; VF19 on draws the capitals and the
+// punctuation this needs.
+const stanzaProse = (stanza: string) => {
+	const text = stanza.split('\n').join(', ');
+	return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
+};
+const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).map(stanzaProse).join('\n\n');
 
 /** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"; wine
  *  copy 2026-11-05): the same shape as Humorist's — Vin, Degustation, the
@@ -421,10 +430,13 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// line whichever weight is chosen.
 	{ text: 'MAXA', wght: 450, sizeDesktop: 406, sizeMobile: 113, lineHeight: 1.1 },
 	{
-		text: 'HARVEST OF THE VINEYARD',
+		// Two set lines, like Humorist's NEW / DEBUT (2026-11-08): it wrapped
+		// into three at 250px. THE VINEYARD is ≤7.66em (Black), so each line
+		// holds in 97% of 1360px / 380px at any weight.
+		text: 'HARVEST OF\nTHE VINEYARD',
 		wght: 850,
-		sizeDesktop: 250,
-		sizeMobile: 66,
+		sizeDesktop: 172,
+		sizeMobile: 48,
 		lineHeight: 0.95
 	},
 	{
