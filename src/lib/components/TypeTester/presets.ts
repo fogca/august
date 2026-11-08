@@ -125,6 +125,13 @@ export const FONT_SIZE_DEFAULT_MOBILE = 20;
 export const FONT_SIZE_DEFAULT = FONT_SIZE_DEFAULT_DESKTOP;
 // Breakpoint at which mobile default applies
 export const MOBILE_BREAKPOINT_PX = 768;
+/** The phone width a tester line's sizeMobile is set for (2026-11-08): 390px,
+ *  less the text's 5px side margins (WeightRow). A display line is scaled to
+ *  the phone it is on, so it fills a 360px or 430px screen the same way. */
+export const PHONE_BASE_WIDTH_PX = 390;
+/** Lines this size and up on a phone are display lines (scaled to the
+ *  screen); running text below it keeps its size. */
+export const PHONE_DISPLAY_MIN_PX = 40;
 
 // Switch: show the large specimen line and its size slider. 2026-08-30 — back
 // on (a 1-2 word specimen, not the body copy, is the tester's main content

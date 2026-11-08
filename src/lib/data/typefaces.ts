@@ -340,7 +340,7 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	// The single cellar words that followed (Dégustation! to Soutirage) were
 	// removed the same day ("ブロックはまるまる消して"). Set in Regular ("最初の
 	// HUMORISTは流石にRegularかな").
-	{ text: 'HUMORIST', wght: 450, sizeDesktop: 261, sizeMobile: 69, lineHeight: 1.1, letterSpacing: -0.03 },
+	{ text: 'HUMORIST', wght: 450, sizeDesktop: 261, sizeMobile: 74, lineHeight: 1.1, letterSpacing: -0.03 },
 	{
 		// Two lines (2026-11-08, at the user's request — "NEW<br>DEBUTに変えて");
 		// it was "PICKED. AGED. POURED.". DEBUT, the longer, is ≤3.03em at
@@ -348,7 +348,12 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 		text: 'NEW\nDEBUT',
 		wght: 850,
 		sizeDesktop: 333,
-		sizeMobile: 88,
+		// Phone sizes from 2026-11-08 (the user's screenshot: 74 / 130 / 41 /
+		// 60px), fitted to 380px (390 less 5px a side) at the widest weight
+		// each line would show: HUMORIST 5.07em, DEBUT 3.03em, Geometrical
+		// Humanist 9.03em in Hair, (0123456789) 6.07em in Regular — the
+		// AaBbCc line wraps into its three groups.
+		sizeMobile: 124,
 		lineHeight: 0.95,
 		letterSpacing: -0.04
 	},
@@ -361,7 +366,7 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 		text: 'Geometrical Humanist',
 		wght: 50,
 		sizeDesktop: 108,
-		sizeMobile: 29,
+		sizeMobile: 41,
 		lineHeight: 1.1,
 		letterSpacing: -0.02
 	},
@@ -369,7 +374,7 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 		text: 'AaBbCc (0123456789) ?!&#',
 		wght: 450,
 		sizeDesktop: 108,
-		sizeMobile: 29,
+		sizeMobile: 60,
 		lineHeight: 1.1,
 		letterSpacing: -0.02
 	},
@@ -414,7 +419,7 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// after Humorist's). MAXA is 3.08em in Regular and 3.25em in Black
 	// (VF20), so 97% of 1360px / 360px at the widest weight keeps it on one
 	// line whichever weight is chosen.
-	{ text: 'MAXA', wght: 450, sizeDesktop: 406, sizeMobile: 107, lineHeight: 1.1 },
+	{ text: 'MAXA', wght: 450, sizeDesktop: 406, sizeMobile: 113, lineHeight: 1.1 },
 	{
 		text: 'HARVEST OF THE VINEYARD',
 		wght: 850,

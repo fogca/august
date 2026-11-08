@@ -337,6 +337,16 @@
 		padding-inline: var(--padding);
 	}
 
+	/* On a phone the specimen itself runs nearly edge to edge — 5px a side
+	   (2026-11-08, at the user's request — "タイプテスター本体の左右のマージン
+	   ？は5pxくらいに抑えて、すぐ改行されないように"); the controls above it
+	   keep the page margin. */
+	@media (max-width: 767.98px) {
+		.WeightRow__text {
+			padding-inline: 5px;
+		}
+	}
+
 	.label-name {
 		font-weight: var(--fw-strong);
 		min-width: 28px;

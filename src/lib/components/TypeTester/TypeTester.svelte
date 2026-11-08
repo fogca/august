@@ -6,6 +6,8 @@
 	import type { WeightDef, TesterLine } from './presets.js';
 	import {
 		MOBILE_BREAKPOINT_PX,
+		PHONE_BASE_WIDTH_PX,
+		PHONE_DISPLAY_MIN_PX,
 		WEIGHT_ROW_SIZE_DEFAULT_DESKTOP,
 		WEIGHT_ROW_SIZE_DEFAULT_MOBILE,
 		WEIGHT_ROW_NOTE_DEFAULT_DESKTOP,
@@ -81,6 +83,14 @@
 		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
 	const initialAlign = isPhone ? WEIGHT_ROW_ALIGN_DEFAULT_MOBILE : WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP;
 
+	// A line's starting size: the desktop one, or on a phone its sizeMobile
+	// (set for a 390px screen) scaled to this screen if it is a display line.
+	const phoneScale = isPhone ? window.innerWidth / PHONE_BASE_WIDTH_PX : 1;
+	function lineSize(l: TesterLine): number {
+		if (!isPhone) return l.sizeDesktop;
+		return l.sizeMobile >= PHONE_DISPLAY_MIN_PX ? Math.floor(l.sizeMobile * phoneScale) : l.sizeMobile;
+	}
+
 	// A tester line is a weight row that sets its own size, weight and spacing.
 	// Its label is the typeface's name and the weight's name ("Medium") —
 	// nothing that pretends to be a style of its own.
@@ -107,7 +117,7 @@
 				title={name ?? fontFamily}
 				defaultText={line.text}
 				{fontFamily}
-				initialSize={isPhone ? line.sizeMobile : line.sizeDesktop}
+				initialSize={lineSize(line)}
 				{initialAlign}
 				lineHeight={line.lineHeight}
 				letterSpacing={line.letterSpacing}
