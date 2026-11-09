@@ -449,8 +449,11 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// VINEYARD (2026-11-09, at the user's request). Each fits one line at
 	// its widest weight (VF25: 6.09em / 8.00em in Black) in 97% of 1360px /
 	// 380px, so it stays on one line whichever weight is chosen.
+	// Phone sizes (2026-11-09, at the user's request): 64 / 80 / 36 / 20 / 24 / 16 / 14px
+	// as shown on their phone (display lines are scaled by screen width, so
+	// 60 / 75 / 34 here read 64 / 80 / 36 there). Classical Modern wraps to two lines.
 	{ text: 'Mid-Century', wght: 450, sizeDesktop: 216, sizeMobile: 60, lineHeight: 1.1 },
-	{ text: 'Classical Modern', wght: 850, sizeDesktop: 164, sizeMobile: 46, lineHeight: 1.1 },
+	{ text: 'Classical Modern', wght: 850, sizeDesktop: 164, sizeMobile: 75, lineHeight: 1.1 },
 	// The concept line and the full alphabet with figures (2026-11-09, at the
 	// user's request; the cellar sentence and the a-x line before them were
 	// dropped). Each line fits at its widest weight (VF25, Black): Grotesque,
@@ -462,12 +465,12 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 		text: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwx0123456789!?',
 		wght: 450,
 		sizeDesktop: 67,
-		sizeMobile: 17,
+		sizeMobile: 20,
 		lineHeight: 1.2
 	},
 	{ text: prideText(2), wght: 450, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
 	{ text: prideText(14), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
-	{ text: prideText(24), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
+	{ text: prideText(24), wght: 450, sizeDesktop: 14, sizeMobile: 14, lineHeight: 1.4, columns: 3 }
 ];
 
 export const TYPEFACES: Typeface[] = [
