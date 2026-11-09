@@ -668,12 +668,28 @@ export const TYPEFACES: Typeface[] = [
 		placeholder: true,
 		fontFamily: 'Maxica',
 		tagline: 'In development.',
+		// Concept text agreed 2026-11-09 (built like Unica's story, without
+		// naming it: two forebears, build from one and measure from the other,
+		// what the mix makes possible, where it is used). Facts checked: Maxima
+		// = Gert Wunderlich for Typoart, Dresden, begun 1963, capitals in
+		// classical-roman proportions + a narrow lowercase for reading; Maxa's
+		// ascenders rise above the capitals since VF24 (cap 700, asc 720).
 		description:
-			'TTT Maxa is a grotesque in development at Apres Guerre. ' +
-			'Details on its design direction, weights and release schedule will follow.',
+			'TTT Maxa is a neo-grotesque drawn from two answers to the same mid-century question. ' +
+			'In Switzerland, Helvetica made the grotesque firm, dense and even. ' +
+			"In the 1960s, the book designer Gert Wunderlich drew Maxima for Typoart in Dresden as East Germany's own answer: a sans whose capitals keep the proportions of the classical roman, and whose narrow lowercase was cut for reading. " +
+			"Maxa takes Helvetica's build — level terminals, firm curves, close spacing — and Maxima's measure: capitals that are wide or narrow as their roman ancestors were, and ascenders that rise above them, so capitals sit quietly in a line of text. " +
+			'At a glance it is as plain as any grotesque; its capitals keep a rhythm that grotesques usually give up. ' +
+			'That makes it useful where a neo-grotesque turns stiff: names, titles and wayfinding set in capitals; text full of capitals, such as German or lists of proper names; identities that run from a wordmark into body text in one typeface. ' +
+			'One weight axis runs from Hair for large display to Black for posters.',
 		descriptionFr:
-			'TTT Maxa est une grotesque en cours de développement chez Apres Guerre. ' +
-			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
+			'TTT Maxa est une néo-grotesque née de deux réponses à une même question du milieu du XXe siècle. ' +
+			"En Suisse, l'Helvetica a rendu la grotesque ferme, dense et régulière. " +
+			"Dans les années 1960, le graphiste du livre Gert Wunderlich a dessiné la Maxima pour Typoart à Dresde, réponse propre de l'Allemagne de l'Est : une linéale dont les capitales gardent les proportions de la romaine classique, et dont les bas-de-casse étroits ont été taillés pour la lecture. " +
+			"Maxa emprunte à l'Helvetica sa construction — terminaisons horizontales, courbes tendues, approche serrée — et à la Maxima sa mesure : des capitales larges ou étroites comme l'étaient leurs ancêtres romaines, et des ascendantes qui les dépassent, si bien que les capitales restent discrètes dans une ligne de texte. " +
+			'Au premier regard, elle est aussi simple que n’importe quelle grotesque ; ses capitales gardent pourtant un rythme que les grotesques abandonnent d’ordinaire. ' +
+			'Elle sert ainsi là où une néo-grotesque se fige : noms, titres et signalétique composés en capitales ; textes riches en majuscules, comme l’allemand ou les listes de noms propres ; identités qui passent du logotype au texte courant dans un seul caractère. ' +
+			'Un seul axe de graisse va du Hair, pour les grands titres, au Black, pour les affiches.',
 		classification: 'Grotesque · In development',
 		weights: WEIGHTS,
 		defaultTexts: ['Maxa'],
