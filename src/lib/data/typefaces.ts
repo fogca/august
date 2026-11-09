@@ -427,16 +427,19 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// (2026-11-08, at the user's request — "Maxaの書体ページも同様にアップデート",
 	// after Humorist's). MAXA is 3.08em in Regular and 3.25em in Black
 	// (VF20), so 97% of 1360px / 360px at the widest weight keeps it on one
-	// line whichever weight is chosen.
-	{ text: 'MAXA', wght: 450, sizeDesktop: 406, sizeMobile: 113, lineHeight: 1.1 },
+	// line whichever weight is chosen. VF24 (cap height 720 → 700) took the
+	// capitals to 2.99em / 3.15em, so both sizes grew by the same 2.9%
+	// (406 → 417, 113 → 116) to keep the line exactly as full.
+	{ text: 'MAXA', wght: 450, sizeDesktop: 417, sizeMobile: 116, lineHeight: 1.1 },
 	{
 		// Two set lines, like Humorist's NEW / DEBUT (2026-11-08): it wrapped
 		// into three at 250px. THE VINEYARD is ≤7.66em (Black), so each line
-		// holds in 97% of 1360px / 380px at any weight.
+		// holds in 97% of 1360px / 380px at any weight. ≤7.46em since VF24,
+		// refitted the same way (172 → 176, 48 → 49).
 		text: 'HARVEST OF\nTHE VINEYARD',
 		wght: 850,
-		sizeDesktop: 172,
-		sizeMobile: 48,
+		sizeDesktop: 176,
+		sizeMobile: 49,
 		lineHeight: 0.95
 	},
 	{
