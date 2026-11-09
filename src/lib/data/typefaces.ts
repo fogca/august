@@ -430,18 +430,12 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// line whichever weight is chosen. VF24 (cap height 720 → 700) took the
 	// capitals to 2.99em / 3.15em, so both sizes grew by the same 2.9%
 	// (406 → 417, 113 → 116) to keep the line exactly as full.
-	{ text: 'MAXA', wght: 450, sizeDesktop: 417, sizeMobile: 116, lineHeight: 1.1 },
-	{
-		// Two set lines, like Humorist's NEW / DEBUT (2026-11-08): it wrapped
-		// into three at 250px. THE VINEYARD is ≤7.66em (Black), so each line
-		// holds in 97% of 1360px / 380px at any weight. ≤7.46em since VF24,
-		// refitted the same way (172 → 176, 48 → 49).
-		text: 'HARVEST OF\nTHE VINEYARD',
-		wght: 850,
-		sizeDesktop: 176,
-		sizeMobile: 49,
-		lineHeight: 0.95
-	},
+	// "Mid-Century" / "Classical Modern" replaced MAXA and HARVEST OF / THE
+	// VINEYARD (2026-11-09, at the user's request). Each fits one line at
+	// its widest weight (VF25: 6.09em / 8.00em in Black) in 97% of 1360px /
+	// 380px, so it stays on one line whichever weight is chosen.
+	{ text: 'Mid-Century', wght: 450, sizeDesktop: 216, sizeMobile: 60, lineHeight: 1.1 },
+	{ text: 'Classical Modern', wght: 850, sizeDesktop: 164, sizeMobile: 46, lineHeight: 1.1 },
 	{
 		text: 'the cellar opens at first light and the first glasses of pinot and merlot are poured from the oldest barrels',
 		wght: 450,

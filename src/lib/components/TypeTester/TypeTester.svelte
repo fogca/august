@@ -8,6 +8,9 @@
 		MOBILE_BREAKPOINT_PX,
 		PHONE_BASE_WIDTH_PX,
 		PHONE_DISPLAY_MIN_PX,
+		DESKTOP_BASE_TEXT_WIDTH_PX,
+		DESKTOP_SIDE_PADDING_PX,
+		DESKTOP_DISPLAY_MIN_PX,
 		WEIGHT_ROW_SIZE_DEFAULT_DESKTOP,
 		WEIGHT_ROW_SIZE_DEFAULT_MOBILE,
 		WEIGHT_ROW_NOTE_DEFAULT_DESKTOP,
@@ -83,11 +86,17 @@
 		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
 	const initialAlign = isPhone ? WEIGHT_ROW_ALIGN_DEFAULT_MOBILE : WEIGHT_ROW_ALIGN_DEFAULT_DESKTOP;
 
-	// A line's starting size: the desktop one, or on a phone its sizeMobile
-	// (set for a 390px screen) scaled to this screen if it is a display line.
+	// A line's starting size: the desktop one (set for a 1440px window, scaled
+	// down on a narrower one if it is a display line), or on a phone its
+	// sizeMobile (set for a 390px screen) scaled to this screen likewise.
 	const phoneScale = isPhone ? window.innerWidth / PHONE_BASE_WIDTH_PX : 1;
+	const desktopScale = browser && !isPhone
+		? Math.min(1, (window.innerWidth - 2 * DESKTOP_SIDE_PADDING_PX) / DESKTOP_BASE_TEXT_WIDTH_PX)
+		: 1;
 	function lineSize(l: TesterLine): number {
-		if (!isPhone) return l.sizeDesktop;
+		if (!isPhone) {
+			return l.sizeDesktop >= DESKTOP_DISPLAY_MIN_PX ? Math.floor(l.sizeDesktop * desktopScale) : l.sizeDesktop;
+		}
 		return l.sizeMobile >= PHONE_DISPLAY_MIN_PX ? Math.floor(l.sizeMobile * phoneScale) : l.sizeMobile;
 	}
 
