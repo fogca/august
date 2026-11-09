@@ -106,7 +106,9 @@
 	// whole weight range would pass it off as the placeholder's. One row, at
 	// the weight the name above is set in, and no more.
 	const testerWeights = $derived(
-		tf.placeholder ? tf.weights.filter((w) => w.axisValue === nameWeight).slice(0, 1) : tf.weights
+		tf.placeholder && !tf.weightMenu
+			? tf.weights.filter((w) => w.axisValue === nameWeight).slice(0, 1)
+			: tf.weights
 	);
 
 	// The spec lines, in two columns. Only what the data holds: a line with
@@ -345,7 +347,7 @@
 		lines={tf.testerLines}
 		available={isAvailable}
 		notice={tf.testerNotice}
-		defaultSizeDesktop={isHumorist || tf.placeholder ? TESTER_SIZE_DESKTOP : tf.slug === 'norma' ? 36 : undefined}
+		defaultSizeDesktop={tf.testerRowSizeDesktop ?? (isHumorist || tf.placeholder ? TESTER_SIZE_DESKTOP : tf.slug === 'norma' ? 36 : undefined)}
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 		selectableWeights={tf.weightMenu !== undefined}
 	/>

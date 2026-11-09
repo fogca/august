@@ -131,7 +131,7 @@ export const MOBILE_BREAKPOINT_PX = 768;
 export const PHONE_BASE_WIDTH_PX = 390;
 /** Lines this size and up on a phone are display lines (scaled to the
  *  screen); running text below it keeps its size. */
-export const PHONE_DISPLAY_MIN_PX = 40;
+export const PHONE_DISPLAY_MIN_PX = 30;
 /** The desktop width a tester line's sizeDesktop is set for (2026-11-09):
  *  1440px, i.e. 1360px of text between the 40px side paddings. Display lines
  *  shrink with narrower desktop windows (never grow) so they stay one line. */

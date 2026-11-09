@@ -78,9 +78,15 @@
 	// DEFAULT_WEIGHT/DEFAULT_GLYPH, wrapped in untrack() to say so explicitly
 	// rather than leave it as an unexplained lint warning.
 	const isPhone = browser && window.innerWidth < MOBILE_BREAKPOINT_PX;
+	// Desktop sizes are set for a 1440px window; display sizes shrink with a
+	// narrower one (never grow) so a line set to fit stays on one line.
+	const desktopScale = browser && !isPhone
+		? Math.min(1, (window.innerWidth - 2 * DESKTOP_SIDE_PADDING_PX) / DESKTOP_BASE_TEXT_WIDTH_PX)
+		: 1;
+	const desktopSize = (px: number) => (px >= DESKTOP_DISPLAY_MIN_PX ? Math.floor(px * desktopScale) : px);
 	const initialSize = isPhone
 		? (untrack(() => defaultSizeMobile) ?? WEIGHT_ROW_SIZE_DEFAULT_MOBILE)
-		: (untrack(() => defaultSizeDesktop) ?? WEIGHT_ROW_SIZE_DEFAULT_DESKTOP);
+		: desktopSize(untrack(() => defaultSizeDesktop) ?? WEIGHT_ROW_SIZE_DEFAULT_DESKTOP);
 	const initialNoteSize = isPhone
 		? WEIGHT_ROW_NOTE_DEFAULT_MOBILE
 		: WEIGHT_ROW_NOTE_DEFAULT_DESKTOP;
@@ -90,12 +96,9 @@
 	// down on a narrower one if it is a display line), or on a phone its
 	// sizeMobile (set for a 390px screen) scaled to this screen likewise.
 	const phoneScale = isPhone ? window.innerWidth / PHONE_BASE_WIDTH_PX : 1;
-	const desktopScale = browser && !isPhone
-		? Math.min(1, (window.innerWidth - 2 * DESKTOP_SIDE_PADDING_PX) / DESKTOP_BASE_TEXT_WIDTH_PX)
-		: 1;
 	function lineSize(l: TesterLine): number {
 		if (!isPhone) {
-			return l.sizeDesktop >= DESKTOP_DISPLAY_MIN_PX ? Math.floor(l.sizeDesktop * desktopScale) : l.sizeDesktop;
+			return desktopSize(l.sizeDesktop);
 		}
 		return l.sizeMobile >= PHONE_DISPLAY_MIN_PX ? Math.floor(l.sizeMobile * phoneScale) : l.sizeMobile;
 	}
@@ -135,8 +138,11 @@
 			/>
 		{/each}
 		{#each weights as weight, i (weight.id)}
+			<!-- Titled with the typeface's name, like the lines above (2026-11-09):
+			     the weight's own name is its scale number ("5"), never shown. -->
 			<WeightRow
 				{weight}
+				title={name ?? fontFamily}
 				defaultText={defaultTexts[i % defaultTexts.length]}
 				defaultNote={defaultNotes?.[i % defaultNotes.length]}
 				{fontFamily}

@@ -95,6 +95,9 @@ export interface Typeface {
 	 *  user's request — "weight選択できるようにして欲しい"): the face's own named
 	 *  stops, for a real variable font. Left out, the rows keep their weights. */
 	weightMenu?: WeightDef[];
+	/** The weight rows' starting size on a 1440px desktop, when the face's
+	 *  default line would not fit the page's usual size at its widest weight. */
+	testerRowSizeDesktop?: number;
 	/** The notice under the Type Tester, for a face where the default ("… is in
 	 *  development. Preview shown in Norma.") isn't true — a placeholder that
 	 *  borrows a face, or a face still missing characters. */
@@ -448,19 +451,19 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	// 380px, so it stays on one line whichever weight is chosen.
 	{ text: 'Mid-Century', wght: 450, sizeDesktop: 216, sizeMobile: 60, lineHeight: 1.1 },
 	{ text: 'Classical Modern', wght: 850, sizeDesktop: 164, sizeMobile: 46, lineHeight: 1.1 },
+	// The concept line and the full alphabet with figures (2026-11-09, at the
+	// user's request; the cellar sentence and the a-x line before them were
+	// dropped). Each line fits at its widest weight (VF25, Black): Grotesque,
+	// yet humane 10.81em; the capitals 18.15em and the lowercase, figures and
+	// !? 19.46em — 97% of 1360px, and of 380px (350px for the alphabet, which
+	// has no spaces to wrap at and is not scaled to the phone).
+	{ text: 'Grotesque, yet humane', wght: 50, sizeDesktop: 122, sizeMobile: 34, lineHeight: 1.1 },
 	{
-		text: 'the cellar opens at first light and the first glasses of pinot and merlot are poured from the oldest barrels',
+		text: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwx0123456789!?',
 		wght: 450,
-		sizeDesktop: 80,
-		sizeMobile: 28,
-		lineHeight: 1.1
-	},
-	{
-		text: 'abcdefghijklmnopqrstuvwx',
-		wght: 450,
-		sizeDesktop: 108,
-		sizeMobile: 28,
-		lineHeight: 1.1
+		sizeDesktop: 67,
+		sizeMobile: 17,
+		lineHeight: 1.2
 	},
 	{ text: prideText(2), wght: 450, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
 	{ text: prideText(14), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
@@ -697,8 +700,13 @@ export const TYPEFACES: Typeface[] = [
 			'Elle sert ainsi là où une néo-grotesque se fige : noms, titres et signalétique composés en capitales ; textes riches en majuscules, comme l’allemand ou les listes de noms propres ; identités qui passent du logotype au texte courant dans un seul caractère. ' +
 			'Un seul axe de graisse va du Hair, pour les grands titres, au Black, pour les affiches.',
 		classification: 'Neo-grotesque · In development',
-		weights: WEIGHTS,
-		defaultTexts: ['Maxa'],
+		// Its own ten named stops (Hair 50 … Black 950), one weight row each,
+		// all on the same line as Humorist's (2026-11-09, at the user's request
+		// — "Humoristのように同じサイズのweight違いを全て並べる"). AaBbCcDdEeFfGg is
+		// 8.64em in Black, so the rows start at 152px (97% of 1360px), not 160.
+		weights: ANGO_WEIGHTS,
+		defaultTexts: ANGO_TESTER_TEXTS.alphabet,
+		testerRowSizeDesktop: 152,
 		testerLines: MAXICA_TESTER_LINES,
 		// Its ten named stops are Humorist's (Hair 50 … Regular 450 … Black 950).
 		weightMenu: ANGO_WEIGHTS,
