@@ -302,18 +302,23 @@ const ANGO_TESTER_TEXTS: Record<
 	]
 };
 
-/** Running text for Humorist's Type Tester: six paragraphs on wine, the
- *  register of the weight rows' own line. The lines draw on it by length —
- *  the first paragraph at 48px, the first four at 19px, all six at 14px. */
-const WINE_PARAGRAPHS = [
-	'A wine is never finished, only ready. In the cellar the fruit fades first, the bright cherry and the sharp edge of youth, and under it the bouquet begins its slow change: leather, then mushroom, then the damp of a forest floor after rain. Nobody can hurry it. The cellar master walks the rows with a candle, tastes from the barrel, and decides whether it needs another year or another decade.',
-	'Grapes are the beginning, and they are never the same twice. They carry the year in them: the frost of April, the heat of August, the rain of the week before the harvest. A vigneron learns to read that difference the way a baker reads flour, and to leave most of it alone. The fruit is picked, sorted and pressed by hand, then left to ferment in its own time. What happens after that happens in the dark, in cool air at a steady temperature, and it is the cellar that does the rest.',
-	'To drink it well, open it an hour before serving. A bottle straight from the cellar is closed and quiet; in the glass it opens, and the smell comes first, of cherry and violet and warm stone. Pour it so that the glass is never more than a third full, and turn it gently. Serve it with bread, with a plate of something simple, with good company, and do not rush. There is nothing in the glass that needs improving.',
-	'Every region has its own answer. In the north the wines are pale and sharp and lean toward the sea; in the hills they are dark, tannic and slow to open, and keep for decades; on the plains they are young, bright and generous, made in the autumn and drunk within the year. The names on the label, Bordeaux and Burgundy, Barolo and Rioja, are less a list than a map.',
-	'A good sommelier knows a bottle before it is opened. They lift it, tilt it to the light, and read the colour: a wine that is ready is clear and deep, a wine that is not stays stubborn, and one that has gone too far turns brown at the rim and thin on the palate. There is no number for this. It is learned the way a language is, by hearing it spoken every day for years, until the meaning arrives without translation.',
-	'Laid on its side in the dark, a bottle keeps breathing through the cork. Keep it somewhere cool and still, away from light and from anything with a strong smell, and move it only to open. If a little sediment settles at the bottom, leave it there; if the smell turns sharp and vinegary, it has simply had its day. Buy less, more often, and ask for a taste. A good merchant will always say yes.'
+/** Running text for Humorist's Type Tester (2026-11-09, at the user's request
+ *  — "ワイン系ではなくて、世界的古典とかの文章に"; it was six paragraphs on wine):
+ *  the opening of Lewis Carroll's Alice's Adventures in Wonderland (1865,
+ *  public domain; Project Gutenberg #11, italics markers dropped). The lines
+ *  draw on it by length — the first paragraph at 48px, the first four at
+ *  19px, all six at 14px. Every character is in Ango-VF43's cmap. Quotes
+ *  and apostrophes are set straight (" '): Ango-VF43's curly ones (“ ” ‘ ’)
+ *  are still drafts that read as primes and backticks. */
+const ALICE_PARAGRAPHS = [
+	"Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, \"and what is the use of a book,\" thought Alice \"without pictures or conversations?\"",
+	"So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.",
+	"There was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, \"Oh dear! Oh dear! I shall be late!\" (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually took a watch out of its waistcoat-pocket, and looked at it, and then hurried on, Alice started to her feet, for it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.",
+	"In another moment down went Alice after it, never once considering how in the world she was to get out again.",
+	"The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.",
+	"Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled \"ORANGE MARMALADE\", but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody underneath, so managed to put it into one of the cupboards as she fell past it."
 ];
-const wineText = (n: number) => WINE_PARAGRAPHS.slice(0, n).join('\n\n');
+const aliceText = (n: number) => ALICE_PARAGRAPHS.slice(0, n).join('\n\n');
 
 /** Humorist's Type Tester lines (2026-11-04, at the user's request — after
  *  type.kontrapunkt.com/en/fonts/kp-duo-sans: "もっと全体的にコントラストつけて",
@@ -378,38 +383,45 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 		lineHeight: 1.1,
 		letterSpacing: -0.02
 	},
-	{ text: wineText(1), wght: 350, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15, letterSpacing: -0.01 },
-	{ text: wineText(4), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
-	{ text: wineText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
+	{ text: aliceText(1), wght: 350, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15, letterSpacing: -0.01 },
+	{ text: aliceText(4), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
+	{ text: aliceText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
-/** Running text for Maxica's Type Tester: ten short stanzas about a vineyard
- *  and its cellar, one phrase to a line, no punctuation. Maxica (VF14) draws
- *  `A`-`Z` and `a`-`y` and nothing else — no `z`, no figures, no accents, no
- *  punctuation — so the text is made of those alone and every character comes
- *  out in Maxica, not in the face that stands in for what is not drawn yet. */
-const VINEYARD_STANZAS = [
-	'first light on the vineyard wall\nthe first crates arrive from the hill\npinot and gamay wrapped in cloth\nbarrels stacked in a tower\na funnel a pencil a handful of corks\nno one in a rush',
-	'the cellar opens before the heat\nrows of oak and chestnut staves\nnebbiolo and sangiovese in dim light\na cask as large as a room\nthe smell of cold stone from the corner\nsomeone rinses a glass at the tap',
-	'at noon the shade has moved to the other side\nthe crates are bare the presses idle\na cart rolls home over the cobbles\nthe shutters come down in turn\nwhat is left is a few bottles and a cat asleep on the barrels',
-	'in the evening the vineyard is quiet\nthe ladders lean against the posts\na pair of shears on a wire\nthe pickers have gone home to eat\ntomorrow the same vines will be picked again',
-	'a good vintage is made in the winter\nin pruning and patience and the cold\nin the weather that no one can order\nthe grape remembers all of it\nthe sweetness the acid the thin skin\nand the time it was given to ripen',
-	'choose for the balance not the label\ntilt the glass to the light\nsmell the wine before the first sip\ncherry leather mushroom and damp earth\ndrink it the same hour or the next',
-	'the river is low in the late summer\nstones show where the water was\nthe vines reach down for it\na heron stands in the shallows\nnothing moves until it decides to',
-	'a bell somewhere announces the hour\nthe shutters open one after another\nbread arrives in a cloth\na carafe of red on a tin plate\nthe old men take their seats at the corner table',
-	'in the cellar of the old house\nbottles lie in rows along the walls\neach label marked with a year and a name\nclaret and riesling and a dusty magnum of port\nsealed in summer opened in the cold',
-	'in a drawer a map of the old vineyard\neach row drawn and numbered\nthe date each one was planted\nthe name of the man who planted it\nsome of the vines are gone the numbers remain'
+/** Running text for Maxa's Type Tester (2026-11-09, at the user's request —
+ *  "ワイン系ではなくて、世界的古典とかの文章に"; it was ten stanzas about a
+ *  vineyard): the opening of Jane Austen's Pride and Prejudice (1813, public
+ *  domain; Project Gutenberg #1342, illustration captions and italics markers
+ *  dropped, `--` set as an em dash). The lines draw on it by length — 2, 14
+ *  and 24 paragraphs at 48 / 19 / 14px, about as much text as Humorist's.
+ *  Every character is in Maxica-VF25's cmap. */
+const PRIDE_PARAGRAPHS = [
+	"It is a truth universally acknowledged, that a single man in possession of a good fortune must be in want of a wife.",
+	"However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.",
+	"“My dear Mr. Bennet,” said his lady to him one day, “have you heard that Netherfield Park is let at last?”",
+	"Mr. Bennet replied that he had not.",
+	"“But it is,” returned she; “for Mrs. Long has just been here, and she told me all about it.”",
+	"Mr. Bennet made no answer.",
+	"“Do not you want to know who has taken it?” cried his wife, impatiently.",
+	"“You want to tell me, and I have no objection to hearing it.”",
+	"This was invitation enough.",
+	"“Why, my dear, you must know, Mrs. Long says that Netherfield is taken by a young man of large fortune from the north of England; that he came down on Monday in a chaise and four to see the place, and was so much delighted with it that he agreed with Mr. Morris immediately; that he is to take possession before Michaelmas, and some of his servants are to be in the house by the end of next week.”",
+	"“What is his name?”",
+	"“Bingley.”",
+	"“Is he married or single?”",
+	"“Oh, single, my dear, to be sure! A single man of large fortune; four or five thousand a year. What a fine thing for our girls!”",
+	"“How so? how can it affect them?”",
+	"“My dear Mr. Bennet,” replied his wife, “how can you be so tiresome? You must know that I am thinking of his marrying one of them.”",
+	"“Is that his design in settling here?”",
+	"“Design? Nonsense, how can you talk so! But it is very likely that he may fall in love with one of them, and therefore you must visit him as soon as he comes.”",
+	"“I see no occasion for that. You and the girls may go—or you may send them by themselves, which perhaps will be still better; for as you are as handsome as any of them, Mr. Bingley might like you the best of the party.”",
+	"“My dear, you flatter me. I certainly have had my share of beauty, but I do not pretend to be anything extraordinary now. When a woman has five grown-up daughters, she ought to give over thinking of her own beauty.”",
+	"“In such cases, a woman has not often much beauty to think of.”",
+	"“But, my dear, you must indeed go and see Mr. Bingley when he comes into the neighbourhood.”",
+	"“It is more than I engage for, I assure you.”",
+	"“But consider your daughters. Only think what an establishment it would be for one of them. Sir William and Lady Lucas are determined to go, merely on that account; for in general, you know, they visit no new comers. Indeed you must go, for it will be impossible for us to visit him, if you do not.”"
 ];
-// Set as prose, not one phrase to a line (2026-11-08, at the user's request
-// — "Maxaではサイズが同じでも改行されてる": the hard line breaks made Maxa's
-// running text break where Humorist's flows). Each stanza's phrases are
-// joined with commas into one sentence; VF19 on draws the capitals and the
-// punctuation this needs.
-const stanzaProse = (stanza: string) => {
-	const text = stanza.split('\n').join(', ');
-	return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
-};
-const vineyardText = (n: number) => VINEYARD_STANZAS.slice(0, n).map(stanzaProse).join('\n\n');
+const prideText = (n: number) => PRIDE_PARAGRAPHS.slice(0, n).join('\n\n');
 
 /** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"; wine
  *  copy 2026-11-05): the same shape as Humorist's — Vin, Degustation, the
@@ -450,9 +462,9 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 		sizeMobile: 28,
 		lineHeight: 1.1
 	},
-	{ text: vineyardText(2), wght: 450, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
-	{ text: vineyardText(5), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
-	{ text: vineyardText(10), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
+	{ text: prideText(2), wght: 450, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
+	{ text: prideText(14), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
+	{ text: prideText(24), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
 export const TYPEFACES: Typeface[] = [
