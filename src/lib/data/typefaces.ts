@@ -474,8 +474,8 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	{
 		text: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwx0123456789!?',
 		wght: 450,
-		sizeDesktop: 36,
-		sizeMobile: 20,
+		sizeDesktop: 67,
+		sizeMobile: 34,
 		lineHeight: 1.2
 	},
 	{ text: prideText(2), wght: 450, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
