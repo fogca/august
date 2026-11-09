@@ -337,6 +337,10 @@
 	     A placeholder (Maxica, Quad Sans) has it too (2026-10-31, at the user's
 	     request — "各書体ページ、タイプテスター導入して"), as the one row of
 	     testerWeights; the sections below stay off its page. -->
+	<!-- Keyed by typeface: navigating between two font pages reuses this page
+	     component, and the tester rows read their text and size once, so
+	     without it the previous typeface's texts carried over (2026-11-10). -->
+	{#key tf.slug}
 	<TypeTester
 		weights={testerWeights}
 		fontFamily={tf.fontFamily}
@@ -351,6 +355,7 @@
 		defaultSizeMobile={tf.slug === 'norma' ? 24 : undefined}
 		selectableWeights={tf.weightMenu !== undefined}
 	/>
+	{/key}
 
 	{#if !tf.placeholder}
 
