@@ -985,11 +985,14 @@ export function displayName(tf: Pick<Typeface, 'name'>): string {
  *  アニメーション、3D rotationアニメーション、タイプライターアニメーションなどを
  *  それぞれTopのサムネで動きがあると面白い"). Each runs only while its panel is on
  *  screen, and none under reduced motion.
- *  - `wght`: a wave of weight runs through the letters (a variable face).
- *  - `rotate`: the letters turn about their vertical axis one after another.
+ *  - `wght`: the letters' weight swings together, all at the same time (no
+ *    stagger since 2026-11-09, at the user's request).
  *  - `typewriter`: the name is typed, held, and backspaced, with a caret.
- *  - `tracking`: the spacing between the letters opens and closes. */
-export type HomePanelMotion = 'wght' | 'rotate' | 'typewriter' | 'tracking';
+ *  - `none`: the name stands still.
+ *  The 3D turn (Humorist) and the letter-spacing (Quad Serif) motions were
+ *  dropped 2026-11-09, at the user's request ("回転アニメーション…letter-spacing
+ *  アニメーションもなしで"). */
+export type HomePanelMotion = 'wght' | 'typewriter' | 'none';
 
 /** One panel of the home page's typeface section: a flat ground with the name
  *  set huge in its own face, and a caption (2026-11-05, at the user's request,
@@ -1016,7 +1019,8 @@ export interface HomePanel {
 }
 
 /** How each typeface shows in the home section. The order here is the order
- *  on the page (Maxa, Humorist, Quad Sans — then Quad Serif, below): kept
+ *  on the page (Maxa, Humorist, Quad Sans; Quad Serif's panel was removed
+ *  2026-11-09, at the user's request — "Quad Serifはなしで"): kept
  *  apart from `Typeface.order`, which the menus and /fonts follow. A typeface
  *  that is hidden is left out, as everywhere else. */
 const HOME_PANEL_STYLES: {
@@ -1025,12 +1029,23 @@ const HOME_PANEL_STYLES: {
 	bg: string;
 	fg: string;
 	motion: HomePanelMotion;
+	/** Set the big name in capitals. */
+	uppercase?: boolean;
 }[] = [
 	// Maxa's axis is the widest (50-950) and its name the shortest, so it takes
 	// the weight wave; Quad Sans has the one weight, so it is typed.
 	// Grounds (2026-11-05, the user's): Maxa black, Humorist white, Quad Sans blue.
 	{ slug: 'ttt-maxa', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
-	{ slug: 'ttt-humorist', weight: 300, bg: 'var(--white)', fg: 'var(--black)', motion: 'rotate' },
+	// Humorist: still, in Regular (wght 450), in capitals (2026-11-09, at the
+	// user's request — "Humoristは、Regularでuppercaseにして").
+	{
+		slug: 'ttt-humorist',
+		weight: 450,
+		bg: 'var(--white)',
+		fg: 'var(--black)',
+		motion: 'none',
+		uppercase: true
+	},
 	{
 		slug: 'ttt-quad-sans',
 		weight: 400,
@@ -1040,39 +1055,20 @@ const HOME_PANEL_STYLES: {
 	}
 ];
 
-/** Quad Serif — the serif half of the Quad family, named on the home page
- *  before it exists: no face is drawn and there is no page, so the panel does
- *  not link, and its name is set in a stand-in serif (EB Garamond, the file the
- *  /opentype reference already carries — see app.html) until there is. Quad
- *  Sans's panel is blue and paper, so this one is its inverse: paper and
- *  blue (the user named the first three grounds only, 2026-11-05). */
-const QUAD_SERIF_PANEL: HomePanel = {
-	key: 'ttt-quad-serif',
-	name: `${NAME_PREFIX} Quad Serif`,
-	lines: ['Quad', 'Serif'],
-	fontFamily: 'Quad Serif',
-	weight: 400,
-	bg: 'var(--brand-paper)',
-	fg: 'var(--brand-blue)',
-	motion: 'tracking',
-	meta: ['Serif', 'Coming soon']
-};
-
 /** The home section's panels, in the order they run down the page. */
 export function homePanels(): HomePanel[] {
-	const faces = HOME_PANEL_STYLES.flatMap(({ slug, ...style }) => {
+	return HOME_PANEL_STYLES.flatMap(({ slug, uppercase, ...style }) => {
 		const tf = getTypeface(slug);
 		if (!tf || tf.hidden) return [];
 		const panel: HomePanel = {
 			key: tf.slug,
 			href: `/fonts/${tf.slug}`,
 			name: tf.name,
-			lines: displayName(tf).split(' '),
+			lines: (uppercase ? displayName(tf).toUpperCase() : displayName(tf)).split(' '),
 			fontFamily: tf.fontFamily,
 			meta: tf.classification.split(' · '),
 			...style
 		};
 		return [panel];
 	});
-	return [...faces, QUAD_SERIF_PANEL];
 }

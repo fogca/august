@@ -93,7 +93,7 @@
 	}
 
 	/** Where a line's letters start in the panel's running count — the index
-	 *  each letter's --i (its stagger) and its place in the typing come from. */
+	 *  each letter's place in the typing comes from. */
 	function lineStart(panel: HomePanel, line: number): number {
 		return panel.lines.slice(0, line).reduce((n, l) => n + l.length, 0);
 	}
@@ -278,27 +278,21 @@
 				use:inview={(isLive) => (live[panel.key] = isLive)}
 			>
 				<!-- The caption says it all to a screen reader, so the big name is
-				     for the eye only. Where the motion works on the letters one by
-				     one they are spans (--i: the letter's place in the name, for
-				     its stagger); a motion on the whole name leaves it plain. -->
+				     for the eye only. Its letters are spans, for the motions that
+				     work on them one by one (the weight swing, the typing). -->
 				<p class="HomeHero__name" aria-hidden="true">
 					{#each panel.lines as line, l (line)}
 						<span class="HomeHero__line">
-							{#if panel.motion === 'tracking'}
-								{line}
-							{:else}
-								{#each [...line] as ch, c (c)}
-									{@const i = lineStart(panel, l) + c}
-									{@const count = typed[panel.key] ?? Infinity}
-									<span
-										class="HomeHero__ch"
-										class:is-typed={i < count}
-										class:is-caret={count === 0 ? i === 0 : i === count - 1}
-										class:is-before={count === 0}
-										style="--i: {i}">{ch}</span
-									>
-								{/each}
-							{/if}
+							{#each [...line] as ch, c (c)}
+								{@const i = lineStart(panel, l) + c}
+								{@const count = typed[panel.key] ?? Infinity}
+								<span
+									class="HomeHero__ch"
+									class:is-typed={i < count}
+									class:is-caret={count === 0 ? i === 0 : i === count - 1}
+									class:is-before={count === 0}>{ch}</span
+								>
+							{/each}
 						</span>
 					{/each}
 				</p>
@@ -466,10 +460,13 @@
 	}
 
 	/* The name, centred, at one size for every panel: sized by the width of
-	   the widest ("Humorist", about 4.05em) with a margin, and capped by the
-	   height so a two-line name still sits well inside a short, wide screen. */
+	   the widest with a margin, and capped by the height so a two-line name
+	   still sits well inside a short, wide screen. The widest is "HUMORIST" in
+	   capitals and Regular since 2026-11-09 (5.28em; it was "Humorist" in
+	   Light, 4.05em, at 20vw / 21vw), so the size came down to keep the same
+	   share of the width: 81% (85% on a phone). */
 	.HomeHero__name {
-		--name-size: min(20vw, 34vh);
+		--name-size: min(15.3vw, 34vh);
 		position: absolute;
 		inset: 0;
 		display: flex;
@@ -506,13 +503,12 @@
 	/* ── Motion (see HomePanelMotion). Every animation below is paused until
 	   its panel is live — on screen — and dropped under reduced motion. ── */
 
-	/* wght: a wave of weight through the letters. Each letter is on the same
-	   loop, a step behind the one before (a negative delay, so the wave is
-	   already running when the panel comes in); Hair-ish to Black and back.
-	   The word's width breathes with it, centred. */
+	/* wght: every letter swings Hair-ish to Black and back on the same loop,
+	   all at the same time — no stagger (2026-11-09, at the user's request —
+	   "staggerでずらさず、同じタイミングで"). The word's width breathes with
+	   it, centred. */
 	.HomeHero--wght .HomeHero__ch {
 		animation: ch-weight 3.6s ease-in-out infinite;
-		animation-delay: calc(var(--i) * -0.32s);
 		animation-play-state: paused;
 	}
 
@@ -523,26 +519,6 @@
 		}
 		50% {
 			font-variation-settings: 'wght' 900;
-		}
-	}
-
-	/* rotate: each letter, in turn, a full turn about its vertical axis in its
-	   own perspective, then rest for the rest of the loop. */
-	.HomeHero--rotate .HomeHero__ch {
-		--persp: calc(var(--name-size) * 3);
-		display: inline-block;
-		animation: ch-turn 6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-		animation-delay: calc(var(--i) * 0.16s);
-		animation-play-state: paused;
-	}
-
-	@keyframes ch-turn {
-		0% {
-			transform: perspective(var(--persp)) rotateY(0deg);
-		}
-		35%,
-		100% {
-			transform: perspective(var(--persp)) rotateY(360deg);
 		}
 	}
 
@@ -580,22 +556,6 @@
 	@keyframes caret-blink {
 		50% {
 			opacity: 0;
-		}
-	}
-
-	/* tracking: the spacing between the letters opens and closes. */
-	.HomeHero--tracking .HomeHero__name {
-		animation: name-tracking 5.4s ease-in-out infinite;
-		animation-play-state: paused;
-	}
-
-	@keyframes name-tracking {
-		0%,
-		100% {
-			letter-spacing: 0;
-		}
-		50% {
-			letter-spacing: 0.1em;
 		}
 	}
 
@@ -670,9 +630,9 @@
 			bottom: 32px;
 		}
 
-		/* "Humorist" across the screen with the page inset either side. */
+		/* "HUMORIST" across the screen with the page inset either side. */
 		.HomeHero__name {
-			--name-size: 21vw;
+			--name-size: 16.1vw;
 		}
 	}
 </style>
