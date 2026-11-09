@@ -662,7 +662,7 @@ export const TYPEFACES: Typeface[] = [
 		// working name, as Humorist's keep 'Ango'.
 		slug: 'ttt-maxa',
 		name: 'TTT Maxa',
-		category: 'Grotesque sans-serif',
+		category: 'Neo-grotesque sans-serif',
 		order: 3,
 		status: 'in-development',
 		placeholder: true,
@@ -690,7 +690,7 @@ export const TYPEFACES: Typeface[] = [
 			'Au premier regard, elle est aussi simple que n’importe quelle grotesque ; ses capitales gardent pourtant un rythme que les grotesques abandonnent d’ordinaire. ' +
 			'Elle sert ainsi là où une néo-grotesque se fige : noms, titres et signalétique composés en capitales ; textes riches en majuscules, comme l’allemand ou les listes de noms propres ; identités qui passent du logotype au texte courant dans un seul caractère. ' +
 			'Un seul axe de graisse va du Hair, pour les grands titres, au Black, pour les affiches.',
-		classification: 'Grotesque · In development',
+		classification: 'Neo-grotesque · In development',
 		weights: WEIGHTS,
 		defaultTexts: ['Maxa'],
 		testerLines: MAXICA_TESTER_LINES,
@@ -707,7 +707,7 @@ export const TYPEFACES: Typeface[] = [
 			subtitle: '(Coming Soon)',
 			debut: 'Coming Soon',
 			comingSoon: true,
-			intro: 'A grotesque in development.',
+			intro: 'A neo-grotesque in development.',
 			statement: 'Coming soon.'
 		}
 	},
