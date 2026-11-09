@@ -321,7 +321,9 @@ const ALICE_PARAGRAPHS = [
 	"The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.",
 	"Either the well was very deep, or she fell very slowly, for she had plenty of time as she went down to look about her and to wonder what was going to happen next. First, she tried to look down and make out what she was coming to, but it was too dark to see anything; then she looked at the sides of the well, and noticed that they were filled with cupboards and book-shelves; here and there she saw maps and pictures hung upon pegs. She took down a jar from one of the shelves as she passed; it was labelled \"ORANGE MARMALADE\", but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody underneath, so managed to put it into one of the cupboards as she fell past it."
 ];
-const aliceText = (n: number) => ALICE_PARAGRAPHS.slice(0, n).join('\n\n');
+// Paragraphs break with one newline, not a blank line (2026-11-10, at the user's
+// request — "テスターの本文用のテキスト改行多いね").
+const aliceText = (n: number) => ALICE_PARAGRAPHS.slice(0, n).join('\n');
 
 /** Humorist's Type Tester lines (2026-11-04, at the user's request — after
  *  type.kontrapunkt.com/en/fonts/kp-duo-sans: "もっと全体的にコントラストつけて",
@@ -424,7 +426,15 @@ const PRIDE_PARAGRAPHS = [
 	"“It is more than I engage for, I assure you.”",
 	"“But consider your daughters. Only think what an establishment it would be for one of them. Sir William and Lady Lucas are determined to go, merely on that account; for in general, you know, they visit no new comers. Indeed you must go, for it will be impossible for us to visit him, if you do not.”"
 ];
-const prideText = (n: number) => PRIDE_PARAGRAPHS.slice(0, n).join('\n\n');
+// Only the two narrative paragraphs break the line; the short dialogue lines
+// after them run together as one block, so the text does not break every few
+// words (2026-11-10, at the user's request — "テスターの本文用のテキスト改行多いね").
+const PRIDE_BREAK_AFTER = 2;
+const prideText = (n: number) => {
+	const head = PRIDE_PARAGRAPHS.slice(0, Math.min(n, PRIDE_BREAK_AFTER)).join('\n');
+	const dialogue = PRIDE_PARAGRAPHS.slice(PRIDE_BREAK_AFTER, n).join(' ');
+	return dialogue ? `${head}\n${dialogue}` : head;
+};
 
 /** Maxica's Type Tester lines (2026-11-04, "Maxicaも同様に対応して"; wine
  *  copy 2026-11-05): the same shape as Humorist's — Vin, Degustation, the
