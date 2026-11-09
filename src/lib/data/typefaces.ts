@@ -480,7 +480,7 @@ const MAXICA_TESTER_LINES: TesterLine[] = [
 	},
 	{ text: prideText(2), wght: 450, sizeDesktop: 48, sizeMobile: 24, lineHeight: 1.15 },
 	{ text: prideText(14), wght: 450, sizeDesktop: 19, sizeMobile: 16, lineHeight: 1.4, columns: 3 },
-	{ text: prideText(24), wght: 450, sizeDesktop: 14, sizeMobile: 14, lineHeight: 1.4, columns: 3 }
+	{ text: prideText(24), wght: 250, sizeDesktop: 14, sizeMobile: 12, lineHeight: 1.4, columns: 3 }
 ];
 
 export const TYPEFACES: Typeface[] = [
