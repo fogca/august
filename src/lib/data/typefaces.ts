@@ -1048,7 +1048,8 @@ const HOME_PANEL_STYLES: {
 	// Maxa's axis is the widest (50-950) and its name the shortest, so it takes
 	// the weight wave; Quad Sans has the one weight, so it is typed.
 	// Grounds (2026-11-05, the user's): Maxa black, Humorist white, Quad Sans blue.
-	{ slug: 'ttt-maxa', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
+	// Humorist first, then Maxa (2026-11-11, at the user's request —
+	// "HUMORISTが先で、その後Maxaがあと").
 	// Humorist: still, in Regular (wght 450), in capitals (2026-11-09, at the
 	// user's request — "Humoristは、Regularでuppercaseにして").
 	{
@@ -1059,6 +1060,7 @@ const HOME_PANEL_STYLES: {
 		motion: 'none',
 		uppercase: true
 	},
+	{ slug: 'ttt-maxa', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
 	{
 		slug: 'ttt-quad-sans',
 		weight: 400,

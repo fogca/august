@@ -251,6 +251,18 @@
 		<div class="Opening__logo"><Logo /></div>
 	</div>
 
+	<section class="HomeLead">
+		<h1 class="HomeLead__title">Time Type Tokyo</h1>
+		<!-- The frame's own copy (it repeats twice there as filler), with the
+		     brand name updated and "from Tokyo" left out, per the user's
+		     earlier request to keep the city out of the site's copy. -->
+		<p class="HomeLead__text">
+			Time Type Tokyo is an independent type foundry. We draw humanist typefaces that treat the letter
+			as the medium meaning passes through — retail families and bespoke type for those who value
+			the power of design.
+		</p>
+	</section>
+
 	<div class="HomeHeroes" bind:this={heroesEl}>
 		{#each panels as panel (panel.key)}
 			<!-- The ground is a plain CSS background, which is what the Header
@@ -310,14 +322,14 @@
 		/* The ground turns white first, then the hero comes up into it. */
 		--hero-at: 2.25s;
 		--hero-dur: 1.6s;
+		--lead-at: 2.7s;
+		--lead-dur: 0.8s;
 		--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 		--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 		/* Heroes: full screen PC, 90vh SP; the lead holds the top 35vh on PC,
 		   the top half on SP. */
 		--hero-h: 100vh;
-		/* No lead since 2026-11-11 (at the user's request — the page starts
-		   on the typeface heroes): the first hero rises to the very top. */
-		--lead-h: 0px;
+		--lead-h: 35vh;
 		/* Where the heroes start their rise: just below the fold, whatever the
 		   lead's height (the hero's top sits at --lead-h, so this is what is
 		   left of the screen under it). */
@@ -381,6 +393,45 @@
 	@keyframes logo-to-ink {
 		to {
 			color: var(--black);
+		}
+	}
+
+	/* ── Lead: the white top half ── */
+	.HomeLead {
+		position: relative;
+		height: var(--lead-h);
+		padding: 0;
+	}
+
+	.HomeLead__title {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+
+	/* Ango 11px / 1.4, 646px wide, its last line 30px above the hero. */
+	.HomeLead__text {
+		position: absolute;
+		left: var(--edge);
+		bottom: 30px;
+		width: min(646px, calc(100% - 2 * var(--edge)));
+		margin: 0;
+		font-family: var(--font-ango), sans-serif;
+		font-size: 11px;
+		font-weight: 400;
+		font-variation-settings: 'wght' 400;
+		line-height: 1.4;
+		letter-spacing: 0;
+		color: var(--color-text);
+		animation: lead-in var(--lead-dur) ease var(--lead-at) backwards;
+	}
+
+	@keyframes lead-in {
+		from {
+			opacity: 0;
 		}
 	}
 
@@ -546,7 +597,8 @@
 		display: none;
 	}
 
-	.HomeTop.is-settled .HomeHeroes {
+	.HomeTop.is-settled .HomeHeroes,
+	.HomeTop.is-settled .HomeLead__text {
 		animation: none;
 	}
 
@@ -556,6 +608,7 @@
 		}
 
 		.HomeHeroes,
+		.HomeLead__text,
 		.HomeHero__name,
 		.HomeHero__ch,
 		.HomeHero__ch::after {
@@ -568,10 +621,11 @@
 			--hero-h: 90vh;
 			/* Small viewport: the hero's top lands at the middle of what is
 			   actually visible, URL bar and all. */
-			--lead-h: 0px;
-			--hero-from: 100svh;
+			--lead-h: 50svh;
+			--hero-from: var(--lead-h);
 		}
 
+		.HomeLead__text,
 		.HomeHero__caption {
 			bottom: 32px;
 		}
