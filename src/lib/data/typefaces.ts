@@ -1052,21 +1052,24 @@ const HOME_PANEL_STYLES: {
 	// "HUMORISTが先で、その後Maxaがあと").
 	// Humorist: still, in Regular (wght 450), in capitals (2026-11-09, at the
 	// user's request — "Humoristは、Regularでuppercaseにして").
+	// 2026-11-11 (at the user's request — "Quad Sansのタイプアニメーションと、
+	// Maxaのアニメーションは無しで。Humoristを黒背景にして、1番目に。Maxaを白
+	// 背景にして"): every panel still; Humorist black, Maxa white.
 	{
 		slug: 'ttt-humorist',
 		weight: 450,
-		bg: 'var(--white)',
-		fg: 'var(--black)',
+		bg: 'var(--black)',
+		fg: 'var(--brand-paper)',
 		motion: 'none',
 		uppercase: true
 	},
-	{ slug: 'ttt-maxa', weight: 400, bg: 'var(--black)', fg: 'var(--brand-paper)', motion: 'wght' },
+	{ slug: 'ttt-maxa', weight: 400, bg: 'var(--white)', fg: 'var(--black)', motion: 'none' },
 	{
 		slug: 'ttt-quad-sans',
 		weight: 400,
 		bg: 'var(--brand-blue)',
 		fg: 'var(--brand-paper)',
-		motion: 'typewriter'
+		motion: 'none'
 	}
 ];
 
@@ -1087,7 +1090,9 @@ export function homePanels(): HomePanel[] {
 			key: tf.slug,
 			href: `/fonts/${tf.slug}`,
 			name: tf.name,
-			lines: (uppercase ? displayName(tf).toUpperCase() : displayName(tf)).split(' '),
+			// One line, as on /fonts, now the panels are a row's height rather than
+			// a screen (2026-11-11): "Quad Sans" on two lines no longer fits.
+			lines: [uppercase ? displayName(tf).toUpperCase() : displayName(tf)],
 			fontFamily: tf.fontFamily,
 			meta: tf.classification.split(' · '),
 			...style

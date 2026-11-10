@@ -326,9 +326,11 @@
 		--lead-dur: 0.8s;
 		--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 		--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
-		/* Heroes: full screen PC, 90vh SP; the lead holds the top 35vh on PC,
-		   the top half on SP. */
-		--hero-h: 100vh;
+		/* Heroes: the height of a row on /fonts since 2026-11-11 (at the
+		   user's request — "Fontsページのように高さは少し抑えて"; they were a
+		   full screen, 90vh on SP). The lead holds the top 35vh on PC, the top
+		   half on SP. */
+		--hero-h: clamp(300px, 33vw, 480px);
 		--lead-h: 35vh;
 		/* Where the heroes start their rise: just below the fold, whatever the
 		   lead's height (the hero's top sits at --lead-h, so this is what is
@@ -618,7 +620,6 @@
 
 	@media (max-width: 767.98px) {
 		.HomeTop {
-			--hero-h: 90vh;
 			/* Small viewport: the hero's top lands at the middle of what is
 			   actually visible, URL bar and all. */
 			--lead-h: 50svh;
