@@ -406,6 +406,27 @@
 		</div>
 	</section>
 
+	<!-- 2b. Where the zoom lands: the same black the stroke filled the screen
+	     with. Carries the Custom copy that used to sit in a white card over
+	     the field (2026-10, at the user's request, the card is gone from the
+	     field — "白背景・テキストエリア削除"). -->
+	<section class="Home__customCopy" aria-labelledby="custom-heading">
+		<div class="Custom__inner">
+			<p class="Custom__eyebrow">Bespoke</p>
+			<!-- Spans, not <br>: they stay inline on desktop and become the three
+			     designed lines on phones. -->
+			<h2 class="Custom__heading" id="custom-heading">
+				<span>Custom Type</span> <span>for Corporate</span> <span>Identity</span>
+			</h2>
+			<p class="Custom__body">
+				Beyond our retail library, Time Type Tokyo designs bespoke typefaces for brands and
+				institutions — a proprietary voice, drawn from the first sketch to a fully realised family.
+				A custom typeface is the most enduring asset a brand can own: it travels across every
+				screen, surface, and language while remaining unmistakably yours.
+			</p>
+			<a class="Custom__cta" href="/custom">Explore custom type</a>
+		</div>
+	</section>
 </main>
 
 <style>
@@ -451,5 +472,93 @@
 		.Home__custom {
 			--zoom-span: 0px;
 		}
+	}
+	/* --- 2b. Where the zoom lands --- */
+	.Home__customCopy {
+		min-height: 100vh;
+		min-height: 100lvh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		/* Black since 2026-11-11, like the Ts the zoom dives into. */
+		background: var(--black);
+		padding-block: clamp(96px, 12vh, 140px);
+		text-align: center;
+	}
+
+	/* base.css re-asserts a colour on each text element individually. */
+	.Home__customCopy :global(*) {
+		color: var(--brand-paper);
+	}
+
+	.Custom__inner {
+		max-width: 760px;
+	}
+
+	.Custom__eyebrow {
+		font-family: var(--font-en), sans-serif;
+		font-size: 11px;
+		font-weight: var(--fw-ui);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		opacity: 0.7;
+		margin: 0 0 20px;
+	}
+
+	.Custom__heading {
+		font-family: var(--font-en), sans-serif;
+		font-size: clamp(36px, min(6vw, 8vh), 80px);
+		line-height: 1.02;
+		/* Capitals again since 2026-11-11 (at the user's request — "タイトルは
+		   uppercaseで表示"); the copy itself stays in title case. */
+		text-transform: uppercase;
+		letter-spacing: 0.025em;
+		margin: 0 0 28px;
+	}
+
+	/* Phones: break to the designed three lines instead of wrapping freely. */
+	@media (max-width: 767.98px) {
+		.Custom__heading span {
+			display: block;
+		}
+	}
+
+	.Custom__body {
+		font-family: var(--font-en), sans-serif;
+		font-size: 15px;
+		font-variation-settings: 'wght' 360;
+		line-height: 1.7;
+		letter-spacing: 0.02em;
+		/* Centred, not justified (2026-09, at the user's request —
+		   "Custom文章justifyからcenterへ"). */
+		text-align: center;
+		max-width: 56ch;
+		margin: 0 auto 32px;
+	}
+
+	/* Solid, square-cornered box link (2026-09, at the user's request —
+	   "Top AboutとCustomセクションのボタンもContact同様ボックスリンクに変更")
+	   — replaces the Arrow.svelte + text pattern. Black on white (2026-10-31,
+	   the white / blue / black palette; it was blue on the brand orange, and
+	   white on the signal red before that). */
+	.Home__customCopy .Custom__cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px 32px;
+		font-family: var(--font-en), sans-serif;
+		font-size: 15px;
+		font-weight: 500;
+		font-variation-settings: 'wght' 500;
+		color: #000000;
+		background: #ffffff;
+		border: 0;
+		border-radius: 0;
+		text-decoration: none;
+		transition: opacity 0.15s ease;
+	}
+
+	.Custom__cta:hover {
+		opacity: 0.8;
 	}
 </style>
