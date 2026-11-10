@@ -29,7 +29,9 @@ ROOT = Path(__file__).resolve().parent.parent
 # The wordmark is still set in Maxa VF19 (VF18 until 2026-11-05). VF20 (2026-11-08) changed
 # the face (x-height, widths, spacing); the file is kept here, out of static/, so the
 # wordmark stays reproducible. Point FONT at static/fonts/Maxica-VF20.woff2 to follow the new Maxa.
-FONT = ROOT / "scripts/fonts/Maxica-VF19.woff2"
+# 2026-11-10, at the user's request ("ロゴも最新のMaxa使って"): VF35, copied here
+# from static/fonts for the same reason.
+FONT = ROOT / "scripts/fonts/Maxica-VF35.woff2"
 OUT = ROOT / "src/lib/data/wordmark.ts"
 
 # 2026-11-05, at the user's request: the name in Maxa Regular, capitalised
