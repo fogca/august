@@ -13,8 +13,8 @@
 </script>
 
 <svelte:head>
-	<title>Order Received — Apres Guerre</title>
-	<meta name="description" content="Order confirmation — Apres Guerre." />
+	<title>Order Received — Time Type Tokyo</title>
+	<meta name="description" content="Order confirmation — Time Type Tokyo." />
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -63,7 +63,7 @@
 				order reference{/if}.
 		</p>
 
-		<a href="/" class="Success__home">← Back to Apres Guerre</a>
+		<a href="/" class="Success__home">← Back to Time Type Tokyo</a>
 	</div>
 </main>
 

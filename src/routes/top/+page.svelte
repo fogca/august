@@ -187,7 +187,7 @@
 </script>
 
 <svelte:head>
-	<title>Shape Study — Apres Guerre</title>
+	<title>Shape Study — Time Type Tokyo</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

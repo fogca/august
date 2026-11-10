@@ -252,12 +252,12 @@
 	</div>
 
 	<section class="HomeLead">
-		<h1 class="HomeLead__title">Apres Guerre</h1>
+		<h1 class="HomeLead__title">Time Type Tokyo</h1>
 		<!-- The frame's own copy (it repeats twice there as filler), with the
 		     brand name updated and "from Tokyo" left out, per the user's
 		     earlier request to keep the city out of the site's copy. -->
 		<p class="HomeLead__text">
-			Apres Guerre is an independent type foundry. We draw humanist typefaces that treat the letter
+			Time Type Tokyo is an independent type foundry. We draw humanist typefaces that treat the letter
 			as the medium meaning passes through — retail families and bespoke type for those who value
 			the power of design.
 		</p>

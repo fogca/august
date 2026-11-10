@@ -20,10 +20,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact — Apres Guerre</title>
+	<title>Contact — Time Type Tokyo</title>
 	<meta
 		name="description"
-		content="Contact Apres Guerre — licensing questions, enterprise scale, custom typefaces, and general enquiries."
+		content="Contact Time Type Tokyo — licensing questions, enterprise scale, custom typefaces, and general enquiries."
 	/>
 </svelte:head>
 

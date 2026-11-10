@@ -89,7 +89,7 @@
 </script>
 
 <svelte:head>
-	<title>Glyph Check — Apres Guerre</title>
+	<title>Glyph Check — Time Type Tokyo</title>
 	<meta name="description" content="Proof a typeface across long, varied sample text." />
 	<meta name="robots" content="noindex" />
 </svelte:head>

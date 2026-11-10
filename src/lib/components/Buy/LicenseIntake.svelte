@@ -83,7 +83,7 @@
 				class="LicenseIntake__input"
 				type="text"
 				bind:value={companyName}
-				placeholder="Apres Guerre Inc."
+				placeholder="Time Type Tokyo Inc."
 				required
 				aria-required="true"
 			/>

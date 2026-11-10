@@ -26,10 +26,10 @@
 </script>
 
 <svelte:head>
-	<title>Fonts — Apres Guerre</title>
+	<title>Fonts — Time Type Tokyo</title>
 	<meta
 		name="description"
-		content="Apres Guerre typeface catalogue — {lead} and upcoming releases."
+		content="Time Type Tokyo typeface catalogue — {lead} and upcoming releases."
 	/>
 </svelte:head>
 

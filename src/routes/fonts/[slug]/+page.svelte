@@ -180,7 +180,7 @@
 </script>
 
 <svelte:head>
-	<title>{tf.name} — Apres Guerre</title>
+	<title>{tf.name} — Time Type Tokyo</title>
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 

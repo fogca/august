@@ -41,10 +41,10 @@
 </script>
 
 <svelte:head>
-	<title>Licence (EULA) — Apres Guerre</title>
+	<title>Licence (EULA) — Time Type Tokyo</title>
 	<meta
 		name="description"
-		content="End User Licence Agreement for Apres Guerre fonts — Individual, Organisation, and Project licenses."
+		content="End User Licence Agreement for Time Type Tokyo fonts — Individual, Organisation, and Project licenses."
 	/>
 </svelte:head>
 
@@ -77,7 +77,7 @@
 
 		<div class="Eula__lead">
 			<p>
-				Apres Guerre fonts are licensed, not sold. Each licence below — Individual, Organisation,
+				Time Type Tokyo fonts are licensed, not sold. Each licence below — Individual, Organisation,
 				and Project License — is its own standalone agreement; your Sales Receipt records which one
 				you have bought and at what tier.
 			</p>

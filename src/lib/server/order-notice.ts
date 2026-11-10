@@ -83,7 +83,7 @@ export function buildOrderNotice(session: Stripe.Checkout.Session): OrderNotice 
 	].filter((row): row is string => row !== null);
 
 	const text = [
-		'A payment was completed on the Apres Guerre /buy page.',
+		'A payment was completed on the Time Type Tokyo /buy page.',
 		'',
 		...rows,
 		'',
