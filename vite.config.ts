@@ -23,11 +23,11 @@ export default defineConfig({
 				type: 'module'
 			},
 			manifest: {
-				name: 'Apres Guerre',
-				short_name: 'Apres Guerre',
+				name: 'Time Type Tokyo',
+				short_name: 'Time Type Tokyo',
 				description: 'An independent type foundry.',
 				theme_color: '#ffffff',
-				background_color: '#ffffff',
+				background_color: '#000000',
 				display: 'standalone',
 				start_url: '/',
 				scope: '/',

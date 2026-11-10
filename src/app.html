@@ -216,11 +216,9 @@
 			}
 		</style>
 
-		<!-- Icons — the A of the former wordmark ($lib/data/logo.ts) in
-		     white on the brand blue, as the home page's opening shows it (2026-10-31;
-		     it was orange). SVG
-		     first (scalable, and what modern browsers pick), PNG as the
-		     fallback for browsers that don't support SVG favicons. -->
+		<!-- Icons — the T of TTT Maxa in white on black (2026-11-11; generated
+		     by scripts/build_icons.py). SVG first (scalable, and what modern
+		     browsers pick), PNG as the fallback. -->
 		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<link rel="icon" type="image/png" href="%sveltekit.assets%/favicon.png" />
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
@@ -229,20 +227,23 @@
 		<!-- Open Graph / Twitter (site-wide defaults; pages set their own <title>).
 		     No og:url here — crawlers fall back to each page's own URL. -->
 		<meta property="og:type" content="website" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="Time Type Tokyo" />
 		<meta property="og:site_name" content="Time Type Tokyo" />
 		<meta property="og:title" content="Time Type Tokyo — TTT Humorist" />
 		<meta
 			property="og:description"
 			content="An independent type foundry. TTT Humorist — a nine-weight geometric humanist variable typeface, in development."
 		/>
-		<meta property="og:image" content="https://august.tf/og.png" />
+		<meta property="og:image" content="https://timetokyo.pages.dev/og.png" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="Time Type Tokyo — TTT Humorist" />
 		<meta
 			name="twitter:description"
 			content="An independent type foundry. TTT Humorist — a nine-weight geometric humanist variable typeface, in development."
 		/>
-		<meta name="twitter:image" content="https://august.tf/og.png" />
+		<meta name="twitter:image" content="https://timetokyo.pages.dev/og.png" />
 
 		%sveltekit.head%
 	</head>

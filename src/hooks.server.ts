@@ -34,7 +34,21 @@ import { themeFor } from '$lib/theme';
 
 const PAGE_THEME_ATTR = 'data-theme="page"';
 
+// The site moved to timetokyo.pages.dev (2026-11-11). Both Pages projects
+// build from this repository, so the old project redirects every page there,
+// path and query intact.
+const LEGACY_HOST = 'august-a0c.pages.dev';
+const SITE_ORIGIN = 'https://timetokyo.pages.dev';
+const MOVED_PERMANENTLY = 301;
+
 export const handle: Handle = async ({ event, resolve }) => {
+	if (event.url.hostname === LEGACY_HOST || event.url.hostname.endsWith(`.${LEGACY_HOST}`)) {
+		return new Response(null, {
+			status: MOVED_PERMANENTLY,
+			headers: { location: SITE_ORIGIN + event.url.pathname + event.url.search }
+		});
+	}
+
 	if (event.url.pathname.startsWith('/_app/')) {
 		return new Response('Not found', {
 			status: 404,
