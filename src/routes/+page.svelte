@@ -5,7 +5,7 @@
 	import AboutSection from '$lib/components/home/AboutSection.svelte';
 	import { homePanels } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
-	import { LOGO_LETTERS } from '$lib/data/logo';
+	import { WORDMARK_LETTERS } from '$lib/data/wordmark';
 	import { initScroll, getLenis, onScroll } from '$lib/scroll';
 	import { onMount } from 'svelte';
 
@@ -21,38 +21,65 @@
 
 	const panels = homePanels();
 
-	// The Custom section's pile: the wordmark's own A, P, G and R (2026-10, at
-	// the user's request — "ロゴのsvgから抽出したもの…グリフはAPGRの4つ"),
-	// as outlines at the logo's own proportions. Indices into LOGO_LETTERS
-	// (A P R E S G U E R R E): A=0, P=1, R=2, G=5.
+	// The Custom section's pile: the T of the wordmark (Maxa), and only the T
+	// (2026-11-11, at the user's request — "文字もTに全て変えて"; it was the
+	// old wordmark's A, P, G and R), as its outline at the wordmark's own
+	// proportions.
 	//
 	// Sized off the screen rather than fixed px (2026-10, "それぞれの文字もっと
 	// 大きくして"): letter height is a share of the viewport height on PC, of
 	// its width on phones (where height would make them too wide to tumble).
-	const PILE_LETTERS = [0, 1, 5, 2];
+	const PILE_LETTER = WORDMARK_LETTERS.find((l) => l.char === 'T')!;
 	const PILE_HEIGHT_OF_VH = 0.4;
 	const PILE_HEIGHT_OF_VW_SMALL = 0.5;
 	const SMALL_SCREEN = 768;
-	/** Cap height of the wordmark's letters (the A's), viewBox units. */
-	const LETTER_UNITS = LOGO_LETTERS[0].y1 - LOGO_LETTERS[0].y0;
+	const PILE_T = tGeometry(PILE_LETTER.d);
+
+	/** Ink box and zoom target of a T drawn only in horizontal and vertical
+	 *  segments (M x y, then H/V). The core — what the zoom dives into — is the
+	 *  largest circle inside the junction of bar and stem: touching the bar's
+	 *  top edge and the two inner corners where the stem meets the bar. */
+	function tGeometry(d: string) {
+		const points: [number, number][] = [];
+		let x = 0;
+		let y = 0;
+		for (const [, cmd, args] of d.matchAll(/([MHV])([^MHVZ]*)/g)) {
+			const n = args.trim().split(/[\s,]+/).map(Number);
+			if (cmd === 'M') [x, y] = n;
+			else if (cmd === 'H') x = n[0];
+			else y = n[0];
+			points.push([x, y]);
+		}
+		const xs = points.map((p) => p[0]);
+		const ys = points.map((p) => p[1]);
+		const y0 = Math.min(...ys);
+		const y1 = Math.max(...ys);
+		const barBottom = Math.min(...ys.filter((v) => v > y0));
+		const stem = points.filter((p) => p[1] === y1).map((p) => p[0]);
+		const cx = (Math.min(...stem) + Math.max(...stem)) / 2;
+		const half = (Math.max(...stem) - Math.min(...stem)) / 2;
+		// |centre - corner| = centre - top  →  solve for the centre's y.
+		const cy = (half * half + barBottom * barBottom - y0 * y0) / (2 * (barBottom - y0));
+		return { x0: Math.min(...xs), x1: Math.max(...xs), y0, y1, core: { x: cx, y: cy, r: cy - y0 } };
+	}
+
 	function pileShapes() {
 		const target =
 			window.innerWidth < SMALL_SCREEN
 				? window.innerWidth * PILE_HEIGHT_OF_VW_SMALL
 				: window.innerHeight * PILE_HEIGHT_OF_VH;
-		const scale = target / LETTER_UNITS;
-		return PILE_LETTERS.map((i) => {
-			const l = LOGO_LETTERS[i];
-			return {
-				d: l.d,
-				ox: l.x0,
-				oy: l.y0,
-				w: (l.x1 - l.x0) * scale,
-				h: (l.y1 - l.y0) * scale,
+		const scale = target / (PILE_T.y1 - PILE_T.y0);
+		return [
+			{
+				d: PILE_LETTER.d,
+				ox: PILE_T.x0,
+				oy: PILE_T.y0,
+				w: (PILE_T.x1 - PILE_T.x0) * scale,
+				h: (PILE_T.y1 - PILE_T.y0) * scale,
 				scale,
-				core: l.core
-			};
-		});
+				core: PILE_T.core
+			}
+		];
 	}
 
 	// ── Custom: scroll zooms into the pile ─────────────────────────────────
@@ -366,16 +393,16 @@
 	<HomeTop {panels} />
 
 	<!-- 2. Custom type for business — a full-screen field of the wordmark's
-	     own A P G R raining down and packing the screen (GlyphFill, in `shapes`
+	     own T raining down and packing the screen (GlyphFill, in `shapes`
 	     mode; without that prop it pours the typeset version), pinned while
 	     scrolling zooms into it (see "Custom: scroll zooms into the pile"). -->
 	<section class="Home__custom" id="custom" bind:this={customTrackEl}>
 		<div class="Custom__stage" bind:this={customStageEl}>
-			<GlyphFill shapes={pileShapes} color="var(--brand-blue)" zoom={customZoom} />
+			<GlyphFill shapes={pileShapes} color="var(--black)" zoom={customZoom} />
 		</div>
 	</section>
 
-	<!-- 2b. Where the zoom lands: the same blue the stroke filled the screen
+	<!-- 2b. Where the zoom lands: the same black the stroke filled the screen
 	     with. Carries the Custom copy that used to sit in a white card over
 	     the field (2026-10, at the user's request, the card is gone from the
 	     field — "白背景・テキストエリア削除"). -->
@@ -468,7 +495,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: var(--brand-blue);
+		/* Black since 2026-11-11, like the Ts the zoom dives into. */
+		background: var(--black);
 		padding-block: clamp(96px, 12vh, 140px);
 		text-align: center;
 	}
