@@ -1068,6 +1068,14 @@ const HOME_PANEL_STYLES: {
 	}
 ];
 
+/** A typeface's big display name, in capitals where the home panel sets it
+ *  so (Humorist — and on /fonts too, 2026-11-11, at the user's request —
+ *  "Humoristは、HUMORISTで"). */
+export function displayNameAsSet(tf: Typeface): string {
+	const upper = HOME_PANEL_STYLES.some((s) => s.slug === tf.slug && s.uppercase);
+	return upper ? displayName(tf).toUpperCase() : displayName(tf);
+}
+
 /** The home section's panels, in the order they run down the page. */
 export function homePanels(): HomePanel[] {
 	return HOME_PANEL_STYLES.flatMap(({ slug, uppercase, ...style }) => {

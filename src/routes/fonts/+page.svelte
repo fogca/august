@@ -9,7 +9,7 @@
      The chrome (names, counts, pills) is in Ango (--font-en). The h1 is there
      for screen readers and search only. -->
 <script lang="ts">
-	import { TYPEFACES, displayName } from '$lib/data/typefaces.js';
+	import { TYPEFACES, displayName, displayNameAsSet } from '$lib/data/typefaces.js';
 	import type { Typeface } from '$lib/data/typefaces.js';
 
 	// Sort by order (ascending) to guarantee display sequence
@@ -43,10 +43,11 @@
 				     on every tag, which beats anything inherited. -->
 				<p
 					class="FontRow__name"
+					class:FontRow__name--caps={displayNameAsSet(tf) !== displayName(tf)}
 					style="font-family: '{tf.fontFamily}', sans-serif; font-variation-settings: 'wght' {tf.specimenWeight ??
 						400}; font-weight: {tf.specimenWeight ?? 400};"
 				>
-					{displayName(tf)}
+					{displayNameAsSet(tf)}
 				</p>
 
 				<div class="FontRow__foot">
@@ -118,6 +119,12 @@
 		letter-spacing: 0;
 		text-align: center;
 		color: var(--color-text);
+	}
+
+	/* A name set in capitals (HUMORIST, ≈5.1em) is wider than any in lower
+	   case, so it is scaled to the same width: 300px × 3.9 / 5.1. */
+	.FontRow__name--caps {
+		font-size: clamp(49px, 15.9vw, 229px);
 	}
 
 	.FontRow__foot {

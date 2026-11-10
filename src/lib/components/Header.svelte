@@ -238,7 +238,7 @@
 {#if cartNoteVisible}
 	<!-- Outside the header on purpose: the header is blended with `difference`,
 	     which would turn this blue box into its inverse. -->
-	<p class="CartNote" role="status" transition:fade={{ duration: 150 }}>Available from October</p>
+	<p class="CartNote" role="status" transition:fade={{ duration: 150 }}>Available from December</p>
 {/if}
 
 {#if open}

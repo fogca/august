@@ -2,7 +2,6 @@
 	import { browser } from '$app/environment';
 	import HomeTop from '$lib/components/home/HomeTop.svelte';
 	import GlyphFill from '$lib/components/home/GlyphFill.svelte';
-	import AboutSection from '$lib/components/home/AboutSection.svelte';
 	import { homePanels } from '$lib/data/typefaces';
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { WORDMARK_LETTERS } from '$lib/data/wordmark';
@@ -174,7 +173,8 @@
 				if (!customEl) return;
 				const y = window.scrollY;
 				const top = (el: HTMLElement) => Math.round(el.getBoundingClientRect().top + y);
-				targets = [0, ...heroEls.map(top), top(customEl)];
+				// Deduplicated: with no lead above them the first hero starts at 0.
+				targets = [...new Set([0, ...heroEls.map(top), top(customEl)])];
 			}
 
 			measure();
@@ -388,6 +388,10 @@
 	/>
 </svelte:head>
 
+<!-- Since 2026-11-11 (at the user's request — "Fontsのデザインからスタック
+     アニメーション > Footerのみのシンプルな構成に"): the typeface heroes, the
+     pile of Ts, then the footer. The Custom copy, About and Contact sections
+     that followed the pile were removed. -->
 <main class="Home">
 	<!-- 1. Opening, then the typeface heroes (see HomeTop.svelte). -->
 	<HomeTop {panels} />
@@ -402,45 +406,6 @@
 		</div>
 	</section>
 
-	<!-- 2b. Where the zoom lands: the same black the stroke filled the screen
-	     with. Carries the Custom copy that used to sit in a white card over
-	     the field (2026-10, at the user's request, the card is gone from the
-	     field — "白背景・テキストエリア削除"). -->
-	<section class="Home__customCopy" aria-labelledby="custom-heading">
-		<div class="Custom__inner">
-			<p class="Custom__eyebrow">Bespoke</p>
-			<!-- Spans, not <br>: they stay inline on desktop and become the three
-			     designed lines on phones. -->
-			<h2 class="Custom__heading" id="custom-heading">
-				<span>Custom Type</span> <span>for Corporate</span> <span>Identity</span>
-			</h2>
-			<p class="Custom__body">
-				Beyond our retail library, Time Type Tokyo designs bespoke typefaces for brands and
-				institutions — a proprietary voice, drawn from the first sketch to a fully realised family.
-				A custom typeface is the most enduring asset a brand can own: it travels across every
-				screen, surface, and language while remaining unmistakably yours.
-			</p>
-			<a class="Custom__cta" href="/custom">Explore custom type</a>
-		</div>
-	</section>
-
-	<!-- 3. About — one screen of running text, set well above body size. -->
-	<AboutSection />
-
-	<!-- 4. Contact — no in-page form (2026-09, at the user's request, "トップに
-	     問い合わせフォームを設置する必要はない"); a plain button in the form's old
-	     spot hands off to /contact instead. -->
-	<section class="Home__contact" id="contact">
-		<div class="Contact__inner">
-			<p class="Contact__eyebrow">Contact</p>
-			<h2 class="Contact__heading">Licensing, custom type, general enquiries.</h2>
-			<p class="Contact__body">
-				For license questions, enterprise requirements (1,000+ users / 100M+ PV), bespoke typefaces,
-				or anything else — please get in touch. We will respond within five business days.
-			</p>
-			<a class="Contact__cta" href="/contact">Contact us</a>
-		</div>
-	</section>
 </main>
 
 <style>
@@ -485,187 +450,6 @@
 	@media (prefers-reduced-motion: reduce) {
 		.Home__custom {
 			--zoom-span: 0px;
-		}
-	}
-
-	/* --- 2b. Where the zoom lands --- */
-	.Home__customCopy {
-		min-height: 100vh;
-		min-height: 100lvh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		/* Black since 2026-11-11, like the Ts the zoom dives into. */
-		background: var(--black);
-		padding-block: clamp(96px, 12vh, 140px);
-		text-align: center;
-	}
-
-	/* base.css re-asserts a colour on each text element individually. */
-	.Home__customCopy :global(*) {
-		color: var(--brand-paper);
-	}
-
-	.Custom__inner {
-		max-width: 760px;
-	}
-
-	.Custom__eyebrow {
-		font-family: var(--font-en), sans-serif;
-		font-size: 11px;
-		font-weight: var(--fw-ui);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		opacity: 0.7;
-		margin: 0 0 20px;
-	}
-
-	.Custom__heading {
-		font-family: var(--font-en), sans-serif;
-		font-size: clamp(36px, min(6vw, 8vh), 80px);
-		line-height: 1.02;
-		/* Title case in the copy itself now, not CSS text-transform (2026-09,
-		   at the user's request — "uppercase外して、Custom Type for
-		   Corporate Identityに変更"). */
-		letter-spacing: 0.025em;
-		margin: 0 0 28px;
-	}
-
-	/* Phones: break to the designed three lines instead of wrapping freely. */
-	@media (max-width: 767.98px) {
-		.Custom__heading span {
-			display: block;
-		}
-	}
-
-	.Custom__body {
-		font-family: var(--font-en), sans-serif;
-		font-size: 15px;
-		font-variation-settings: 'wght' 360;
-		line-height: 1.7;
-		letter-spacing: 0.02em;
-		/* Centred, not justified (2026-09, at the user's request —
-		   "Custom文章justifyからcenterへ"). */
-		text-align: center;
-		max-width: 56ch;
-		margin: 0 auto 32px;
-	}
-
-	/* Solid, square-cornered box link (2026-09, at the user's request —
-	   "Top AboutとCustomセクションのボタンもContact同様ボックスリンクに変更")
-	   — replaces the Arrow.svelte + text pattern. Black on white (2026-10-31,
-	   the white / blue / black palette; it was blue on the brand orange, and
-	   white on the signal red before that). */
-	.Home__customCopy .Custom__cta {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		padding: 16px 32px;
-		font-family: var(--font-en), sans-serif;
-		font-size: 15px;
-		font-weight: 500;
-		font-variation-settings: 'wght' 500;
-		color: #000000;
-		background: #ffffff;
-		border: 0;
-		border-radius: 0;
-		text-decoration: none;
-		transition: opacity 0.15s ease;
-	}
-
-	.Custom__cta:hover {
-		opacity: 0.8;
-	}
-
-	/* --- 4. Contact --- */
-	.Home__contact {
-		/* Not a full screen (2026-09, at the user's request — "トップの
-		   Contactセクションは100vhではなくて良いのでもう少し低く適切な
-		   余白ーpadding-y 100pxとかで") — was min-height:100svh; sized by
-		   its own content plus a plain top/bottom padding instead. */
-		display: flex;
-		align-items: center;
-		/* Fixed dark grey, white text (2026-09, at the user's request — About
-		   and Contact reading as the exact same colour was the problem, not
-		   the colour itself, so Contact now gets its own fixed tone instead of
-		   sharing the debug-switchable --summer-color with About/the /contact
-		   page). */
-		background: #333333;
-		padding-block: 100px;
-	}
-
-	/* base.css §7 re-asserts a colour on div/p/span/a/h2/button/input
-	   individually, so a plain `color` on the section would never reach them —
-	   the same :global(*) pattern the Footer and the old Buy band use. */
-	.Home__contact :global(*) {
-		color: #ffffff;
-	}
-
-	.Contact__inner {
-		width: 100%;
-	}
-
-	.Contact__eyebrow {
-		font-family: var(--font-en), sans-serif;
-		font-size: 11px;
-		font-weight: var(--fw-ui);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		opacity: 0.6;
-		margin: 0 0 20px;
-	}
-
-	.Contact__heading {
-		font-family: var(--font-en), sans-serif;
-		font-size: var(--display-fs);
-		line-height: 1.02;
-		letter-spacing: 0.01em;
-		max-width: 20ch;
-		margin: 0 0 24px;
-	}
-
-	.Contact__body {
-		font-family: var(--font-en), sans-serif;
-		font-size: 15px;
-		font-variation-settings: 'wght' 360;
-		line-height: 1.7;
-		opacity: 0.8;
-		max-width: 52ch;
-		margin: 0;
-	}
-
-	/* Stands in for the form that used to start here — same 2em gap
-	   ContactForm's own .ContactForm__form used. Square corners are
-	   deliberate (unlike the pill-shaped submit button elsewhere on the
-	   site). Light on the dark #333 ground now — wins over .Home__contact's
-	   :global(*) white-out above by coming later in source order at equal
-	   specificity. */
-	.Contact__cta {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		margin-top: 2em;
-		padding: 16px 32px;
-		font-family: var(--font-en), sans-serif;
-		font-size: 15px;
-		font-weight: 500;
-		font-variation-settings: 'wght' 500;
-		color: #000000;
-		background: #ffffff;
-		border: 0;
-		border-radius: 0;
-		text-decoration: none;
-		transition: opacity 0.15s ease;
-	}
-
-	.Contact__cta:hover {
-		opacity: 0.8;
-	}
-
-	@media (max-width: 767.98px) {
-		.Contact__cta {
-			display: flex;
-			width: 100%;
 		}
 	}
 </style>

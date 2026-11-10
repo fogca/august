@@ -152,7 +152,9 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-		font-size: 28px;
+		/* 18px since 2026-11-11 (at the user's request — "Footerのリンクもっと
+		   小さく"); it was 28px. */
+		font-size: 18px;
 		font-weight: 450;
 	}
 
@@ -170,7 +172,7 @@
 		.Footer__list--desktop {
 			display: flex;
 			flex-direction: row;
-			gap: 24px;
+			gap: 20px;
 		}
 	}
 
@@ -211,7 +213,8 @@
 	.Footer__bottom {
 		margin-top: 28px;
 		padding: 24px var(--padding) 0;
-		border-top: var(--border-line);
+		/* No rule between the nav and the small print (2026-11-11, at the
+		   user's request — "Footerの真ん中の線消して"). */
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
@@ -314,7 +317,6 @@
 		.Footer__bottom {
 			margin-top: 40px;
 			padding-top: 24px;
-			border-top: var(--border-line);
 			gap: 16px;
 			opacity: 1;
 		}
