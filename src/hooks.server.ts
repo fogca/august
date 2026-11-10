@@ -31,6 +31,7 @@
 // attribute in sync on client-side navigation.
 import type { Handle } from '@sveltejs/kit';
 import { themeFor } from '$lib/theme';
+import { applyPageMeta, SITE_ORIGIN } from '$lib/server/page-meta';
 
 const PAGE_THEME_ATTR = 'data-theme="page"';
 
@@ -38,7 +39,6 @@ const PAGE_THEME_ATTR = 'data-theme="page"';
 // build from this repository, so the old project redirects every page there,
 // path and query intact.
 const LEGACY_HOST = 'august-a0c.pages.dev';
-const SITE_ORIGIN = 'https://timetokyo.pages.dev';
 const MOVED_PERMANENTLY = 301;
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -58,10 +58,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const theme = themeFor(event.url.pathname);
 	const response = await resolve(event, {
-		transformPageChunk:
-			theme === 'page'
-				? undefined
-				: ({ html }) => html.replace(PAGE_THEME_ATTR, `data-theme="${theme}"`)
+		transformPageChunk: ({ html }) => {
+			const themed = theme === 'page' ? html : html.replace(PAGE_THEME_ATTR, `data-theme="${theme}"`);
+			return applyPageMeta(themed, event.url.pathname);
+		}
 	});
 
 	if (response.headers.get('content-type')?.includes('text/html')) {
