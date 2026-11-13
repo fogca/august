@@ -524,8 +524,11 @@
 	   sticky UI and the pages' content clear. */
 	@media (min-width: 1060px) {
 		.Header {
-			--lockup-w: 69.7px;
-			--lockup-top: 11px;
+			/* 140px wide (2026-11-13, at the user's request — "ロゴをSPでもPCでも
+			   大きくして"; it was 69.7px): 23.7px tall, centred on the link row
+			   (10px + half its 17.5px = 18.75px) — hence 7px from the top. */
+			--lockup-w: 140px;
+			--lockup-top: 7px;
 			--row-top: 10px;
 			--edge: 20px;
 		}
@@ -582,8 +585,10 @@
 	/* ── SP lockup sizes ── */
 	@media (max-width: 767.98px) {
 		.Header {
-			--lockup-w: 66px;
-			--lockup-top: 19px;
+			/* 120px wide (2026-11-13; it was 66px): 20.3px tall, kept on the same
+			   centre line as before (24.6px) — hence 14.5px from the top. */
+			--lockup-w: 120px;
+			--lockup-top: 14.5px;
 		}
 
 		/* The lockup spans most of the width; Cart alone fits beside it. */
