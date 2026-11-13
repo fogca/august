@@ -33,20 +33,20 @@ export type GalleryItem =
 /** The foundry's initials, the prefix of every public typeface name
  *  (2026-10-30, at the user's request — "APGRは全てつけるようにして"), the way
  *  Kontrapunkt Type's are "KP Duo Sans". Slugs follow: lowercase, hyphenated
- *  (`context-humorist`). The big display of a name drops it — see displayName().
- *  "CONTEXT" since 2026-11-13 (at the user's request — "TTTもCONTEXTに合わせて
- *  変更して"; the slugs `ttt-…` → `context-…`, the old ones 301). Before that
- *  "TTT" (Time Type Tokyo) since 2026-11-06, at the user's request ("書体名は
+ *  (`cf-humorist`). The big display of a name drops it — see displayName().
+ *  "CF" since 2026-11-13 (at the user's request — "接頭辞はCFとして"; the slugs
+ *  `ttt-…` → `cf-…`, the old ones 301; `context-…` lived for minutes). Before
+ *  that "TTT" (Time Type Tokyo) since 2026-11-06, at the user's request ("書体名は
  *  APGR {XXX}からTTT {XXX}に変更"), and the slugs with them the same day
- *  ("リンク含めて全て変えて"): `apgr-…` → `ttt-…`, the old ones 301 (LEGACY_SLUGS
+ *  ("リンク含めて全て変えて"): `apgr-…` → `ttt-…` → `cf-…`, the old ones 301 (LEGACY_SLUGS
  *  below and the repo-root _redirects). */
-export const NAME_PREFIX = 'CONTEXT';
+export const NAME_PREFIX = 'CF';
 
 export interface Typeface {
-	/** `context-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
+	/** `cf-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
 	 *  pricing and checkout tables are keyed by it, and the face is hidden). */
 	slug: string;
-	/** Public name, prefix included (e.g. 'CONTEXT Humorist'). The CSS family
+	/** Public name, prefix included (e.g. 'CF Humorist'). The CSS family
 	 *  (`fontFamily`) and the font/image files keep their old internal names. */
 	name: string;
 	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Quad Sans, 5 = Alfred */
@@ -491,7 +491,7 @@ export const TYPEFACES: Typeface[] = [
 		// Prefixed with the rest (2026-10-30). Its final name is still open —
 		// Linotype already sells a "Norma" — and the prose below still says
 		// "Norma": settle the name, then rewrite it (see the TODO below).
-		name: 'CONTEXT Norma',
+		name: 'CF Norma',
 		category: 'Neo humanist sans-serif',
 		order: 1,
 		status: 'available',
@@ -634,8 +634,8 @@ export const TYPEFACES: Typeface[] = [
 		// drawings formerly shown as "Mokuseki Sans" (a client's name, kept off
 		// the public site), exported from Quad.glyphs as one Regular. Its CSS
 		// family is 'Quad Sans' (app.html @font-face; QuadSans-Regular.woff2).
-		slug: 'context-quad-sans',
-		name: 'CONTEXT Quad Sans',
+		slug: 'cf-quad-sans',
+		name: 'CF Quad Sans',
 		category: 'Sans-serif',
 		order: 4,
 		status: 'in-development',
@@ -643,20 +643,20 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Quad Sans',
 		tagline: 'In development.',
 		description:
-			'CONTEXT Quad Sans is a sans-serif in development at CONTEXT, one half of a family that will pair it with a serif. ' +
+			'CF Quad Sans is a sans-serif in development at CONTEXT, one half of a family that will pair it with a serif. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'CONTEXT Quad Sans est un sans-serif en cours de développement chez CONTEXT, une moitié d’une famille qui l’associera à un serif. ' +
+			'CF Quad Sans est un sans-serif en cours de développement chez CONTEXT, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
 		// The one cut there is: a Regular (the file is static, so wght 400 is
 		// only its name in the Type Tester's row).
 		weights: [{ id: 40, name: '40', label: 'Regular', axisValue: 400 }],
-		defaultTexts: ['CONTEXT Quad Sans'],
+		defaultTexts: ['CF Quad Sans'],
 		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
 		// the build leaves those out, so the page sets them in another face.
 		testerNotice:
-			'CONTEXT Quad Sans is in development. Characters not drawn yet are set in another face.',
+			'CF Quad Sans is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -681,11 +681,11 @@ export const TYPEFACES: Typeface[] = [
 		// browser's sans-serif.
 		// Shown as "Maxa" since 2026-11-05 (at the user's request — "書体名、
 		// 一回Maxaにしてみて", a trial), confirmed 2026-11-06 ("Maxaで確定、
-		// context-maxaにして"): the slug followed (`context-maxica` and `apgr-maxica`
+		// cf-maxaにして"): the slug followed (`cf-maxica` and `apgr-maxica`
 		// 301 here). The CSS family ('Maxica') and the font file keep the
 		// working name, as Humorist's keep 'Ango'.
-		slug: 'context-maxa',
-		name: 'CONTEXT Maxa',
+		slug: 'cf-maxa',
+		name: 'CF Maxa',
 		category: 'Neo-grotesque sans-serif',
 		order: 3,
 		status: 'in-development',
@@ -699,7 +699,7 @@ export const TYPEFACES: Typeface[] = [
 		// classical-roman proportions + a narrow lowercase for reading; Maxa's
 		// ascenders rise above the capitals since VF24 (cap 700, asc 720).
 		description:
-			'CONTEXT Maxa is a neo-grotesque drawn from two answers to the same mid-century question. ' +
+			'CF Maxa is a neo-grotesque drawn from two answers to the same mid-century question. ' +
 			'In Switzerland, Helvetica made the grotesque firm, dense and even. ' +
 			"In the 1960s, the book designer Gert Wunderlich drew Maxima for Typoart in Dresden as East Germany's own answer: a sans whose capitals keep the proportions of the classical roman, and whose narrow lowercase was cut for reading. " +
 			"Maxa takes Helvetica's build — level terminals, firm curves, close spacing — and Maxima's measure: capitals that are wide or narrow as their roman ancestors were, and ascenders that rise above them, so capitals sit quietly in a line of text. " +
@@ -707,7 +707,7 @@ export const TYPEFACES: Typeface[] = [
 			'That makes it useful where a neo-grotesque turns stiff: names, titles and wayfinding set in capitals; text full of capitals, such as German or lists of proper names; identities that run from a wordmark into body text in one typeface. ' +
 			'One weight axis runs from Hair for large display to Black for posters.',
 		descriptionFr:
-			'CONTEXT Maxa est une néo-grotesque née de deux réponses à une même question du milieu du XXe siècle. ' +
+			'CF Maxa est une néo-grotesque née de deux réponses à une même question du milieu du XXe siècle. ' +
 			"En Suisse, l'Helvetica a rendu la grotesque ferme, dense et régulière. " +
 			"Dans les années 1960, le graphiste du livre Gert Wunderlich a dessiné la Maxima pour Typoart à Dresde, réponse propre de l'Allemagne de l'Est : une linéale dont les capitales gardent les proportions de la romaine classique, et dont les bas-de-casse étroits ont été taillés pour la lecture. " +
 			"Maxa emprunte à l'Helvetica sa construction — terminaisons horizontales, courbes tendues, approche serrée — et à la Maxima sa mesure : des capitales larges ou étroites comme l'étaient leurs ancêtres romaines, et des ascendantes qui les dépassent, si bien que les capitales restent discrètes dans une ligne de texte. " +
@@ -726,7 +726,7 @@ export const TYPEFACES: Typeface[] = [
 		// Its ten named stops are Humorist's (Hair 50 … Regular 450 … Black 950).
 		weightMenu: ANGO_WEIGHTS,
 		testerNotice:
-			'CONTEXT Maxa is in development. Characters not drawn yet are set in another face.',
+			'CF Maxa is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 500,
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -748,12 +748,12 @@ export const TYPEFACES: Typeface[] = [
 		// position moved from wght 850 to 950 on 2026-09-22, at the user's
 		// request, so its scale now reaches Norma's own top stop.
 		// Re-shown 2026-08-29 at the user's request (temporary).
-		// "Ango" until 2026-10-30, then "CONTEXT Humorist" (a pun on the category
+		// "Ango" until 2026-10-30, then "CF Humorist" (a pun on the category
 		// Humanist). Only the public name and slug moved: the CSS family stays
 		// 'Ango' (other projects set type in it) and so do the Ango-VF*.woff2
 		// and ango-* image files below.
-		slug: 'context-humorist',
-		name: 'CONTEXT Humorist',
+		slug: 'cf-humorist',
+		name: 'CF Humorist',
 		category: 'Geometric humanist sans-serif',
 		order: 2,
 		status: 'in-development',
@@ -761,14 +761,14 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Ango',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'CONTEXT Humorist is a sibling to Norma, in development at CONTEXT. ' +
-			'Where Norma runs wide and even across twenty weights, CONTEXT Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
+			'CF Humorist is a sibling to Norma, in development at CONTEXT. ' +
+			'Where Norma runs wide and even across twenty weights, CF Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Black — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'CONTEXT Humorist est une police sœur de Norma, en cours de développement chez CONTEXT. ' +
+			'CF Humorist est une police sœur de Norma, en cours de développement chez CONTEXT. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development · 10 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -825,10 +825,9 @@ export const TYPEFACES: Typeface[] = [
 		// hero's own, Light).
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 300,
-		// The page's own title is the family prefix alone, in Medium (2026-11-01,
-		// at the user's request — "一番上のHumoristをApgrにして、Mediumで").
-		pageTitle: NAME_PREFIX,
-		pageTitleWeight: 550,
+		// The page title was the prefix alone, in Medium, until 2026-11-13: with
+		// the two-letter prefix "CF" fitted to the page's width it came out ~900px
+		// tall, so Humorist now shows its name like the other faces.
 		// Borrowed from gQ (2026-08-31, at the user's request) — Ango has no
 		// hero image of its own yet, so its page top reuses gQ's for now.
 		thumbnail: '/images/fonts/gq.png',
@@ -845,21 +844,21 @@ export const TYPEFACES: Typeface[] = [
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-cream.jpg',
-				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by CONTEXT, set in CONTEXT Humorist — a case study mockup',
+				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by CONTEXT, set in CF Humorist — a case study mockup',
 				width: 2000,
 				height: 1125
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-mozzarella-brie.webp',
-				alt: '“Mozzarella &” in a light weight of CONTEXT Humorist above “Brie de Meaux” in a heavy one, white on blue',
+				alt: '“Mozzarella &” in a light weight of CF Humorist above “Brie de Meaux” in a heavy one, white on blue',
 				width: 2000,
 				height: 720
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-extinguisher.jpg',
-				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in CONTEXT Humorist — a case study mockup',
+				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in CF Humorist — a case study mockup',
 				width: 2000,
 				height: 1333
 			},
@@ -923,8 +922,8 @@ export const TYPEFACES: Typeface[] = [
 		// specimen; everything below is still fully provisional (unlike Ango,
 		// no drawings at all yet). Re-shown 2026-08-29, re-hidden 2026-08-31,
 		// both at the user's request.
-		slug: 'context-alfred',
-		name: 'CONTEXT Alfred',
+		slug: 'cf-alfred',
+		name: 'CF Alfred',
 		category: 'Neo classic',
 		order: 5,
 		status: 'in-development',
@@ -934,10 +933,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'CONTEXT Alfred is a Neo Classic typeface in development at CONTEXT. ' +
+			'CF Alfred is a Neo Classic typeface in development at CONTEXT. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'CONTEXT Alfred est un caractère Neo Classic en cours de développement chez CONTEXT. ' +
+			'CF Alfred est un caractère Neo Classic en cours de développement chez CONTEXT. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised
@@ -976,20 +975,23 @@ export function getTypeface(slug: string): Typeface | undefined {
  *  `elio` is Ango's name before 2026-10-03; `ango` and `gq` before the
  *  2026-10-30 rename; `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before
  *  GQ Sans became Quad Sans; the `apgr-` ones until the CONTEXT prefix
- *  (2026-11-06); `context-maxica` for the hours before Maxa was confirmed. Alfred is left out: it is hidden, so it never had a public
+ *  (2026-11-06); `cf-maxica` for the hours before Maxa was confirmed. Alfred is left out: it is hidden, so it never had a public
  *  page to carry over. The /buy?font= parameter reads the same map. */
 export const LEGACY_SLUGS: Record<string, string> = {
-	ango: 'context-humorist',
-	elio: 'context-humorist',
-	gq: 'context-quad-sans',
-	'apgr-gq-sans': 'context-quad-sans',
-	'apgr-humorist': 'context-humorist',
-	'apgr-quad-sans': 'context-quad-sans',
-	'apgr-maxica': 'context-maxa',
-	'ttt-maxica': 'context-maxa',
-	'ttt-maxa': 'context-maxa',
-	'ttt-humorist': 'context-humorist',
-	'ttt-quad-sans': 'context-quad-sans'
+	ango: 'cf-humorist',
+	elio: 'cf-humorist',
+	gq: 'cf-quad-sans',
+	'apgr-gq-sans': 'cf-quad-sans',
+	'apgr-humorist': 'cf-humorist',
+	'apgr-quad-sans': 'cf-quad-sans',
+	'apgr-maxica': 'cf-maxa',
+	'ttt-maxica': 'cf-maxa',
+	'ttt-maxa': 'cf-maxa',
+	'ttt-humorist': 'cf-humorist',
+	'ttt-quad-sans': 'cf-quad-sans',
+	'context-maxa': 'cf-maxa',
+	'context-humorist': 'cf-humorist',
+	'context-quad-sans': 'cf-quad-sans'
 };
 
 /** The name as the big display sets it: the prefix dropped ("Humorist"), as
@@ -1061,16 +1063,16 @@ const HOME_PANEL_STYLES: {
 	// Maxaのアニメーションは無しで。Humoristを黒背景にして、1番目に。Maxaを白
 	// 背景にして"): every panel still; Humorist black, Maxa white.
 	{
-		slug: 'context-humorist',
+		slug: 'cf-humorist',
 		weight: 450,
 		bg: 'var(--black)',
 		fg: 'var(--brand-paper)',
 		motion: 'none',
 		uppercase: true
 	},
-	{ slug: 'context-maxa', weight: 400, bg: 'var(--white)', fg: 'var(--black)', motion: 'none' },
+	{ slug: 'cf-maxa', weight: 400, bg: 'var(--white)', fg: 'var(--black)', motion: 'none' },
 	{
-		slug: 'context-quad-sans',
+		slug: 'cf-quad-sans',
 		weight: 400,
 		bg: 'var(--brand-blue)',
 		fg: 'var(--brand-paper)',

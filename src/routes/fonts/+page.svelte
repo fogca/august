@@ -2,7 +2,7 @@
      (2026-10-31, at the user's request — "Fontsページはタイトルとか不要"). The
      list was redone 2026-10-30, at the user's request, after Kontrapunkt
      Type's shop (type.kontrapunkt.com/en/shop): one row to a typeface, the
-     name set huge in its own face (the "CONTEXT" prefix dropped there), the full
+     name set huge in its own face (the "CF" prefix dropped there), the full
      name and "1 family, N styles" bottom-left, a pill bottom-right, a rule
      between rows. It was a two-column card grid under a PageSection title.
      Each name is set in that typeface's own face (inline font-family below).
@@ -14,7 +14,7 @@
 
 	// Sort by order (ascending) to guarantee display sequence
 	const typefaces = TYPEFACES.filter((f) => !f.hidden).sort((a, b) => a.order - b.order);
-	// "CONTEXT Humorist and upcoming releases" — the first of the visible ones
+	// "CF Humorist and upcoming releases" — the first of the visible ones
 	// (Norma is hidden; it leads again when it is shown).
 	const lead = typefaces[0]?.name ?? 'Typefaces';
 

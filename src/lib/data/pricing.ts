@@ -92,7 +92,7 @@ export function isEnterpriseTier(tierIndex: number): boolean {
 
 // ── Package definitions ──────────────────────────────────────────────────────
 
-export type TypefaceSlug = 'norma' | 'context-quad-sans' | 'context-humorist';
+export type TypefaceSlug = 'norma' | 'cf-quad-sans' | 'cf-humorist';
 
 export interface PackageDef {
 	id: string;
@@ -191,11 +191,11 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 		// nine weights drawn so far, each upright and italic; the italics are
 		// promised, not drawn. The final family is ten weights (20 styles) —
 		// styles gets its tenth when its name is settled.
-		slug: 'context-humorist',
+		slug: 'cf-humorist',
 		packages: [
 			{
-				id: 'context-humorist-complete',
-				label: 'CONTEXT Humorist',
+				id: 'cf-humorist-complete',
+				label: 'CF Humorist',
 				detail: '9 weights, upright and italic',
 				styles: ['15', '25', '35', '45', '55', '65', '75', '85', '95'].flatMap((w) => [
 					w,
@@ -212,7 +212,7 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 			}
 		]
 	}
-	// context-quad-sans: in development — not for sale yet (its five weights' names
+	// cf-quad-sans: in development — not for sale yet (its five weights' names
 	// and which are drawn are not settled)
 ];
 

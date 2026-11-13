@@ -1,4 +1,4 @@
-// Generated from the shipped Ango VF (the face sold as CONTEXT Humorist) by
+// Generated from the shipped Ango VF (the face sold as CF Humorist) by
 // docs/gen_humorist_overview.py — the encoded characters by group, the vertical metrics and the
 // Hyperglot language list (0.7.3, base support, validity=verified: the same
 // method and thresholds as the spec table's language count). Regenerate whenever

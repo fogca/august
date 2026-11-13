@@ -127,10 +127,10 @@
 </script>
 
 <svelte:head>
-	<title>CONTEXT — CONTEXT Humorist</title>
+	<title>CONTEXT — CF Humorist</title>
 	<meta
 		name="description"
-		content="CONTEXT — an independent type foundry. CONTEXT Humorist, a nine-weight geometric humanist variable typeface, in development."
+		content="CONTEXT — an independent type foundry. CF Humorist, a nine-weight geometric humanist variable typeface, in development."
 	/>
 </svelte:head>
 
