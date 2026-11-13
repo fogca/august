@@ -20,10 +20,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact — Time Type Tokyo</title>
+	<title>Contact — CONTEXT</title>
 	<meta
 		name="description"
-		content="Contact Time Type Tokyo — licensing questions, enterprise scale, custom typefaces, and general enquiries."
+		content="Contact CONTEXT — licensing questions, enterprise scale, custom typefaces, and general enquiries."
 	/>
 </svelte:head>
 

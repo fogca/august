@@ -18,7 +18,7 @@ import { buildOrderNotice } from './order-notice';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 const TO_ADDRESS = 'hi@august.tf';
-const FROM_ADDRESS = 'Time Type Tokyo orders <hi@august.tf>';
+const FROM_ADDRESS = 'CONTEXT orders <hi@august.tf>';
 
 /** Reads STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET and RESEND_API_KEY. Typed as a
  *  plain env record so SvelteKit's `$env/dynamic/private` object can be passed as-is. */

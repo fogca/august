@@ -41,10 +41,10 @@
 </script>
 
 <svelte:head>
-	<title>Licence (EULA) — Time Type Tokyo</title>
+	<title>Licence (EULA) — CONTEXT</title>
 	<meta
 		name="description"
-		content="End User Licence Agreement for Time Type Tokyo fonts — Individual, Organisation, and Project licenses."
+		content="End User Licence Agreement for CONTEXT fonts — Individual, Organisation, and Project licenses."
 	/>
 </svelte:head>
 
@@ -77,7 +77,7 @@
 
 		<div class="Eula__lead">
 			<p>
-				Time Type Tokyo fonts are licensed, not sold. Each licence below — Individual, Organisation,
+				CONTEXT fonts are licensed, not sold. Each licence below — Individual, Organisation,
 				and Project License — is its own standalone agreement; your Sales Receipt records which one
 				you have bought and at what tier.
 			</p>

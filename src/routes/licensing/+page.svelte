@@ -23,10 +23,10 @@
 </script>
 
 <svelte:head>
-	<title>Licensing — Time Type Tokyo</title>
+	<title>Licensing — CONTEXT</title>
 	<meta
 		name="description"
-		content="What an Time Type Tokyo licence covers — Desktop, Web, and App use, bundled into one licence from the Team tier upward."
+		content="What an CONTEXT licence covers — Desktop, Web, and App use, bundled into one licence from the Team tier upward."
 	/>
 </svelte:head>
 
@@ -45,7 +45,7 @@
 
 {#snippet introBody()}
 	<p>
-		Time Type Tokyo licences are sold per company size, not per platform. From the Team tier upward,
+		CONTEXT licences are sold per company size, not per platform. From the Team tier upward,
 		one licence already includes Desktop, Web, and App use — there is no separate Desktop, Web, App,
 		or Books licence to buy. The Individual tier is the one exception — it's scoped to desktop use
 		alone. This page is a plain-language guide to that scope; the binding terms are in the

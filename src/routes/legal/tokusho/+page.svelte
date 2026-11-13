@@ -7,10 +7,10 @@
 </script>
 
 <svelte:head>
-	<title>Legal Notice — Time Type Tokyo</title>
+	<title>Legal Notice — CONTEXT</title>
 	<meta
 		name="description"
-		content="Specified Commercial Transactions Act disclosure for Time Type Tokyo."
+		content="Specified Commercial Transactions Act disclosure for CONTEXT."
 	/>
 </svelte:head>
 
@@ -22,14 +22,14 @@
 		flow
 	>
 		<p>
-			This notice discloses information about Time Type Tokyo's font sales as required under Japan's
+			This notice discloses information about CONTEXT's font sales as required under Japan's
 			Act on Specified Commercial Transactions (特定商取引法).
 		</p>
 
 		<dl class="Legal__facts">
 			<div class="Legal__fact">
 				<dt>Seller</dt>
-				<dd>Mirai Service Co., Ltd. (trading as Time Type Tokyo)</dd>
+				<dd>Mirai Service Co., Ltd. (trading as CONTEXT)</dd>
 			</div>
 			<div class="Legal__fact">
 				<dt>Person in charge of operations</dt>

@@ -26,10 +26,10 @@
 </script>
 
 <svelte:head>
-	<title>Fonts — Time Type Tokyo</title>
+	<title>Fonts — CONTEXT</title>
 	<meta
 		name="description"
-		content="Time Type Tokyo typeface catalogue — {lead} and upcoming releases."
+		content="CONTEXT typeface catalogue — {lead} and upcoming releases."
 	/>
 </svelte:head>
 

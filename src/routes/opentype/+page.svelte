@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>OpenType — Reference — Time Type Tokyo</title>
+	<title>OpenType — Reference — CONTEXT</title>
 	<meta name="description" content="A working reference of essential and recommended OpenType features." />
 	<meta name="robots" content="noindex" />
 </svelte:head>

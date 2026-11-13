@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>{page.status} — Time Type Tokyo</title>
+	<title>{page.status} — CONTEXT</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -26,7 +26,7 @@
 			{/if}
 		</p>
 		<div class="ErrorPage__links">
-			<a href="/">← Time Type Tokyo</a>
+			<a href="/">← CONTEXT</a>
 			<a href="/contact">Contact</a>
 		</div>
 	</div>

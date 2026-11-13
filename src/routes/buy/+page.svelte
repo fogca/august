@@ -320,7 +320,7 @@
 
 <svelte:head>
 	{#if data.checkoutOpen}
-		<title>{pageTitle} — Time Type Tokyo</title>
+		<title>{pageTitle} — CONTEXT</title>
 		<meta
 			name="description"
 			content="Buy a license for {selectedPackage?.label ??
@@ -329,7 +329,7 @@
 	{:else}
 		<!-- Generic while closed: the default package here is a typeface that isn't
 		     shown on the site, so its name stays off the COMING SOON page. -->
-		<title>Buy — Time Type Tokyo</title>
+		<title>Buy — CONTEXT</title>
 		<meta name="description" content="Licences go on sale soon." />
 	{/if}
 </svelte:head>

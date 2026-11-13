@@ -5,7 +5,7 @@
      above it at the same scale.
 
      Since 2026-11-05 the wordmark is the user's trial name in Maxa Regular,
-     black — "Texmex Typefoundry Tokyo" on the first day, "Time Type Tokyo"
+     black — "Texmex Typefoundry Tokyo" on the first day, "CONTEXT"
      since 2026-11-06 (see $lib/data/wordmark.ts, generated from the font by
      scripts/build_wordmark.py). The words keep the layout's
      old names, `apres` (the first word) and `guerre` (the second): see
@@ -29,7 +29,7 @@
 	import { WORDMARK_H, WORDMARK_LETTERS, WORDMARK_TEXT } from '$lib/data/wordmark';
 
 	interface Props {
-		/** The two word wrappers (APRES, GUERRE), for callers that move them. */
+		/** The two word wrappers (CON, TEXT), for callers that move them. */
 		wordEls?: HTMLElement[];
 		/** All the letter paths, left to right, for callers that animate them. */
 		letterEls?: SVGPathElement[];
@@ -121,24 +121,11 @@
 		width: calc(var(--logo-guerre-w) * var(--u));
 	}
 
-	/* SP: two lines. GUERRE spans the width inside the 15px margin; APRES is
-	   centred above it at the same scale, --logo-stack-gap units between
-	   the lines (the Figma 7:782 share of the line height). */
+	/* SP: the same one line, with its own top margin. (The old two-word name
+	   stacked on two lines here; CONTEXT is short enough for one.) */
 	@media (max-width: 767.98px) {
 		.Logo {
 			--logo-top: calc(28px + env(safe-area-inset-top, 0px));
-			--u: calc((100cqw - 2 * var(--logo-side)) / var(--logo-guerre-w));
-		}
-
-		.Logo__word--apres {
-			--word-left: calc(
-				var(--logo-side) + (var(--logo-guerre-w) - var(--logo-apres-w)) / 2 * var(--u)
-			);
-		}
-
-		.Logo__word--guerre {
-			--word-left: var(--logo-side);
-			--word-top: calc(var(--logo-top) + (var(--logo-h) + var(--logo-stack-gap)) * var(--u));
 		}
 	}
 </style>

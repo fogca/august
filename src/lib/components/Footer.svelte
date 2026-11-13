@@ -35,7 +35,7 @@
 </script>
 
 <footer class="Footer" aria-labelledby="footer-heading">
-	<h2 id="footer-heading" class="Footer__sr">Time Type Tokyo</h2>
+	<h2 id="footer-heading" class="Footer__sr">CONTEXT</h2>
 
 	<!-- Site nav — shared verbatim with the Header's own desktop nav (see
 	     $lib/data/nav.ts) so the two can't drift out of sync. Rendered twice
@@ -83,7 +83,7 @@
 					<li><a href={item.href}>{item.label}</a></li>
 				{/each}
 			</ul>
-			<p class="Footer__copy">© {YEAR} Time Type Tokyo</p>
+			<p class="Footer__copy">© {YEAR} CONTEXT</p>
 		</div>
 	</div>
 </footer>

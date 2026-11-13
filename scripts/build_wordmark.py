@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Sets the site's wordmark in a face of ours and writes it out as outlines.
+"""(Superseded 2026-11-13: the wordmark is now the supplied CONTEXT artwork — see
+scripts/build_wordmark_from_svg.py. This script set "Time Type Tokyo" in a face
+of ours and would overwrite wordmark.ts if run.)
+
+Sets the site's wordmark in a face of ours and writes it out as outlines.
 
     python3 scripts/build_wordmark.py
 

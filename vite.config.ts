@@ -23,8 +23,8 @@ export default defineConfig({
 				type: 'module'
 			},
 			manifest: {
-				name: 'Time Type Tokyo',
-				short_name: 'Time Type Tokyo',
+				name: 'CONTEXT',
+				short_name: 'CONTEXT',
 				description: 'An independent type foundry.',
 				theme_color: '#ffffff',
 				background_color: '#000000',

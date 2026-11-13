@@ -252,12 +252,12 @@
 	</div>
 
 	<section class="HomeLead">
-		<h1 class="HomeLead__title">Time Type Tokyo</h1>
+		<h1 class="HomeLead__title">CONTEXT</h1>
 		<!-- The frame's own copy (it repeats twice there as filler), with the
 		     brand name updated and "from Tokyo" left out, per the user's
 		     earlier request to keep the city out of the site's copy. -->
 		<p class="HomeLead__text">
-			Time Type Tokyo is an independent type foundry. We draw humanist typefaces that treat the letter
+			CONTEXT is an independent type foundry. We draw humanist typefaces that treat the letter
 			as the medium meaning passes through — retail families and bespoke type for those who value
 			the power of design.
 		</p>
@@ -331,7 +331,9 @@
 		   /fonts row's ~50vh): 70vh, 60vh on SP. The lead holds the top 35vh on
 		   PC, the top half on SP. */
 		--hero-h: 70vh;
-		--lead-h: 35vh;
+		/* Half the screen on PC too (35vh before): CONTEXT, set across the width,
+		   is twice as tall as the old name. */
+		--lead-h: 50vh;
 		/* Where the heroes start their rise: just below the fold, whatever the
 		   lead's height (the hero's top sits at --lead-h, so this is what is
 		   left of the screen under it). */

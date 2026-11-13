@@ -187,7 +187,7 @@
 </script>
 
 <svelte:head>
-	<title>Shape Study — Time Type Tokyo</title>
+	<title>Shape Study — CONTEXT</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

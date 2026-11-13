@@ -9,17 +9,17 @@
 </script>
 
 <svelte:head>
-	<title>Privacy Policy — Time Type Tokyo</title>
-	<meta name="description" content="How Time Type Tokyo collects and uses personal data." />
+	<title>Privacy Policy — CONTEXT</title>
+	<meta name="description" content="How CONTEXT collects and uses personal data." />
 </svelte:head>
 
 <main class="Legal">
 	<PageSection title="Privacy" as="h1" subtitle="Privacy Policy — last updated August 2026" flow>
 		<p>
-			This Privacy Policy describes how Mirai Service Co., Ltd., trading as Time Type Tokyo ("Apres
+			This Privacy Policy describes how Mirai Service Co., Ltd., trading as CONTEXT ("Apres
 			Guerre," "we," "us," or "our"), handles personal information collected through august.tf and
 			through the purchase, delivery, and support of our font licences — currently Norma, in 20
-			weights, and any other typefaces we release under the Time Type Tokyo name. It applies whenever
+			weights, and any other typefaces we release under the CONTEXT name. It applies whenever
 			you browse the site, buy a Desktop, Web, App, or Books licence, or write to us about an
 			existing licence. It does not apply to the websites, apps, or publications you build using our
 			fonts — those are covered by your own privacy practices, not ours.
@@ -112,7 +112,7 @@
 		<p>
 			We keep the footprint small on purpose. Payment details never touch our own servers — they go
 			directly to Stripe. The site is served over HTTPS, and access to order and billing records is
-			limited to the people who need it to run Time Type Tokyo. No system is unbreakable, but we take
+			limited to the people who need it to run CONTEXT. No system is unbreakable, but we take
 			reasonable technical and organisational precautions to protect what we hold.
 		</p>
 
@@ -127,7 +127,7 @@
 
 		<h3>Children's Privacy</h3>
 		<p>
-			Time Type Tokyo isn't directed at children, and we don't knowingly collect personal information
+			CONTEXT isn't directed at children, and we don't knowingly collect personal information
 			from anyone under 16. If you believe a minor has given us personal information, contact us
 			through our <a href="/contact">contact form</a> and we'll delete it.
 		</p>
@@ -143,7 +143,7 @@
 		<p>
 			Questions about this policy, or about your own information, go to our
 			<a href="/contact">contact form</a>. You can also write to us at Mirai Service Co., Ltd.
-			(trading as Time Type Tokyo), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan. This
+			(trading as CONTEXT), 1-16 Hinokuchi-cho, Nishi-ku, Nagoya, Aichi 451-0034, Japan. This
 			policy is governed by the laws of Japan.
 		</p>
 	</PageSection>

@@ -641,10 +641,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Quad Sans',
 		tagline: 'In development.',
 		description:
-			'TTT Quad Sans is a sans-serif in development at Time Type Tokyo, one half of a family that will pair it with a serif. ' +
+			'TTT Quad Sans is a sans-serif in development at CONTEXT, one half of a family that will pair it with a serif. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'TTT Quad Sans est un sans-serif en cours de développement chez Time Type Tokyo, une moitié d’une famille qui l’associera à un serif. ' +
+			'TTT Quad Sans est un sans-serif en cours de développement chez CONTEXT, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
 		// The one cut there is: a Regular (the file is static, so wght 400 is
@@ -759,14 +759,14 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Ango',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'TTT Humorist is a sibling to Norma, in development at Time Type Tokyo. ' +
+			'TTT Humorist is a sibling to Norma, in development at CONTEXT. ' +
 			'Where Norma runs wide and even across twenty weights, TTT Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Black — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'TTT Humorist est une police sœur de Norma, en cours de développement chez Time Type Tokyo. ' +
+			'TTT Humorist est une police sœur de Norma, en cours de développement chez CONTEXT. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development · 10 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -843,7 +843,7 @@ export const TYPEFACES: Typeface[] = [
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-cream.jpg',
-				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by Time Type Tokyo, set in TTT Humorist — a case study mockup',
+				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by CONTEXT, set in TTT Humorist — a case study mockup',
 				width: 2000,
 				height: 1125
 			},
@@ -932,10 +932,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'TTT Alfred is a Neo Classic typeface in development at Time Type Tokyo. ' +
+			'TTT Alfred is a Neo Classic typeface in development at CONTEXT. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'TTT Alfred est un caractère Neo Classic en cours de développement chez Time Type Tokyo. ' +
+			'TTT Alfred est un caractère Neo Classic en cours de développement chez CONTEXT. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised
