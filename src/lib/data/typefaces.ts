@@ -33,18 +33,20 @@ export type GalleryItem =
 /** The foundry's initials, the prefix of every public typeface name
  *  (2026-10-30, at the user's request — "APGRは全てつけるようにして"), the way
  *  Kontrapunkt Type's are "KP Duo Sans". Slugs follow: lowercase, hyphenated
- *  (`ttt-humorist`). The big display of a name drops it — see displayName().
+ *  (`context-humorist`). The big display of a name drops it — see displayName().
+ *  "CONTEXT" since 2026-11-13 (at the user's request — "TTTもCONTEXTに合わせて
+ *  変更して"; the slugs `ttt-…` → `context-…`, the old ones 301). Before that
  *  "TTT" (Time Type Tokyo) since 2026-11-06, at the user's request ("書体名は
  *  APGR {XXX}からTTT {XXX}に変更"), and the slugs with them the same day
  *  ("リンク含めて全て変えて"): `apgr-…` → `ttt-…`, the old ones 301 (LEGACY_SLUGS
  *  below and the repo-root _redirects). */
-export const NAME_PREFIX = 'TTT';
+export const NAME_PREFIX = 'CONTEXT';
 
 export interface Typeface {
-	/** `ttt-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
+	/** `context-` + the name, lowercase and hyphenated (Norma keeps `norma`: the
 	 *  pricing and checkout tables are keyed by it, and the face is hidden). */
 	slug: string;
-	/** Public name, prefix included (e.g. 'TTT Humorist'). The CSS family
+	/** Public name, prefix included (e.g. 'CONTEXT Humorist'). The CSS family
 	 *  (`fontFamily`) and the font/image files keep their old internal names. */
 	name: string;
 	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Quad Sans, 5 = Alfred */
@@ -489,7 +491,7 @@ export const TYPEFACES: Typeface[] = [
 		// Prefixed with the rest (2026-10-30). Its final name is still open —
 		// Linotype already sells a "Norma" — and the prose below still says
 		// "Norma": settle the name, then rewrite it (see the TODO below).
-		name: 'TTT Norma',
+		name: 'CONTEXT Norma',
 		category: 'Neo humanist sans-serif',
 		order: 1,
 		status: 'available',
@@ -632,8 +634,8 @@ export const TYPEFACES: Typeface[] = [
 		// drawings formerly shown as "Mokuseki Sans" (a client's name, kept off
 		// the public site), exported from Quad.glyphs as one Regular. Its CSS
 		// family is 'Quad Sans' (app.html @font-face; QuadSans-Regular.woff2).
-		slug: 'ttt-quad-sans',
-		name: 'TTT Quad Sans',
+		slug: 'context-quad-sans',
+		name: 'CONTEXT Quad Sans',
 		category: 'Sans-serif',
 		order: 4,
 		status: 'in-development',
@@ -641,20 +643,20 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Quad Sans',
 		tagline: 'In development.',
 		description:
-			'TTT Quad Sans is a sans-serif in development at CONTEXT, one half of a family that will pair it with a serif. ' +
+			'CONTEXT Quad Sans is a sans-serif in development at CONTEXT, one half of a family that will pair it with a serif. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'TTT Quad Sans est un sans-serif en cours de développement chez CONTEXT, une moitié d’une famille qui l’associera à un serif. ' +
+			'CONTEXT Quad Sans est un sans-serif en cours de développement chez CONTEXT, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
 		// The one cut there is: a Regular (the file is static, so wght 400 is
 		// only its name in the Type Tester's row).
 		weights: [{ id: 40, name: '40', label: 'Regular', axisValue: 400 }],
-		defaultTexts: ['TTT Quad Sans'],
+		defaultTexts: ['CONTEXT Quad Sans'],
 		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
 		// the build leaves those out, so the page sets them in another face.
 		testerNotice:
-			'TTT Quad Sans is in development. Characters not drawn yet are set in another face.',
+			'CONTEXT Quad Sans is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -679,11 +681,11 @@ export const TYPEFACES: Typeface[] = [
 		// browser's sans-serif.
 		// Shown as "Maxa" since 2026-11-05 (at the user's request — "書体名、
 		// 一回Maxaにしてみて", a trial), confirmed 2026-11-06 ("Maxaで確定、
-		// ttt-maxaにして"): the slug followed (`ttt-maxica` and `apgr-maxica`
+		// context-maxaにして"): the slug followed (`context-maxica` and `apgr-maxica`
 		// 301 here). The CSS family ('Maxica') and the font file keep the
 		// working name, as Humorist's keep 'Ango'.
-		slug: 'ttt-maxa',
-		name: 'TTT Maxa',
+		slug: 'context-maxa',
+		name: 'CONTEXT Maxa',
 		category: 'Neo-grotesque sans-serif',
 		order: 3,
 		status: 'in-development',
@@ -697,7 +699,7 @@ export const TYPEFACES: Typeface[] = [
 		// classical-roman proportions + a narrow lowercase for reading; Maxa's
 		// ascenders rise above the capitals since VF24 (cap 700, asc 720).
 		description:
-			'TTT Maxa is a neo-grotesque drawn from two answers to the same mid-century question. ' +
+			'CONTEXT Maxa is a neo-grotesque drawn from two answers to the same mid-century question. ' +
 			'In Switzerland, Helvetica made the grotesque firm, dense and even. ' +
 			"In the 1960s, the book designer Gert Wunderlich drew Maxima for Typoart in Dresden as East Germany's own answer: a sans whose capitals keep the proportions of the classical roman, and whose narrow lowercase was cut for reading. " +
 			"Maxa takes Helvetica's build — level terminals, firm curves, close spacing — and Maxima's measure: capitals that are wide or narrow as their roman ancestors were, and ascenders that rise above them, so capitals sit quietly in a line of text. " +
@@ -705,7 +707,7 @@ export const TYPEFACES: Typeface[] = [
 			'That makes it useful where a neo-grotesque turns stiff: names, titles and wayfinding set in capitals; text full of capitals, such as German or lists of proper names; identities that run from a wordmark into body text in one typeface. ' +
 			'One weight axis runs from Hair for large display to Black for posters.',
 		descriptionFr:
-			'TTT Maxa est une néo-grotesque née de deux réponses à une même question du milieu du XXe siècle. ' +
+			'CONTEXT Maxa est une néo-grotesque née de deux réponses à une même question du milieu du XXe siècle. ' +
 			"En Suisse, l'Helvetica a rendu la grotesque ferme, dense et régulière. " +
 			"Dans les années 1960, le graphiste du livre Gert Wunderlich a dessiné la Maxima pour Typoart à Dresde, réponse propre de l'Allemagne de l'Est : une linéale dont les capitales gardent les proportions de la romaine classique, et dont les bas-de-casse étroits ont été taillés pour la lecture. " +
 			"Maxa emprunte à l'Helvetica sa construction — terminaisons horizontales, courbes tendues, approche serrée — et à la Maxima sa mesure : des capitales larges ou étroites comme l'étaient leurs ancêtres romaines, et des ascendantes qui les dépassent, si bien que les capitales restent discrètes dans une ligne de texte. " +
@@ -724,7 +726,7 @@ export const TYPEFACES: Typeface[] = [
 		// Its ten named stops are Humorist's (Hair 50 … Regular 450 … Black 950).
 		weightMenu: ANGO_WEIGHTS,
 		testerNotice:
-			'TTT Maxa is in development. Characters not drawn yet are set in another face.',
+			'CONTEXT Maxa is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		specimenWeight: 500,
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -746,12 +748,12 @@ export const TYPEFACES: Typeface[] = [
 		// position moved from wght 850 to 950 on 2026-09-22, at the user's
 		// request, so its scale now reaches Norma's own top stop.
 		// Re-shown 2026-08-29 at the user's request (temporary).
-		// "Ango" until 2026-10-30, then "TTT Humorist" (a pun on the category
+		// "Ango" until 2026-10-30, then "CONTEXT Humorist" (a pun on the category
 		// Humanist). Only the public name and slug moved: the CSS family stays
 		// 'Ango' (other projects set type in it) and so do the Ango-VF*.woff2
 		// and ango-* image files below.
-		slug: 'ttt-humorist',
-		name: 'TTT Humorist',
+		slug: 'context-humorist',
+		name: 'CONTEXT Humorist',
 		category: 'Geometric humanist sans-serif',
 		order: 2,
 		status: 'in-development',
@@ -759,14 +761,14 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Ango',
 		tagline: 'Reticent and Ravenous.',
 		description:
-			'TTT Humorist is a sibling to Norma, in development at CONTEXT. ' +
-			'Where Norma runs wide and even across twenty weights, TTT Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
+			'CONTEXT Humorist is a sibling to Norma, in development at CONTEXT. ' +
+			'Where Norma runs wide and even across twenty weights, CONTEXT Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
 			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
 			'A little over half the design is there already, and the rest is following weight by weight. ' +
 			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Black — the same letterforms pulled toward opposite instincts. ' +
 			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
 		descriptionFr:
-			'TTT Humorist est une police sœur de Norma, en cours de développement chez CONTEXT. ' +
+			'CONTEXT Humorist est une police sœur de Norma, en cours de développement chez CONTEXT. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development · 10 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
@@ -843,21 +845,21 @@ export const TYPEFACES: Typeface[] = [
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-cream.jpg',
-				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by CONTEXT, set in TTT Humorist — a case study mockup',
+				alt: 'A blue jar and a white box for “Facial Barrier Cream (3)” by CONTEXT, set in CONTEXT Humorist — a case study mockup',
 				width: 2000,
 				height: 1125
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-mozzarella-brie.webp',
-				alt: '“Mozzarella &” in a light weight of TTT Humorist above “Brie de Meaux” in a heavy one, white on blue',
+				alt: '“Mozzarella &” in a light weight of CONTEXT Humorist above “Brie de Meaux” in a heavy one, white on blue',
 				width: 2000,
 				height: 720
 			},
 			{
 				kind: 'image',
 				src: '/images/fonts/ango-case-study-extinguisher.jpg',
-				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in TTT Humorist — a case study mockup',
+				alt: 'A white fire extinguisher printed with “Fire Extinguisher” set in CONTEXT Humorist — a case study mockup',
 				width: 2000,
 				height: 1333
 			},
@@ -921,8 +923,8 @@ export const TYPEFACES: Typeface[] = [
 		// specimen; everything below is still fully provisional (unlike Ango,
 		// no drawings at all yet). Re-shown 2026-08-29, re-hidden 2026-08-31,
 		// both at the user's request.
-		slug: 'ttt-alfred',
-		name: 'TTT Alfred',
+		slug: 'context-alfred',
+		name: 'CONTEXT Alfred',
 		category: 'Neo classic',
 		order: 5,
 		status: 'in-development',
@@ -932,10 +934,10 @@ export const TYPEFACES: Typeface[] = [
 		fontFamily: 'Norma',
 		tagline: 'A Neo Classic in development.',
 		description:
-			'TTT Alfred is a Neo Classic typeface in development at CONTEXT. ' +
+			'CONTEXT Alfred is a Neo Classic typeface in development at CONTEXT. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'TTT Alfred est un caractère Neo Classic en cours de développement chez CONTEXT. ' +
+			'CONTEXT Alfred est un caractère Neo Classic en cours de développement chez CONTEXT. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'In development',
 		// Provisional weights — same axis as Norma until the spec is finalised
@@ -973,18 +975,21 @@ export function getTypeface(slug: string): Typeface | undefined {
  *  are now (a 301 — see fonts/[slug]/+page.ts; one hop, never a chain).
  *  `elio` is Ango's name before 2026-10-03; `ango` and `gq` before the
  *  2026-10-30 rename; `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before
- *  GQ Sans became Quad Sans; the `apgr-` ones until the TTT prefix
- *  (2026-11-06); `ttt-maxica` for the hours before Maxa was confirmed. Alfred is left out: it is hidden, so it never had a public
+ *  GQ Sans became Quad Sans; the `apgr-` ones until the CONTEXT prefix
+ *  (2026-11-06); `context-maxica` for the hours before Maxa was confirmed. Alfred is left out: it is hidden, so it never had a public
  *  page to carry over. The /buy?font= parameter reads the same map. */
 export const LEGACY_SLUGS: Record<string, string> = {
-	ango: 'ttt-humorist',
-	elio: 'ttt-humorist',
-	gq: 'ttt-quad-sans',
-	'apgr-gq-sans': 'ttt-quad-sans',
-	'apgr-humorist': 'ttt-humorist',
-	'apgr-quad-sans': 'ttt-quad-sans',
-	'apgr-maxica': 'ttt-maxa',
-	'ttt-maxica': 'ttt-maxa'
+	ango: 'context-humorist',
+	elio: 'context-humorist',
+	gq: 'context-quad-sans',
+	'apgr-gq-sans': 'context-quad-sans',
+	'apgr-humorist': 'context-humorist',
+	'apgr-quad-sans': 'context-quad-sans',
+	'apgr-maxica': 'context-maxa',
+	'ttt-maxica': 'context-maxa',
+	'ttt-maxa': 'context-maxa',
+	'ttt-humorist': 'context-humorist',
+	'ttt-quad-sans': 'context-quad-sans'
 };
 
 /** The name as the big display sets it: the prefix dropped ("Humorist"), as
@@ -1056,16 +1061,16 @@ const HOME_PANEL_STYLES: {
 	// Maxaのアニメーションは無しで。Humoristを黒背景にして、1番目に。Maxaを白
 	// 背景にして"): every panel still; Humorist black, Maxa white.
 	{
-		slug: 'ttt-humorist',
+		slug: 'context-humorist',
 		weight: 450,
 		bg: 'var(--black)',
 		fg: 'var(--brand-paper)',
 		motion: 'none',
 		uppercase: true
 	},
-	{ slug: 'ttt-maxa', weight: 400, bg: 'var(--white)', fg: 'var(--black)', motion: 'none' },
+	{ slug: 'context-maxa', weight: 400, bg: 'var(--white)', fg: 'var(--black)', motion: 'none' },
 	{
-		slug: 'ttt-quad-sans',
+		slug: 'context-quad-sans',
 		weight: 400,
 		bg: 'var(--brand-blue)',
 		fg: 'var(--brand-paper)',

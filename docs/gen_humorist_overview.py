@@ -1,5 +1,5 @@
 """Generate src/lib/data/humoristOverview.ts from the shipped Ango VF (the face
-sold as TTT Humorist): the encoded glyphs by group, the vertical metrics and
+sold as CONTEXT Humorist): the encoded glyphs by group, the vertical metrics and
 the Hyperglot language list. Run from anywhere:
 
     python3 docs/gen_humorist_overview.py <path to Ango-VF*.woff2> <out .ts>
@@ -60,7 +60,7 @@ def js(s):
 
 
 lines = []
-lines.append("// Generated from the shipped Ango VF (the face sold as TTT Humorist) by")
+lines.append("// Generated from the shipped Ango VF (the face sold as CONTEXT Humorist) by")
 lines.append("// docs/gen_humorist_overview.py — the encoded characters by group, the vertical metrics and the")
 lines.append("// Hyperglot language list (0.7.3, base support, validity=verified: the same")
 lines.append("// method and thresholds as the spec table's language count). Regenerate whenever")
