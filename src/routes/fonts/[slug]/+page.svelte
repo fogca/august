@@ -31,7 +31,7 @@
 	import FontInformation from '$lib/components/fonts/FontInformation.svelte';
 	import { getPackage, packageStage, stageFactor, STAGE_LABELS } from '$lib/data/pricing.js';
 	import type { TypefaceSlug } from '$lib/data/pricing.js';
-	import { displayName } from '$lib/data/typefaces.js';
+	import { displayNameAsSet } from '$lib/data/typefaces.js';
 	import type { GalleryItem } from '$lib/data/typefaces.js';
 	import type { PageData } from './$types.js';
 
@@ -93,8 +93,9 @@
 	// The big name at the top: the prefix dropped, set at the face's own
 	// display weight (400 where it has none).
 	const nameWeight = $derived(tf.specimenWeight ?? 400);
-	// …unless the typeface sets its page title apart (Humorist: "CF", Medium).
-	const titleText = $derived(tf.pageTitle ?? displayName(tf));
+	// …as the home panel sets it (Humorist in capitals), unless the typeface
+	// sets its page title apart.
+	const titleText = $derived(tf.pageTitle ?? displayNameAsSet(tf));
 	const titleWeight = $derived(tf.pageTitleWeight ?? nameWeight);
 
 	// The Type Tester's default size on a desktop screen (Humorist since
@@ -477,12 +478,24 @@
 	   the masthead's wordmark; the side padding is the page's own inset (the
 	   wordmark's margin, base.css --padding). */
 	.FontTitle {
-		padding: 12px var(--padding) 24px;
+		/* The first view is the name alone, centred in what is left of the
+		   screen under the bar (2026-11-20, at the user's request, after
+		   nguyengobber.com/typefaces/sticks — "書体名を90vwで中央表示。詳細は
+		   ファーストビューより下に"); the intro begins below the fold. */
+		display: grid;
+		place-items: center;
+		min-height: calc(100vh - var(--header-bar-h));
+		min-height: calc(100svh - var(--header-bar-h));
+		padding: 0;
 	}
 
 	/* font-size 0 so the heading's own strut adds no space around the line:
 	   the word (an inline-block, which sets its own size) is all that is in it. */
 	.FontTitle__name {
+		/* 90% of the section, which is the page's full width: the same as
+		   90vw, without a classic scrollbar pushing it out of line. fitText
+		   sizes the word to this. */
+		width: 90%;
 		margin: 0;
 		font-size: 0;
 		line-height: 0;
@@ -493,7 +506,7 @@
 		white-space: nowrap;
 		/* What shows until fitText has measured (and with no JS): about the
 		   width of a short word at the page's width. */
-		font-size: clamp(72px, 22vw, 360px);
+		font-size: clamp(48px, 16vw, 360px);
 		line-height: 0.8;
 		letter-spacing: 0;
 	}

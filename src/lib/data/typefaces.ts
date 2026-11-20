@@ -827,7 +827,10 @@ export const TYPEFACES: Typeface[] = [
 		specimenWeight: 300,
 		// The page title was the prefix alone, in Medium, until 2026-11-13: with
 		// the two-letter prefix "CF" fitted to the page's width it came out ~900px
-		// tall, so Humorist now shows its name like the other faces.
+		// tall, so Humorist shows its name like the other faces — since
+		// 2026-11-20 as the home panel sets it (capitals, Regular 450; at the
+		// user's request — "topと見え方統一して、uppercaseでweightも揃えて").
+		pageTitleWeight: 450,
 		// Borrowed from gQ (2026-08-31, at the user's request) — Ango has no
 		// hero image of its own yet, so its page top reuses gQ's for now.
 		thumbnail: '/images/fonts/gq.png',
