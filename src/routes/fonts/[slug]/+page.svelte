@@ -24,6 +24,8 @@
 	import { resolve } from '$app/paths';
 	import { dragScroll } from '$lib/actions/dragScroll';
 	import { fitText } from '$lib/actions/fitText';
+	import TitleOutline from '$lib/components/fonts/TitleOutline.svelte';
+	import { TITLE_PATHS } from '$lib/data/titlePaths.js';
 	import TypeTester from '$lib/components/TypeTester/TypeTester.svelte';
 	import GlyphSet from '$lib/components/fonts/GlyphSet.svelte';
 	import GlyphShowcase from '$lib/components/fonts/GlyphShowcase.svelte';
@@ -97,6 +99,9 @@
 	// sets its page title apart.
 	const titleText = $derived(tf.pageTitle ?? displayNameAsSet(tf));
 	const titleWeight = $derived(tf.pageTitleWeight ?? nameWeight);
+	// The name as outlines for the opening path animation, where the build
+	// has them (scripts/build_title_paths.py); else the plain text below.
+	const titlePath = $derived(tf.pageTitle ? undefined : TITLE_PATHS[tf.slug]);
 
 	// The Type Tester's default size on a desktop screen (Humorist since
 	// 2026-10-30; the placeholders follow it).
@@ -193,12 +198,18 @@
 	     says the full name to a screen reader. -->
 	<section class="FontTitle" aria-label="{tf.name}">
 		<h1 class="FontTitle__name" aria-label={tf.name}>
-			<span
-				class="FontTitle__text"
-				use:fitText={tf.slug}
-				style="font-variation-settings: 'wght' {titleWeight}; font-weight: {titleWeight};"
-				>{titleText}</span
-			>
+			{#if titlePath}
+				{#key tf.slug}
+					<TitleOutline path={titlePath} />
+				{/key}
+			{:else}
+				<span
+					class="FontTitle__text"
+					use:fitText={tf.slug}
+					style="font-variation-settings: 'wght' {titleWeight}; font-weight: {titleWeight};"
+					>{titleText}</span
+				>
+			{/if}
 		</h1>
 	</section>
 
@@ -484,8 +495,14 @@
 		   ファーストビューより下に"); the intro begins below the fold. */
 		display: grid;
 		place-items: center;
-		min-height: calc(100vh - var(--header-bar-h));
-		min-height: calc(100svh - var(--header-bar-h));
+		/* The whole first screen, strictly: <main> starts under the Masthead
+		   (the layout's spacer for the Header), so the section reaches back up
+		   over it and the name centres on the screen, not on what is left under
+		   the bar (2026-11-20, at the user's request — ".Mastheadの高さがある
+		   から厳密に中央ではない"). The Header floats above it. */
+		margin-top: calc(-1 * var(--masthead-h));
+		min-height: 100vh;
+		min-height: 100svh;
 		padding: 0;
 	}
 
