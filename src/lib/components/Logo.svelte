@@ -5,7 +5,7 @@
      above it at the same scale.
 
      Since 2026-11-05 the wordmark is the user's trial name in Maxa Regular,
-     black — "Texmex Typefoundry Tokyo" on the first day, "CONTEXT"
+     black — "Texmex Typefoundry Tokyo" on the first day, "PLEASANT"
      since 2026-11-06 (see $lib/data/wordmark.ts, generated from the font by
      scripts/build_wordmark.py). The words keep the layout's
      old names, `apres` (the first word) and `guerre` (the second): see
@@ -122,7 +122,7 @@
 	}
 
 	/* SP: the same one line, with its own top margin. (The old two-word name
-	   stacked on two lines here; CONTEXT is short enough for one.) */
+	   stacked on two lines here; PLEASANT is short enough for one.) */
 	@media (max-width: 767.98px) {
 		.Logo {
 			--logo-top: calc(28px + env(safe-area-inset-top, 0px));

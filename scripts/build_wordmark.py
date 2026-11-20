@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""(Superseded 2026-11-13: the wordmark is now the supplied CONTEXT artwork — see
-scripts/build_wordmark_from_svg.py. This script set "Time Type Tokyo" in a face
-of ours and would overwrite wordmark.ts if run.)
+"""(2026-11-20: the name became PLEASANT. Until the logo artwork for it exists, this
+script sets it in Humorist Regular — the interim wordmark. When the artwork
+arrives, scripts/build_wordmark_from_svg.py takes over again.)
 
 Sets the site's wordmark in a face of ours and writes it out as outlines.
 
@@ -44,11 +44,11 @@ OUT = ROOT / "src/lib/data/wordmark.ts"
 # (initial capitals; first set in all caps by mistake, then corrected). It was
 # "Texmex Typefoundry Tokyo" for a day; since 2026-11-06 it is "Time Type
 # Tokyo". Maxica draws A-Z and a-y, so the name has to stay clear of "z".
-WORDMARK_TEXT = "TIME TYPE TOKYO"
+WORDMARK_TEXT = "PLEASANT"
 WEIGHT = 450  # Humorist Regular
 # Where the name breaks into the two words the Header moves (the first word's
 # letters, then the rest — a space inside the second word stays a space).
-FIRST_WORD = "TIME"
+FIRST_WORD = "PLEA"
 
 # Room above the tallest ink and below the lowest, in font units: the box is
 # measured off the letters themselves (ascenders d f k, descenders y p).
@@ -126,7 +126,8 @@ def build() -> str:
         letters.append({"char": char, "x0": x0, "x1": x1, "d": d, "index": i})
 
     first_end = len(FIRST_WORD)
-    gap_end = first_end + 1  # the space after the first word
+    # The space after the first word, if the name has one (PLEASANT has none).
+    gap_end = first_end + 1 if WORDMARK_TEXT[first_end : first_end + 1] == " " else first_end
     n_first = sum(1 for lt in letters if lt["index"] < first_end)
     words = [
         {"text": FIRST_WORD, "from": 0, "to": n_first, "x0": 0, "x1": r(origins[first_end])},

@@ -13,8 +13,8 @@
 </script>
 
 <svelte:head>
-	<title>Order Received — CONTEXT</title>
-	<meta name="description" content="Order confirmation — CONTEXT." />
+	<title>Order Received — PLEASANT</title>
+	<meta name="description" content="Order confirmation — PLEASANT." />
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
@@ -63,7 +63,7 @@
 				order reference{/if}.
 		</p>
 
-		<a href="/" class="Success__home">← Back to CONTEXT</a>
+		<a href="/" class="Success__home">← Back to PLEASANT</a>
 	</div>
 </main>
 

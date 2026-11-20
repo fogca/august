@@ -14,7 +14,7 @@
 	import SectionHeading from './SectionHeading.svelte';
 
 	interface Props {
-		/** Public name, for the style names ("CF Humorist Regular"). */
+		/** Public name, for the style names ("PF Humorist Regular"). */
 		name: string;
 		weights: TypefaceWeight[];
 		groups: GlyphGroup[];

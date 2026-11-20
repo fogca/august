@@ -187,7 +187,7 @@
 </script>
 
 <svelte:head>
-	<title>Shape Study — CONTEXT</title>
+	<title>Shape Study — PLEASANT</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 

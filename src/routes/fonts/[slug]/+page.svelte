@@ -1,6 +1,6 @@
 <!-- Typeface page. Top of the page redone 2026-10-30, at the user's request, after
      Kontrapunkt Type's typeface pages (type.kontrapunkt.com): the name, with
-     the "CF" prefix dropped, as wide as the page; a rule; then the spec lines
+     the "PF" prefix dropped, as wide as the page; a rule; then the spec lines
      (two columns) and the description (the wider column); a Buy pill fixed at
      the bottom of the screen (centred on SP, bottom right on PC — Klim's "Buy
      fonts" made a fixture, 2026-11-05) that opens that typeface's purchase. The colour band with the classification headline
@@ -88,7 +88,7 @@
 	// Humorist (Ango) only has 52 letters and no OpenType features drawn yet —
 	// Glyph set / Beyond A-Z / OpenType below are swapped for a plain
 	// sample-text block on its page (see the {#if isHumorist} further down).
-	const isHumorist = $derived(tf.slug === 'cf-humorist');
+	const isHumorist = $derived(tf.slug === 'pf-humorist');
 
 	// The big name at the top: the prefix dropped, set at the face's own
 	// display weight (400 where it has none).
@@ -181,7 +181,7 @@
 </script>
 
 <svelte:head>
-	<title>{tf.name} — CONTEXT</title>
+	<title>{tf.name} — PLEASANT</title>
 	<meta name="description" content="{tf.tagline} {tf.classification}." />
 </svelte:head>
 

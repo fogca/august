@@ -89,7 +89,7 @@
 </script>
 
 <svelte:head>
-	<title>Glyph Check — CONTEXT</title>
+	<title>Glyph Check — PLEASANT</title>
 	<meta name="description" content="Proof a typeface across long, varied sample text." />
 	<meta name="robots" content="noindex" />
 </svelte:head>

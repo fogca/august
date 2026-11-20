@@ -127,10 +127,10 @@
 </script>
 
 <svelte:head>
-	<title>CONTEXT — CF Humorist</title>
+	<title>PLEASANT — PF Humorist</title>
 	<meta
 		name="description"
-		content="CONTEXT — an independent type foundry. CF Humorist, a nine-weight geometric humanist variable typeface, in development."
+		content="PLEASANT — an independent type foundry. PF Humorist, a nine-weight geometric humanist variable typeface, in development."
 	/>
 </svelte:head>
 
@@ -165,7 +165,7 @@
 				<span>Custom Type</span> <span>for Corporate</span> <span>Identity</span>
 			</h2>
 			<p class="Custom__body">
-				Beyond our retail library, CONTEXT designs bespoke typefaces for brands and
+				Beyond our retail library, PLEASANT designs bespoke typefaces for brands and
 				institutions — a proprietary voice, drawn from the first sketch to a fully realised family.
 				A custom typeface is the most enduring asset a brand can own: it travels across every
 				screen, surface, and language while remaining unmistakably yours.

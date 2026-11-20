@@ -40,10 +40,10 @@
 </script>
 
 <svelte:head>
-	<title>About — CONTEXT</title>
+	<title>About — PLEASANT</title>
 	<meta
 		name="description"
-		content="CONTEXT — an independent type foundry. Studio statement and philosophy."
+		content="PLEASANT — an independent type foundry. Studio statement and philosophy."
 	/>
 </svelte:head>
 
@@ -54,7 +54,7 @@
 
 			<div class="About__body">
 				<p class="en" lang="en">
-					CONTEXT is an independent type foundry, founded in 2026. We cross histories,
+					PLEASANT is an independent type foundry, founded in 2026. We cross histories,
 					cultures, and eras, reinterpret their context, and draw type through a contemporary eye.
 					Anchored in retail families and bespoke commissions, we keep searching for forms not yet
 					seen. A typeface is never the meaning itself. It is the medium meaning passes through,
@@ -63,7 +63,7 @@
 					sketch to a fully realised family.
 				</p>
 				<p class="fr" lang="fr">
-					CONTEXT est une fonderie de caractères indépendante, fondée en 2026. Nous traversons
+					PLEASANT est une fonderie de caractères indépendante, fondée en 2026. Nous traversons
 					les histoires, les cultures et les époques, en réinterprétons le contexte, et dessinons
 					des caractères à travers un regard contemporain. Ancrés dans nos familles de vente et nos
 					commandes sur mesure, nous continuons de chercher des formes encore jamais vues. Un
@@ -123,10 +123,10 @@
 								<span class="fr" lang="fr">Caractères de vente</span>
 							</h3>
 							<p class="en" lang="en">
-								CF Humorist, a nine-weight variable typeface, in development.
+								PF Humorist, a nine-weight variable typeface, in development.
 							</p>
 							<p class="fr" lang="fr">
-								CF Humorist, une police variable en neuf graisses, en cours de développement.
+								PF Humorist, une police variable en neuf graisses, en cours de développement.
 							</p>
 						</div>
 						<div class="About__item">

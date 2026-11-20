@@ -20,10 +20,10 @@
 </script>
 
 <svelte:head>
-	<title>Contact — CONTEXT</title>
+	<title>Contact — PLEASANT</title>
 	<meta
 		name="description"
-		content="Contact CONTEXT — licensing questions, enterprise scale, custom typefaces, and general enquiries."
+		content="Contact PLEASANT — licensing questions, enterprise scale, custom typefaces, and general enquiries."
 	/>
 </svelte:head>
 

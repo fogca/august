@@ -23,8 +23,8 @@ export default defineConfig({
 				type: 'module'
 			},
 			manifest: {
-				name: 'CONTEXT',
-				short_name: 'CONTEXT',
+				name: 'PLEASANT',
+				short_name: 'PLEASANT',
 				description: 'An independent type foundry.',
 				theme_color: '#ffffff',
 				background_color: '#000000',

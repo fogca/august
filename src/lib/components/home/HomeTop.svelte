@@ -252,12 +252,12 @@
 	</div>
 
 	<section class="HomeLead">
-		<h1 class="HomeLead__title">CONTEXT</h1>
+		<h1 class="HomeLead__title">PLEASANT</h1>
 		<!-- The frame's own copy (it repeats twice there as filler), with the
 		     brand name updated and "from Tokyo" left out, per the user's
 		     earlier request to keep the city out of the site's copy. -->
 		<p class="HomeLead__text">
-			CONTEXT is an independent type foundry. We draw humanist typefaces that treat the letter
+			PLEASANT is an independent type foundry. We draw humanist typefaces that treat the letter
 			as the medium meaning passes through — retail families and bespoke type for those who value
 			the power of design.
 		</p>
@@ -331,7 +331,7 @@
 		   /fonts row's ~50vh): 70vh, 60vh on SP. The lead holds the top 35vh on
 		   PC, the top half on SP. */
 		--hero-h: 70vh;
-		/* Half the screen on PC too (35vh before): CONTEXT, set across the width,
+		/* Half the screen on PC too (35vh before): PLEASANT, set across the width,
 		   is twice as tall as the old name. */
 		--lead-h: 50vh;
 		/* Where the heroes start their rise: just below the fold, whatever the

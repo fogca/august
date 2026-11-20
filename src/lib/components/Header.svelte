@@ -192,7 +192,7 @@
 	onfocusin={onFocusIn}
 	onfocusout={onFocusOut}
 >
-	<a class="Header__logo" href="/" onclick={close} aria-label="CONTEXT — home">
+	<a class="Header__logo" href="/" onclick={close} aria-label="PLEASANT — home">
 		<Logo bind:wordEls />
 		<!-- Where the two words land in the compact state (see measure()). -->
 		<span class="Header__slot Header__slot--apres" bind:this={slotEls[0]}></span>
@@ -296,7 +296,7 @@
 		   which sticky page UI clears — and, on every page but the home, the
 		   space the layout reserves above the content (--masthead-h).
 		   The lockup widths here and below are set for the name's own
-		   proportions (5.9:1 since CONTEXT, 2026-11-13; 11.5:1 before), keeping
+		   proportions (5.9:1 since PLEASANT, 2026-11-13; 11.5:1 before), keeping
 		   the heights the longer name had: ≈14.4px here — the header's rhythm
 		   doesn't change with the name. */
 		--lockup-w: 85.4px;
@@ -516,7 +516,7 @@
 	   the link row are centred in it (the lockup 135px wide, 17px tall; the
 	   links 17.5px). The lockup was 170px by 19px for the 9:1 Apres Guerre
 	   mark, then 223px by 17px for the 13:1 "Texmex Typefoundry Tokyo"; the
-	   8:1 "CONTEXT" keeps the 17px.
+	   8:1 "PLEASANT" keeps the 17px.
 	   Since 2026-11-06 (the user's own values: "top 10px, left, right 20px")
 	   the row sits 10px from the top and 20px in from each side, no longer
 	   centred in the bar nor on the page margin; the lockup keeps its 1px

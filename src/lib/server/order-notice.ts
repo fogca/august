@@ -83,7 +83,7 @@ export function buildOrderNotice(session: Stripe.Checkout.Session): OrderNotice 
 	].filter((row): row is string => row !== null);
 
 	const text = [
-		'A payment was completed on the CONTEXT /buy page.',
+		'A payment was completed on the PLEASANT /buy page.',
 		'',
 		...rows,
 		'',
