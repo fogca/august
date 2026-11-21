@@ -1,7 +1,8 @@
 <!-- A typeface page's big name, drawn as it opens (2026-11-20, at the user's
      request, after nguyengobber.com/typefaces/sticks — "path animationから始め
-     て欲しい"): each contour of each letter is traced as a thin line, letter by
-     letter, and then the letter fills in and the line fades out.
+     て欲しい"): every contour of every letter is traced as a thin line, all at
+     once (no stagger — "staggerはなくていいよ", 2026-11-21), and then the
+     letters fill in and the lines fade out.
 
      The outlines come from $lib/data/titlePaths.ts (scripts/build_title_paths.py);
      the viewBox is the name's ink box, so the SVG is exactly as wide as its
@@ -49,23 +50,20 @@
 	style="--sw: {lineWidth}"
 >
 	{#each path.letters as letter, i (i)}
-		<g style="--i: {i}">
+		<g>
 			<path class="TitleOutline__fill" d={letter.d} />
 			{#each letter.contours as contour, k (k)}
-				<path class="TitleOutline__line" d={contour} pathLength="1" style="--k: {k}" />
+				<path class="TitleOutline__line" d={contour} pathLength="1" />
 			{/each}
 		</g>
 	{/each}
 </svg>
 
 <style>
-	/* Timeline, per letter i (and contour k): the line draws for DRAW seconds
-	   from i·STEP + k·SUB; the fill comes in once the first strokes are
-	   round; the line fades as the fill arrives. */
+	/* Timeline: every line draws for DRAW seconds from 0; the fill comes in
+	   once the strokes are round; the lines fade as the fill arrives. */
 	.TitleOutline {
 		--draw: 1.2s;
-		--step: 0.09s;
-		--sub: 0.07s;
 		--fill-at: 1s;
 
 		display: block;
@@ -77,8 +75,7 @@
 
 	.TitleOutline__fill {
 		fill: currentColor;
-		animation: title-fill 0.45s ease-out both;
-		animation-delay: calc(var(--fill-at) + var(--i) * var(--step));
+		animation: title-fill 0.45s ease-out var(--fill-at) both;
 	}
 
 	.TitleOutline__line {
@@ -90,10 +87,7 @@
 		stroke-dashoffset: 1;
 		animation:
 			title-draw var(--draw) cubic-bezier(0.65, 0, 0.35, 1) both,
-			title-line-out 0.4s ease-out both;
-		animation-delay:
-			calc(var(--i) * var(--step) + var(--k) * var(--sub)),
-			calc(var(--fill-at) + 0.25s + var(--i) * var(--step));
+			title-line-out 0.4s ease-out calc(var(--fill-at) + 0.25s) both;
 	}
 
 	@keyframes title-draw {
