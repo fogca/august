@@ -52,14 +52,18 @@
 	// "baselineとグリフの間に隙間1pxくらいある"). A zero-size marker sitting on
 	// the text's baseline is measured, and every line and the grid hang from
 	// that.
-	let emEl = $state<HTMLElement>();
+	let squareEl = $state<HTMLElement>();
 	let baseMarker = $state<HTMLElement>();
 	let baseY = $state<number | null>(null);
 
 	function measureBaseline() {
-		if (!emEl || !baseMarker) return;
+		if (!squareEl || !baseMarker) return;
 		const dpr = window.devicePixelRatio || 1;
-		const y = baseMarker.getBoundingClientRect().top - emEl.getBoundingClientRect().top;
+		// From the top of the square's padding box (inside its frame), which is
+		// what the lines and the grid are positioned from.
+		const y =
+			baseMarker.getBoundingClientRect().top -
+			(squareEl.getBoundingClientRect().top + squareEl.clientTop);
 		baseY = Math.round(y * dpr) / dpr;
 	}
 
@@ -73,8 +77,8 @@
 
 	onMount(() => {
 		measureBaseline();
-		const observer = emEl ? new ResizeObserver(measureBaseline) : undefined;
-		if (emEl) observer?.observe(emEl);
+		const observer = squareEl ? new ResizeObserver(measureBaseline) : undefined;
+		if (squareEl) observer?.observe(squareEl);
 		document.fonts?.ready.then(measureBaseline);
 		document.fonts?.addEventListener('loadingdone', measureBaseline);
 		return () => {
@@ -116,10 +120,13 @@
 
 	<div class="GlyphOverview__grid">
 		<div class="GlyphOverview__stage">
+			<!-- A square, framed (2026-11-21, at the user's request — "全体が正方形に
+			     なるようにして欲しくて、枠線つけて"): the grid fills it, the metric
+			     lines run across it, and the glyph's line box stands in the middle. -->
 			<div
-				class="GlyphOverview__em"
-				bind:this={emEl}
-				style="--asc: {ascender}; --desc: {descender};{baseY === null ? '' : ` --base: ${baseY}px;`} font-variation-settings: 'wght' {weight.axisValue}; font-weight: {weight.axisValue};"
+				class="GlyphOverview__square"
+				bind:this={squareEl}
+				style="--asc: {ascender}; --desc: {descender};{baseY === null ? '' : ` --base: ${baseY}px;`}"
 			>
 				{#if showMetrics}
 					<!-- The square grid: a cell is 20 units (40 until 2026-11-21, then "もっと
@@ -134,11 +141,16 @@
 						</div>
 					{/each}
 				{/if}
-				<span class="GlyphOverview__glyph" aria-label="{selected} {hex(selected)}"
-					><span class="GlyphOverview__text"
-						>{selected}<i class="GlyphOverview__base" bind:this={baseMarker}></i></span
-					></span
+				<div
+					class="GlyphOverview__em"
+					style="font-variation-settings: 'wght' {weight.axisValue}; font-weight: {weight.axisValue};"
 				>
+					<span class="GlyphOverview__glyph" aria-label="{selected} {hex(selected)}"
+						><span class="GlyphOverview__text"
+							>{selected}<i class="GlyphOverview__base" bind:this={baseMarker}></i></span
+						></span
+					>
+				</div>
 			</div>
 		</div>
 
@@ -260,26 +272,39 @@
 		container-type: inline-size;
 	}
 
-	/* The em box: as tall as the font's line box (ascender - descender), so the
-	   metric lines can be placed from its top. cqw is the stage's width. The
-	   top margin leaves room for the ascender line's label. */
-	.GlyphOverview__em {
+	/* The square: as wide as the stage, as tall as it is wide, framed. Inside, the
+	   grid and the metric lines are positioned from its top (--base is the
+	   measured baseline, from there), and the em box — the font's line box
+	   (ascender - descender) — is centred in it. cqw is the stage's width. */
+	.GlyphOverview__square {
 		--fs: min(62cqw, 520px);
 		/* A whole number of 20-unit cells (50 to the em): whole pixels for the
 		   grid and for every line. */
 		--line: color-mix(in srgb, var(--color-text) 30%, #fff);
 		--grid: color-mix(in srgb, var(--color-text) 6%, #fff);
-		/* Until the baseline is measured: where the metrics put it. */
-		--base: calc(var(--asc) / 1000 * var(--fs));
+		/* Until the baseline is measured: where the metrics put it in the
+		   centred em box. */
+		--em-h: calc(var(--fs) * (var(--asc) - var(--desc)) / 1000);
+		--base: calc((100cqw - 2px - var(--em-h)) / 2 + var(--asc) / 1000 * var(--fs));
 		position: relative;
-		margin-top: 22px;
-		height: calc(var(--fs) * (var(--asc) - var(--desc)) / 1000);
+		aspect-ratio: 1 / 1;
+		overflow: hidden;
+		border: 1px solid var(--line);
 	}
 
 	@supports (width: round(nearest, 1px, 1px)) {
-		.GlyphOverview__em {
+		.GlyphOverview__square {
 			--fs: round(nearest, min(62cqw, 520px), 50px);
 		}
+	}
+
+	.GlyphOverview__em {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		height: var(--em-h);
+		margin-top: calc(var(--em-h) / -2);
 	}
 
 	/* The square grid, a cell 20 units wide and tall. Its rows hang from the
@@ -293,7 +318,7 @@
 			linear-gradient(to right, var(--grid) 1px, transparent 1px),
 			linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
 		background-size: calc(var(--fs) / 50) calc(var(--fs) / 50);
-		background-position: round(down, 50cqw, 1px) var(--base);
+		background-position: round(down, calc(50cqw - 1px), 1px) var(--base);
 	}
 
 	.GlyphOverview__glyph {
@@ -334,8 +359,8 @@
 
 	.GlyphOverview__lineText {
 		position: absolute;
-		left: 0;
-		right: 0;
+		left: 8px;
+		right: 8px;
 		bottom: 2px;
 		display: flex;
 		justify-content: space-between;
