@@ -9,6 +9,7 @@
      the top, and each metric line is placed from the top at
      (ascender - value) / 1000 em. -->
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { TypefaceWeight } from '$lib/data/typefaces.js';
 	import type { GlyphGroup, MetricLine } from '$lib/data/humoristOverview.js';
 	import SectionHeading from './SectionHeading.svelte';
@@ -43,6 +44,44 @@
 
 	const hex = (c: string) =>
 		'U+' + (c.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, '0');
+
+	// Where the baseline really is. The browser sets the text on a whole device
+	// pixel, so the baseline the metrics predict (ascender / 1000 × size from
+	// the top) can be a pixel off from where the letters stand: the line then
+	// floats under them, or cuts into them (2026-11-21, at the user's request —
+	// "baselineとグリフの間に隙間1pxくらいある"). A zero-size marker sitting on
+	// the text's baseline is measured, and every line and the grid hang from
+	// that.
+	let emEl = $state<HTMLElement>();
+	let baseMarker = $state<HTMLElement>();
+	let baseY = $state<number | null>(null);
+
+	function measureBaseline() {
+		if (!emEl || !baseMarker) return;
+		const dpr = window.devicePixelRatio || 1;
+		const y = baseMarker.getBoundingClientRect().top - emEl.getBoundingClientRect().top;
+		baseY = Math.round(y * dpr) / dpr;
+	}
+
+	// A new glyph or weight changes the text; wait for it to be laid out.
+	$effect(() => {
+		void selected;
+		void weight.axisValue;
+		void showMetrics;
+		requestAnimationFrame(measureBaseline);
+	});
+
+	onMount(() => {
+		measureBaseline();
+		const observer = emEl ? new ResizeObserver(measureBaseline) : undefined;
+		if (emEl) observer?.observe(emEl);
+		document.fonts?.ready.then(measureBaseline);
+		document.fonts?.addEventListener('loadingdone', measureBaseline);
+		return () => {
+			observer?.disconnect();
+			document.fonts?.removeEventListener('loadingdone', measureBaseline);
+		};
+	});
 </script>
 
 <section class="GlyphOverview" aria-label="Glyph Overview">
@@ -79,9 +118,13 @@
 		<div class="GlyphOverview__stage">
 			<div
 				class="GlyphOverview__em"
-				style="--asc: {ascender}; --desc: {descender}; font-variation-settings: 'wght' {weight.axisValue}; font-weight: {weight.axisValue};"
+				bind:this={emEl}
+				style="--asc: {ascender}; --desc: {descender};{baseY === null ? '' : ` --base: ${baseY}px;`} font-variation-settings: 'wght' {weight.axisValue}; font-weight: {weight.axisValue};"
 			>
 				{#if showMetrics}
+					<!-- The square grid: a cell is 40 units, which every metric line
+					     (1000, 720, 480, 0, -200) lands on. Paler than the lines. -->
+					<div class="GlyphOverview__paper" aria-hidden="true"></div>
 					{#each metrics as m (m.label)}
 						<div class="GlyphOverview__line" style="--v: {m.value}">
 							<span class="GlyphOverview__lineText">
@@ -90,7 +133,11 @@
 						</div>
 					{/each}
 				{/if}
-				<span class="GlyphOverview__glyph" aria-label="{selected} {hex(selected)}">{selected}</span>
+				<span class="GlyphOverview__glyph" aria-label="{selected} {hex(selected)}"
+					><span class="GlyphOverview__text"
+						>{selected}<i class="GlyphOverview__base" bind:this={baseMarker}></i></span
+					></span
+				>
 			</div>
 		</div>
 
@@ -217,9 +264,35 @@
 	   top margin leaves room for the ascender line's label. */
 	.GlyphOverview__em {
 		--fs: min(62cqw, 520px);
+		/* A whole number of 40-unit cells (25 to the em): whole pixels for the
+		   grid and for every line. */
+		--line: color-mix(in srgb, var(--color-text) 30%, #fff);
+		--grid: color-mix(in srgb, var(--color-text) 7%, #fff);
+		/* Until the baseline is measured: where the metrics put it. */
+		--base: calc(var(--asc) / 1000 * var(--fs));
 		position: relative;
 		margin-top: 22px;
 		height: calc(var(--fs) * (var(--asc) - var(--desc)) / 1000);
+	}
+
+	@supports (width: round(nearest, 1px, 1px)) {
+		.GlyphOverview__em {
+			--fs: round(nearest, min(62cqw, 520px), 25px);
+		}
+	}
+
+	/* The square grid, a cell 40 units wide and tall. Its rows hang from the
+	   baseline and its columns from the middle of the box (where the glyph is
+	   centred); the lines are the same 1px as the metric lines and paler. */
+	.GlyphOverview__paper {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background-image:
+			linear-gradient(to right, var(--grid) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+		background-size: calc(var(--fs) / 25) calc(var(--fs) / 25);
+		background-position: round(down, 50cqw, 1px) var(--base);
 	}
 
 	.GlyphOverview__glyph {
@@ -234,13 +307,27 @@
 		user-select: none;
 	}
 
+	/* The marker the baseline is measured from: no size, on the text's baseline. */
+	.GlyphOverview__text {
+		display: inline;
+	}
+
+	.GlyphOverview__base {
+		display: inline-block;
+		width: 0;
+		height: 0;
+		vertical-align: baseline;
+	}
+
+	/* From the baseline up: the metric lines are solid (the grid under them is
+	   paler, and must not add to them). */
 	.GlyphOverview__line {
 		position: absolute;
 		left: 0;
 		right: 0;
 		height: 0;
-		top: calc((var(--asc) - var(--v)) / 1000 * var(--fs));
-		border-top: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+		top: calc(var(--base) - var(--v) / 1000 * var(--fs));
+		border-top: 1px solid var(--line);
 		pointer-events: none;
 	}
 
