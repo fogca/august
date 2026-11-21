@@ -13,7 +13,7 @@
      with reduced motion — or if animations never run — the name is simply
      there, filled.
 
-     The line's width is 1.5px on screen whatever the size: the SVG's scale is
+     The line's width is 1px on screen whatever the size: the SVG's scale is
      measured and the width in viewBox units follows. -->
 <script lang="ts">
 	import { onMount } from 'svelte';
@@ -21,9 +21,10 @@
 
 	let { path }: { path: TitlePath } = $props();
 
-	const LINE_PX = 1.5;
-	// Until the SVG is measured: about 1.5px at a 1300px-wide name.
-	const guess = $derived(Math.round(path.width * 0.00115 * 100) / 100);
+	// 1px (1.5px until 2026-11-21: "パスのアウトラインが少し太いので細くして").
+	const LINE_PX = 1;
+	// Until the SVG is measured: about 1px at a 1300px-wide name.
+	const guess = $derived(Math.round(path.width * 0.00077 * 100) / 100);
 	let measured = $state<number | null>(null);
 	const lineWidth = $derived(measured ?? guess);
 
@@ -31,7 +32,9 @@
 
 	onMount(() => {
 		const measure = () => {
-			const px = svg.getBoundingClientRect().width;
+			// Layout width, not the bounding box: the page turns the name on its
+			// side on a phone, and a turned box is measured the other way about.
+			const px = svg.clientWidth;
 			if (px > 0) measured = Math.round(((LINE_PX * path.width) / px) * 100) / 100;
 		};
 		measure();

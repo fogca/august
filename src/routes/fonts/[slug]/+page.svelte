@@ -197,7 +197,11 @@
 	<!-- The name, prefix dropped, as wide as the page (see fitText). The h1
 	     says the full name to a screen reader. -->
 	<section class="FontTitle" aria-label="{tf.name}">
-		<h1 class="FontTitle__name" aria-label={tf.name}>
+		<h1
+			class="FontTitle__name"
+			class:FontTitle__name--outline={titlePath}
+			aria-label={tf.name}
+		>
 			{#if titlePath}
 				{#key tf.slug}
 					<TitleOutline path={titlePath} />
@@ -494,6 +498,7 @@
 		   nguyengobber.com/typefaces/sticks — "書体名を90vwで中央表示。詳細は
 		   ファーストビューより下に"); the intro begins below the fold. */
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
 		place-items: center;
 		/* The whole first screen, strictly: <main> starts under the Masthead
 		   (the layout's spacer for the Header), so the section reaches back up
@@ -504,6 +509,25 @@
 		min-height: 100vh;
 		min-height: 100svh;
 		padding: 0;
+	}
+
+	/* On a phone held upright the name is turned a quarter to the right and
+	   runs down the screen (2026-11-21, at the user's request — "SPではパスアニメー
+	   ションを90度右に回転させて、縦にして"): its length is 80% of the screen's
+	   height (the Header above and the Buy pill below take the rest), and it is
+	   turned about its own centre, which stays the centre of the screen. The
+	   grid track is pinned to the screen's width so the long box overflows it
+	   evenly, and the section clips what the turn leaves outside. */
+	@media (max-width: 767.98px) and (orientation: portrait) {
+		.FontTitle {
+			overflow: clip;
+		}
+
+		.FontTitle .FontTitle__name--outline {
+			width: 80vh;
+			width: 80svh;
+			transform: rotate(90deg);
+		}
 	}
 
 	/* font-size 0 so the heading's own strut adds no space around the line:
