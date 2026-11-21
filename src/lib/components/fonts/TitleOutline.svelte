@@ -64,7 +64,10 @@
 	   once the strokes are round; the lines fade as the fill arrives. */
 	.TitleOutline {
 		--draw: 1.2s;
-		--fill-at: 1s;
+		/* After the lines are round (DRAW = 1.2s) plus a beat: it began at 1s,
+		   while they were still finishing (2026-11-21, at the user's request —
+		   "塗りつぶし発火はもう少し遅らせてほしい"). */
+		--fill-at: 1.7s;
 
 		display: block;
 		width: 100%;
