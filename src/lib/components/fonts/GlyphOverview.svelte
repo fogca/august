@@ -122,8 +122,9 @@
 				style="--asc: {ascender}; --desc: {descender};{baseY === null ? '' : ` --base: ${baseY}px;`} font-variation-settings: 'wght' {weight.axisValue}; font-weight: {weight.axisValue};"
 			>
 				{#if showMetrics}
-					<!-- The square grid: a cell is 40 units, which every metric line
-					     (1000, 720, 480, 0, -200) lands on. Paler than the lines. -->
+					<!-- The square grid: a cell is 20 units (40 until 2026-11-21, then "もっと
+					     細かくしたい"), which every metric line (1000, 720, 480, 0, -200)
+					     lands on. Paler than the lines. -->
 					<div class="GlyphOverview__paper" aria-hidden="true"></div>
 					{#each metrics as m (m.label)}
 						<div class="GlyphOverview__line" style="--v: {m.value}">
@@ -264,10 +265,10 @@
 	   top margin leaves room for the ascender line's label. */
 	.GlyphOverview__em {
 		--fs: min(62cqw, 520px);
-		/* A whole number of 40-unit cells (25 to the em): whole pixels for the
+		/* A whole number of 20-unit cells (50 to the em): whole pixels for the
 		   grid and for every line. */
 		--line: color-mix(in srgb, var(--color-text) 30%, #fff);
-		--grid: color-mix(in srgb, var(--color-text) 7%, #fff);
+		--grid: color-mix(in srgb, var(--color-text) 6%, #fff);
 		/* Until the baseline is measured: where the metrics put it. */
 		--base: calc(var(--asc) / 1000 * var(--fs));
 		position: relative;
@@ -277,11 +278,11 @@
 
 	@supports (width: round(nearest, 1px, 1px)) {
 		.GlyphOverview__em {
-			--fs: round(nearest, min(62cqw, 520px), 25px);
+			--fs: round(nearest, min(62cqw, 520px), 50px);
 		}
 	}
 
-	/* The square grid, a cell 40 units wide and tall. Its rows hang from the
+	/* The square grid, a cell 20 units wide and tall. Its rows hang from the
 	   baseline and its columns from the middle of the box (where the glyph is
 	   centred); the lines are the same 1px as the metric lines and paler. */
 	.GlyphOverview__paper {
@@ -291,7 +292,7 @@
 		background-image:
 			linear-gradient(to right, var(--grid) 1px, transparent 1px),
 			linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-		background-size: calc(var(--fs) / 25) calc(var(--fs) / 25);
+		background-size: calc(var(--fs) / 50) calc(var(--fs) / 50);
 		background-position: round(down, 50cqw, 1px) var(--base);
 	}
 
