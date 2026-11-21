@@ -766,11 +766,11 @@ export const TYPEFACES: Typeface[] = [
 		description:
 			'In the late 1920s, Eric Gill drew a sans serif from Edward Johnston’s lettering and the capitals of Roman inscriptions, and it went on to speak for railways and paperbacks alike. ' +
 			'PF Humorist carries that humanist line forward. ' +
-			'The proportions stay classical; the rest is rebuilt — a variable axis running from a hairline Hair to a blunt Black, evenly spaced across its ten weights, and set to be read on screens as comfortably as on paper.',
+			'Every letter is redrawn from scratch, yet the small gestures of the original stay — a variable axis running from a hairline Hair to a blunt Black, evenly spaced across its ten weights, and set to be read on screens as comfortably as on paper.',
 		descriptionFr:
 			'À la fin des années 1920, Eric Gill dessine un sans-serif à partir des lettres d’Edward Johnston et des capitales des inscriptions romaines ; il deviendra la voix des chemins de fer comme des livres de poche. ' +
 			'PF Humorist prolonge cette lignée humaniste. ' +
-			'Les proportions restent classiques ; tout le reste est reconstruit — un axe variable qui court d’un Hair filiforme à un Black franc, espacé avec régularité sur ses dix graisses, et pensé pour se lire à l’écran aussi confortablement que sur papier.',
+			'Chaque lettre est redessinée de zéro, mais les petits gestes de l’original demeurent — un axe variable qui court d’un Hair filiforme à un Black franc, espacé avec régularité sur ses dix graisses, et pensé pour se lire à l’écran aussi confortablement que sur papier.',
 		classification: 'In development · 10 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
 		// (Asta.glyphs' own glyph box), not the shipped VF's cmap — unlike
