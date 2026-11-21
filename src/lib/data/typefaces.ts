@@ -760,16 +760,17 @@ export const TYPEFACES: Typeface[] = [
 		hidden: false,
 		fontFamily: 'Ango',
 		tagline: 'Reticent and Ravenous.',
+		// Rewritten 2026-11-20/21, at the user's request ("Humoristの説明を全面的に書き
+		// 換えたい。Gill Sansのモダナイズって感じ" → draft B): the Gill Sans lineage,
+		// no longer "a sibling to Norma, in development".
 		description:
-			'PF Humorist is a sibling to Norma, in development at PLEASANT. ' +
-			'Where Norma runs wide and even across twenty weights, PF Humorist narrows its focus to ten — an axis built from two hand-drawn extremes, Hair and Black, with the eight named stops between them genuinely interpolated rather than invented. ' +
-			"Both masters are drawn in full; what's still catching up is the shared glyph set, since a variable font can only ship a character once its lightest and heaviest drawings agree closely enough to interpolate cleanly between them. " +
-			'A little over half the design is there already, and the rest is following weight by weight. ' +
-			'Even mid-development, the two extremes already read as a distinct temperament — reserved and almost weightless at Hair, blunt and unwavering at Black — the same letterforms pulled toward opposite instincts. ' +
-			'Its default words in the Type Tester borrow the language of wine and terroir, the same register Norma continues at greater length: Appellation, Cuvée, Héritage — words that, like the type itself, describe something inherited and still being shaped.',
+			'In the late 1920s, Eric Gill drew a sans serif from Edward Johnston’s lettering and the capitals of Roman inscriptions, and it went on to speak for railways and paperbacks alike. ' +
+			'PF Humorist carries that humanist line forward. ' +
+			'The proportions stay classical; the rest is rebuilt — a variable axis running from a hairline Hair to a blunt Black, evenly spaced across its ten weights, and set to be read on screens as comfortably as on paper.',
 		descriptionFr:
-			'PF Humorist est une police sœur de Norma, en cours de développement chez PLEASANT. ' +
-			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
+			'À la fin des années 1920, Eric Gill dessine un sans-serif à partir des lettres d’Edward Johnston et des capitales des inscriptions romaines ; il deviendra la voix des chemins de fer comme des livres de poche. ' +
+			'PF Humorist prolonge cette lignée humaniste. ' +
+			'Les proportions restent classiques ; tout le reste est reconstruit — un axe variable qui court d’un Hair filiforme à un Black franc, espacé avec régularité sur ses dix graisses, et pensé pour se lire à l’écran aussi confortablement que sur papier.',
 		classification: 'In development · 10 weights',
 		// Glyph/language counts here deliberately use the SOURCE repertoire
 		// (Asta.glyphs' own glyph box), not the shipped VF's cmap — unlike
