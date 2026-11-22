@@ -66,6 +66,25 @@
 		return () => clearInterval(id);
 	});
 
+	// On a phone held upright the Header and the Buy pill stay hidden while the
+	// name draws itself (CSS below, ~2.4s) and come back after. Touching or
+	// scrolling the page brings them back at once: someone who reaches for the
+	// page is not waiting for the show.
+	onMount(() => {
+		const intro = window.matchMedia(
+			'(max-width: 767.98px) and (orientation: portrait) and (prefers-reduced-motion: no-preference)'
+		).matches;
+		if (!intro) return;
+		const root = document.documentElement;
+		const events = ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+		const skip = () => root.classList.add('title-intro-skip');
+		for (const e of events) window.addEventListener(e, skip, { passive: true, once: true });
+		return () => {
+			for (const e of events) window.removeEventListener(e, skip);
+			root.classList.remove('title-intro-skip');
+		};
+	});
+
 	// Use $derived so these stay reactive if data changes on navigation
 	const tf = $derived(data.typeface);
 	const isAvailable = $derived(tf.status === 'available');
@@ -527,6 +546,42 @@
 			width: 80vh;
 			width: 80svh;
 			transform: rotate(90deg);
+		}
+	}
+
+	/* While the name draws itself (phone held upright) nothing else is on the
+	   screen: the Header and the Buy pill are hidden until the fill is in, then
+	   fade back over 0.4s (2026-11-22, at the user's request — "SP slugのパスア
+	   ニメーション時は、他の要素非表示にしようかな" → plan A). 2.4s hidden + 0.4s
+	   fade = 2.8s; the title's own timeline (TitleOutline.svelte) ends at
+	   ~2.35s. `backwards` fill only: once it ends the element is back to its own
+	   styles (a held opacity animation would take the Header's blend mode off
+	   the page for good). */
+	@media (max-width: 767.98px) and (orientation: portrait) and (prefers-reduced-motion: no-preference) {
+		.FontPill,
+		:global(body:has(.TitleOutline) .Header) {
+			animation: title-intro-reveal 2.8s linear backwards;
+		}
+
+		:global(html.title-intro-skip) .FontPill,
+		:global(html.title-intro-skip body:has(.TitleOutline) .Header) {
+			animation: none;
+		}
+	}
+
+	@keyframes title-intro-reveal {
+		0%,
+		85.6% {
+			opacity: 0;
+			visibility: hidden;
+		}
+		85.7% {
+			opacity: 0;
+			visibility: visible;
+		}
+		100% {
+			opacity: 1;
+			visibility: visible;
 		}
 	}
 
