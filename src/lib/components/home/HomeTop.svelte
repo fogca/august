@@ -1,7 +1,7 @@
 <!-- Home page top (2026-10 redesign, Figma "II-ii"): the opening (1:635 PC,
      7:782 SP), then the resting top (175:178 PC, 7:874 SP).
 
-     Opening: the wordmark's letters, in white, rise into view at the FOOT
+     Opening: the wordmark's letters, in white, rise into view at the CENTRE
      of the screen, on a violet ground (--opening-ground; #4640A0 since
      2026-11-25, at the user's request — #554EB1 earlier that day, black from
      2026-11-05, brand blue in Figma 1:635). The words overlap: each begins
@@ -11,7 +11,9 @@
      underneath, the letters turn black, and they travel up one after another
      to their place at the top (2026-11-26, at the user's request —
      "テキストinを画面下にて行って、背景色が切り替わるタイミングで、それを
-     staggerで上に移動"; until then they rose in at the top and stayed). The
+     staggerで上に移動"; the same day they started from the foot of the
+     screen, then "画面中央から、上にするように". Before that they rose in at
+     the top and stayed). The
      lead text fades in as they arrive. That first section is a full screen: no typeface
      hero shows until the page is scrolled (2026-11-25, at the user's request
      — "最初の100vhには見えないようにして、first sectionを100vhにして"; until
@@ -355,11 +357,8 @@
 		z-index: 1300;
 		background: var(--opening-ground);
 		pointer-events: none;
-		/* For the letters' starting place, measured from the overlay's foot. */
+		/* For the letters' starting place, the middle of the overlay. */
 		container-type: size;
-		/* Where the letters rise in: as far above the foot as they come to
-		   rest below the top. */
-		--opening-foot: calc(35px + env(safe-area-inset-bottom, 0px));
 		/* The whole overlay goes a hair after the Header's mark is back under it. */
 		animation:
 			opening-lift var(--lift-dur) ease var(--lift-at) forwards,
@@ -407,12 +406,11 @@
 		}
 	}
 
-	/* On that beat each letter also leaves the foot for its place at the top,
-	   left to right. --drop is how far below that place it starts. */
+	/* On that beat each letter also leaves the middle for its place at the top,
+	   left to right. --drop is how far below that place it starts: the name
+	   centred in the overlay. */
 	.Opening :global(.Logo__letter) {
-		--drop: calc(
-			100cqh - var(--opening-foot) - var(--logo-h) * var(--u) - var(--logo-top)
-		);
+		--drop: calc((100cqh - var(--logo-h) * var(--u)) / 2 - var(--logo-top));
 		color: var(--white);
 		animation:
 			logo-to-ink var(--lift-dur) ease var(--lift-at) forwards,
@@ -664,10 +662,6 @@
 	@media (max-width: 767.98px) {
 		.HomeTop {
 			--hero-h: 60vh;
-		}
-
-		.Opening {
-			--opening-foot: calc(28px + env(safe-area-inset-bottom, 0px));
 		}
 
 		.HomeLead__text {
