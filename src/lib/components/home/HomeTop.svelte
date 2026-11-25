@@ -329,7 +329,8 @@
 		--lift-dur: 0.8s;
 		/* Each letter's trip to the top, and the gap between departures. */
 		--travel-dur: 1.1s;
-		--travel-step: 60ms;
+		/* 60ms until the same day: "staggerよわえて" (2026-11-26). */
+		--travel-step: 30ms;
 		/* The last of the eight letters lands. */
 		--handover-at: calc(var(--lift-at) + 7 * var(--travel-step) + var(--travel-dur));
 		/* The last beat, as the letters arrive. It has to END after
