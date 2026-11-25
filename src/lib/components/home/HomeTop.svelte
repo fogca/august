@@ -1,9 +1,9 @@
 <!-- Home page top (2026-10 redesign, Figma "II-ii"): the opening (1:635 PC,
      7:782 SP), then the resting top (175:178 PC, 7:874 SP).
 
-     Opening: the wordmark's letters, in white, rise into place on a black
-     ground (Figma 1:635 had it brand blue; black since 2026-11-05, at the
-     user's request, with the new name). The words overlap: each begins when
+     Opening: the wordmark's letters, in white, rise into place on a violet
+     ground (--opening-ground; #554EB1 since 2026-11-25, at the user's
+     request — black from 2026-11-05, brand blue in Figma 1:635). The words overlap: each begins when
      the one before it is three letters in ("Tim" of Time), not when it is
      done, so the whole name is up sooner (the user asked for a shorter
      opening). Then the ground lifts
@@ -309,6 +309,7 @@
 
 <style>
 	.HomeTop {
+		--opening-ground: #554eb1;
 		/* Opening timeline (seconds from first paint). */
 		--rise-at: 0.3s;
 		--rise-dur: 1.2s;
@@ -348,7 +349,7 @@
 		inset: 0;
 		/* Above the Header (1200), whose own mark it hands over to. */
 		z-index: 1300;
-		background: var(--black);
+		background: var(--opening-ground);
 		pointer-events: none;
 		animation: opening-lift var(--lift-dur) ease var(--lift-at) forwards;
 	}
