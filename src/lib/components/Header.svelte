@@ -296,10 +296,10 @@
 		   which sticky page UI clears — and, on every page but the home, the
 		   space the layout reserves above the content (--masthead-h).
 		   The lockup widths here and below are set for the logo's own
-		   proportions (7.6:1, the PLEASANT artwork, 2026-11-25), keeping the
+		   proportions (7.25:1, the PLEASANT artwork, 2026-11-25), keeping the
 		   letters as tall as they were before it — the header's rhythm doesn't
 		   change with the artwork. */
-		--lockup-w: 93px;
+		--lockup-w: 89px;
 		--lockup-top: 34.5px;
 		/* The lockup's left edge: centred, as Figma 3:671 has it (on the page
 		   margin on PC until 2026-11-05). The second is the same in the
@@ -524,10 +524,10 @@
 	   sticky UI and the pages' content clear. */
 	@media (min-width: 1060px) {
 		.Header {
-			/* 153px wide, 20px tall: the letter height the larger lockup had
+			/* 146px wide, 20px tall: the letter height the larger lockup had
 			   (2026-11-13, "ロゴをSPでもPCでも大きくして"), centred on the same
 			   line — hence 7.5px from the top. */
-			--lockup-w: 153px;
+			--lockup-w: 146px;
 			--lockup-top: 7.5px;
 			--row-top: 10px;
 			--edge: 20px;
@@ -585,9 +585,9 @@
 	/* ── SP lockup sizes ── */
 	@media (max-width: 767.98px) {
 		.Header {
-			/* 131px wide, 17px tall: the letter height of the larger lockup
+			/* 125px wide, 17px tall: the letter height of the larger lockup
 			   (2026-11-13), on the same centre line — hence 15px from the top. */
-			--lockup-w: 131px;
+			--lockup-w: 125px;
 			--lockup-top: 15px;
 		}
 
