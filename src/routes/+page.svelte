@@ -20,63 +20,41 @@
 
 	const panels = homePanels();
 
-	// The Custom section's pile: the T of the wordmark (Maxa), and only the T
-	// (2026-11-11, at the user's request — "文字もTに全て変えて"; it was the
-	// old wordmark's A, P, G and R), as its outline at the wordmark's own
-	// proportions.
+	// The Custom section's pile: the P of the wordmark, and only the P
+	// (2026-11-25, at the user's request — "テキストスタックはTではなくPにして";
+	// it was the T from 2026-11-11, and the old wordmark's A, P, G and R before),
+	// as its outline at the wordmark's own proportions.
 	//
 	// Sized off the screen rather than fixed px (2026-10, "それぞれの文字もっと
 	// 大きくして"): letter height is a share of the viewport height on PC, of
 	// its width on phones (where height would make them too wide to tumble).
-	const PILE_LETTER = WORDMARK_LETTERS.find((l) => l.char === 'T')!;
+	const PILE_LETTER = WORDMARK_LETTERS.find((l) => l.char === 'P')!;
 	const PILE_HEIGHT_OF_VH = 0.4;
 	const PILE_HEIGHT_OF_VW_SMALL = 0.5;
 	const SMALL_SCREEN = 768;
-	const PILE_T = tGeometry(PILE_LETTER.d);
-
-	/** Ink box and zoom target of a T drawn in straight segments (M x y, then
-	 *  H/V/L). The core — what the zoom dives into — is the
-	 *  largest circle inside the junction of bar and stem: touching the bar's
-	 *  top edge and the two inner corners where the stem meets the bar. */
-	function tGeometry(d: string) {
-		const points: [number, number][] = [];
-		let x = 0;
-		let y = 0;
-		for (const [, cmd, args] of d.matchAll(/([MHVL])([^MHVLZ]*)/g)) {
-			const n = args.trim().split(/[\s,]+/).map(Number);
-			if (cmd === 'M' || cmd === 'L') [x, y] = n;
-			else if (cmd === 'H') x = n[0];
-			else y = n[0];
-			points.push([x, y]);
-		}
-		const xs = points.map((p) => p[0]);
-		const ys = points.map((p) => p[1]);
-		const y0 = Math.min(...ys);
-		const y1 = Math.max(...ys);
-		const barBottom = Math.min(...ys.filter((v) => v > y0));
-		const stem = points.filter((p) => p[1] === y1).map((p) => p[0]);
-		const cx = (Math.min(...stem) + Math.max(...stem)) / 2;
-		const half = (Math.max(...stem) - Math.min(...stem)) / 2;
-		// |centre - corner| = centre - top  →  solve for the centre's y.
-		const cy = (half * half + barBottom * barBottom - y0 * y0) / (2 * (barBottom - y0));
-		return { x0: Math.min(...xs), x1: Math.max(...xs), y0, y1, core: { x: cx, y: cy, r: cy - y0 } };
-	}
+	// Measured off the P's outline (viewBox units) — measure again if the logo
+	// artwork changes. Its ink runs from y0 to y1; the core, what the zoom
+	// dives into, is the largest circle inside the ink: where the stem meets
+	// the foot of the bowl.
+	const PILE_Y0 = 0.14;
+	const PILE_Y1 = 110.81;
+	const PILE_CORE = { x: 9.06, y: 57.74, r: 9.06 };
 
 	function pileShapes() {
 		const target =
 			window.innerWidth < SMALL_SCREEN
 				? window.innerWidth * PILE_HEIGHT_OF_VW_SMALL
 				: window.innerHeight * PILE_HEIGHT_OF_VH;
-		const scale = target / (PILE_T.y1 - PILE_T.y0);
+		const scale = target / (PILE_Y1 - PILE_Y0);
 		return [
 			{
 				d: PILE_LETTER.d,
-				ox: PILE_T.x0,
-				oy: PILE_T.y0,
-				w: (PILE_T.x1 - PILE_T.x0) * scale,
-				h: (PILE_T.y1 - PILE_T.y0) * scale,
+				ox: PILE_LETTER.x0,
+				oy: PILE_Y0,
+				w: (PILE_LETTER.x1 - PILE_LETTER.x0) * scale,
+				h: (PILE_Y1 - PILE_Y0) * scale,
 				scale,
-				core: PILE_T.core
+				core: PILE_CORE
 			}
 		];
 	}
