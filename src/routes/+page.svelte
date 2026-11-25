@@ -34,17 +34,17 @@
 	const SMALL_SCREEN = 768;
 	const PILE_T = tGeometry(PILE_LETTER.d);
 
-	/** Ink box and zoom target of a T drawn only in horizontal and vertical
-	 *  segments (M x y, then H/V). The core — what the zoom dives into — is the
+	/** Ink box and zoom target of a T drawn in straight segments (M x y, then
+	 *  H/V/L). The core — what the zoom dives into — is the
 	 *  largest circle inside the junction of bar and stem: touching the bar's
 	 *  top edge and the two inner corners where the stem meets the bar. */
 	function tGeometry(d: string) {
 		const points: [number, number][] = [];
 		let x = 0;
 		let y = 0;
-		for (const [, cmd, args] of d.matchAll(/([MHV])([^MHVZ]*)/g)) {
+		for (const [, cmd, args] of d.matchAll(/([MHVL])([^MHVLZ]*)/g)) {
 			const n = args.trim().split(/[\s,]+/).map(Number);
-			if (cmd === 'M') [x, y] = n;
+			if (cmd === 'M' || cmd === 'L') [x, y] = n;
 			else if (cmd === 'H') x = n[0];
 			else y = n[0];
 			points.push([x, y]);

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""(2026-11-20: the name became PLEASANT. Until the logo artwork for it exists, this
+"""NOT IN USE since 2026-11-25: wordmark.ts now comes from the logo artwork
+(scripts/build_wordmark_from_svg.py) — running this would overwrite it.
+
+(2026-11-20: the name became PLEASANT. Until the logo artwork for it exists, this
 script sets it in Humorist Regular — the interim wordmark. When the artwork
 arrives, scripts/build_wordmark_from_svg.py takes over again.)
 

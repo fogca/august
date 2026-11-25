@@ -13,8 +13,8 @@ CONTEXT and 2026-11-20 for PLEASANT ("ブランド名をPLEASANTで決定で"):
   icon-512.png (also the PWA's maskable icon: the P sits well inside its 80%
   safe circle).
 - Share image (static/og.png, 1200x630): the whole wordmark in white on black.
-  (Redone 2026-11-20 for PLEASANT: the interim wordmark, no tagline until the
-  logo artwork exists.)
+  (Redone 2026-11-20 for PLEASANT, and 2026-11-25 from the logo artwork; there
+  is no tagline.)
 
 The PNGs are rasterised with sharp (a dependency of the site already) through
 Node.

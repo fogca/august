@@ -295,12 +295,12 @@
 		   header's overall height is the shared base.css --header-bar-h token,
 		   which sticky page UI clears — and, on every page but the home, the
 		   space the layout reserves above the content (--masthead-h).
-		   The lockup widths here and below are set for the name's own
-		   proportions (5.9:1 since PLEASANT, 2026-11-13; 11.5:1 before), keeping
-		   the heights the longer name had: ≈14.4px here — the header's rhythm
-		   doesn't change with the name. */
-		--lockup-w: 85.4px;
-		--lockup-top: 34px;
+		   The lockup widths here and below are set for the logo's own
+		   proportions (7.85:1, the PLEASANT artwork, 2026-11-25), keeping the
+		   letters as tall as they were before it — the header's rhythm doesn't
+		   change with the artwork. */
+		--lockup-w: 96px;
+		--lockup-top: 34.5px;
 		/* The lockup's left edge: centred, as Figma 3:671 has it (on the page
 		   margin on PC until 2026-11-05). The second is the same in the
 		   container units the words' own CSS works in. */
@@ -524,11 +524,11 @@
 	   sticky UI and the pages' content clear. */
 	@media (min-width: 1060px) {
 		.Header {
-			/* 140px wide (2026-11-13, at the user's request — "ロゴをSPでもPCでも
-			   大きくして"; it was 69.7px): 23.7px tall, centred on the link row
-			   (10px + half its 17.5px = 18.75px) — hence 7px from the top. */
-			--lockup-w: 140px;
-			--lockup-top: 7px;
+			/* 158px wide, 20px tall: the letter height the larger lockup had
+			   (2026-11-13, "ロゴをSPでもPCでも大きくして"), centred on the same
+			   line — hence 7.5px from the top. */
+			--lockup-w: 158px;
+			--lockup-top: 7.5px;
 			--row-top: 10px;
 			--edge: 20px;
 		}
@@ -585,10 +585,10 @@
 	/* ── SP lockup sizes ── */
 	@media (max-width: 767.98px) {
 		.Header {
-			/* 120px wide (2026-11-13; it was 66px): 20.3px tall, kept on the same
-			   centre line as before (24.6px) — hence 14.5px from the top. */
-			--lockup-w: 120px;
-			--lockup-top: 14.5px;
+			/* 135px wide, 17px tall: the letter height of the larger lockup
+			   (2026-11-13), on the same centre line — hence 15px from the top. */
+			--lockup-w: 135px;
+			--lockup-top: 15px;
 		}
 
 		/* The lockup spans most of the width; Cart alone fits beside it. */
