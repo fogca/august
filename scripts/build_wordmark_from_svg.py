@@ -4,7 +4,8 @@
     python3 scripts/build_wordmark_from_svg.py
 
 The wordmark is the artwork itself, docs/brand/pleasant-logo.svg, supplied by
-the user 2026-11-25 ("ロゴはこれで"), one path per letter. It replaces the
+the user 2026-11-25 ("ロゴはこれで", revised the same day), one <path> or
+<polygon> per letter. It replaces the
 interim wordmark set in Humorist (scripts/build_wordmark.py), and before that
 the CONTEXT artwork this script was first written for (2026-11-13).
 
@@ -29,8 +30,21 @@ FIRST_WORD_LEN = 4
 DECIMALS = 2
 
 
+def outlines(svg: str) -> list[str]:
+    """Every <path> and <polygon> of the artwork as SVG path data."""
+    found = []
+    for tag, attrs in re.findall(r"<(path|polygon)\b([^>]*)>", svg):
+        name = "d" if tag == "path" else "points"
+        value = re.search(rf'\s{name}="([^"]+)"', attrs).group(1)
+        if tag == "polygon":
+            n = value.split()
+            value = "M" + "L".join(f"{x} {y}" for x, y in zip(n[::2], n[1::2])) + "Z"
+        found.append(value)
+    return found
+
+
 def main() -> None:
-    paths = re.findall(r'<path d="([^"]+)"', SVG.read_text())
+    paths = outlines(SVG.read_text())
     letters = []
     for d in paths:
         pen = BoundsPen(None)

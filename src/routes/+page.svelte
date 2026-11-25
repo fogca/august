@@ -36,9 +36,9 @@
 	// artwork changes. Its ink runs from y0 to y1; the core, what the zoom
 	// dives into, is the largest circle inside the ink: where the stem meets
 	// the foot of the bowl.
-	const PILE_Y0 = 0.14;
-	const PILE_Y1 = 110.81;
-	const PILE_CORE = { x: 9.06, y: 57.74, r: 9.06 };
+	const PILE_Y0 = 0.15;
+	const PILE_Y1 = 112.23;
+	const PILE_CORE = { x: 9.94, y: 58.45, r: 9.94 };
 
 	function pileShapes() {
 		const target =
