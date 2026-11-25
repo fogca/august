@@ -2,16 +2,17 @@
      7:782 SP), then the resting top (175:178 PC, 7:874 SP).
 
      Opening: the wordmark's letters, in white, rise into place on a violet
-     ground (--opening-ground; #554EB1 since 2026-11-25, at the user's
-     request — black from 2026-11-05, brand blue in Figma 1:635). The words overlap: each begins when
+     ground (--opening-ground; #4640A0 since 2026-11-25, at the user's
+     request — #554EB1 earlier that day, black from 2026-11-05, brand blue in Figma 1:635). The words overlap: each begins when
      the one before it is three letters in ("Tim" of Time), not when it is
      done, so the whole name is up sooner (the user asked for a shorter
      opening). Then the ground lifts
      away to the white page underneath, the letters turning black as it goes
-     (so the logo turns dark at the very moment the ground turns white),
-     while the first typeface hero comes up from below, growing as it rises,
-     until its top edge rests at half the screen height ("OPから背景が白に
-     なり、下から大きくなりながら書体Hero100vhがinして、50vh分見える感じ").
+     (so the logo turns dark at the very moment the ground turns white), and
+     the lead text fades in. That first section is a full screen: no typeface
+     hero shows until the page is scrolled (2026-11-25, at the user's request
+     — "最初の100vhには見えないようにして、first sectionを100vhにして"; until
+     then the first hero rose into the lower half as the opening's last beat).
 
      The opening is a fixed overlay carrying its own copy of the wordmark
      (Logo.svelte, the same component and position as the Header's), above
@@ -147,9 +148,9 @@
 	const AT_TOP = 4;
 
 	/** True once the opening is over or was skipped: the overlay goes and
-	 *  the heroes/lead render at rest with no animation. */
+	 *  the lead renders at rest with no animation. */
 	let settled = $state(false);
-	let heroesEl: HTMLElement | undefined = $state();
+	let leadTextEl: HTMLElement | undefined = $state();
 
 	function finish() {
 		settled = true;
@@ -187,18 +188,18 @@
 		};
 	}
 
-	/** The heroes' entrance — the opening's last beat — if it is still to
+	/** The lead text's fade-in — the opening's last beat — if it is still to
 	 *  run or running. Svelte scopes keyframe names, hence endsWith. */
-	function heroesEntrance(): Animation | undefined {
-		return heroesEl
+	function leadEntrance(): Animation | undefined {
+		return leadTextEl
 			?.getAnimations()
-			.find((a) => 'animationName' in a && String(a.animationName).endsWith('heroes-in'));
+			.find((a) => 'animationName' in a && String(a.animationName).endsWith('lead-in'));
 	}
 
 	onMount(() => {
 		homeIntro.introComplete = false;
 
-		const entrance = heroesEntrance();
+		const entrance = leadEntrance();
 		if (
 			homeIntro.inApp ||
 			window.scrollY > AT_TOP ||
@@ -256,14 +257,14 @@
 		<!-- The frame's own copy (it repeats twice there as filler), with the
 		     brand name updated and "from Tokyo" left out, per the user's
 		     earlier request to keep the city out of the site's copy. -->
-		<p class="HomeLead__text">
+		<p class="HomeLead__text" bind:this={leadTextEl}>
 			PLEASANT is an independent type foundry. We draw humanist typefaces that treat the letter
 			as the medium meaning passes through — retail families and bespoke type for those who value
 			the power of design.
 		</p>
 	</section>
 
-	<div class="HomeHeroes" bind:this={heroesEl}>
+	<div class="HomeHeroes">
 		{#each panels as panel (panel.key)}
 			<!-- The ground is a plain CSS background, which is what the Header
 			     samples to pick its own colour — see Header.svelte. A name with
@@ -309,7 +310,7 @@
 
 <style>
 	.HomeTop {
-		--opening-ground: #554eb1;
+		--opening-ground: #4640a0;
 		/* Opening timeline (seconds from first paint). */
 		--rise-at: 0.3s;
 		--rise-dur: 1.2s;
@@ -320,25 +321,14 @@
 		   time), so the lift, and what follows it, come 0.5s sooner. */
 		--lift-at: 1.9s;
 		--lift-dur: 0.8s;
-		/* The ground turns white first, then the hero comes up into it. */
-		--hero-at: 2.25s;
-		--hero-dur: 1.6s;
+		/* The ground turns white first, then the lead text: the last beat. */
 		--lead-at: 2.7s;
 		--lead-dur: 0.8s;
 		--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-		--ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 		/* Heroes: lower than a screen since 2026-11-11 (at the user's request —
 		   "Fontsページのように高さは少し抑えて", then "もう少し高くして" from a
-		   /fonts row's ~50vh): 70vh, 60vh on SP. The lead holds the top 35vh on
-		   PC, the top half on SP. */
+		   /fonts row's ~50vh): 70vh, 60vh on SP. */
 		--hero-h: 70vh;
-		/* Half the screen on PC too (35vh before): PLEASANT, set across the width,
-		   is twice as tall as the old name. */
-		--lead-h: 50vh;
-		/* Where the heroes start their rise: just below the fold, whatever the
-		   lead's height (the hero's top sits at --lead-h, so this is what is
-		   left of the screen under it). */
-		--hero-from: calc(100vh - var(--lead-h));
 		/* The page's side inset (base.css --padding). */
 		--edge: var(--padding);
 	}
@@ -401,10 +391,13 @@
 		}
 	}
 
-	/* ── Lead: the white top half ── */
+	/* ── Lead: the first screen, white ── */
 	.HomeLead {
 		position: relative;
-		height: var(--lead-h);
+		/* The large viewport, so a hero never peeks in when a phone's URL bar
+		   folds away. */
+		height: 100vh;
+		height: 100lvh;
 		padding: 0;
 	}
 
@@ -417,11 +410,16 @@
 		white-space: nowrap;
 	}
 
-	/* Ango 11px / 1.4, 646px wide, its last line 30px above the hero. */
+	/* Ango 11px / 1.4, 646px wide, its last line 30px above the foot of the
+	   screen. */
 	.HomeLead__text {
+		--lead-foot: 30px;
 		position: absolute;
 		left: var(--edge);
-		bottom: 30px;
+		bottom: var(--lead-foot);
+		/* With a phone's URL bar showing, the section runs on below what is
+		   visible (100lvh against 100svh; the same on a desktop). */
+		bottom: calc(100lvh - 100svh + var(--lead-foot));
 		width: min(646px, calc(100% - 2 * var(--edge)));
 		margin: 0;
 		font-family: var(--font-ango), sans-serif;
@@ -441,18 +439,6 @@
 	}
 
 	/* ── Heroes ── */
-	.HomeHeroes {
-		/* Rises from fully below the fold, growing to full width. */
-		transform-origin: 50% 0;
-		animation: heroes-in var(--hero-dur) var(--ease-out-quint) var(--hero-at) backwards;
-	}
-
-	@keyframes heroes-in {
-		from {
-			transform: translateY(var(--hero-from)) scale(0.8);
-		}
-	}
-
 	/* --panel-bg / -fg / -font / -weight come from the panel's data. */
 	.HomeHero {
 		position: relative;
@@ -602,7 +588,6 @@
 		display: none;
 	}
 
-	.HomeTop.is-settled .HomeHeroes,
 	.HomeTop.is-settled .HomeLead__text {
 		animation: none;
 	}
@@ -612,7 +597,6 @@
 			display: none;
 		}
 
-		.HomeHeroes,
 		.HomeLead__text,
 		.HomeHero__name,
 		.HomeHero__ch,
@@ -624,13 +608,12 @@
 	@media (max-width: 767.98px) {
 		.HomeTop {
 			--hero-h: 60vh;
-			/* Small viewport: the hero's top lands at the middle of what is
-			   actually visible, URL bar and all. */
-			--lead-h: 50svh;
-			--hero-from: var(--lead-h);
 		}
 
-		.HomeLead__text,
+		.HomeLead__text {
+			--lead-foot: 32px;
+		}
+
 		.HomeHero__caption {
 			bottom: 32px;
 		}
