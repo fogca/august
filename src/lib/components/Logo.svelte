@@ -33,9 +33,17 @@
 		wordEls?: HTMLElement[];
 		/** All the letter paths, left to right, for callers that animate them. */
 		letterEls?: SVGPathElement[];
+		/** One box per letter instead of one per word, at the same pixels, for a
+		 *  caller that moves the letters one by one (the home page's opening):
+		 *  an <svg> clips to its viewBox, so a letter can't leave a word's. */
+		split?: boolean;
 	}
 
-	let { wordEls = $bindable([]), letterEls = $bindable([]) }: Props = $props();
+	let { wordEls = $bindable([]), letterEls = $bindable([]), split = false }: Props = $props();
+
+	/** Room (viewBox units) either side of a split letter's box, so its edges'
+	 *  anti-aliasing isn't cut off. */
+	const LETTER_PAD = 1;
 
 	/** Each letter's word of the name (Time, Type, Tokyo — not the two
 	 *  crops above, the second of which holds two) and its place in that word,
@@ -46,26 +54,43 @@
 </script>
 
 <span class="Logo" aria-hidden="true">
-	{#each LOGO_WORDS as word, w (word.key)}
-		<span class="Logo__word Logo__word--{word.key}" bind:this={wordEls[w]}>
-			<svg
-				viewBox="{word.x0} 0 {word.x1 - word.x0} {WORDMARK_H}"
-				preserveAspectRatio="xMinYMin meet"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<!-- For callers that stagger: --i is the letter's left-to-right index in
-				     the whole name, --w the number of its word and --j its place in it. -->
-				{#each WORDMARK_LETTERS.slice(word.from, word.to) as letter, i (i)}
-					{@const pos = LETTER_POS[word.from + i]}
-					<path
-						bind:this={letterEls[word.from + i]}
-						d={letter.d}
-						style="--i: {word.from + i}; --w: {pos.word}; --j: {pos.place}"
-					/>
-				{/each}
-			</svg>
-		</span>
-	{/each}
+	{#if split}
+		{#each WORDMARK_LETTERS as letter, i (i)}
+			{@const x = letter.x0 - LETTER_PAD}
+			{@const width = letter.x1 - letter.x0 + 2 * LETTER_PAD}
+			{@const pos = LETTER_POS[i]}
+			<span class="Logo__letter" style="--x: {x}; --lw: {width}; --i: {i}">
+				<svg
+					viewBox="{x} 0 {width} {WORDMARK_H}"
+					preserveAspectRatio="xMinYMin meet"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path d={letter.d} style="--i: {i}; --w: {pos.word}; --j: {pos.place}" />
+				</svg>
+			</span>
+		{/each}
+	{:else}
+		{#each LOGO_WORDS as word, w (word.key)}
+			<span class="Logo__word Logo__word--{word.key}" bind:this={wordEls[w]}>
+				<svg
+					viewBox="{word.x0} 0 {word.x1 - word.x0} {WORDMARK_H}"
+					preserveAspectRatio="xMinYMin meet"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<!-- For callers that stagger: --i is the letter's left-to-right index in
+					     the whole name, --w the number of its word and --j its place in it. -->
+					{#each WORDMARK_LETTERS.slice(word.from, word.to) as letter, i (i)}
+						{@const pos = LETTER_POS[word.from + i]}
+						<path
+							bind:this={letterEls[word.from + i]}
+							d={letter.d}
+							style="--i: {word.from + i}; --w: {pos.word}; --j: {pos.place}"
+						/>
+					{/each}
+				</svg>
+			</span>
+		{/each}
+	{/if}
 </span>
 
 <style>
@@ -102,7 +127,19 @@
 		transform-origin: 0 0;
 	}
 
-	.Logo__word svg {
+	/* A split letter's own box: where it sits within the one-line wordmark. */
+	.Logo__letter {
+		position: absolute;
+		top: var(--logo-top);
+		left: calc(var(--logo-side) + var(--x) * var(--u));
+		display: block;
+		width: calc(var(--lw) * var(--u));
+		height: calc(var(--logo-h) * var(--u));
+		color: var(--logo-color, var(--black));
+	}
+
+	.Logo__word svg,
+	.Logo__letter svg {
 		display: block;
 		width: 100%;
 		height: 100%;

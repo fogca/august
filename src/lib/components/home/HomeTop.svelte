@@ -1,25 +1,30 @@
 <!-- Home page top (2026-10 redesign, Figma "II-ii"): the opening (1:635 PC,
      7:782 SP), then the resting top (175:178 PC, 7:874 SP).
 
-     Opening: the wordmark's letters, in white, rise into place on a violet
-     ground (--opening-ground; #4640A0 since 2026-11-25, at the user's
-     request — #554EB1 earlier that day, black from 2026-11-05, brand blue in Figma 1:635). The words overlap: each begins when
-     the one before it is three letters in ("Tim" of Time), not when it is
-     done, so the whole name is up sooner (the user asked for a shorter
-     opening). Then the ground lifts
-     away to the white page underneath, the letters turning black as it goes
-     (so the logo turns dark at the very moment the ground turns white), and
-     the lead text fades in. That first section is a full screen: no typeface
+     Opening: the wordmark's letters, in white, rise into view at the FOOT
+     of the screen, on a violet ground (--opening-ground; #4640A0 since
+     2026-11-25, at the user's request — #554EB1 earlier that day, black from
+     2026-11-05, brand blue in Figma 1:635). The words overlap: each begins
+     when the one before it is three letters in ("Tim" of Time), not when it
+     is done, so the whole name is up sooner (the user asked for a shorter
+     opening). Then, on one beat, the ground lifts away to the white page
+     underneath, the letters turn black, and they travel up one after another
+     to their place at the top (2026-11-26, at the user's request —
+     "テキストinを画面下にて行って、背景色が切り替わるタイミングで、それを
+     staggerで上に移動"; until then they rose in at the top and stayed). The
+     lead text fades in as they arrive. That first section is a full screen: no typeface
      hero shows until the page is scrolled (2026-11-25, at the user's request
      — "最初の100vhには見えないようにして、first sectionを100vhにして"; until
      then the first hero rose into the lower half as the opening's last beat).
 
      The opening is a fixed overlay carrying its own copy of the wordmark
-     (Logo.svelte, the same component and position as the Header's), above
-     the Header. By the time the overlay's ground has faded the letters have
-     become the same black as the Header's own mark, which is already sitting
-     on exactly the same pixels underneath — so the hand-over is invisible
-     and nothing has to be told to "show" the Header.
+     (Logo.svelte, the same component and position as the Header's, one box
+     per letter so each can travel), above the Header. The Header's own mark
+     is held back while the letters are on their way — it would show through
+     the fading ground as a second wordmark — and returns when the last has
+     landed (--handover-at), black on exactly the same pixels as the
+     overlay's, which goes just after: the hand-over is invisible. Both are
+     CSS animations, so neither waits for a script.
 
      The whole sequence is CSS animation, so it runs from the server-rendered
      first paint without waiting on hydration, and a page that never gets its
@@ -249,7 +254,7 @@
 
 <div class="HomeTop" class:is-settled={settled}>
 	<div class="Opening" aria-hidden="true">
-		<div class="Opening__logo"><Logo /></div>
+		<div class="Opening__logo"><Logo split /></div>
 	</div>
 
 	<section class="HomeLead">
@@ -309,21 +314,30 @@
 </div>
 
 <style>
-	.HomeTop {
-		--opening-ground: #4640a0;
-		/* Opening timeline (seconds from first paint). */
+	/* Opening timeline (seconds from first paint). On <body> rather than
+	   .HomeTop because the Header, outside it, waits on the same clock. */
+	:global(body:has(.HomeTop)) {
 		--rise-at: 0.3s;
 		--rise-dur: 1.2s;
 		--rise-step: 60ms;
 		/* How many letters of a word are up before the next word starts. */
 		--word-lead: 3;
-		/* The last letter starts rising at 1.08s (it was 1.56s, a word at a
-		   time), so the lift, and what follows it, come 0.5s sooner. */
+		/* The ground's change and the letters' departure upwards. */
 		--lift-at: 1.9s;
 		--lift-dur: 0.8s;
-		/* The ground turns white first, then the lead text: the last beat. */
-		--lead-at: 2.7s;
+		/* Each letter's trip to the top, and the gap between departures. */
+		--travel-dur: 1.1s;
+		--travel-step: 60ms;
+		/* The last of the eight letters lands. */
+		--handover-at: calc(var(--lift-at) + 7 * var(--travel-step) + var(--travel-dur));
+		/* The last beat, as the letters arrive. It has to END after
+		   --handover-at: its end is what marks the opening over. */
+		--lead-at: 3s;
 		--lead-dur: 0.8s;
+	}
+
+	.HomeTop {
+		--opening-ground: #4640a0;
 		--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 		/* Heroes: lower than a screen since 2026-11-11 (at the user's request —
 		   "Fontsページのように高さは少し抑えて", then "もう少し高くして" from a
@@ -341,7 +355,15 @@
 		z-index: 1300;
 		background: var(--opening-ground);
 		pointer-events: none;
-		animation: opening-lift var(--lift-dur) ease var(--lift-at) forwards;
+		/* For the letters' starting place, measured from the overlay's foot. */
+		container-type: size;
+		/* Where the letters rise in: as far above the foot as they come to
+		   rest below the top. */
+		--opening-foot: calc(35px + env(safe-area-inset-bottom, 0px));
+		/* The whole overlay goes a hair after the Header's mark is back under it. */
+		animation:
+			opening-lift var(--lift-dur) ease var(--lift-at) forwards,
+			opening-gone 0s linear calc(var(--handover-at) + 50ms) forwards;
 	}
 
 	.Opening__logo {
@@ -352,12 +374,12 @@
 		height: 0;
 	}
 
-	/* Each letter rises out of its word's own box (the <svg> clips to its
+	/* Each letter rises out of its own box (the <svg> clips to its
 	   viewBox), staggered left to right. translateY is in viewBox units here
 	   — 1.1 line heights clears the box entirely. --w is the letter's word,
 	   --j its place in that word (Logo.svelte): a word starts --word-lead
 	   letters after the one before it. */
-	.Opening :global(.Logo__word path) {
+	.Opening :global(.Logo__letter path) {
 		animation: letter-rise var(--rise-dur) var(--ease-out-expo) backwards;
 		animation-delay: calc(
 			var(--rise-at) + (var(--w) * var(--word-lead) + var(--j)) * var(--rise-step)
@@ -370,19 +392,53 @@
 		}
 	}
 
-	/* Only the ground fades (to transparent, so the page and the rising hero
-	   show through); the letters are not faded but recoloured, white to the
-	   Header's black, over the same beat. */
+	/* Only the ground fades (to transparent, so the page shows through); the
+	   letters are not faded but recoloured, white to the Header's black, over
+	   the same beat. */
 	@keyframes opening-lift {
 		to {
 			background-color: rgba(255, 255, 255, 0);
+		}
+	}
+
+	@keyframes opening-gone {
+		to {
 			visibility: hidden;
 		}
 	}
 
-	.Opening :global(.Logo__word) {
+	/* On that beat each letter also leaves the foot for its place at the top,
+	   left to right. --drop is how far below that place it starts. */
+	.Opening :global(.Logo__letter) {
+		--drop: calc(
+			100cqh - var(--opening-foot) - var(--logo-h) * var(--u) - var(--logo-top)
+		);
 		color: var(--white);
-		animation: logo-to-ink var(--lift-dur) ease var(--lift-at) forwards;
+		animation:
+			logo-to-ink var(--lift-dur) ease var(--lift-at) forwards,
+			letter-travel var(--travel-dur) cubic-bezier(0.76, 0, 0.24, 1)
+				calc(var(--lift-at) + var(--i) * var(--travel-step)) backwards;
+	}
+
+	@keyframes letter-travel {
+		from {
+			transform: translateY(var(--drop));
+		}
+	}
+
+	/* The Header's own mark stays out of sight until the letters have landed
+	   on it (see the top comment). */
+	@media (prefers-reduced-motion: no-preference) {
+		:global(body:has(.HomeTop:not(.is-settled)) .Header__logo) {
+			animation: header-mark-waits var(--handover-at) linear backwards;
+		}
+	}
+
+	@keyframes -global-header-mark-waits {
+		from,
+		to {
+			visibility: hidden;
+		}
 	}
 
 	@keyframes logo-to-ink {
@@ -608,6 +664,10 @@
 	@media (max-width: 767.98px) {
 		.HomeTop {
 			--hero-h: 60vh;
+		}
+
+		.Opening {
+			--opening-foot: calc(28px + env(safe-area-inset-bottom, 0px));
 		}
 
 		.HomeLead__text {
