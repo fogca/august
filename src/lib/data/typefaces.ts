@@ -2,7 +2,7 @@
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef, TesterLine } from '$lib/components/TypeTester/presets.js';
-import { WEIGHTS, ANGO_WEIGHTS } from '$lib/components/TypeTester/presets.js';
+import { WEIGHTS, ANGO_WEIGHTS, QUAD_WEIGHTS } from '$lib/components/TypeTester/presets.js';
 import type { GlyphGroup, MetricLine } from './humoristOverview.js';
 import {
 	HUMORIST_GLYPH_GROUPS,
@@ -633,7 +633,7 @@ export const TYPEFACES: Typeface[] = [
 		// user's request — "GQは、Quad Sansとして" — with the face itself: the
 		// drawings formerly shown as "Mokuseki Sans" (a client's name, kept off
 		// the public site), exported from Quad.glyphs as one Regular. Its CSS
-		// family is 'Quad Sans' (app.html @font-face; QuadSans-Regular.woff2).
+		// family is 'Quad Sans' (app.html @font-face; QuadSans-VF01.woff2).
 		slug: 'pf-quad-sans',
 		name: 'PF Quad Sans',
 		category: 'Sans-serif',
@@ -649,9 +649,11 @@ export const TYPEFACES: Typeface[] = [
 			'PF Quad Sans est un sans-serif en cours de développement chez PLEASANT, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
-		// The one cut there is: a Regular (the file is static, so wght 400 is
-		// only its name in the Type Tester's row).
-		weights: [{ id: 40, name: '40', label: 'Regular', axisValue: 400 }],
+		// A variable font since 2026-11-26 (QuadSans-VF01.woff2, Thin 100 –
+		// Bold 700; at the user's request — "テスターもweight複数対応して"):
+		// one tester row per stop, and the menu to switch them, as Maxa's.
+		weights: QUAD_WEIGHTS,
+		weightMenu: QUAD_WEIGHTS,
 		defaultTexts: ['PF Quad Sans'],
 		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
 		// the build leaves those out, so the page sets them in another face.

@@ -113,6 +113,18 @@ export const ANGO_WEIGHTS: WeightDef[] = [
 	{ id: 950, name: '95', label: 'Black', axisValue: 950 }
 ];
 
+// Quad Sans (2026-11-26): masters Thin 100 / Regular 400 / Bold 700, the
+// other stops interpolated. The CSS keyword weights, Thin to Bold.
+export const QUAD_WEIGHTS: WeightDef[] = [
+	{ id: 100, name: '10', label: 'Thin', axisValue: 100 },
+	{ id: 200, name: '20', label: 'ExtraLight', axisValue: 200 },
+	{ id: 300, name: '30', label: 'Light', axisValue: 300 },
+	{ id: 400, name: '40', label: 'Regular', axisValue: 400 },
+	{ id: 500, name: '50', label: 'Medium', axisValue: 500 },
+	{ id: 600, name: '60', label: 'SemiBold', axisValue: 600 },
+	{ id: 700, name: '70', label: 'Bold', axisValue: 700 }
+];
+
 // Maximum characters allowed in the textarea
 export const MAX_CHARS = 500;
 
