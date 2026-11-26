@@ -395,18 +395,19 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	{ text: aliceText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
-/** Gigi Sans's opening tester line (2026-11-26, at the user's request, from a
- *  screenshot of the tester — "こういう感じにして"): the dictionary sense of
- *  "quaint" (the face's name until 2026-11-27) in capitals, three centred lines in Bold at 160px. OLD FASHIONED,
- *  the longest, is 7.40em in Bold (7.54em in Black; VF03), so the three lines
- *  hold on a 1440px screen, and at 50px on a 390px phone. The five weight rows
- *  follow. */
+/** Gigi Sans's opening tester line: three centred lines in capitals, Bold.
+ *  Added 2026-11-26 at the user's request, from a screenshot of the tester
+ *  ("こういう感じにして"), with the dictionary sense of "quaint", the face's name
+ *  then; new words 2026-11-27, at the user's request. CHIC, GRACEFUL AND, the
+ *  longest, is 9.77em in Bold (10em in Black), so the three lines hold in either
+ *  at 135px on a 1440px screen (160px before) and at 38px on a 390px phone.
+ *  The five weight rows follow. */
 const GIGI_TESTER_LINES: TesterLine[] = [
 	{
-		text: 'ATTRACTIVELY\nUNUSUAL OR\nOLD FASHIONED',
+		text: 'CHIC, GRACEFUL AND\nEFFORTLESSLY\nREFINED',
 		wght: 700,
-		sizeDesktop: 160,
-		sizeMobile: 50,
+		sizeDesktop: 135,
+		sizeMobile: 38,
 		lineHeight: 1
 	}
 ];
