@@ -399,9 +399,9 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
  *  Added 2026-11-26 at the user's request, from a screenshot of the tester
  *  ("こういう感じにして"), with the dictionary sense of "quaint", the face's name
  *  then; new words 2026-11-27, at the user's request, and the same day new
- *  line breaks. AND EFFORTLESSLY, the longest, is 8.86em in Bold (9.01em in
- *  Black), so the three lines hold in either at 150px on a 1440px screen and at
- *  42px on a 390px phone. The five weight rows follow. */
+ *  line breaks. AND EFFORTLESSLY, the longest, is 8.83em in Bold (8.96em in
+ *  Black; VF06), so the three lines hold in either at 150px on a 1440px screen
+ *  and at 42px on a 390px phone. The five weight rows follow. */
 const GIGI_TESTER_LINES: TesterLine[] = [
 	{
 		text: 'CHIC, GRACEFUL\nAND EFFORTLESSLY\nREFINED',
