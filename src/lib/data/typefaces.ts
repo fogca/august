@@ -395,6 +395,21 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	{ text: aliceText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
+/** Quaint Sans's opening tester line (2026-11-26, at the user's request, from a
+ *  screenshot of the tester — "こういう感じにして"): the dictionary sense of
+ *  "quaint" in capitals, three centred lines in Bold at 160px. OLD FASHIONED,
+ *  the longest, is 7.38em in Bold (7.55em in Black), so the three lines hold on
+ *  a 1440px screen, and at 50px on a 390px phone. The five weight rows follow. */
+const QUAINT_TESTER_LINES: TesterLine[] = [
+	{
+		text: 'ATTRACTIVELY\nUNUSUAL OR\nOLD FASHIONED',
+		wght: 700,
+		sizeDesktop: 160,
+		sizeMobile: 50,
+		lineHeight: 1
+	}
+];
+
 /** Running text for Maxa's Type Tester (2026-11-09, at the user's request —
  *  "ワイン系ではなくて、世界的古典とかの文章に"; it was ten stanzas about a
  *  vineyard): the opening of Jane Austen's Pride and Prejudice (1813, public
@@ -659,6 +674,7 @@ export const TYPEFACES: Typeface[] = [
 		weights: QUAINT_WEIGHTS,
 		weightMenu: QUAINT_WEIGHTS,
 		defaultTexts: ['PF Quaint Sans'],
+		testerLines: QUAINT_TESTER_LINES,
 		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
 		// the build leaves those out, so the page sets them in another face.
 		testerNotice:
