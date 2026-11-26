@@ -2,7 +2,7 @@
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef, TesterLine } from '$lib/components/TypeTester/presets.js';
-import { WEIGHTS, ANGO_WEIGHTS, QUAD_WEIGHTS } from '$lib/components/TypeTester/presets.js';
+import { WEIGHTS, ANGO_WEIGHTS, QUAINT_WEIGHTS } from '$lib/components/TypeTester/presets.js';
 import type { GlyphGroup, MetricLine } from './humoristOverview.js';
 import {
 	HUMORIST_GLYPH_GROUPS,
@@ -49,12 +49,12 @@ export interface Typeface {
 	/** Public name, prefix included (e.g. 'PF Humorist'). The CSS family
 	 *  (`fontFamily`) and the font/image files keep their old internal names. */
 	name: string;
-	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Quad Sans, 5 = Alfred */
+	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Quaint Sans, 5 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
 	hidden?: boolean;
-	/** A name on the shelf before the face is finished (Maxica, Quad Sans). Its
+	/** A name on the shelf before the face is finished (Maxica, Quaint Sans). Its
 	 *  page is the hero name, the spec lines, the description, a one-row Type
 	 *  Tester and "Coming soon" — no weights or glyphs to show, and none are
 	 *  invented. */
@@ -634,31 +634,34 @@ export const TYPEFACES: Typeface[] = [
 		// drawings formerly shown as "Mokuseki Sans" (a client's name, kept off
 		// the public site), exported from Quad.glyphs as one Regular. Its CSS
 		// family is 'Quad Sans' (app.html @font-face; QuadSans-VF01.woff2).
-		slug: 'pf-quad-sans',
-		name: 'PF Quad Sans',
+		// Quaint Sans since 2026-11-26 (at the user's request — "Quad Sansを
+		// Quaint Sansに名称変更"): name, slug and CSS family. The font files,
+		// their internal names and the Glyphs source keep the working name Quad.
+		slug: 'pf-quaint-sans',
+		name: 'PF Quaint Sans',
 		category: 'Sans-serif',
 		order: 4,
 		status: 'in-development',
 		placeholder: true,
-		fontFamily: 'Quad Sans',
+		fontFamily: 'Quaint Sans',
 		tagline: 'In development.',
 		description:
-			'PF Quad Sans is a sans-serif in development at PLEASANT, one half of a family that will pair it with a serif. ' +
+			'PF Quaint Sans is a sans-serif in development at PLEASANT, one half of a family that will pair it with a serif. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'PF Quad Sans est un sans-serif en cours de développement chez PLEASANT, une moitié d’une famille qui l’associera à un serif. ' +
+			'PF Quaint Sans est un sans-serif en cours de développement chez PLEASANT, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
 		// A variable font since 2026-11-26 (QuadSans-VF01.woff2, Thin 100 –
 		// Bold 700; at the user's request — "テスターもweight複数対応して"):
 		// one tester row per stop, and the menu to switch them, as Maxa's.
-		weights: QUAD_WEIGHTS,
-		weightMenu: QUAD_WEIGHTS,
-		defaultTexts: ['PF Quad Sans'],
+		weights: QUAINT_WEIGHTS,
+		weightMenu: QUAINT_WEIGHTS,
+		defaultTexts: ['PF Quaint Sans'],
 		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
 		// the build leaves those out, so the page sets them in another face.
 		testerNotice:
-			'PF Quad Sans is in development. Characters not drawn yet are set in another face.',
+			'PF Quaint Sans is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -980,27 +983,29 @@ export function getTypeface(slug: string): Typeface | undefined {
  *  are now (a 301 — see fonts/[slug]/+page.ts; one hop, never a chain).
  *  `elio` is Ango's name before 2026-10-03; `ango` and `gq` before the
  *  2026-10-30 rename; `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before
- *  GQ Sans became Quad Sans; the `apgr-` ones until the PLEASANT prefix
+ *  GQ Sans became Quad Sans (`pf-quad-sans` until Quaint Sans, 2026-11-26);
+ *  the `apgr-` ones until the PLEASANT prefix
  *  (2026-11-06); `pf-maxica` for the hours before Maxa was confirmed. Alfred is left out: it is hidden, so it never had a public
  *  page to carry over. The /buy?font= parameter reads the same map. */
 export const LEGACY_SLUGS: Record<string, string> = {
 	ango: 'pf-humorist',
 	elio: 'pf-humorist',
-	gq: 'pf-quad-sans',
-	'apgr-gq-sans': 'pf-quad-sans',
+	gq: 'pf-quaint-sans',
+	'apgr-gq-sans': 'pf-quaint-sans',
 	'apgr-humorist': 'pf-humorist',
-	'apgr-quad-sans': 'pf-quad-sans',
+	'apgr-quad-sans': 'pf-quaint-sans',
 	'apgr-maxica': 'pf-maxa',
 	'ttt-maxica': 'pf-maxa',
 	'ttt-maxa': 'pf-maxa',
 	'ttt-humorist': 'pf-humorist',
-	'ttt-quad-sans': 'pf-quad-sans',
+	'ttt-quad-sans': 'pf-quaint-sans',
 	'context-maxa': 'pf-maxa',
 	'context-humorist': 'pf-humorist',
-	'context-quad-sans': 'pf-quad-sans',
+	'context-quad-sans': 'pf-quaint-sans',
 	'cf-maxa': 'pf-maxa',
 	'cf-humorist': 'pf-humorist',
-	'cf-quad-sans': 'pf-quad-sans'
+	'cf-quad-sans': 'pf-quaint-sans',
+	'pf-quad-sans': 'pf-quaint-sans'
 };
 
 /** The name as the big display sets it: the prefix dropped ("Humorist"), as
@@ -1081,7 +1086,7 @@ const HOME_PANEL_STYLES: {
 	},
 	{ slug: 'pf-maxa', weight: 400, bg: 'var(--white)', fg: 'var(--black)', motion: 'none' },
 	{
-		slug: 'pf-quad-sans',
+		slug: 'pf-quaint-sans',
 		weight: 400,
 		bg: 'var(--brand-blue)',
 		fg: 'var(--brand-paper)',

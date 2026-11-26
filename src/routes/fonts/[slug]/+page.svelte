@@ -369,7 +369,7 @@
 	     (An "In Use" section used to sit directly below this — 4-5
 	     application-photo slots — removed 2026-09 at the user's request;
 	     tf.inUseImages in typefaces.ts is unused now but left in place.)
-	     A placeholder (Maxica, Quad Sans) has it too (2026-10-31, at the user's
+	     A placeholder (Maxica, Quaint Sans) has it too (2026-10-31, at the user's
 	     request — "各書体ページ、タイプテスター導入して"), as the one row of
 	     testerWeights; the sections below stay off its page. -->
 	<!-- Keyed by typeface: navigating between two font pages reuses this page

@@ -113,9 +113,9 @@ export const ANGO_WEIGHTS: WeightDef[] = [
 	{ id: 950, name: '95', label: 'Black', axisValue: 950 }
 ];
 
-// Quad Sans (2026-11-26): masters Thin 100 / Regular 400 / Bold 700, the
+// Quaint Sans (named Quad Sans until 2026-11-26): masters Thin 100 / Regular 400 / Bold 700, the
 // other stops interpolated. The CSS keyword weights, Thin to Bold.
-export const QUAD_WEIGHTS: WeightDef[] = [
+export const QUAINT_WEIGHTS: WeightDef[] = [
 	{ id: 100, name: '10', label: 'Thin', axisValue: 100 },
 	{ id: 200, name: '20', label: 'ExtraLight', axisValue: 200 },
 	{ id: 300, name: '30', label: 'Light', axisValue: 300 },
