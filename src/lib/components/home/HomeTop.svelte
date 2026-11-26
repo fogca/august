@@ -18,6 +18,8 @@
      hero shows until the page is scrolled (2026-11-25, at the user's request
      — "最初の100vhには見えないようにして、first sectionを100vhにして"; until
      then the first hero rose into the lower half as the opening's last beat).
+     On PC a row of typeface thumbnails comes in along its foot as the opening
+     ends (2026-11-27, HomeStrip.svelte); the heroes still start below it.
 
      The opening is a fixed overlay carrying its own copy of the wordmark
      (Logo.svelte, the same component and position as the Header's, one box
@@ -56,6 +58,7 @@
 	import { homeIntro } from '$lib/state/homeIntro.svelte';
 	import { initScroll, getLenis } from '$lib/scroll';
 	import Logo from '$lib/components/Logo.svelte';
+	import HomeStrip from '$lib/components/home/HomeStrip.svelte';
 
 	interface Props {
 		panels: HomePanel[];
@@ -157,11 +160,19 @@
 	/** True once the opening is over or was skipped: the overlay goes and
 	 *  the lead renders at rest with no animation. */
 	let settled = $state(false);
+	/** True if it never played through: the thumbnail row, which comes in as it
+	 *  ends, then stands in place at once. */
+	let skipped = $state(false);
 	let leadTextEl: HTMLElement | undefined = $state();
 
 	function finish() {
 		settled = true;
 		homeIntro.introComplete = true;
+	}
+
+	function skip() {
+		skipped = true;
+		finish();
 	}
 
 	/** Blocks every common way to move the page (wheel, touch-drag, scroll
@@ -214,7 +225,7 @@
 			!entrance ||
 			entrance.playState === 'finished'
 		) {
-			finish();
+			skip();
 			return;
 		}
 
@@ -226,7 +237,7 @@
 		// the page moved out from under the lock.
 		const onExternalScroll = () => {
 			release();
-			finish();
+			skip();
 		};
 
 		function release() {
@@ -259,7 +270,9 @@
 		<div class="Opening__logo"><Logo split /></div>
 	</div>
 
-	<section class="HomeLead">
+	<!-- The first screen; on PC the thumbnail row runs along its foot and the
+	     scroll moves it sideways (see HomeStrip.svelte). -->
+	<HomeStrip {panels} {skipped}>
 		<h1 class="HomeLead__title">PLEASANT</h1>
 		<!-- The frame's own copy (it repeats twice there as filler), with the
 		     brand name updated and "from Tokyo" left out, per the user's
@@ -269,7 +282,7 @@
 			as the medium meaning passes through — retail families and bespoke type for those who value
 			the power of design.
 		</p>
-	</section>
+	</HomeStrip>
 
 	<div class="HomeHeroes">
 		{#each panels as panel (panel.key)}
@@ -446,16 +459,7 @@
 		}
 	}
 
-	/* ── Lead: the first screen, white ── */
-	.HomeLead {
-		position: relative;
-		/* The large viewport, so a hero never peeks in when a phone's URL bar
-		   folds away. */
-		height: 100vh;
-		height: 100lvh;
-		padding: 0;
-	}
-
+	/* ── Lead: the first screen, white (its box is HomeStrip's) ── */
 	.HomeLead__title {
 		position: absolute;
 		width: 1px;
@@ -471,10 +475,10 @@
 		--lead-foot: 30px;
 		position: absolute;
 		left: var(--edge);
-		bottom: var(--lead-foot);
+		bottom: calc(var(--strip-h, 0px) + var(--lead-foot));
 		/* With a phone's URL bar showing, the section runs on below what is
 		   visible (100lvh against 100svh; the same on a desktop). */
-		bottom: calc(100lvh - 100svh + var(--lead-foot));
+		bottom: calc(100lvh - 100svh + var(--strip-h, 0px) + var(--lead-foot));
 		width: min(646px, calc(100% - 2 * var(--edge)));
 		margin: 0;
 		font-family: var(--font-ango), sans-serif;

@@ -2,7 +2,8 @@
 	// Apres Guerre site header (2026-10 redesign, Figma "II-ii").
 	//
 	// Two states:
-	// - Top of the home page: the large wordmark alone (Logo.svelte — PC one
+	// - Top of the home page (which lasts while its first screen is held for
+	//   the thumbnail row to pass sideways, homeIntro.holdScroll): the large wordmark alone (Logo.svelte — PC one
 	//   line, SP two), the same artwork and position as the home page's
 	//   opening. Only there (2026-10-31, at the user's request — "Topページのみ
 	//   top0の時にロゴを大きく"): every other page has the compact state from
@@ -37,6 +38,7 @@
 	import { page } from '$app/state';
 	import { fade } from 'svelte/transition';
 	import Logo from '$lib/components/Logo.svelte';
+	import { homeIntro } from '$lib/state/homeIntro.svelte';
 
 	/** Scroll distance (px) past which the header switches to its compact state. */
 	const COMPACT_AFTER = 8;
@@ -44,7 +46,7 @@
 	const CART_NOTE_MS = 3200;
 
 	let open = $state(false);
-	let scrolled = $state(false);
+	let scrollTop = $state(0);
 	let focusInside = $state(false);
 	/** Transitions switch on only after the first measured layout, so a page
 	 *  loaded mid-scroll doesn't animate its logo shrinking on arrival. */
@@ -53,6 +55,7 @@
 	let hydrated = $state(false);
 	/** The large wordmark exists only at the top of the home page. */
 	const isHome = $derived(page.url.pathname === '/');
+	const scrolled = $derived(scrollTop > COMPACT_AFTER + (isHome ? homeIntro.holdScroll : 0));
 	const compact = $derived(!isHome || scrolled || open || focusInside);
 
 	let wordEls: HTMLElement[] = $state([]);
@@ -116,7 +119,7 @@
 
 	onMount(() => {
 		const update = () => {
-			scrolled = window.scrollY > COMPACT_AFTER;
+			scrollTop = window.scrollY;
 			// Back at the top, a focus left behind in the header (a keyboard
 			// user who has tabbed on into the page) no longer holds it compact.
 			if (!scrolled && !headerHasFocus()) focusInside = false;

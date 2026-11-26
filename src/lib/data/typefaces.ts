@@ -1070,6 +1070,9 @@ export interface HomePanel {
 	bg: string;
 	fg: string;
 	motion: HomePanelMotion;
+	/** Thumbnail image for the home page's top row (PC). Without one the row
+	 *  shows a stand-in: this panel's ground with the name in the face. */
+	thumb?: string;
 	/** What the caption says after the name, one part each ("Grotesque", "In
 	 *  development"). Set apart by space, not by a "·": Ango's middle dot sits
 	 *  on the baseline. */
@@ -1089,6 +1092,9 @@ const HOME_PANEL_STYLES: {
 	motion: HomePanelMotion;
 	/** Set the big name in capitals. */
 	uppercase?: boolean;
+	/** The top row's thumbnail (see HomePanel.thumb): put the image under
+	 *  static/images/home/ and give its path here, '/images/home/<slug>.jpg'. */
+	thumb?: string;
 }[] = [
 	// Maxa's axis is the widest (50-950) and its name the shortest, so it takes
 	// the weight wave; Quad Sans has the one weight, so it is typed.

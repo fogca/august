@@ -10,6 +10,10 @@ class HomeIntroState {
 	 *  opening plays once, on arriving at the site, not on every return to
 	 *  "/". */
 	inApp = $state(false);
+	/** px of scroll over which the home page's first screen stays where it is
+	 *  (its thumbnail row moving sideways, HomeStrip.svelte). The Header counts
+	 *  that as still being at the top. */
+	holdScroll = $state(0);
 }
 
 export const homeIntro = new HomeIntroState();
