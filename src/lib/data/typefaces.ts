@@ -398,16 +398,16 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 /** Gigi Sans's opening tester line: three centred lines in capitals, Bold.
  *  Added 2026-11-26 at the user's request, from a screenshot of the tester
  *  ("こういう感じにして"), with the dictionary sense of "quaint", the face's name
- *  then; new words 2026-11-27, at the user's request. CHIC, GRACEFUL AND, the
- *  longest, is 9.77em in Bold (10em in Black), so the three lines hold in either
- *  at 135px on a 1440px screen (160px before) and at 38px on a 390px phone.
- *  The five weight rows follow. */
+ *  then; new words 2026-11-27, at the user's request, and the same day new
+ *  line breaks. AND EFFORTLESSLY, the longest, is 8.86em in Bold (9.01em in
+ *  Black), so the three lines hold in either at 150px on a 1440px screen and at
+ *  42px on a 390px phone. The five weight rows follow. */
 const GIGI_TESTER_LINES: TesterLine[] = [
 	{
-		text: 'CHIC, GRACEFUL AND\nEFFORTLESSLY\nREFINED',
+		text: 'CHIC, GRACEFUL\nAND EFFORTLESSLY\nREFINED',
 		wght: 700,
-		sizeDesktop: 135,
-		sizeMobile: 38,
+		sizeDesktop: 150,
+		sizeMobile: 42,
 		lineHeight: 1
 	}
 ];
