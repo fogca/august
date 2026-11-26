@@ -120,13 +120,15 @@
 			   the name the files and the source keep) — drawn in
 			   Projects/brands/August/00_Typeface/Qutis/Quad.glyphs. One Regular
 			   (build_quad.py) until 2026-11-26, then a variable font from its
-			   Thin / Regular / Bold masters (build_quad_vf.py, wght 100–700).
-			   Characters not drawn yet are left out of the file, so they fall
-			   through to the next face in the stack. */
+			   three masters (build_quad_family.py). VF02 since the same day:
+			   five stops, Thin 100 / Light 300 / Regular 400 / Bold 700 /
+			   Black 900 (the heaviest master is Black; Light and Bold are
+			   interpolated). Characters not drawn yet are left out of the file,
+			   so they fall through to the next face in the stack. */
 			@font-face {
 				font-family: 'Quaint Sans';
-				src: url('%sveltekit.assets%/fonts/QuadSans-VF01.woff2?v=20261126') format('woff2-variations');
-				font-weight: 100 700;
+				src: url('%sveltekit.assets%/fonts/QuadSans-VF02.woff2?v=20261126') format('woff2-variations');
+				font-weight: 100 900;
 				font-style: normal;
 				font-display: swap;
 			}

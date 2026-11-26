@@ -652,9 +652,10 @@ export const TYPEFACES: Typeface[] = [
 			'PF Quaint Sans est un sans-serif en cours de développement chez PLEASANT, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
-		// A variable font since 2026-11-26 (QuadSans-VF01.woff2, Thin 100 –
-		// Bold 700; at the user's request — "テスターもweight複数対応して"):
-		// one tester row per stop, and the menu to switch them, as Maxa's.
+		// A variable font since 2026-11-26 (at the user's request —
+		// "テスターもweight複数対応して"): one tester row per stop, and the menu
+		// to switch them, as Maxa's. QuadSans-VF02.woff2, five stops Thin 100 –
+		// Black 900, the same day ("テスターも5weightに差し替えて").
 		weights: QUAINT_WEIGHTS,
 		weightMenu: QUAINT_WEIGHTS,
 		defaultTexts: ['PF Quaint Sans'],
