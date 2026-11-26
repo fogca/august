@@ -42,7 +42,7 @@ OUT = ROOT / "src/lib/data/titlePaths.ts"
 TITLES = [
     ("pf-humorist", "static/fonts/Ango-VF47.woff2", 450, "HUMORIST"),
     ("pf-maxa", "static/fonts/Maxica-VF38.woff2", 500, "Maxa"),
-    ("pf-quaint-sans", "static/fonts/QuadSans-VF02.woff2", 400, "Quaint Sans"),
+    ("pf-quaint-sans", "static/fonts/QuadSans-VF03.woff2", 400, "Quaint Sans"),
 ]
 
 DECIMALS = 1

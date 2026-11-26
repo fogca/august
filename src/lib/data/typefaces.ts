@@ -398,8 +398,9 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 /** Quaint Sans's opening tester line (2026-11-26, at the user's request, from a
  *  screenshot of the tester — "こういう感じにして"): the dictionary sense of
  *  "quaint" in capitals, three centred lines in Bold at 160px. OLD FASHIONED,
- *  the longest, is 7.38em in Bold (7.55em in Black), so the three lines hold on
- *  a 1440px screen, and at 50px on a 390px phone. The five weight rows follow. */
+ *  the longest, is 7.40em in Bold (7.54em in Black; VF03), so the three lines
+ *  hold on a 1440px screen, and at 50px on a 390px phone. The five weight rows
+ *  follow. */
 const QUAINT_TESTER_LINES: TesterLine[] = [
 	{
 		text: 'ATTRACTIVELY\nUNUSUAL OR\nOLD FASHIONED',
@@ -669,8 +670,8 @@ export const TYPEFACES: Typeface[] = [
 		classification: 'Sans-serif · In development',
 		// A variable font since 2026-11-26 (at the user's request —
 		// "テスターもweight複数対応して"): one tester row per stop, and the menu
-		// to switch them, as Maxa's. QuadSans-VF02.woff2, five stops Thin 100 –
-		// Black 900, the same day ("テスターも5weightに差し替えて").
+		// to switch them, as Maxa's. Five stops Thin 100 – Black 900, the same
+		// day ("テスターも5weightに差し替えて"); QuadSans-VF03.woff2 since 11-27.
 		weights: QUAINT_WEIGHTS,
 		weightMenu: QUAINT_WEIGHTS,
 		defaultTexts: ['PF Quaint Sans'],

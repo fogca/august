@@ -114,8 +114,9 @@ export const ANGO_WEIGHTS: WeightDef[] = [
 ];
 
 // Quaint Sans (named Quad Sans until 2026-11-26): five weights (at the user's
-// request, 2026-11-26 — "Thin Light Regular Bold Black"). Masters Thin 100 /
-// Regular 400 / Black 900; Light and Bold are interpolated.
+// request, 2026-11-26 — "Thin Light Regular Bold Black"). Thin 100 and Black
+// 900 are drawn masters; since VF03 (11-27) the three in between are all
+// interpolated (the drawn stem-62 master, at about wght 349, is not a stop).
 export const QUAINT_WEIGHTS: WeightDef[] = [
 	{ id: 100, name: '10', label: 'Thin', axisValue: 100 },
 	{ id: 300, name: '30', label: 'Light', axisValue: 300 },
