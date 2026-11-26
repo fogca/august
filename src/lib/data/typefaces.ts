@@ -2,7 +2,7 @@
 // Used by /fonts listing and /fonts/[slug] detail pages.
 
 import type { WeightDef, TesterLine } from '$lib/components/TypeTester/presets.js';
-import { WEIGHTS, ANGO_WEIGHTS, QUAINT_WEIGHTS } from '$lib/components/TypeTester/presets.js';
+import { WEIGHTS, ANGO_WEIGHTS, GIGI_WEIGHTS } from '$lib/components/TypeTester/presets.js';
 import type { GlyphGroup, MetricLine } from './humoristOverview.js';
 import {
 	HUMORIST_GLYPH_GROUPS,
@@ -49,12 +49,12 @@ export interface Typeface {
 	/** Public name, prefix included (e.g. 'PF Humorist'). The CSS family
 	 *  (`fontFamily`) and the font/image files keep their old internal names. */
 	name: string;
-	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Quaint Sans, 5 = Alfred */
+	/** Display order (ascending): 1 = Norma, 2 = Humorist, 3 = Maxica, 4 = Gigi Sans, 5 = Alfred */
 	order: number;
 	status: TypefaceStatus;
 	/** Temporarily hide from all listings (top page, /fonts, header menu) */
 	hidden?: boolean;
-	/** A name on the shelf before the face is finished (Maxica, Quaint Sans). Its
+	/** A name on the shelf before the face is finished (Maxica, Gigi Sans). Its
 	 *  page is the hero name, the spec lines, the description, a one-row Type
 	 *  Tester and "Coming soon" — no weights or glyphs to show, and none are
 	 *  invented. */
@@ -395,13 +395,13 @@ const HUMORIST_TESTER_LINES: TesterLine[] = [
 	{ text: aliceText(6), wght: 450, sizeDesktop: 14, sizeMobile: 13, lineHeight: 1.4, columns: 3 }
 ];
 
-/** Quaint Sans's opening tester line (2026-11-26, at the user's request, from a
+/** Gigi Sans's opening tester line (2026-11-26, at the user's request, from a
  *  screenshot of the tester — "こういう感じにして"): the dictionary sense of
- *  "quaint" in capitals, three centred lines in Bold at 160px. OLD FASHIONED,
+ *  "quaint" (the face's name until 2026-11-27) in capitals, three centred lines in Bold at 160px. OLD FASHIONED,
  *  the longest, is 7.40em in Bold (7.54em in Black; VF03), so the three lines
  *  hold on a 1440px screen, and at 50px on a 390px phone. The five weight rows
  *  follow. */
-const QUAINT_TESTER_LINES: TesterLine[] = [
+const GIGI_TESTER_LINES: TesterLine[] = [
 	{
 		text: 'ATTRACTIVELY\nUNUSUAL OR\nOLD FASHIONED',
 		wght: 700,
@@ -653,33 +653,37 @@ export const TYPEFACES: Typeface[] = [
 		// Quaint Sans since 2026-11-26 (at the user's request — "Quad Sansを
 		// Quaint Sansに名称変更"): name, slug and CSS family. The font files,
 		// their internal names and the Glyphs source keep the working name Quad.
-		slug: 'pf-quaint-sans',
-		name: 'PF Quaint Sans',
+		// Gigi Sans since 2026-11-27 (at the user's request — "QuaintはGigiとして
+		// 全面的に名前をアップデート"): name, slug, CSS family, and this time the
+		// shipped font too (GigiSans-VF03.woff2: VF03 with only its name table
+		// rewritten; the build scripts name the family Gigi Sans from now on).
+		slug: 'pf-gigi-sans',
+		name: 'PF Gigi Sans',
 		category: 'Sans-serif',
 		order: 4,
 		status: 'in-development',
 		placeholder: true,
-		fontFamily: 'Quaint Sans',
+		fontFamily: 'Gigi Sans',
 		tagline: 'In development.',
 		description:
-			'PF Quaint Sans is a sans-serif in development at PLEASANT, one half of a family that will pair it with a serif. ' +
+			'PF Gigi Sans is a sans-serif in development at PLEASANT, one half of a family that will pair it with a serif. ' +
 			'Details on its design direction, weights and release schedule will follow.',
 		descriptionFr:
-			'PF Quaint Sans est un sans-serif en cours de développement chez PLEASANT, une moitié d’une famille qui l’associera à un serif. ' +
+			'PF Gigi Sans est un sans-serif en cours de développement chez PLEASANT, une moitié d’une famille qui l’associera à un serif. ' +
 			'Les détails sur son orientation, ses graisses et son calendrier de sortie suivront.',
 		classification: 'Sans-serif · In development',
 		// A variable font since 2026-11-26 (at the user's request —
 		// "テスターもweight複数対応して"): one tester row per stop, and the menu
 		// to switch them, as Maxa's. Five stops Thin 100 – Black 900, the same
-		// day ("テスターも5weightに差し替えて"); QuadSans-VF03.woff2 since 11-27.
-		weights: QUAINT_WEIGHTS,
-		weightMenu: QUAINT_WEIGHTS,
-		defaultTexts: ['PF Quaint Sans'],
-		testerLines: QUAINT_TESTER_LINES,
+		// day ("テスターも5weightに差し替えて"); VF03 since 11-27.
+		weights: GIGI_WEIGHTS,
+		weightMenu: GIGI_WEIGHTS,
+		defaultTexts: ['PF Gigi Sans'],
+		testerLines: GIGI_TESTER_LINES,
 		// About a quarter of the basic set is still undrawn (? @ % $ ( ) [ ] …);
 		// the build leaves those out, so the page sets them in another face.
 		testerNotice:
-			'PF Quaint Sans is in development. Characters not drawn yet are set in another face.',
+			'PF Gigi Sans is in development. Characters not drawn yet are set in another face.',
 		specimen: ['ABCDEFGHIJKLMNOP', 'QRSTUVWXYZabcdefg', 'hijklmnopqrstuvwxyz'],
 		thumbnail: '/images/fonts/gq.png',
 		theme: { bg: '#EDEAE3', fg: '#1a1a1a' },
@@ -1001,29 +1005,30 @@ export function getTypeface(slug: string): Typeface | undefined {
  *  are now (a 301 — see fonts/[slug]/+page.ts; one hop, never a chain).
  *  `elio` is Ango's name before 2026-10-03; `ango` and `gq` before the
  *  2026-10-30 rename; `apgr-gq-sans` lived a day (2026-10-30 to 10-31) before
- *  GQ Sans became Quad Sans (`pf-quad-sans` until Quaint Sans, 2026-11-26);
+ *  GQ Sans became Quad Sans (`pf-quad-sans` until Quaint Sans, 2026-11-26, and Gigi Sans the day after);
  *  the `apgr-` ones until the PLEASANT prefix
  *  (2026-11-06); `pf-maxica` for the hours before Maxa was confirmed. Alfred is left out: it is hidden, so it never had a public
  *  page to carry over. The /buy?font= parameter reads the same map. */
 export const LEGACY_SLUGS: Record<string, string> = {
 	ango: 'pf-humorist',
 	elio: 'pf-humorist',
-	gq: 'pf-quaint-sans',
-	'apgr-gq-sans': 'pf-quaint-sans',
+	gq: 'pf-gigi-sans',
+	'apgr-gq-sans': 'pf-gigi-sans',
 	'apgr-humorist': 'pf-humorist',
-	'apgr-quad-sans': 'pf-quaint-sans',
+	'apgr-quad-sans': 'pf-gigi-sans',
 	'apgr-maxica': 'pf-maxa',
 	'ttt-maxica': 'pf-maxa',
 	'ttt-maxa': 'pf-maxa',
 	'ttt-humorist': 'pf-humorist',
-	'ttt-quad-sans': 'pf-quaint-sans',
+	'ttt-quad-sans': 'pf-gigi-sans',
 	'context-maxa': 'pf-maxa',
 	'context-humorist': 'pf-humorist',
-	'context-quad-sans': 'pf-quaint-sans',
+	'context-quad-sans': 'pf-gigi-sans',
 	'cf-maxa': 'pf-maxa',
 	'cf-humorist': 'pf-humorist',
-	'cf-quad-sans': 'pf-quaint-sans',
-	'pf-quad-sans': 'pf-quaint-sans'
+	'cf-quad-sans': 'pf-gigi-sans',
+	'pf-quad-sans': 'pf-gigi-sans',
+	'pf-quaint-sans': 'pf-gigi-sans'
 };
 
 /** The name as the big display sets it: the prefix dropped ("Humorist"), as
@@ -1104,7 +1109,7 @@ const HOME_PANEL_STYLES: {
 	},
 	{ slug: 'pf-maxa', weight: 400, bg: 'var(--white)', fg: 'var(--black)', motion: 'none' },
 	{
-		slug: 'pf-quaint-sans',
+		slug: 'pf-gigi-sans',
 		weight: 400,
 		bg: 'var(--brand-blue)',
 		fg: 'var(--brand-paper)',

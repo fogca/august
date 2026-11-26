@@ -113,11 +113,11 @@ export const ANGO_WEIGHTS: WeightDef[] = [
 	{ id: 950, name: '95', label: 'Black', axisValue: 950 }
 ];
 
-// Quaint Sans (named Quad Sans until 2026-11-26): five weights (at the user's
+// Gigi Sans (Quad Sans until 2026-11-26, Quaint Sans until 11-27): five weights (at the user's
 // request, 2026-11-26 — "Thin Light Regular Bold Black"). Thin 100 and Black
 // 900 are drawn masters; since VF03 (11-27) the three in between are all
 // interpolated (the drawn stem-62 master, at about wght 349, is not a stop).
-export const QUAINT_WEIGHTS: WeightDef[] = [
+export const GIGI_WEIGHTS: WeightDef[] = [
 	{ id: 100, name: '10', label: 'Thin', axisValue: 100 },
 	{ id: 300, name: '30', label: 'Light', axisValue: 300 },
 	{ id: 400, name: '40', label: 'Regular', axisValue: 400 },

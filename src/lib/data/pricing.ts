@@ -92,7 +92,7 @@ export function isEnterpriseTier(tierIndex: number): boolean {
 
 // ── Package definitions ──────────────────────────────────────────────────────
 
-export type TypefaceSlug = 'norma' | 'pf-quaint-sans' | 'pf-humorist';
+export type TypefaceSlug = 'norma' | 'pf-gigi-sans' | 'pf-humorist';
 
 export interface PackageDef {
 	id: string;
@@ -103,7 +103,7 @@ export interface PackageDef {
 	// a buyer picks a custom subset from.
 	styles?: string[];
 	// Whether each weight also ships an Italic. When true, the style list renders as a
-	// 2-column layout (upright left, italic right). Quaint Sans has no italics.
+	// 2-column layout (upright left, italic right). Gigi Sans has no italics.
 	italic?: boolean;
 	// Buyer selects individual styles. The StyleList renders as toggleable chips.
 	selectable?: boolean;
@@ -212,7 +212,7 @@ export const TYPEFACE_PRICING: TypefacePricing[] = [
 			}
 		]
 	}
-	// pf-quaint-sans: in development — not for sale yet (its five weights' names
+	// pf-gigi-sans: in development — not for sale yet (its five weights' names
 	// and which are drawn are not settled)
 ];
 
